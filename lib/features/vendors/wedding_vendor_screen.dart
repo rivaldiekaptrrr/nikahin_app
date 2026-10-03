@@ -7,6 +7,7 @@ import '../../domain/enums/wedding_enums.dart';
 import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/currency_utils.dart';
 import '../../shared/utils/uuid_utils.dart';
+import '../../shared/utils/validation_utils.dart';
 import '../../shared/widgets/bento_card.dart';
 import '../../shared/widgets/currency_text_field.dart';
 import '../../shared/widgets/delete_confirm_dialog.dart';
@@ -708,7 +709,7 @@ class _AddVendorBottomSheetState extends ConsumerState<_AddVendorBottomSheet> {
                 maxLength: 60,
                 buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(labelText: 'Nama Vendor / Perusahaan'),
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Nama vendor wajib diisi' : null,
+                validator: (v) => ValidationUtils.validateRequired(v, 'Nama vendor'),
               ),
               const SizedBox(height: 14),
 
@@ -717,7 +718,10 @@ class _AddVendorBottomSheetState extends ConsumerState<_AddVendorBottomSheet> {
                   Expanded(
                     child: TextFormField(
                       controller: _picController,
-                      inputFormatters: [LengthLimitingTextInputFormatter(50)],
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(50),
+                        ValidationUtils.nameInputFormatter,
+                      ],
                       maxLength: 50,
                       buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                       decoration: const InputDecoration(labelText: 'Nama PIC (Opsional)'),
@@ -729,12 +733,13 @@ class _AddVendorBottomSheetState extends ConsumerState<_AddVendorBottomSheet> {
                       controller: _phoneController,
                       keyboardType: TextInputType.phone,
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9\+\-\s]')),
                         LengthLimitingTextInputFormatter(16),
+                        ValidationUtils.phoneInputFormatter,
                       ],
                       maxLength: 16,
                       buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                       decoration: const InputDecoration(labelText: 'Nomor Telepon / WA'),
+                      validator: (v) => ValidationUtils.validatePhoneIndo(v, isRequired: false),
                     ),
                   ),
                 ],
@@ -743,7 +748,10 @@ class _AddVendorBottomSheetState extends ConsumerState<_AddVendorBottomSheet> {
 
               TextFormField(
                 controller: _igController,
-                inputFormatters: [LengthLimitingTextInputFormatter(30)],
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(30),
+                  ValidationUtils.igHandleInputFormatter,
+                ],
                 maxLength: 30,
                 buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(

@@ -7,6 +7,7 @@ import '../../data/repositories/wedding_repository.dart';
 import '../../domain/enums/wedding_enums.dart';
 import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/export_utils.dart';
+import '../../shared/utils/validation_utils.dart';
 import '../../shared/widgets/bento_card.dart';
 import '../../shared/widgets/currency_text_field.dart';
 import '../../shared/widgets/date_selector_button.dart';
@@ -138,26 +139,32 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                     children: [
                       TextFormField(
                         controller: _groomController,
-                        inputFormatters: [LengthLimitingTextInputFormatter(50)],
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(50),
+                          ValidationUtils.nameInputFormatter,
+                        ],
                         maxLength: 50,
                         buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                         decoration: const InputDecoration(
                           labelText: 'Nama Mempelai Pria (CPP)',
                           hintText: 'Cth: Dimas Arya',
                         ),
-                        validator: (v) => (v == null || v.trim().isEmpty) ? 'Nama CPP wajib diisi' : null,
+                        validator: (v) => ValidationUtils.validateName(v, 'Nama CPP'),
                       ),
                       const SizedBox(height: 14),
                       TextFormField(
                         controller: _brideController,
-                        inputFormatters: [LengthLimitingTextInputFormatter(50)],
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(50),
+                          ValidationUtils.nameInputFormatter,
+                        ],
                         maxLength: 50,
                         buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                         decoration: const InputDecoration(
                           labelText: 'Nama Mempelai Wanita (CPW)',
                           hintText: 'Cth: Larasati',
                         ),
-                        validator: (v) => (v == null || v.trim().isEmpty) ? 'Nama CPW wajib diisi' : null,
+                        validator: (v) => ValidationUtils.validateName(v, 'Nama CPW'),
                       ),
                       const SizedBox(height: 14),
                       DateSelectorButton(

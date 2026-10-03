@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/local/preferences_manager.dart';
 import '../../data/repositories/wedding_repository.dart';
+import '../../shared/utils/validation_utils.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -108,45 +109,56 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
 
   void _showForgotPasswordDialog() {
     final emailResetCtrl = TextEditingController(text: _emailController.text);
+    String? resetError;
     showDialog(
       context: context,
       builder: (dialogCtx) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: const Text('Lupa Password?', style: TextStyle(fontWeight: FontWeight.bold)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('Masukkan email akun Anda untuk menerima tautan reset kata sandi.'),
-              const SizedBox(height: 14),
-              TextField(
-                controller: emailResetCtrl,
-                keyboardType: TextInputType.emailAddress,
-                inputFormatters: [LengthLimitingTextInputFormatter(60)],
-                maxLength: 60,
-                buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
-                decoration: const InputDecoration(
-                  labelText: 'Email Terdaftar',
-                  prefixIcon: Icon(Icons.email_outlined),
-                ),
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              title: const Text('Lupa Password?', style: TextStyle(fontWeight: FontWeight.bold)),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Masukkan email akun Anda untuk menerima tautan reset kata sandi.'),
+                  const SizedBox(height: 14),
+                  TextField(
+                    controller: emailResetCtrl,
+                    keyboardType: TextInputType.emailAddress,
+                    inputFormatters: [LengthLimitingTextInputFormatter(60)],
+                    maxLength: 60,
+                    buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
+                    decoration: InputDecoration(
+                      labelText: 'Email Terdaftar',
+                      prefixIcon: const Icon(Icons.email_outlined),
+                      errorText: resetError,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogCtx).pop(),
-              child: const Text('Batal'),
-            ),
-            FilledButton(
-              onPressed: () {
-                Navigator.of(dialogCtx).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Tautan pemulihan kata sandi telah dikirim ke ${emailResetCtrl.text.trim()}')),
-                );
-              },
-              child: const Text('Kirim Link'),
-            ),
-          ],
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(dialogCtx).pop(),
+                  child: const Text('Batal'),
+                ),
+                FilledButton(
+                  onPressed: () {
+                    final emailErr = ValidationUtils.validateEmail(emailResetCtrl.text.trim(), isRequired: true);
+                    if (emailErr != null) {
+                      setDialogState(() => resetError = emailErr);
+                      return;
+                    }
+                    Navigator.of(dialogCtx).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Tautan pemulihan kata sandi telah dikirim ke ${emailResetCtrl.text.trim()}')),
+                    );
+                  },
+                  child: const Text('Kirim Link'),
+                ),
+              ],
+            );
+          },
         );
       },
     );
@@ -274,7 +286,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                         const SizedBox(height: 6),
                         TextFormField(
                           controller: _nameController,
-                          inputFormatters: [LengthLimitingTextInputFormatter(50)],
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(50),
+                            ValidationUtils.nameInputFormatter,
+                          ],
                           maxLength: 50,
                           buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                           decoration: InputDecoration(
@@ -282,7 +297,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                             prefixIcon: Icon(Icons.person_outline_rounded, color: primaryColor),
                           ),
                           validator: (val) =>
-                              (_isRegisterMode && (val == null || val.trim().isEmpty)) ? 'Nama wajib diisi' : null,
+                              _isRegisterMode ? ValidationUtils.validateName(val, 'Nama Lengkap') : null,
                         ),
                         const SizedBox(height: 16),
                       ],
@@ -313,11 +328,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                           hintText: 'Masukkan email akun',
                           prefixIcon: Icon(Icons.email_outlined, color: primaryColor),
                         ),
-                        validator: (val) {
-                          if (val == null || val.trim().isEmpty) return 'Email wajib diisi';
-                          if (!val.contains('@')) return 'Format email tidak valid';
-                          return null;
-                        },
+                        validator: (val) => ValidationUtils.validateEmail(val, isRequired: true),
                       ),
                     ],
                   ),
@@ -354,11 +365,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                             onPressed: () => setState(() => _passwordVisible = !_passwordVisible),
                           ),
                         ),
-                        validator: (val) {
-                          if (val == null || val.isEmpty) return 'Password wajib diisi';
-                          if (val.length < 6) return 'Password minimal 6 karakter';
-                          return null;
-                        },
+                        validator: (val) => ValidationUtils.validatePassword(val, minLength: 6),
                       ),
                     ],
                   ),

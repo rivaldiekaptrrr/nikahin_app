@@ -7,6 +7,7 @@ import '../../domain/enums/wedding_enums.dart';
 import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/currency_utils.dart';
 import '../../shared/utils/uuid_utils.dart';
+import '../../shared/utils/validation_utils.dart';
 import '../../shared/widgets/bento_card.dart';
 import '../../shared/widgets/currency_text_field.dart';
 import '../../shared/widgets/delete_confirm_dialog.dart';
@@ -750,7 +751,7 @@ class _AddSeserahanBottomSheetState extends ConsumerState<_AddSeserahanBottomShe
                   labelText: 'Nama Barang / Item',
                   hintText: 'Cth: Set Perhiasan, Mukena, Skincare',
                 ),
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Nama barang wajib diisi' : null,
+                validator: (v) => ValidationUtils.validateRequired(v, 'Nama barang'),
               ),
               const SizedBox(height: 14),
 
@@ -767,6 +768,11 @@ class _AddSeserahanBottomSheetState extends ConsumerState<_AddSeserahanBottomShe
                       maxLength: 3,
                       buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                       decoration: const InputDecoration(labelText: 'Jumlah (Qty)'),
+                      validator: (val) => ValidationUtils.validateMinNumber(
+                        int.tryParse(val ?? ''),
+                        1,
+                        'Jumlah (Qty)',
+                      ),
                       onChanged: (val) => _qty = int.tryParse(val) ?? 1,
                     ),
                   ),
@@ -804,6 +810,7 @@ class _AddSeserahanBottomSheetState extends ConsumerState<_AddSeserahanBottomShe
                   prefixIcon: Icon(Icons.link_rounded),
                 ),
                 keyboardType: TextInputType.url,
+                validator: (v) => ValidationUtils.validateUrl(v, isRequired: false),
               ),
               const SizedBox(height: 24),
 

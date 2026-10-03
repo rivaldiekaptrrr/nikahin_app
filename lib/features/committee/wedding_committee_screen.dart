@@ -6,6 +6,7 @@ import '../../data/repositories/wedding_repository.dart';
 import '../../domain/enums/wedding_enums.dart';
 import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/uuid_utils.dart';
+import '../../shared/utils/validation_utils.dart';
 import '../../shared/widgets/bento_card.dart';
 import '../../shared/widgets/delete_confirm_dialog.dart';
 import '../../shared/widgets/status_chip.dart';
@@ -626,11 +627,14 @@ class _AddCommitteeBottomSheetState extends ConsumerState<_AddCommitteeBottomShe
 
               TextFormField(
                 controller: _nameController,
-                inputFormatters: [LengthLimitingTextInputFormatter(50)],
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(50),
+                  ValidationUtils.nameInputFormatter,
+                ],
                 maxLength: 50,
                 buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(labelText: 'Nama Lengkap'),
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Nama wajib diisi' : null,
+                validator: (v) => ValidationUtils.validateName(v, 'Nama lengkap'),
               ),
               const SizedBox(height: 14),
 
@@ -642,7 +646,7 @@ class _AddCommitteeBottomSheetState extends ConsumerState<_AddCommitteeBottomShe
                 decoration: const InputDecoration(
                   labelText: 'Peran & Tugas (cth: Saksi Nikah, Among Tamu, Meja Resepsi, MC)',
                 ),
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Peran tugas wajib diisi' : null,
+                validator: (v) => ValidationUtils.validateRequired(v, 'Peran tugas'),
               ),
               const SizedBox(height: 14),
 
@@ -660,12 +664,13 @@ class _AddCommitteeBottomSheetState extends ConsumerState<_AddCommitteeBottomShe
                 controller: _phoneController,
                 keyboardType: TextInputType.phone,
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9\+\-\s]')),
                   LengthLimitingTextInputFormatter(16),
+                  ValidationUtils.phoneInputFormatter,
                 ],
                 maxLength: 16,
                 buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(labelText: 'Nomor Telepon WhatsApp (Opsional)'),
+                validator: (v) => ValidationUtils.validatePhoneIndo(v, isRequired: false),
               ),
               const SizedBox(height: 14),
 

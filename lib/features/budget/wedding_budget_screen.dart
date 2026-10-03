@@ -9,6 +9,7 @@ import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/currency_utils.dart';
 import '../../shared/utils/date_utils.dart';
 import '../../shared/utils/uuid_utils.dart';
+import '../../shared/utils/validation_utils.dart';
 import '../../shared/widgets/bento_card.dart';
 import '../../shared/widgets/currency_text_field.dart';
 import '../../shared/widgets/date_selector_button.dart';
@@ -967,12 +968,9 @@ class _AddExpenseBottomSheetState extends ConsumerState<_AddExpenseBottomSheet> 
                           labelText: 'Nama Kategori Baru',
                           hintText: 'Cth: Photobooth, Honeymoon, Mobil Pengantin, dll',
                         ),
-                        validator: (v) {
-                          if (_category == 'LAINNYA' && (v == null || v.trim().isEmpty)) {
-                            return 'Nama kategori baru wajib diisi';
-                          }
-                          return null;
-                        },
+                        validator: (v) => _category == 'LAINNYA'
+                            ? ValidationUtils.validateRequired(v, 'Nama kategori baru')
+                            : null,
                       ),
                     ),
                   ],
@@ -990,7 +988,7 @@ class _AddExpenseBottomSheetState extends ConsumerState<_AddExpenseBottomSheet> 
                   labelText: 'Nama Pos / Kebutuhan',
                   hintText: 'Contoh: Sewa Gedung Resepsi',
                 ),
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Nama pos wajib diisi' : null,
+                validator: (v) => ValidationUtils.validateRequired(v, 'Nama pos'),
               ),
               const SizedBox(height: 14),
 
@@ -1707,7 +1705,7 @@ class _AddPaymentRecordDialogState extends ConsumerState<_AddPaymentRecordDialog
                   labelText: 'Jenis Bayar (DP 1, Pelunasan, dll)',
                   hintText: 'Cth: DP 1, DP 2, Pelunasan',
                 ),
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Jenis bayar wajib diisi' : null,
+                validator: (v) => ValidationUtils.validateRequired(v, 'Jenis bayar'),
               ),
               const SizedBox(height: 14),
               CurrencyTextField(
@@ -1742,7 +1740,13 @@ class _AddPaymentRecordDialogState extends ConsumerState<_AddPaymentRecordDialog
   }
 
   Future<void> _submitPayment() async {
-    if (!_formKey.currentState!.validate() || _amount <= 0) return;
+    if (!_formKey.currentState!.validate()) return;
+    if (_amount <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Nominal pembayaran harus lebih dari 0')),
+      );
+      return;
+    }
     setState(() => _isLoading = true);
 
     try {

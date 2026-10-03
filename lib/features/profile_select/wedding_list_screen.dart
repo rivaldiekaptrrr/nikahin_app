@@ -10,6 +10,7 @@ import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/currency_utils.dart';
 import '../../shared/utils/date_utils.dart';
 import '../../shared/utils/uuid_utils.dart';
+import '../../shared/utils/validation_utils.dart';
 import '../../shared/widgets/bento_card.dart';
 import '../../shared/widgets/currency_text_field.dart';
 import '../../shared/widgets/date_selector_button.dart';
@@ -319,7 +320,10 @@ class _CreateProfileBottomSheetState extends ConsumerState<_CreateProfileBottomS
               // Groom & Bride Names
               TextFormField(
                 controller: _groomController,
-                inputFormatters: [LengthLimitingTextInputFormatter(50)],
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(50),
+                  ValidationUtils.nameInputFormatter,
+                ],
                 maxLength: 50,
                 buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(
@@ -327,12 +331,15 @@ class _CreateProfileBottomSheetState extends ConsumerState<_CreateProfileBottomS
                   hintText: 'Contoh: Rivaldi',
                   prefixIcon: Icon(Icons.person_outline_rounded),
                 ),
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Nama CPP wajib diisi' : null,
+                validator: (v) => ValidationUtils.validateName(v, 'Nama CPP'),
               ),
               const SizedBox(height: 14),
               TextFormField(
                 controller: _brideController,
-                inputFormatters: [LengthLimitingTextInputFormatter(50)],
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(50),
+                  ValidationUtils.nameInputFormatter,
+                ],
                 maxLength: 50,
                 buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(
@@ -340,7 +347,7 @@ class _CreateProfileBottomSheetState extends ConsumerState<_CreateProfileBottomS
                   hintText: 'Contoh: Sarah',
                   prefixIcon: Icon(Icons.person_outline_rounded),
                 ),
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Nama CPW wajib diisi' : null,
+                validator: (v) => ValidationUtils.validateName(v, 'Nama CPW'),
               ),
               const SizedBox(height: 14),
 

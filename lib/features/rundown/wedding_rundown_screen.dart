@@ -5,6 +5,7 @@ import '../../data/repositories/wedding_repository.dart';
 import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/date_utils.dart';
 import '../../shared/utils/uuid_utils.dart';
+import '../../shared/utils/validation_utils.dart';
 import '../../shared/widgets/bento_card.dart';
 import '../../shared/widgets/date_selector_button.dart';
 import '../../shared/widgets/delete_confirm_dialog.dart';
@@ -601,6 +602,7 @@ class _AddEventDialog extends ConsumerStatefulWidget {
 }
 
 class _AddEventDialogState extends ConsumerState<_AddEventDialog> {
+  final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _locController = TextEditingController();
   int _eventDate = DateTime.now().millisecondsSinceEpoch;
@@ -630,44 +632,48 @@ class _AddEventDialogState extends ConsumerState<_AddEventDialog> {
     return AlertDialog(
       title: Text(isEdit ? 'Edit Acara' : 'Tambah Acara Baru'),
       content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextFormField(
-              controller: _nameController,
-              inputFormatters: [LengthLimitingTextInputFormatter(50)],
-              maxLength: 50,
-              buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
-              decoration: const InputDecoration(
-                labelText: 'Nama Acara',
-                hintText: 'Cth: Akad Nikah, Resepsi, Sangjit',
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: _nameController,
+                inputFormatters: [LengthLimitingTextInputFormatter(50)],
+                maxLength: 50,
+                buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
+                decoration: const InputDecoration(
+                  labelText: 'Nama Acara',
+                  hintText: 'Cth: Akad Nikah, Resepsi, Sangjit',
+                ),
+                validator: (v) => ValidationUtils.validateRequired(v, 'Nama acara'),
               ),
-            ),
-            const SizedBox(height: 12),
-            DateSelectorButton(
-              label: 'Tanggal Acara',
-              selectedEpochMillis: _eventDate,
-              onDateSelected: (m) => setState(() => _eventDate = m),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _locController,
-              inputFormatters: [LengthLimitingTextInputFormatter(80)],
-              maxLength: 80,
-              buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
-              decoration: const InputDecoration(
-                labelText: 'Tempat Acara (Opsional)',
-                hintText: 'Cth: Masjid Agung, Ballroom Hotel',
+              const SizedBox(height: 12),
+              DateSelectorButton(
+                label: 'Tanggal Acara',
+                selectedEpochMillis: _eventDate,
+                onDateSelected: (m) => setState(() => _eventDate = m),
               ),
-            ),
-          ],
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _locController,
+                inputFormatters: [LengthLimitingTextInputFormatter(80)],
+                maxLength: 80,
+                buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
+                decoration: const InputDecoration(
+                  labelText: 'Tempat Acara (Opsional)',
+                  hintText: 'Cth: Masjid Agung, Ballroom Hotel',
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       actions: [
         TextButton(onPressed: () => Navigator.pop(context), child: const Text('Batal')),
         FilledButton(
           onPressed: () async {
-            if (_nameController.text.trim().isEmpty) return;
+            if (!_formKey.currentState!.validate()) return;
             final repo = ref.read(weddingRepositoryProvider);
             if (widget.eventToEdit != null) {
               final updated = widget.eventToEdit!.copyWith(
@@ -822,6 +828,12 @@ class _AddRundownItemBottomSheetState extends ConsumerState<_AddRundownItemBotto
                       maxLength: 3,
                       buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                       decoration: const InputDecoration(labelText: 'Durasi (Menit)'),
+                      validator: (val) => ValidationUtils.validateMinNumber(
+                        int.tryParse(val ?? ''),
+                        1,
+                        'Durasi',
+                        unit: 'menit',
+                      ),
                       onChanged: (val) => _durationMinutes = int.tryParse(val) ?? 15,
                     ),
                   ),
@@ -838,13 +850,16 @@ class _AddRundownItemBottomSheetState extends ConsumerState<_AddRundownItemBotto
                   labelText: 'Nama Kegiatan & Sesi',
                   hintText: 'Cth: Akad Nikah, Penyambutan, Sungkeman',
                 ),
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Nama sesi wajib diisi' : null,
+                validator: (v) => ValidationUtils.validateRequired(v, 'Nama sesi'),
               ),
               const SizedBox(height: 14),
 
               TextFormField(
                 controller: _picController,
-                inputFormatters: [LengthLimitingTextInputFormatter(50)],
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(50),
+                  ValidationUtils.nameInputFormatter,
+                ],
                 maxLength: 50,
                 buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(
