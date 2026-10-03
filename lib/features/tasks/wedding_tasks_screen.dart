@@ -6,9 +6,13 @@ import '../../domain/enums/wedding_enums.dart';
 import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/date_utils.dart';
 import '../../shared/utils/uuid_utils.dart';
+import '../../shared/utils/validation_utils.dart';
+import '../../shared/widgets/app_feedback.dart';
 import '../../shared/widgets/bento_card.dart';
 import '../../shared/widgets/date_selector_button.dart';
 import '../../shared/widgets/delete_confirm_dialog.dart';
+import '../../shared/widgets/error_state_view.dart';
+import '../../shared/widgets/skeleton_loading.dart';
 import '../../shared/widgets/wedding_guide_dialog.dart';
 
 class WeddingTasksScreen extends ConsumerStatefulWidget {
@@ -41,8 +45,15 @@ class _WeddingTasksScreenState extends ConsumerState<WeddingTasksScreen> {
       body: StreamBuilder<List<WeddingTask>>(
         stream: repo.watchTasks(widget.profileId),
         builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return ErrorStateView(
+              errorMessage: snapshot.error.toString(),
+              onRetry: () => setState(() {}),
+            );
+          }
+
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const SkeletonListView(showHeader: true);
           }
 
           final allTasks = snapshot.data ?? [];
@@ -261,7 +272,16 @@ class _WeddingTasksScreenState extends ConsumerState<WeddingTasksScreen> {
                   showDeleteConfirmDialog(
                     context: context,
                     itemName: task.title,
-                    onConfirm: () async => await repo.deleteTask(task.taskId),
+                    onConfirm: () async {
+                      await repo.deleteTask(task.taskId);
+                      if (context.mounted) {
+                        AppFeedback.showUndo(
+                          context,
+                          message: 'Tugas "${task.title}" dihapus',
+                          onUndo: () => repo.createTask(task),
+                        );
+                      }
+                    },
                   );
                 }
               },
@@ -441,11 +461,14 @@ class _AddTaskBottomSheetState extends ConsumerState<_AddTaskBottomSheet> {
 
               TextFormField(
                 controller: _titleController,
-                inputFormatters: [LengthLimitingTextInputFormatter(60)],
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(60),
+                  ValidationUtils.nameInputFormatter,
+                ],
                 maxLength: 60,
                 buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(labelText: 'Judul Tugas'),
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Judul tugas wajib diisi' : null,
+                validator: (v) => ValidationUtils.validateRequired(v, 'Judul tugas'),
               ),
               const SizedBox(height: 14),
 
@@ -501,7 +524,8 @@ class _AddTaskBottomSheetState extends ConsumerState<_AddTaskBottomSheet> {
 
     try {
       final repo = ref.read(weddingRepositoryProvider);
-      if (widget.taskToEdit != null) {
+      final isEdit = widget.taskToEdit != null;
+      if (isEdit) {
         final updated = widget.taskToEdit!.copyWith(
           phaseMonth: _phaseMonth,
           title: _titleController.text.trim(),
@@ -523,7 +547,13 @@ class _AddTaskBottomSheetState extends ConsumerState<_AddTaskBottomSheet> {
         await repo.createTask(newTask);
       }
 
-      if (mounted) Navigator.pop(context);
+      if (mounted) {
+        Navigator.pop(context);
+        AppFeedback.showSuccess(
+          context,
+          message: isEdit ? 'Tugas berhasil diperbarui' : 'Tugas baru berhasil ditambahkan',
+        );
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

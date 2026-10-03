@@ -10,10 +10,13 @@ import '../../shared/utils/currency_utils.dart';
 import '../../shared/utils/date_utils.dart';
 import '../../shared/utils/uuid_utils.dart';
 import '../../shared/utils/validation_utils.dart';
+import '../../shared/widgets/app_feedback.dart';
 import '../../shared/widgets/bento_card.dart';
 import '../../shared/widgets/currency_text_field.dart';
 import '../../shared/widgets/date_selector_button.dart';
 import '../../shared/widgets/delete_confirm_dialog.dart';
+import '../../shared/widgets/error_state_view.dart';
+import '../../shared/widgets/skeleton_loading.dart';
 import '../../shared/widgets/wedding_guide_dialog.dart';
 
 class WeddingBudgetScreen extends ConsumerStatefulWidget {
@@ -78,8 +81,16 @@ class _WeddingBudgetScreenState extends ConsumerState<WeddingBudgetScreen> {
           return StreamBuilder<List<WeddingExpense>>(
             stream: repo.watchExpenses(widget.profileId),
             builder: (context, expenseSnap) {
-              if (expenseSnap.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
+              if (profileSnap.hasError || expenseSnap.hasError) {
+                return ErrorStateView(
+                  errorMessage: (profileSnap.error ?? expenseSnap.error).toString(),
+                  onRetry: () => setState(() {}),
+                );
+              }
+
+              if (profileSnap.connectionState == ConnectionState.waiting ||
+                  expenseSnap.connectionState == ConnectionState.waiting) {
+                return const SkeletonListView(showHeader: true);
               }
 
               final allExpenses = expenseSnap.data ?? [];
@@ -498,21 +509,34 @@ class _WeddingBudgetScreenState extends ConsumerState<WeddingBudgetScreen> {
   Widget _buildEmptyExpensesState(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.all(32),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
       child: Center(
         child: Column(
           children: [
-            Icon(Icons.receipt_long_outlined, size: 48, color: theme.colorScheme.outline),
-            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.receipt_long_outlined, size: 48, color: theme.colorScheme.primary),
+            ),
+            const SizedBox(height: 16),
             Text(
               'Belum Ada Pos Anggaran',
               style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 6),
             Text(
               'Catat estimasi biaya venue, katering, MUA, dekorasi, dll.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey[600], fontSize: 12),
+              style: TextStyle(color: theme.colorScheme.onSurfaceVariant, fontSize: 13),
+            ),
+            const SizedBox(height: 18),
+            FilledButton.tonalIcon(
+              onPressed: () => _showAddExpenseDialog(context),
+              icon: const Icon(Icons.add_rounded),
+              label: const Text('Tambah Pengeluaran Pertama'),
             ),
           ],
         ),
@@ -556,7 +580,15 @@ class _WeddingBudgetScreenState extends ConsumerState<WeddingBudgetScreen> {
                   context: context,
                   itemName: expense.title,
                   onConfirm: () async {
-                    await ref.read(weddingRepositoryProvider).deleteExpense(expense.expenseId);
+                    final repo = ref.read(weddingRepositoryProvider);
+                    await repo.deleteExpense(expense.expenseId);
+                    if (context.mounted) {
+                      AppFeedback.showUndo(
+                        context,
+                        message: '"${expense.title}" berhasil dihapus',
+                        onUndo: () => repo.createExpense(expense),
+                      );
+                    }
                   },
                 );
               },
@@ -1067,6 +1099,9 @@ class _AddExpenseBottomSheetState extends ConsumerState<_AddExpenseBottomSheet> 
           notes: _notesController.text.trim(),
         );
         await repo.updateExpense(updated);
+        if (mounted) {
+          AppFeedback.showSuccess(context, message: 'Pos anggaran berhasil diperbarui');
+        }
       } else {
         final newExpense = WeddingExpense(
           expenseId: UuidUtils.generateId(),
@@ -1081,9 +1116,16 @@ class _AddExpenseBottomSheetState extends ConsumerState<_AddExpenseBottomSheet> 
           createdAt: DateTime.now().millisecondsSinceEpoch,
         );
         await repo.createExpense(newExpense);
+        if (mounted) {
+          AppFeedback.showSuccess(context, message: 'Pos anggaran berhasil ditambahkan');
+        }
       }
 
       if (mounted) Navigator.pop(context);
+    } catch (e) {
+      if (mounted) {
+        AppFeedback.showError(context, message: 'Gagal menyimpan anggaran: $e');
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

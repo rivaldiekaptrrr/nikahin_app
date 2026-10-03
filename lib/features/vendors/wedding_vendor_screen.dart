@@ -8,9 +8,12 @@ import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/currency_utils.dart';
 import '../../shared/utils/uuid_utils.dart';
 import '../../shared/utils/validation_utils.dart';
+import '../../shared/widgets/app_feedback.dart';
 import '../../shared/widgets/bento_card.dart';
 import '../../shared/widgets/currency_text_field.dart';
 import '../../shared/widgets/delete_confirm_dialog.dart';
+import '../../shared/widgets/error_state_view.dart';
+import '../../shared/widgets/skeleton_loading.dart';
 import '../../shared/widgets/status_chip.dart';
 import '../../shared/widgets/wedding_guide_dialog.dart';
 
@@ -43,8 +46,15 @@ class _WeddingVendorScreenState extends ConsumerState<WeddingVendorScreen> {
       body: StreamBuilder<List<WeddingVendor>>(
         stream: repo.watchVendors(widget.profileId),
         builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return ErrorStateView(
+              errorMessage: snapshot.error.toString(),
+              onRetry: () => setState(() {}),
+            );
+          }
+
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const SkeletonListView(showHeader: true);
           }
 
           final allVendors = snapshot.data ?? [];
@@ -373,21 +383,34 @@ class _WeddingVendorScreenState extends ConsumerState<WeddingVendorScreen> {
   Widget _buildEmptyVendorsState(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.all(32),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
       child: Center(
         child: Column(
           children: [
-            Icon(Icons.storefront_outlined, size: 48, color: theme.colorScheme.outline),
-            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.storefront_outlined, size: 48, color: theme.colorScheme.primary),
+            ),
+            const SizedBox(height: 16),
             Text(
               'Belum Ada Vendor Tercatat',
               style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 6),
             Text(
               'Kelola tahapan vendor dari tahap riset (prospek) hingga deal kontrak.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey[600], fontSize: 12),
+              style: TextStyle(color: theme.colorScheme.onSurfaceVariant, fontSize: 13),
+            ),
+            const SizedBox(height: 18),
+            FilledButton.tonalIcon(
+              onPressed: () => _showAddVendorDialog(context),
+              icon: const Icon(Icons.add_rounded),
+              label: const Text('Tambah Vendor Pertama'),
             ),
           ],
         ),
@@ -419,7 +442,15 @@ class _WeddingVendorScreenState extends ConsumerState<WeddingVendorScreen> {
                   context: context,
                   itemName: vendor.name,
                   onConfirm: () async {
-                    await ref.read(weddingRepositoryProvider).deleteVendor(vendor.vendorId);
+                    final repo = ref.read(weddingRepositoryProvider);
+                    await repo.deleteVendor(vendor.vendorId);
+                    if (context.mounted) {
+                      AppFeedback.showUndo(
+                        context,
+                        message: '"${vendor.name}" berhasil dihapus',
+                        onUndo: () => repo.createVendor(vendor),
+                      );
+                    }
                   },
                 );
               },
@@ -825,6 +856,9 @@ class _AddVendorBottomSheetState extends ConsumerState<_AddVendorBottomSheet> {
           notes: _notesController.text.trim(),
         );
         await repo.updateVendor(updated);
+        if (mounted) {
+          AppFeedback.showSuccess(context, message: 'Vendor berhasil diperbarui');
+        }
       } else {
         final newVendor = WeddingVendor(
           vendorId: UuidUtils.generateId(),
@@ -840,9 +874,16 @@ class _AddVendorBottomSheetState extends ConsumerState<_AddVendorBottomSheet> {
           createdAt: DateTime.now().millisecondsSinceEpoch,
         );
         await repo.createVendor(newVendor);
+        if (mounted) {
+          AppFeedback.showSuccess(context, message: 'Vendor berhasil ditambahkan');
+        }
       }
 
       if (mounted) Navigator.pop(context);
+    } catch (e) {
+      if (mounted) {
+        AppFeedback.showError(context, message: 'Gagal menyimpan vendor: $e');
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

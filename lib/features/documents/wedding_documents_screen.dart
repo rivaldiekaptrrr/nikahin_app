@@ -6,10 +6,14 @@ import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/currency_utils.dart';
 import '../../shared/utils/date_utils.dart';
 import '../../shared/utils/uuid_utils.dart';
+import '../../shared/utils/validation_utils.dart';
+import '../../shared/widgets/app_feedback.dart';
 import '../../shared/widgets/bento_card.dart';
 import '../../shared/widgets/currency_text_field.dart';
 import '../../shared/widgets/date_selector_button.dart';
 import '../../shared/widgets/delete_confirm_dialog.dart';
+import '../../shared/widgets/error_state_view.dart';
+import '../../shared/widgets/skeleton_loading.dart';
 import '../../shared/widgets/wedding_guide_dialog.dart';
 
 class WeddingDocumentsScreen extends ConsumerStatefulWidget {
@@ -43,8 +47,15 @@ class _WeddingDocumentsScreenState extends ConsumerState<WeddingDocumentsScreen>
       body: StreamBuilder<List<WeddingDocument>>(
         stream: repo.watchDocuments(widget.profileId),
         builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return ErrorStateView(
+              errorMessage: snapshot.error.toString(),
+              onRetry: () => setState(() {}),
+            );
+          }
+
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const SkeletonListView(showHeader: true);
           }
 
           final allDocs = snapshot.data ?? [];
@@ -328,7 +339,16 @@ class _WeddingDocumentsScreenState extends ConsumerState<WeddingDocumentsScreen>
                   showDeleteConfirmDialog(
                     context: context,
                     itemName: doc.docName,
-                    onConfirm: () async => await repo.deleteDocument(doc.docId),
+                    onConfirm: () async {
+                      await repo.deleteDocument(doc.docId);
+                      if (context.mounted) {
+                        AppFeedback.showUndo(
+                          context,
+                          message: '"${doc.docName}" berhasil dihapus',
+                          onUndo: () => repo.createDocument(doc),
+                        );
+                      }
+                    },
                   );
                 }
               },
@@ -357,21 +377,34 @@ class _WeddingDocumentsScreenState extends ConsumerState<WeddingDocumentsScreen>
   Widget _buildEmptyDocumentsState(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.all(32),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
       child: Center(
         child: Column(
           children: [
-            Icon(Icons.description_outlined, size: 48, color: theme.colorScheme.outline),
-            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.description_outlined, size: 48, color: theme.colorScheme.primary),
+            ),
+            const SizedBox(height: 16),
             Text(
               'Belum Ada Dokumen Tercatat',
               style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 6),
             Text(
-              'Kelola berkas persyaratan nikah KUA atau Catatan Sipil.',
+              'Kelola berkas persyaratan nikah KUA atau Catatan Sipil agar persiapan administrasi terstruktur.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey[600], fontSize: 12),
+              style: TextStyle(color: theme.colorScheme.onSurfaceVariant, fontSize: 13),
+            ),
+            const SizedBox(height: 18),
+            FilledButton.tonalIcon(
+              onPressed: () => _showAddDocDialog(context),
+              icon: const Icon(Icons.add_rounded),
+              label: const Text('Tambah Dokumen Pertama'),
             ),
           ],
         ),
@@ -509,7 +542,7 @@ class _AddDocBottomSheetState extends ConsumerState<_AddDocBottomSheet> {
                   labelText: 'Nama Dokumen',
                   hintText: 'Cth: Surat Pengantar N1-N4, Akta Kelahiran',
                 ),
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Nama dokumen wajib diisi' : null,
+                validator: (v) => ValidationUtils.validateRequired(v, 'Nama dokumen'),
               ),
               const SizedBox(height: 14),
 
@@ -565,27 +598,38 @@ class _AddDocBottomSheetState extends ConsumerState<_AddDocBottomSheet> {
 
     try {
       final repo = ref.read(weddingRepositoryProvider);
+      final docName = _nameController.text.trim();
       if (widget.docToEdit != null) {
         final updated = widget.docToEdit!.copyWith(
-          docName: _nameController.text.trim(),
+          docName: docName,
           ownerType: _ownerType,
           adminCost: _cost,
           dueDate: _dueDate,
         );
         await repo.updateDocument(updated);
+        if (mounted) {
+          AppFeedback.showSuccess(context, message: 'Dokumen berhasil diperbarui');
+        }
       } else {
         final newDoc = WeddingDocument(
           docId: UuidUtils.generateId(),
           weddingProfileId: widget.profileId,
-          docName: _nameController.text.trim(),
+          docName: docName,
           ownerType: _ownerType,
           adminCost: _cost,
           dueDate: _dueDate,
         );
         await repo.createDocument(newDoc);
+        if (mounted) {
+          AppFeedback.showSuccess(context, message: 'Dokumen berhasil ditambahkan');
+        }
       }
 
       if (mounted) Navigator.pop(context);
+    } catch (e) {
+      if (mounted) {
+        AppFeedback.showError(context, message: 'Gagal menyimpan dokumen: $e');
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

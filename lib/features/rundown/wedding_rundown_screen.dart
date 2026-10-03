@@ -6,9 +6,12 @@ import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/date_utils.dart';
 import '../../shared/utils/uuid_utils.dart';
 import '../../shared/utils/validation_utils.dart';
+import '../../shared/widgets/app_feedback.dart';
 import '../../shared/widgets/bento_card.dart';
 import '../../shared/widgets/date_selector_button.dart';
 import '../../shared/widgets/delete_confirm_dialog.dart';
+import '../../shared/widgets/error_state_view.dart';
+import '../../shared/widgets/skeleton_loading.dart';
 import '../../shared/widgets/wedding_guide_dialog.dart';
 
 class WeddingRundownScreen extends ConsumerStatefulWidget {
@@ -54,9 +57,20 @@ class _WeddingRundownScreenState extends ConsumerState<WeddingRundownScreen>
     return StreamBuilder<List<WeddingEvent>>(
       stream: repo.watchEvents(widget.profileId),
       builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Scaffold(
+            appBar: AppBar(title: const Text('Rundown & Acara')),
+            body: ErrorStateView(
+              errorMessage: snapshot.error.toString(),
+              onRetry: () => setState(() {}),
+            ),
+          );
+        }
+
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+          return Scaffold(
+            appBar: AppBar(title: const Text('Rundown & Acara')),
+            body: const SkeletonListView(showHeader: true),
           );
         }
 
@@ -216,6 +230,13 @@ class _WeddingRundownScreenState extends ConsumerState<WeddingRundownScreen>
                               itemName: event.eventName,
                               onConfirm: () async {
                                 await repo.deleteEvent(event.eventId);
+                                if (context.mounted) {
+                                  AppFeedback.showUndo(
+                                    context,
+                                    message: '"${event.eventName}" berhasil dihapus',
+                                    onUndo: () => repo.createEvent(event),
+                                  );
+                                }
                               },
                             );
                           }
@@ -409,7 +430,16 @@ class _WeddingRundownScreenState extends ConsumerState<WeddingRundownScreen>
                               showDeleteConfirmDialog(
                                 context: context,
                                 itemName: item.sessionTitle,
-                                onConfirm: () async => await repo.deleteRundownItem(item.itemId),
+                                onConfirm: () async {
+                                  await repo.deleteRundownItem(item.itemId);
+                                  if (context.mounted) {
+                                    AppFeedback.showUndo(
+                                      context,
+                                      message: '"${item.sessionTitle}" berhasil dihapus',
+                                      onUndo: () => repo.createRundownItem(item),
+                                    );
+                                  }
+                                },
                               );
                             }
                           },
@@ -674,25 +704,37 @@ class _AddEventDialogState extends ConsumerState<_AddEventDialog> {
         FilledButton(
           onPressed: () async {
             if (!_formKey.currentState!.validate()) return;
-            final repo = ref.read(weddingRepositoryProvider);
-            if (widget.eventToEdit != null) {
-              final updated = widget.eventToEdit!.copyWith(
-                eventName: _nameController.text.trim(),
-                eventLocation: _locController.text.trim().isEmpty ? null : _locController.text.trim(),
-                eventDate: _eventDate,
-              );
-              await repo.updateEvent(updated);
-            } else {
-              final newEvent = WeddingEvent(
-                eventId: UuidUtils.generateId(),
-                weddingProfileId: widget.profileId,
-                eventName: _nameController.text.trim(),
-                eventDate: _eventDate,
-                eventLocation: _locController.text.trim().isEmpty ? null : _locController.text.trim(),
-              );
-              await repo.createEvent(newEvent);
+            try {
+              final repo = ref.read(weddingRepositoryProvider);
+              if (widget.eventToEdit != null) {
+                final updated = widget.eventToEdit!.copyWith(
+                  eventName: _nameController.text.trim(),
+                  eventLocation: _locController.text.trim().isEmpty ? null : _locController.text.trim(),
+                  eventDate: _eventDate,
+                );
+                await repo.updateEvent(updated);
+                if (context.mounted) {
+                  AppFeedback.showSuccess(context, message: 'Acara berhasil diperbarui');
+                }
+              } else {
+                final newEvent = WeddingEvent(
+                  eventId: UuidUtils.generateId(),
+                  weddingProfileId: widget.profileId,
+                  eventName: _nameController.text.trim(),
+                  eventDate: _eventDate,
+                  eventLocation: _locController.text.trim().isEmpty ? null : _locController.text.trim(),
+                );
+                await repo.createEvent(newEvent);
+                if (context.mounted) {
+                  AppFeedback.showSuccess(context, message: 'Acara berhasil ditambahkan');
+                }
+              }
+              if (context.mounted) Navigator.pop(context);
+            } catch (e) {
+              if (context.mounted) {
+                AppFeedback.showError(context, message: 'Gagal menyimpan acara: $e');
+              }
             }
-            if (context.mounted) Navigator.pop(context);
           },
           child: const Text('Simpan'),
         ),
@@ -906,6 +948,9 @@ class _AddRundownItemBottomSheetState extends ConsumerState<_AddRundownItemBotto
           mcScript: null,
         );
         await repo.updateRundownItem(updated);
+        if (mounted) {
+          AppFeedback.showSuccess(context, message: 'Sesi rundown berhasil diperbarui');
+        }
       } else {
         final newItem = WeddingRundownItem(
           itemId: UuidUtils.generateId(),
@@ -917,9 +962,16 @@ class _AddRundownItemBottomSheetState extends ConsumerState<_AddRundownItemBotto
           mcScript: null,
         );
         await repo.createRundownItem(newItem);
+        if (mounted) {
+          AppFeedback.showSuccess(context, message: 'Sesi rundown berhasil ditambahkan');
+        }
       }
 
       if (mounted) Navigator.pop(context);
+    } catch (e) {
+      if (mounted) {
+        AppFeedback.showError(context, message: 'Gagal menyimpan sesi: $e');
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

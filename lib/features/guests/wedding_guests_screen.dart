@@ -9,8 +9,11 @@ import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/export_utils.dart';
 import '../../shared/utils/uuid_utils.dart';
 import '../../shared/utils/validation_utils.dart';
+import '../../shared/widgets/app_feedback.dart';
 import '../../shared/widgets/bento_card.dart';
 import '../../shared/widgets/delete_confirm_dialog.dart';
+import '../../shared/widgets/error_state_view.dart';
+import '../../shared/widgets/skeleton_loading.dart';
 import '../../shared/widgets/status_chip.dart';
 import '../../shared/widgets/wedding_guide_dialog.dart';
 
@@ -84,6 +87,17 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
       body: StreamBuilder<List<WeddingGuest>>(
         stream: repo.watchGuests(widget.profileId),
         builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return ErrorStateView(
+              errorMessage: snapshot.error.toString(),
+              onRetry: () => setState(() {}),
+            );
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const SkeletonListView(showHeader: true);
+          }
+
           final allGuests = snapshot.data ?? [];
 
           return TabBarView(
@@ -326,7 +340,16 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
                   showDeleteConfirmDialog(
                     context: context,
                     itemName: guest.guestName,
-                    onConfirm: () async => await repo.deleteGuest(guest.guestId),
+                    onConfirm: () async {
+                      await repo.deleteGuest(guest.guestId);
+                      if (context.mounted) {
+                        AppFeedback.showUndo(
+                          context,
+                          message: '"${guest.guestName}" berhasil dihapus',
+                          onUndo: () => repo.createGuest(guest),
+                        );
+                      }
+                    },
                   );
                 }
               },
@@ -344,21 +367,45 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
   Widget _buildEmptyGuestsState(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.all(32),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
       child: Center(
         child: Column(
           children: [
-            Icon(Icons.people_outline_rounded, size: 48, color: theme.colorScheme.outline),
-            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.people_outline_rounded, size: 48, color: theme.colorScheme.primary),
+            ),
+            const SizedBox(height: 16),
             Text(
               'Belum Ada Tamu Undangan',
               style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 6),
             Text(
               'Tambah tamu manual atau import batch dari kontak ponselmu.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey[600], fontSize: 12),
+              style: TextStyle(color: theme.colorScheme.onSurfaceVariant, fontSize: 13),
+            ),
+            const SizedBox(height: 18),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FilledButton.icon(
+                  onPressed: () => _showAddGuestDialog(context),
+                  icon: const Icon(Icons.person_add_rounded),
+                  label: const Text('Tambah Tamu'),
+                ),
+                const SizedBox(width: 10),
+                FilledButton.tonalIcon(
+                  onPressed: () => _importContacts(context, ref),
+                  icon: const Icon(Icons.contacts_rounded),
+                  label: const Text('Import Kontak'),
+                ),
+              ],
             ),
           ],
         ),
@@ -1027,6 +1074,9 @@ class _AddGuestBottomSheetState extends ConsumerState<_AddGuestBottomSheet> {
           rsvpStatus: _rsvp,
         );
         await repo.updateGuest(updated);
+        if (mounted) {
+          AppFeedback.showSuccess(context, message: 'Data tamu berhasil diperbarui');
+        }
       } else {
         final newGuest = WeddingGuest(
           guestId: UuidUtils.generateId(),
@@ -1039,9 +1089,16 @@ class _AddGuestBottomSheetState extends ConsumerState<_AddGuestBottomSheet> {
           rsvpStatus: _rsvp,
         );
         await repo.createGuest(newGuest);
+        if (mounted) {
+          AppFeedback.showSuccess(context, message: 'Tamu undangan berhasil ditambahkan');
+        }
       }
 
       if (mounted) Navigator.pop(context);
+    } catch (e) {
+      if (mounted) {
+        AppFeedback.showError(context, message: 'Gagal menyimpan data tamu: $e');
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

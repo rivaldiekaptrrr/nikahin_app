@@ -7,6 +7,8 @@ import '../../domain/enums/wedding_enums.dart';
 import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/currency_utils.dart';
 import '../../shared/utils/date_utils.dart';
+import '../../shared/widgets/error_state_view.dart';
+import '../../shared/widgets/skeleton_loading.dart';
 import '../../shared/widgets/wedding_guide_dialog.dart';
 
 class WeddingDashboardScreen extends ConsumerStatefulWidget {
@@ -77,6 +79,32 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
                                   stream: repo.watchCommittee(widget.profileId),
                                   builder: (context, committeeSnap) {
                                     final committee = committeeSnap.data ?? [];
+
+                                    if (profilesSnap.hasError ||
+                                        expensesSnap.hasError ||
+                                        tasksSnap.hasError ||
+                                        docsSnap.hasError ||
+                                        guestsSnap.hasError ||
+                                        vendorsSnap.hasError ||
+                                        seserahanSnap.hasError ||
+                                        committeeSnap.hasError) {
+                                      return Scaffold(
+                                        appBar: AppBar(title: const Text('Dashboard Pernikahan')),
+                                        body: ErrorStateView(
+                                          errorMessage: 'Terjadi kendala saat memuat data dashboard',
+                                          onRetry: () => setState(() {}),
+                                        ),
+                                      );
+                                    }
+
+                                    if (profilesSnap.connectionState == ConnectionState.waiting ||
+                                        expensesSnap.connectionState == ConnectionState.waiting ||
+                                        tasksSnap.connectionState == ConnectionState.waiting) {
+                                      return Scaffold(
+                                        appBar: AppBar(title: const Text('Dashboard Pernikahan')),
+                                        body: const SkeletonListView(showHeader: true),
+                                      );
+                                    }
 
                                     return _buildDashboardContent(
                                       context: context,

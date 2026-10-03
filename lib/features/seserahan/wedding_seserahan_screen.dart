@@ -8,9 +8,12 @@ import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/currency_utils.dart';
 import '../../shared/utils/uuid_utils.dart';
 import '../../shared/utils/validation_utils.dart';
+import '../../shared/widgets/app_feedback.dart';
 import '../../shared/widgets/bento_card.dart';
 import '../../shared/widgets/currency_text_field.dart';
 import '../../shared/widgets/delete_confirm_dialog.dart';
+import '../../shared/widgets/error_state_view.dart';
+import '../../shared/widgets/skeleton_loading.dart';
 import '../../shared/widgets/status_chip.dart';
 import '../../shared/widgets/wedding_guide_dialog.dart';
 
@@ -175,8 +178,15 @@ class _WeddingSeserahanScreenState extends ConsumerState<WeddingSeserahanScreen>
       body: StreamBuilder<List<WeddingSeserahan>>(
         stream: repo.watchSeserahan(widget.profileId),
         builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return ErrorStateView(
+              errorMessage: snapshot.error.toString(),
+              onRetry: () => setState(() {}),
+            );
+          }
+
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const SkeletonListView(showHeader: true);
           }
 
           final allItems = snapshot.data ?? [];
@@ -419,7 +429,16 @@ class _WeddingSeserahanScreenState extends ConsumerState<WeddingSeserahanScreen>
                       showDeleteConfirmDialog(
                         context: context,
                         itemName: item.itemName,
-                        onConfirm: () async => await repo.deleteSeserahan(item.itemId),
+                        onConfirm: () async {
+                          await repo.deleteSeserahan(item.itemId);
+                          if (context.mounted) {
+                            AppFeedback.showUndo(
+                              context,
+                              message: '"${item.itemName}" berhasil dihapus',
+                              onUndo: () => repo.createSeserahan(item),
+                            );
+                          }
+                        },
                       );
                     }
                   },
@@ -524,21 +543,34 @@ class _WeddingSeserahanScreenState extends ConsumerState<WeddingSeserahanScreen>
   Widget _buildEmptySectionState(BuildContext context, String direction) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.all(32),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
       child: Center(
         child: Column(
           children: [
-            Icon(Icons.card_giftcard_outlined, size: 48, color: theme.colorScheme.outline),
-            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.card_giftcard_outlined, size: 48, color: theme.colorScheme.primary),
+            ),
+            const SizedBox(height: 16),
             Text(
               'Belum Ada Daftar Barang',
               style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 6),
             Text(
               'Catat daftar isi kotak seserahan, mahar pernikahan, atau hantaran balasan.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey[600], fontSize: 12),
+              style: TextStyle(color: theme.colorScheme.onSurfaceVariant, fontSize: 13),
+            ),
+            const SizedBox(height: 18),
+            FilledButton.tonalIcon(
+              onPressed: () => _showAddItemDialog(context, initialDirection: direction),
+              icon: const Icon(Icons.add_shopping_cart_rounded),
+              label: const Text('Tambah Barang Pertama'),
             ),
           ],
         ),
@@ -850,6 +882,9 @@ class _AddSeserahanBottomSheetState extends ConsumerState<_AddSeserahanBottomShe
           notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
         );
         await repo.updateSeserahan(updated);
+        if (mounted) {
+          AppFeedback.showSuccess(context, message: 'Barang berhasil diperbarui');
+        }
       } else {
         final newItem = WeddingSeserahan(
           itemId: UuidUtils.generateId(),
@@ -862,9 +897,16 @@ class _AddSeserahanBottomSheetState extends ConsumerState<_AddSeserahanBottomShe
           notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
         );
         await repo.createSeserahan(newItem);
+        if (mounted) {
+          AppFeedback.showSuccess(context, message: 'Barang berhasil ditambahkan');
+        }
       }
 
       if (mounted) Navigator.pop(context);
+    } catch (e) {
+      if (mounted) {
+        AppFeedback.showError(context, message: 'Gagal menyimpan barang: $e');
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

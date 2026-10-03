@@ -11,10 +11,13 @@ import '../../shared/utils/currency_utils.dart';
 import '../../shared/utils/date_utils.dart';
 import '../../shared/utils/uuid_utils.dart';
 import '../../shared/utils/validation_utils.dart';
+import '../../shared/widgets/app_feedback.dart';
 import '../../shared/widgets/bento_card.dart';
 import '../../shared/widgets/currency_text_field.dart';
 import '../../shared/widgets/date_selector_button.dart';
 import '../../shared/widgets/delete_confirm_dialog.dart';
+import '../../shared/widgets/error_state_view.dart';
+import '../../shared/widgets/skeleton_loading.dart';
 
 class WeddingListScreen extends ConsumerWidget {
   const WeddingListScreen({super.key});
@@ -45,8 +48,14 @@ class WeddingListScreen extends ConsumerWidget {
       body: StreamBuilder<List<WeddingProfile>>(
         stream: profilesStream,
         builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return ErrorStateView(
+              errorMessage: snapshot.error.toString(),
+            );
+          }
+
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const SkeletonListView(showHeader: false);
           }
 
           final profiles = snapshot.data ?? [];
@@ -172,7 +181,15 @@ class WeddingListScreen extends ConsumerWidget {
                       context: context,
                       itemName: profile.coupleTitle,
                       onConfirm: () async {
-                        await ref.read(weddingRepositoryProvider).deleteProfile(profile.id);
+                        final repo = ref.read(weddingRepositoryProvider);
+                        await repo.deleteProfile(profile.id);
+                        if (context.mounted) {
+                          AppFeedback.showUndo(
+                            context,
+                            message: '"${profile.coupleTitle}" berhasil dihapus',
+                            onUndo: () => repo.createProfile(profile, seedDefaults: false),
+                          );
+                        }
                       },
                     );
                   },
@@ -475,7 +492,12 @@ class _CreateProfileBottomSheetState extends ConsumerState<_CreateProfileBottomS
 
       if (mounted) {
         Navigator.of(context).pop();
+        AppFeedback.showSuccess(context, message: 'Rencana pernikahan berhasil dibuat!');
         context.go('/wedding/$id');
+      }
+    } catch (e) {
+      if (mounted) {
+        AppFeedback.showError(context, message: 'Gagal membuat rencana: $e');
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);

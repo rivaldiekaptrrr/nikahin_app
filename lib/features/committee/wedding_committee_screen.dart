@@ -7,8 +7,11 @@ import '../../domain/enums/wedding_enums.dart';
 import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/uuid_utils.dart';
 import '../../shared/utils/validation_utils.dart';
+import '../../shared/widgets/app_feedback.dart';
 import '../../shared/widgets/bento_card.dart';
 import '../../shared/widgets/delete_confirm_dialog.dart';
+import '../../shared/widgets/error_state_view.dart';
+import '../../shared/widgets/skeleton_loading.dart';
 import '../../shared/widgets/status_chip.dart';
 import '../../shared/widgets/wedding_guide_dialog.dart';
 
@@ -92,8 +95,15 @@ class _WeddingCommitteeScreenState extends ConsumerState<WeddingCommitteeScreen>
               : StreamBuilder<List<WeddingCommitteeMember>>(
                   stream: repo.watchCommittee(widget.profileId),
                   builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return ErrorStateView(
+                        errorMessage: snapshot.error.toString(),
+                        onRetry: () => setState(() {}),
+                      );
+                    }
+
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const SkeletonListView(showHeader: true);
                     }
 
                     final allMembers = snapshot.data ?? [];
@@ -326,7 +336,16 @@ class _WeddingCommitteeScreenState extends ConsumerState<WeddingCommitteeScreen>
                       showDeleteConfirmDialog(
                         context: context,
                         itemName: member.memberName,
-                        onConfirm: () async => await repo.deleteCommittee(member.memberId),
+                        onConfirm: () async {
+                          await repo.deleteCommittee(member.memberId);
+                          if (context.mounted) {
+                            AppFeedback.showUndo(
+                              context,
+                              message: '"${member.memberName}" berhasil dihapus',
+                              onUndo: () => repo.createCommittee(member),
+                            );
+                          }
+                        },
                       );
                     }
                   },
@@ -430,21 +449,34 @@ class _WeddingCommitteeScreenState extends ConsumerState<WeddingCommitteeScreen>
   Widget _buildEmptyCommitteeState(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.all(32),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
       child: Center(
         child: Column(
           children: [
-            Icon(Icons.groups_outlined, size: 48, color: theme.colorScheme.outline),
-            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.groups_outlined, size: 48, color: theme.colorScheme.primary),
+            ),
+            const SizedBox(height: 16),
             Text(
               'Belum Ada Anggota Panitia',
               style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 6),
             Text(
               'Catat susunan panitia keluarga, saksi nikah, among tamu, dan pembagian seragam.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey[600], fontSize: 12),
+              style: TextStyle(color: theme.colorScheme.onSurfaceVariant, fontSize: 13),
+            ),
+            const SizedBox(height: 18),
+            FilledButton.tonalIcon(
+              onPressed: () => _showAddMemberDialog(context),
+              icon: const Icon(Icons.person_add_rounded),
+              label: const Text('Tambah Panitia Pertama'),
             ),
           ],
         ),
@@ -751,6 +783,9 @@ class _AddCommitteeBottomSheetState extends ConsumerState<_AddCommitteeBottomShe
           uniformStatus: _uniformStatus,
         );
         await repo.updateCommittee(updated);
+        if (mounted) {
+          AppFeedback.showSuccess(context, message: 'Data panitia berhasil diperbarui');
+        }
       } else {
         final newMember = WeddingCommitteeMember(
           memberId: UuidUtils.generateId(),
@@ -764,9 +799,16 @@ class _AddCommitteeBottomSheetState extends ConsumerState<_AddCommitteeBottomShe
           uniformStatus: _uniformStatus,
         );
         await repo.createCommittee(newMember);
+        if (mounted) {
+          AppFeedback.showSuccess(context, message: 'Anggota panitia berhasil ditambahkan');
+        }
       }
 
       if (mounted) Navigator.pop(context);
+    } catch (e) {
+      if (mounted) {
+        AppFeedback.showError(context, message: 'Gagal menyimpan data panitia: $e');
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
