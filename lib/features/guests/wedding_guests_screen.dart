@@ -7,6 +7,7 @@ import '../../data/repositories/wedding_repository.dart';
 import '../../domain/enums/wedding_enums.dart';
 import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/export_utils.dart';
+import '../../shared/utils/performance_utils.dart';
 import '../../shared/utils/uuid_utils.dart';
 import '../../shared/utils/validation_utils.dart';
 import '../../shared/widgets/app_feedback.dart';
@@ -29,6 +30,7 @@ class WeddingGuestsScreen extends ConsumerStatefulWidget {
 class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final Debouncer _searchDebouncer = Debouncer(delay: const Duration(milliseconds: 250));
   String _selectedGroup = 'SEMUA';
   String _searchQuery = '';
 
@@ -47,6 +49,7 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
 
   @override
   void dispose() {
+    _searchDebouncer.dispose();
     _tabController.dispose();
     super.dispose();
   }
@@ -173,7 +176,9 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
             filled: true,
             fillColor: theme.colorScheme.surface,
           ),
-          onChanged: (val) => setState(() => _searchQuery = val),
+          onChanged: (val) => _searchDebouncer.run(() {
+            if (mounted) setState(() => _searchQuery = val);
+          }),
         ),
         const SizedBox(height: 12),
 
