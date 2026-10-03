@@ -136,28 +136,66 @@ class WeddingRepository {
       isPaid: true,
       paidDate: DateTime.now().millisecondsSinceEpoch,
     );
-    await createPaymentTerm(term);
+
     final newPaid = expense.totalPaid + amount;
     final status = (newPaid >= expense.totalEstimated && expense.totalEstimated > 0)
         ? 'FULLY_PAID'
         : (newPaid > 0 ? 'PARTIAL_DP' : 'UNPAID');
-    await updateExpense(expense.copyWith(totalPaid: newPaid, paymentStatus: status));
+
+    await db.recordPaymentTx(
+      term: term,
+      expense: expense,
+      newTotalPaid: newPaid,
+      newPaymentStatus: status,
+    );
+    await sync.pushExpense(expense.copyWith(totalPaid: newPaid, paymentStatus: status));
   }
 
   Future<void> removePaymentTerm({
     required WeddingPaymentTerm term,
     required WeddingExpense expense,
   }) async {
-    await deletePaymentTerm(term.termId, expense.expenseId);
     final newPaid = (expense.totalPaid - term.amount).clamp(0.0, double.infinity);
     final status = (newPaid >= expense.totalEstimated && expense.totalEstimated > 0)
         ? 'FULLY_PAID'
         : (newPaid > 0 ? 'PARTIAL_DP' : 'UNPAID');
-    await updateExpense(expense.copyWith(totalPaid: newPaid, paymentStatus: status));
+
+    await db.removePaymentTermTx(
+      termId: term.termId,
+      expenseId: expense.expenseId,
+      expense: expense,
+      newTotalPaid: newPaid,
+      newPaymentStatus: status,
+    );
+    await sync.pushExpense(expense.copyWith(totalPaid: newPaid, paymentStatus: status));
   }
+
+  // ==================== EXPENSE PAGINATION ====================
+  Future<List<WeddingExpense>> getExpensesPaginated(
+    String profileId, {
+    int limit = 20,
+    int offset = 0,
+    String? categoryFilter,
+  }) =>
+      db.getExpensesPaginated(profileId, limit: limit, offset: offset, categoryFilter: categoryFilter);
+
+  Future<int> countExpenses(String profileId, {String? categoryFilter}) =>
+      db.countExpenses(profileId, categoryFilter: categoryFilter);
 
   // ==================== GUESTS ====================
   Stream<List<WeddingGuest>> watchGuests(String profileId) => db.watchGuests(profileId);
+
+  Future<List<WeddingGuest>> getGuestsPaginated(
+    String profileId, {
+    int limit = 20,
+    int offset = 0,
+    String? searchQuery,
+    String? rsvpFilter,
+  }) =>
+      db.getGuestsPaginated(profileId, limit: limit, offset: offset, searchQuery: searchQuery, rsvpFilter: rsvpFilter);
+
+  Future<int> countGuests(String profileId, {String? searchQuery, String? rsvpFilter}) =>
+      db.countGuests(profileId, searchQuery: searchQuery, rsvpFilter: rsvpFilter);
 
   Future<void> createGuest(WeddingGuest guest) async {
     await db.insertGuest(guest);
@@ -290,5 +328,17 @@ class WeddingRepository {
 
   Future<void> deleteDocument(String docId) async {
     await db.deleteDocument(docId);
+  }
+
+  // ==================== BACKUP & RESTORE ====================
+  Future<Map<String, dynamic>> exportFullBackup(String profileId) => db.exportFullBackup(profileId);
+
+  Future<void> restoreFullBackup(Map<String, dynamic> backupData) async {
+    await db.restoreFullBackup(backupData);
+    final profileMap = backupData['profile'] as Map<String, dynamic>?;
+    if (profileMap != null && profileMap['id'] != null) {
+      final profile = WeddingProfile.fromFirestoreMap(profileMap, profileMap['id'] as String);
+      await sync.pushProfile(profile);
+    }
   }
 }

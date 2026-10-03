@@ -566,4 +566,46 @@ class ExportUtils {
       );
     }
   }
+
+  /// Exports full database snapshot to a JSON backup file and opens share dialog
+  static Future<void> exportBackupJson(WeddingProfile profile, Map<String, dynamic> backupData) async {
+    final jsonStr = const JsonEncoder.withIndent('  ').convert(backupData);
+    final cleanGroom = profile.groomName.replaceAll(RegExp(r'[^\w\.-]'), '_');
+    final cleanBride = profile.brideName.replaceAll(RegExp(r'[^\w\.-]'), '_');
+    final fileName = 'Nikahin_Backup_${cleanGroom}_$cleanBride.json';
+
+    try {
+      final tempDir = await getTemporaryDirectory();
+      final file = File('${tempDir.path}/$fileName');
+      await file.writeAsString(jsonStr, encoding: utf8);
+
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path, mimeType: 'application/json', name: fileName)],
+          subject: 'Cadangan Data Pernikahan ${profile.groomName} & ${profile.brideName}',
+          text: 'File Cadangan (Backup JSON) Nikahin App',
+        ),
+      );
+    } catch (_) {
+      await SharePlus.instance.share(
+        ShareParams(
+          text: jsonStr,
+          subject: fileName,
+        ),
+      );
+    }
+  }
+
+  /// Parses JSON string into a verified backup payload
+  static Map<String, dynamic> parseBackupJson(String jsonStr) {
+    final decoded = jsonDecode(jsonStr);
+    if (decoded is! Map<String, dynamic>) {
+      throw const FormatException('Format JSON cadangan tidak valid.');
+    }
+    if (decoded['format'] != 'NIKAHIN_BACKUP') {
+      throw const FormatException('File ini bukan file cadangan Nikahin App.');
+    }
+    return decoded;
+  }
 }
+

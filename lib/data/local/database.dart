@@ -31,8 +31,21 @@ class AppDatabase extends _$AppDatabase {
   @override
   MigrationStrategy get migration => MigrationStrategy(
         beforeOpen: (details) async {
-          // Enable foreign keys cascade support
+          // 1. Enable foreign keys cascade support (Data Consistency & Referential Integrity)
           await customStatement('PRAGMA foreign_keys = ON;');
+
+          // 2. High-performance Indexing on Foreign Keys & frequent query filter columns
+          await customStatement('CREATE INDEX IF NOT EXISTS idx_expenses_profile ON wedding_expenses(wedding_profile_id);');
+          await customStatement('CREATE INDEX IF NOT EXISTS idx_payment_terms_expense ON wedding_payment_terms(expense_id);');
+          await customStatement('CREATE INDEX IF NOT EXISTS idx_guests_profile ON wedding_guests(wedding_profile_id);');
+          await customStatement('CREATE INDEX IF NOT EXISTS idx_guests_rsvp ON wedding_guests(rsvp_status);');
+          await customStatement('CREATE INDEX IF NOT EXISTS idx_vendors_profile ON wedding_vendors(wedding_profile_id);');
+          await customStatement('CREATE INDEX IF NOT EXISTS idx_tasks_profile ON wedding_tasks(wedding_profile_id);');
+          await customStatement('CREATE INDEX IF NOT EXISTS idx_committee_profile ON wedding_committee_members(wedding_profile_id);');
+          await customStatement('CREATE INDEX IF NOT EXISTS idx_events_profile ON wedding_events(wedding_profile_id);');
+          await customStatement('CREATE INDEX IF NOT EXISTS idx_rundown_event ON wedding_rundown_items(event_id);');
+          await customStatement('CREATE INDEX IF NOT EXISTS idx_seserahan_profile ON wedding_seserahans(wedding_profile_id);');
+          await customStatement('CREATE INDEX IF NOT EXISTS idx_docs_profile ON wedding_documents(wedding_profile_id);');
         },
         onCreate: (m) async {
           await m.createAll();
@@ -873,6 +886,291 @@ class AppDatabase extends _$AppDatabase {
       sortOrder: r.sortOrder,
       dueDate: parsedDueDate,
     );
+  }
+
+  // ==========================================
+  // PAGINATION QUERIES
+  // ==========================================
+  Future<List<WeddingGuest>> getGuestsPaginated(
+    String profileId, {
+    int limit = 20,
+    int offset = 0,
+    String? searchQuery,
+    String? rsvpFilter,
+  }) async {
+    final query = select(weddingGuests)
+      ..where((t) => t.weddingProfileId.equals(profileId));
+
+    if (searchQuery != null && searchQuery.trim().isNotEmpty) {
+      query.where((t) => t.guestName.like('%${searchQuery.trim()}%'));
+    }
+    if (rsvpFilter != null && rsvpFilter.isNotEmpty && rsvpFilter != 'ALL') {
+      query.where((t) => t.rsvpStatus.equals(rsvpFilter));
+    }
+
+    query
+      ..orderBy([(t) => OrderingTerm(expression: t.guestName, mode: OrderingMode.asc)])
+      ..limit(limit, offset: offset);
+
+    final rows = await query.get();
+    return rows.map((r) => _guestFromRow(r)).toList();
+  }
+
+  Future<int> countGuests(
+    String profileId, {
+    String? searchQuery,
+    String? rsvpFilter,
+  }) async {
+    final countExp = weddingGuests.guestId.count();
+    final query = selectOnly(weddingGuests)
+      ..where(weddingGuests.weddingProfileId.equals(profileId))
+      ..addColumns([countExp]);
+
+    if (searchQuery != null && searchQuery.trim().isNotEmpty) {
+      query.where(weddingGuests.guestName.like('%${searchQuery.trim()}%'));
+    }
+    if (rsvpFilter != null && rsvpFilter.isNotEmpty && rsvpFilter != 'ALL') {
+      query.where(weddingGuests.rsvpStatus.equals(rsvpFilter));
+    }
+
+    final row = await query.getSingle();
+    return row.read(countExp) ?? 0;
+  }
+
+  Future<List<WeddingExpense>> getExpensesPaginated(
+    String profileId, {
+    int limit = 20,
+    int offset = 0,
+    String? categoryFilter,
+  }) async {
+    final query = select(weddingExpenses)
+      ..where((t) => t.weddingProfileId.equals(profileId));
+
+    if (categoryFilter != null && categoryFilter.isNotEmpty && categoryFilter != 'ALL') {
+      query.where((t) => t.category.equals(categoryFilter));
+    }
+
+    query
+      ..orderBy([(t) => OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc)])
+      ..limit(limit, offset: offset);
+
+    final rows = await query.get();
+    return rows.map((r) => _expenseFromRow(r)).toList();
+  }
+
+  Future<int> countExpenses(
+    String profileId, {
+    String? categoryFilter,
+  }) async {
+    final countExp = weddingExpenses.expenseId.count();
+    final query = selectOnly(weddingExpenses)
+      ..where(weddingExpenses.weddingProfileId.equals(profileId))
+      ..addColumns([countExp]);
+
+    if (categoryFilter != null && categoryFilter.isNotEmpty && categoryFilter != 'ALL') {
+      query.where(weddingExpenses.category.equals(categoryFilter));
+    }
+
+    final row = await query.getSingle();
+    return row.read(countExp) ?? 0;
+  }
+
+  // ==========================================
+  // TRANSACTION-SAFE OPERATIONS (ACID)
+  // ==========================================
+  Future<void> recordPaymentTx({
+    required WeddingPaymentTerm term,
+    required WeddingExpense expense,
+    required double newTotalPaid,
+    required String newPaymentStatus,
+  }) async {
+    await transaction(() async {
+      await insertPaymentTerm(term);
+      await updateExpense(expense.copyWith(
+        totalPaid: newTotalPaid,
+        paymentStatus: newPaymentStatus,
+      ));
+    });
+  }
+
+  Future<void> removePaymentTermTx({
+    required String termId,
+    required String expenseId,
+    required WeddingExpense expense,
+    required double newTotalPaid,
+    required String newPaymentStatus,
+  }) async {
+    await transaction(() async {
+      await (delete(weddingPaymentTerms)..where((t) => t.termId.equals(termId))).go();
+      await updateExpense(expense.copyWith(
+        totalPaid: newTotalPaid,
+        paymentStatus: newPaymentStatus,
+      ));
+    });
+  }
+
+  // ==========================================
+  // BACKUP & RESTORE (FULL DATABASE SERIALIZATION)
+  // ==========================================
+  Future<Map<String, dynamic>> exportFullBackup(String profileId) async {
+    final profile = await getProfileById(profileId);
+    if (profile == null) throw Exception('Profil $profileId tidak ditemukan');
+
+    final expenses = (await (select(weddingExpenses)..where((t) => t.weddingProfileId.equals(profileId))).get())
+        .map((r) => _expenseFromRow(r).toFirestoreMap())
+        .toList();
+
+    final allPaymentTerms = <Map<String, dynamic>>[];
+    for (final exp in expenses) {
+      final expId = exp['expenseId'] as String;
+      final terms = await getPaymentTermsForExpense(expId);
+      allPaymentTerms.addAll(terms.map((t) => t.toFirestoreMap()));
+    }
+
+    final guests = (await (select(weddingGuests)..where((t) => t.weddingProfileId.equals(profileId))).get())
+        .map((r) => _guestFromRow(r).toFirestoreMap())
+        .toList();
+
+    final vendors = (await (select(weddingVendors)..where((t) => t.weddingProfileId.equals(profileId))).get())
+        .map((r) => _vendorFromRow(r).toFirestoreMap())
+        .toList();
+
+    final tasks = (await (select(weddingTasks)..where((t) => t.weddingProfileId.equals(profileId))).get())
+        .map((r) => _taskFromRow(r).toFirestoreMap())
+        .toList();
+
+    final committee = (await (select(weddingCommitteeMembers)..where((t) => t.weddingProfileId.equals(profileId))).get())
+        .map((r) => _committeeFromRow(r).toFirestoreMap())
+        .toList();
+
+    final events = (await (select(weddingEvents)..where((t) => t.weddingProfileId.equals(profileId))).get())
+        .map((r) => _eventFromRow(r).toFirestoreMap())
+        .toList();
+
+    final allRundowns = <Map<String, dynamic>>[];
+    for (final ev in events) {
+      final evId = ev['eventId'] as String;
+      final items = (await (select(weddingRundownItems)..where((t) => t.eventId.equals(evId))).get())
+          .map((r) => _rundownItemFromRow(r).toFirestoreMap());
+      allRundowns.addAll(items);
+    }
+
+    final seserahan = (await (select(weddingSeserahans)..where((t) => t.weddingProfileId.equals(profileId))).get())
+        .map((r) => _seserahanFromRow(r).toFirestoreMap())
+        .toList();
+
+    final documents = (await (select(weddingDocuments)..where((t) => t.weddingProfileId.equals(profileId))).get())
+        .map((r) => _documentFromRow(r).toFirestoreMap())
+        .toList();
+
+    return {
+      'format': 'NIKAHIN_BACKUP',
+      'version': 1,
+      'exportedAt': DateTime.now().millisecondsSinceEpoch,
+      'profile': profile.toFirestoreMap(),
+      'expenses': expenses,
+      'paymentTerms': allPaymentTerms,
+      'guests': guests,
+      'vendors': vendors,
+      'tasks': tasks,
+      'committee': committee,
+      'events': events,
+      'rundownItems': allRundowns,
+      'seserahan': seserahan,
+      'documents': documents,
+    };
+  }
+
+  Future<void> restoreFullBackup(Map<String, dynamic> backup) async {
+    if (backup['format'] != 'NIKAHIN_BACKUP') {
+      throw const FormatException('Format file cadangan tidak valid.');
+    }
+
+    final profileMap = backup['profile'] as Map<String, dynamic>?;
+    if (profileMap == null) throw const FormatException('Data profil tidak ditemukan dalam cadangan.');
+    final profileId = profileMap['id'] as String? ?? '';
+    if (profileId.isEmpty) throw const FormatException('ID Profil tidak valid.');
+
+    final profile = WeddingProfile.fromFirestoreMap(profileMap, profileId);
+
+    final expenses = (backup['expenses'] as List<dynamic>? ?? [])
+        .map((e) => WeddingExpense.fromFirestoreMap(Map<String, dynamic>.from(e as Map), e['expenseId'] as String))
+        .toList();
+
+    final paymentTerms = (backup['paymentTerms'] as List<dynamic>? ?? [])
+        .map((t) => WeddingPaymentTerm.fromFirestoreMap(Map<String, dynamic>.from(t as Map), t['termId'] as String))
+        .toList();
+
+    final guests = (backup['guests'] as List<dynamic>? ?? [])
+        .map((g) => WeddingGuest.fromFirestoreMap(Map<String, dynamic>.from(g as Map), g['guestId'] as String))
+        .toList();
+
+    final vendors = (backup['vendors'] as List<dynamic>? ?? [])
+        .map((v) => WeddingVendor.fromFirestoreMap(Map<String, dynamic>.from(v as Map), v['vendorId'] as String))
+        .toList();
+
+    final tasks = (backup['tasks'] as List<dynamic>? ?? [])
+        .map((t) => WeddingTask.fromFirestoreMap(Map<String, dynamic>.from(t as Map), t['taskId'] as String))
+        .toList();
+
+    final committee = (backup['committee'] as List<dynamic>? ?? [])
+        .map((c) => WeddingCommitteeMember.fromFirestoreMap(Map<String, dynamic>.from(c as Map), c['memberId'] as String))
+        .toList();
+
+    final events = (backup['events'] as List<dynamic>? ?? [])
+        .map((ev) => WeddingEvent.fromFirestoreMap(Map<String, dynamic>.from(ev as Map), ev['eventId'] as String))
+        .toList();
+
+    final rundownItems = (backup['rundownItems'] as List<dynamic>? ?? [])
+        .map((r) => WeddingRundownItem.fromFirestoreMap(Map<String, dynamic>.from(r as Map), r['itemId'] as String))
+        .toList();
+
+    final seserahan = (backup['seserahan'] as List<dynamic>? ?? [])
+        .map((s) => WeddingSeserahan.fromFirestoreMap(Map<String, dynamic>.from(s as Map), s['itemId'] as String))
+        .toList();
+
+    final documents = (backup['documents'] as List<dynamic>? ?? [])
+        .map((d) => WeddingDocument.fromFirestoreMap(Map<String, dynamic>.from(d as Map), d['docId'] as String))
+        .toList();
+
+    // Execute atomic restoration inside an isolated SQLite transaction
+    await transaction(() async {
+      await insertProfile(profile);
+
+      // Clean existing related entities before repopulating
+      await (delete(weddingExpenses)..where((t) => t.weddingProfileId.equals(profileId))).go();
+      await (delete(weddingGuests)..where((t) => t.weddingProfileId.equals(profileId))).go();
+      await (delete(weddingVendors)..where((t) => t.weddingProfileId.equals(profileId))).go();
+      await (delete(weddingTasks)..where((t) => t.weddingProfileId.equals(profileId))).go();
+      await (delete(weddingCommitteeMembers)..where((t) => t.weddingProfileId.equals(profileId))).go();
+      await (delete(weddingEvents)..where((t) => t.weddingProfileId.equals(profileId))).go();
+      await (delete(weddingSeserahans)..where((t) => t.weddingProfileId.equals(profileId))).go();
+      await (delete(weddingDocuments)..where((t) => t.weddingProfileId.equals(profileId))).go();
+
+      // Batch re-insert
+      for (final exp in expenses) {
+        await insertExpense(exp);
+      }
+      for (final term in paymentTerms) {
+        await insertPaymentTerm(term);
+      }
+      await insertGuestsBatch(guests);
+      for (final v in vendors) {
+        await insertVendor(v);
+      }
+      await insertTasksBatch(tasks);
+      for (final c in committee) {
+        await insertCommittee(c);
+      }
+      await insertEventsBatch(events);
+      for (final r in rundownItems) {
+        await insertRundownItem(r);
+      }
+      for (final s in seserahan) {
+        await insertSeserahan(s);
+      }
+      await insertDocumentsBatch(documents);
+    });
   }
 }
 

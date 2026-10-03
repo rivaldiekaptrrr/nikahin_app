@@ -436,10 +436,10 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // 5. Export Center
+                // 5. Export Center & Data Backup
                 _buildSectionHeader(
                   context,
-                  title: 'Ekspor Data & Laporan',
+                  title: 'Ekspor Data & Cadangan (Backup)',
                 ),
                 const SizedBox(height: 10),
                 BentoCard(
@@ -476,6 +476,38 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                         subtitle: const Text('Format tabel spreadsheet untuk tim penerima tamu', style: TextStyle(fontSize: 12)),
                         trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
                         onTap: () => _exportGuestsCsv(context, profile),
+                      ),
+                      const Divider(),
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.blue.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(Icons.backup_rounded, color: Colors.blue, size: 22),
+                        ),
+                        title: const Text('Cadangkan Data Lengkap (JSON Backup)', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                        subtitle: const Text('Simpan seluruh data profil, anggaran, tamu, vendor ke file .json', style: TextStyle(fontSize: 12)),
+                        trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
+                        onTap: () => _exportFullBackupJson(context, profile),
+                      ),
+                      const Divider(),
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.amber.shade800.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(Icons.restore_page_rounded, color: Colors.amber.shade800, size: 22),
+                        ),
+                        title: const Text('Pulihkan Data (Restore Backup)', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                        subtitle: const Text('Pulihkan rencana pernikahan dari teks atau file JSON cadangan', style: TextStyle(fontSize: 12)),
+                        trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
+                        onTap: () => _showRestoreBackupDialog(context),
                       ),
                     ],
                   ),
@@ -826,6 +858,90 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
     final guests = await repo.watchGuests(profile.id).first;
     await ExportUtils.exportGuestsCsv(profile, guests);
   }
+
+  Future<void> _exportFullBackupJson(BuildContext context, WeddingProfile profile) async {
+    try {
+      final repo = ref.read(weddingRepositoryProvider);
+      final backupData = await repo.exportFullBackup(profile.id);
+      await ExportUtils.exportBackupJson(profile, backupData);
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gagal mencadangkan data: $e')),
+        );
+      }
+    }
+  }
+
+  void _showRestoreBackupDialog(BuildContext context) {
+    final controller = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (dialogCtx) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.restore_page_rounded, color: Colors.blue),
+            SizedBox(width: 8),
+            Text('Pulihkan Cadangan'),
+          ],
+        ),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Tempelkan (paste) teks JSON cadangan data pernikahan di bawah ini:',
+                style: TextStyle(fontSize: 13),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: controller,
+                maxLines: 8,
+                decoration: const InputDecoration(
+                  hintText: '{"format":"NIKAHIN_BACKUP", ...}',
+                  border: OutlineInputBorder(),
+                  isDense: true,
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogCtx).pop(),
+            child: const Text('Batal'),
+          ),
+          FilledButton(
+            onPressed: () async {
+              final text = controller.text.trim();
+              if (text.isEmpty) return;
+
+              try {
+                final backupData = ExportUtils.parseBackupJson(text);
+                await ref.read(weddingRepositoryProvider).restoreFullBackup(backupData);
+                if (dialogCtx.mounted) Navigator.of(dialogCtx).pop();
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Data berhasil dipulihkan dari cadangan!')),
+                  );
+                }
+              } catch (err) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Gagal memulihkan cadangan: $err')),
+                  );
+                }
+              }
+            },
+            child: const Text('Pulihkan'),
+          ),
+        ],
+      ),
+    );
+  }
+
 
   void _deleteEntireProfile(BuildContext context, WeddingProfile profile) {
     showDeleteConfirmDialog(
