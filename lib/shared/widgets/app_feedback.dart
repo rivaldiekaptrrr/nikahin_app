@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/error_handler.dart';
 
 /// Centralized UI Feedback helper for Success, Error, Info, and Undo actions
 class AppFeedback {
@@ -33,25 +34,29 @@ class AppFeedback {
 
   static void showError(
     BuildContext context, {
-    required String message,
+    String? message,
+    dynamic error,
     Duration duration = const Duration(seconds: 4),
   }) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    final theme = Theme.of(context);
+    final appException = error != null ? AppErrorHandler.parse(error) : null;
+    final resolvedMessage = message ?? appException?.message ?? 'Terjadi kendala pada sistem.';
+    final resolvedIcon = appException?.icon ?? Icons.error_outline_rounded;
+    final resolvedBg = appException?.color ?? Theme.of(context).colorScheme.error;
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        backgroundColor: theme.colorScheme.error,
+        backgroundColor: resolvedBg,
         content: Row(
           children: [
-            Icon(Icons.error_outline_rounded, color: theme.colorScheme.onError, size: 20),
+            Icon(resolvedIcon, color: Colors.white, size: 20),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                message,
-                style: TextStyle(color: theme.colorScheme.onError, fontWeight: FontWeight.w500),
+                resolvedMessage,
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
               ),
             ),
           ],

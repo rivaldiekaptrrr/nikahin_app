@@ -131,14 +131,16 @@ class FirestoreRestService {
       final firestoreFields = _toFirestoreFields(data);
       final body = jsonEncode({'fields': firestoreFields});
 
-      final response = await http.patch(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          if (idToken != null) 'Authorization': 'Bearer $idToken',
-        },
-        body: body,
-      );
+      final response = await http
+          .patch(
+            url,
+            headers: {
+              'Content-Type': 'application/json',
+              if (idToken != null) 'Authorization': 'Bearer $idToken',
+            },
+            body: body,
+          )
+          .timeout(const Duration(seconds: 10));
 
       return response.statusCode >= 200 && response.statusCode < 300;
     } catch (_) {
@@ -153,12 +155,14 @@ class FirestoreRestService {
   }) async {
     try {
       final url = Uri.parse('$_baseUrl/$path${apiKey != null ? "?key=$apiKey" : ""}');
-      final response = await http.delete(
-        url,
-        headers: {
-          if (idToken != null) 'Authorization': 'Bearer $idToken',
-        },
-      );
+      final response = await http
+          .delete(
+            url,
+            headers: {
+              if (idToken != null) 'Authorization': 'Bearer $idToken',
+            },
+          )
+          .timeout(const Duration(seconds: 10));
       return response.statusCode >= 200 && response.statusCode < 300;
     } catch (_) {
       return false;
@@ -172,12 +176,14 @@ class FirestoreRestService {
   }) async {
     try {
       final url = Uri.parse('$_baseUrl/$collectionPath${apiKey != null ? "?key=$apiKey" : ""}');
-      final response = await http.get(
-        url,
-        headers: {
-          if (idToken != null) 'Authorization': 'Bearer $idToken',
-        },
-      );
+      final response = await http
+          .get(
+            url,
+            headers: {
+              if (idToken != null) 'Authorization': 'Bearer $idToken',
+            },
+          )
+          .timeout(const Duration(seconds: 10));
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         final decoded = jsonDecode(response.body);

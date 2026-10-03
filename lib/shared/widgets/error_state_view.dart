@@ -1,21 +1,31 @@
 import 'package:flutter/material.dart';
+import '../utils/error_handler.dart';
 
 /// Reusable Error State View with descriptive message and Retry CTA
 class ErrorStateView extends StatelessWidget {
+  final dynamic error;
   final String? errorMessage;
+  final String? title;
   final VoidCallback? onRetry;
-  final IconData icon;
+  final IconData? icon;
 
   const ErrorStateView({
     super.key,
+    this.error,
     this.errorMessage,
+    this.title,
     this.onRetry,
-    this.icon = Icons.error_outline_rounded,
+    this.icon,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final appException = error != null ? AppErrorHandler.parse(error) : null;
+
+    final resolvedTitle = title ?? _resolveTitle(appException?.type);
+    final resolvedMessage = errorMessage ?? appException?.message ?? 'Gagal memuat informasi. Silakan coba lagi.';
+    final resolvedIcon = icon ?? appException?.icon ?? Icons.error_outline_rounded;
 
     return Center(
       child: Padding(
@@ -31,14 +41,14 @@ class ErrorStateView extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                icon,
-                size: 48,
+                resolvedIcon,
+                size: 44,
                 color: theme.colorScheme.error,
               ),
             ),
             const SizedBox(height: 16),
             Text(
-              'Terjadi Kendala Memuat Data',
+              resolvedTitle,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -46,7 +56,7 @@ class ErrorStateView extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              errorMessage ?? 'Gagal mengambil informasi dari database. Silakan coba lagi.',
+              resolvedMessage,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -65,4 +75,24 @@ class ErrorStateView extends StatelessWidget {
       ),
     );
   }
+
+  String _resolveTitle(AppErrorType? type) {
+    switch (type) {
+      case AppErrorType.networkError:
+        return 'Koneksi Terputus';
+      case AppErrorType.serverError:
+        return 'Gangguan Server';
+      case AppErrorType.authError:
+        return 'Akses Ditolak';
+      case AppErrorType.permissionError:
+        return 'Izin Diperlukan';
+      case AppErrorType.timeout:
+        return 'Waktu Habis';
+      case AppErrorType.validationError:
+        return 'Data Tidak Sesuai';
+      default:
+        return 'Terjadi Kendala Memuat Data';
+    }
+  }
 }
+
