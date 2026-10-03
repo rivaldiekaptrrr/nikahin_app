@@ -493,6 +493,9 @@ class _WeddingVendorScreenState extends ConsumerState<WeddingVendorScreen> {
               vendor.instagramHandle != null && vendor.instagramHandle!.isNotEmpty
                   ? '@${vendor.instagramHandle!.replaceAll('@', '')}'
                   : '-',
+              onTap: (vendor.instagramHandle != null && vendor.instagramHandle!.isNotEmpty)
+                  ? () => _launchInstagram(vendor.instagramHandle!)
+                  : null,
             ),
             _buildDetailRow('Nilai Kontrak', CurrencyUtils.formatRupiah(vendor.contractValue)),
             if (vendor.notes != null && vendor.notes!.isNotEmpty)
@@ -503,7 +506,7 @@ class _WeddingVendorScreenState extends ConsumerState<WeddingVendorScreen> {
     );
   }
 
-  Widget _buildDetailRow(String label, String value) {
+  Widget _buildDetailRow(String label, String value, {VoidCallback? onTap}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
@@ -514,7 +517,18 @@ class _WeddingVendorScreenState extends ConsumerState<WeddingVendorScreen> {
             child: Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
           ),
           Expanded(
-            child: Text(value, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+            child: GestureDetector(
+              onTap: onTap,
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: onTap != null ? const Color(0xFFE1306C) : null,
+                  decoration: onTap != null ? TextDecoration.underline : null,
+                ),
+              ),
+            ),
           ),
         ],
       ),

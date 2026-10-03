@@ -1466,7 +1466,7 @@ class _ExpenseDetailBottomSheetState extends ConsumerState<_ExpenseDetailBottomS
                                             shrinkWrap: true,
                                             physics: const ClampingScrollPhysics(),
                                             itemCount: terms.length,
-                                            separatorBuilder: (_, __) => const SizedBox(height: 8),
+                                            separatorBuilder: (_, _) => const SizedBox(height: 8),
                                             itemBuilder: (context, index) {
                                               final term = terms[index];
                                               final isPaid = term.isPaid;
