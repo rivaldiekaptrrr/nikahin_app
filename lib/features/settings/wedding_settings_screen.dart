@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/local/preferences_manager.dart';
@@ -140,6 +141,9 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                     children: [
                       TextFormField(
                         controller: _groomController,
+                        inputFormatters: [LengthLimitingTextInputFormatter(50)],
+                        maxLength: 50,
+                        buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                         decoration: const InputDecoration(
                           labelText: 'Nama Mempelai Pria (CPP)',
                           hintText: 'Cth: Dimas Arya',
@@ -149,6 +153,9 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                       const SizedBox(height: 14),
                       TextFormField(
                         controller: _brideController,
+                        inputFormatters: [LengthLimitingTextInputFormatter(50)],
+                        maxLength: 50,
+                        buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                         decoration: const InputDecoration(
                           labelText: 'Nama Mempelai Wanita (CPW)',
                           hintText: 'Cth: Larasati',
@@ -227,6 +234,8 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                         const SizedBox(height: 10),
                         TextFormField(
                           controller: _quoteController,
+                          inputFormatters: [LengthLimitingTextInputFormatter(150)],
+                          maxLength: 150,
                           decoration: const InputDecoration(
                             labelText: 'Teks Kutipan atau Doa',
                             hintText: 'Perjalanan cinta yang luar biasa dimulai dari hari bahagia ini.',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../data/repositories/wedding_repository.dart';
@@ -742,6 +743,9 @@ class _AddSeserahanBottomSheetState extends ConsumerState<_AddSeserahanBottomShe
 
               TextFormField(
                 controller: _nameController,
+                inputFormatters: [LengthLimitingTextInputFormatter(60)],
+                maxLength: 60,
+                buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(
                   labelText: 'Nama Barang / Item',
                   hintText: 'Cth: Set Perhiasan, Mukena, Skincare',
@@ -756,6 +760,12 @@ class _AddSeserahanBottomSheetState extends ConsumerState<_AddSeserahanBottomShe
                     child: TextFormField(
                       initialValue: _qty.toString(),
                       keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(3),
+                      ],
+                      maxLength: 3,
+                      buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                       decoration: const InputDecoration(labelText: 'Jumlah (Qty)'),
                       onChanged: (val) => _qty = int.tryParse(val) ?? 1,
                     ),
@@ -785,6 +795,9 @@ class _AddSeserahanBottomSheetState extends ConsumerState<_AddSeserahanBottomShe
 
               TextFormField(
                 controller: _notesController,
+                inputFormatters: [LengthLimitingTextInputFormatter(200)],
+                maxLength: 200,
+                buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(
                   labelText: 'Link Produk (Opsional)',
                   hintText: 'Cth: https://tk.tokopedia.com/...',

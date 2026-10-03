@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/local/preferences_manager.dart';
@@ -121,6 +122,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
               TextField(
                 controller: emailResetCtrl,
                 keyboardType: TextInputType.emailAddress,
+                inputFormatters: [LengthLimitingTextInputFormatter(60)],
+                maxLength: 60,
+                buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(
                   labelText: 'Email Terdaftar',
                   prefixIcon: Icon(Icons.email_outlined),
@@ -270,6 +274,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                         const SizedBox(height: 6),
                         TextFormField(
                           controller: _nameController,
+                          inputFormatters: [LengthLimitingTextInputFormatter(50)],
+                          maxLength: 50,
+                          buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                           decoration: InputDecoration(
                             hintText: 'Contoh: Rivaldi / Alya',
                             prefixIcon: Icon(Icons.person_outline_rounded, color: primaryColor),
@@ -299,6 +306,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
+                        inputFormatters: [LengthLimitingTextInputFormatter(60)],
+                        maxLength: 60,
+                        buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                         decoration: InputDecoration(
                           hintText: 'Masukkan email akun',
                           prefixIcon: Icon(Icons.email_outlined, color: primaryColor),
@@ -330,6 +340,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                         controller: _passwordController,
                         obscureText: !_passwordVisible,
                         textInputAction: TextInputAction.done,
+                        inputFormatters: [LengthLimitingTextInputFormatter(32)],
+                        maxLength: 32,
+                        buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                         decoration: InputDecoration(
                           hintText: 'Masukkan password',
                           prefixIcon: Icon(Icons.lock_outline_rounded, color: primaryColor),

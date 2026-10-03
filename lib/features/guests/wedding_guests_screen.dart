@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -147,6 +148,9 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
 
         // Search Field
         TextFormField(
+          inputFormatters: [LengthLimitingTextInputFormatter(50)],
+          maxLength: 50,
+          buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
           decoration: InputDecoration(
             hintText: 'Cari nama tamu...',
             prefixIcon: const Icon(Icons.search_rounded),
@@ -399,6 +403,12 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
               TextFormField(
                 initialValue: calculatedResepsi.toString(),
                 keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(4),
+                ],
+                maxLength: 4,
+                buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(
                   labelText: 'Estimasi Jumlah Undangan Resepsi (Pax)',
                   prefixIcon: Icon(Icons.group_outlined),
@@ -898,6 +908,9 @@ class _AddGuestBottomSheetState extends ConsumerState<_AddGuestBottomSheet> {
 
               TextFormField(
                 controller: _nameController,
+                inputFormatters: [LengthLimitingTextInputFormatter(50)],
+                maxLength: 50,
+                buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(labelText: 'Nama Tamu / Keluarga'),
                 validator: (v) => (v == null || v.trim().isEmpty) ? 'Nama wajib diisi' : null,
               ),
@@ -906,6 +919,12 @@ class _AddGuestBottomSheetState extends ConsumerState<_AddGuestBottomSheet> {
               TextFormField(
                 controller: _phoneController,
                 keyboardType: TextInputType.phone,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9\+\-\s]')),
+                  LengthLimitingTextInputFormatter(16),
+                ],
+                maxLength: 16,
+                buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(labelText: 'Nomor WhatsApp / HP (Opsional)'),
               ),
               const SizedBox(height: 14),
@@ -936,6 +955,12 @@ class _AddGuestBottomSheetState extends ConsumerState<_AddGuestBottomSheet> {
                     child: TextFormField(
                       initialValue: _pax.toString(),
                       keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(3),
+                      ],
+                      maxLength: 3,
+                      buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                       decoration: const InputDecoration(labelText: 'Estimasi Pax (Orang)'),
                       onChanged: (val) => _pax = int.tryParse(val) ?? 2,
                     ),
@@ -1244,6 +1269,9 @@ class _BatchContactPickerDialogState
                       // Search Bar
                       TextField(
                         controller: _searchController,
+                        inputFormatters: [LengthLimitingTextInputFormatter(50)],
+                        maxLength: 50,
+                        buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                         decoration: InputDecoration(
                           hintText: 'Cari nama atau nomor HP...',
                           hintStyle: TextStyle(fontSize: 13, color: Colors.grey[500]),

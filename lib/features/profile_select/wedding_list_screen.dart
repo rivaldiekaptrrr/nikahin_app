@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../app/config/mock_config.dart';
@@ -318,6 +319,9 @@ class _CreateProfileBottomSheetState extends ConsumerState<_CreateProfileBottomS
               // Groom & Bride Names
               TextFormField(
                 controller: _groomController,
+                inputFormatters: [LengthLimitingTextInputFormatter(50)],
+                maxLength: 50,
+                buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(
                   labelText: 'Nama Mempelai Pria (CPP)',
                   hintText: 'Contoh: Rivaldi',
@@ -328,6 +332,9 @@ class _CreateProfileBottomSheetState extends ConsumerState<_CreateProfileBottomS
               const SizedBox(height: 14),
               TextFormField(
                 controller: _brideController,
+                inputFormatters: [LengthLimitingTextInputFormatter(50)],
+                maxLength: 50,
+                buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(
                   labelText: 'Nama Mempelai Wanita (CPW)',
                   hintText: 'Contoh: Sarah',

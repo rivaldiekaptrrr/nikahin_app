@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/repositories/wedding_repository.dart';
@@ -625,6 +626,9 @@ class _AddCommitteeBottomSheetState extends ConsumerState<_AddCommitteeBottomShe
 
               TextFormField(
                 controller: _nameController,
+                inputFormatters: [LengthLimitingTextInputFormatter(50)],
+                maxLength: 50,
+                buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(labelText: 'Nama Lengkap'),
                 validator: (v) => (v == null || v.trim().isEmpty) ? 'Nama wajib diisi' : null,
               ),
@@ -632,6 +636,9 @@ class _AddCommitteeBottomSheetState extends ConsumerState<_AddCommitteeBottomShe
 
               TextFormField(
                 controller: _roleController,
+                inputFormatters: [LengthLimitingTextInputFormatter(40)],
+                maxLength: 40,
+                buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(
                   labelText: 'Peran & Tugas (cth: Saksi Nikah, Among Tamu, Meja Resepsi, MC)',
                 ),
@@ -652,6 +659,12 @@ class _AddCommitteeBottomSheetState extends ConsumerState<_AddCommitteeBottomShe
               TextFormField(
                 controller: _phoneController,
                 keyboardType: TextInputType.phone,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9\+\-\s]')),
+                  LengthLimitingTextInputFormatter(16),
+                ],
+                maxLength: 16,
+                buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(labelText: 'Nomor Telepon WhatsApp (Opsional)'),
               ),
               const SizedBox(height: 14),
@@ -661,6 +674,9 @@ class _AddCommitteeBottomSheetState extends ConsumerState<_AddCommitteeBottomShe
                   Expanded(
                     child: TextFormField(
                       controller: _uniformDescController,
+                      inputFormatters: [LengthLimitingTextInputFormatter(80)],
+                      maxLength: 80,
+                      buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                       decoration: const InputDecoration(labelText: 'Deskripsi Seragam & Warna'),
                     ),
                   ),
@@ -669,6 +685,12 @@ class _AddCommitteeBottomSheetState extends ConsumerState<_AddCommitteeBottomShe
                     child: TextFormField(
                       initialValue: _fabricMeters > 0 ? _fabricMeters.toString() : '',
                       keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]')),
+                        LengthLimitingTextInputFormatter(4),
+                      ],
+                      maxLength: 4,
+                      buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                       decoration: const InputDecoration(labelText: 'Jatah Kain (Meter)'),
                       onChanged: (val) => _fabricMeters = double.tryParse(val) ?? 0.0,
                     ),

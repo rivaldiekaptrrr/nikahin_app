@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../data/repositories/wedding_repository.dart';
@@ -689,6 +690,9 @@ class _AddVendorBottomSheetState extends ConsumerState<_AddVendorBottomSheet> {
 
               TextFormField(
                 controller: _nameController,
+                inputFormatters: [LengthLimitingTextInputFormatter(60)],
+                maxLength: 60,
+                buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(labelText: 'Nama Vendor / Perusahaan'),
                 validator: (v) => (v == null || v.trim().isEmpty) ? 'Nama vendor wajib diisi' : null,
               ),
@@ -699,6 +703,9 @@ class _AddVendorBottomSheetState extends ConsumerState<_AddVendorBottomSheet> {
                   Expanded(
                     child: TextFormField(
                       controller: _picController,
+                      inputFormatters: [LengthLimitingTextInputFormatter(50)],
+                      maxLength: 50,
+                      buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                       decoration: const InputDecoration(labelText: 'Nama PIC (Opsional)'),
                     ),
                   ),
@@ -707,6 +714,12 @@ class _AddVendorBottomSheetState extends ConsumerState<_AddVendorBottomSheet> {
                     child: TextFormField(
                       controller: _phoneController,
                       keyboardType: TextInputType.phone,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9\+\-\s]')),
+                        LengthLimitingTextInputFormatter(16),
+                      ],
+                      maxLength: 16,
+                      buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                       decoration: const InputDecoration(labelText: 'Nomor Telepon / WA'),
                     ),
                   ),
@@ -716,6 +729,9 @@ class _AddVendorBottomSheetState extends ConsumerState<_AddVendorBottomSheet> {
 
               TextFormField(
                 controller: _igController,
+                inputFormatters: [LengthLimitingTextInputFormatter(30)],
+                maxLength: 30,
+                buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(
                   labelText: 'Instagram Handle (tanpa @)',
                   prefixText: '@',
@@ -742,6 +758,8 @@ class _AddVendorBottomSheetState extends ConsumerState<_AddVendorBottomSheet> {
 
               TextFormField(
                 controller: _notesController,
+                inputFormatters: [LengthLimitingTextInputFormatter(200)],
+                maxLength: 200,
                 decoration: const InputDecoration(labelText: 'Catatan Khusus / Detail Paket'),
                 maxLines: 2,
               ),

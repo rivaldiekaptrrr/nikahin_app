@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/repositories/wedding_repository.dart';
 import '../../domain/enums/wedding_enums.dart';
@@ -502,6 +503,9 @@ class _AddDocBottomSheetState extends ConsumerState<_AddDocBottomSheet> {
 
               TextFormField(
                 controller: _nameController,
+                inputFormatters: [LengthLimitingTextInputFormatter(60)],
+                maxLength: 60,
+                buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(
                   labelText: 'Nama Dokumen',
                   hintText: 'Cth: Surat Pengantar N1-N4, Akta Kelahiran',

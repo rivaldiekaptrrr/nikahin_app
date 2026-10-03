@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/repositories/wedding_repository.dart';
 import '../../domain/models/wedding_models.dart';
@@ -634,6 +635,9 @@ class _AddEventDialogState extends ConsumerState<_AddEventDialog> {
           children: [
             TextFormField(
               controller: _nameController,
+              inputFormatters: [LengthLimitingTextInputFormatter(50)],
+              maxLength: 50,
+              buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
               decoration: const InputDecoration(
                 labelText: 'Nama Acara',
                 hintText: 'Cth: Akad Nikah, Resepsi, Sangjit',
@@ -648,6 +652,9 @@ class _AddEventDialogState extends ConsumerState<_AddEventDialog> {
             const SizedBox(height: 12),
             TextFormField(
               controller: _locController,
+              inputFormatters: [LengthLimitingTextInputFormatter(80)],
+              maxLength: 80,
+              buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
               decoration: const InputDecoration(
                 labelText: 'Tempat Acara (Opsional)',
                 hintText: 'Cth: Masjid Agung, Ballroom Hotel',
@@ -808,6 +815,12 @@ class _AddRundownItemBottomSheetState extends ConsumerState<_AddRundownItemBotto
                     child: TextFormField(
                       initialValue: _durationMinutes.toString(),
                       keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(3),
+                      ],
+                      maxLength: 3,
+                      buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                       decoration: const InputDecoration(labelText: 'Durasi (Menit)'),
                       onChanged: (val) => _durationMinutes = int.tryParse(val) ?? 15,
                     ),
@@ -818,6 +831,9 @@ class _AddRundownItemBottomSheetState extends ConsumerState<_AddRundownItemBotto
 
               TextFormField(
                 controller: _titleController,
+                inputFormatters: [LengthLimitingTextInputFormatter(60)],
+                maxLength: 60,
+                buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(
                   labelText: 'Nama Kegiatan & Sesi',
                   hintText: 'Cth: Akad Nikah, Penyambutan, Sungkeman',
@@ -828,6 +844,9 @@ class _AddRundownItemBottomSheetState extends ConsumerState<_AddRundownItemBotto
 
               TextFormField(
                 controller: _picController,
+                inputFormatters: [LengthLimitingTextInputFormatter(50)],
+                maxLength: 50,
+                buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(
                   labelText: 'Penanggung Jawab PIC (Opsional)',
                   hintText: 'Cth: Mas Dimas (WO), Bapak H. Ahmad (KUA)',

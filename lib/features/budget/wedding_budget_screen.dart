@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/config/mock_config.dart';
 import '../../data/local/mock_seeder.dart';
@@ -959,6 +960,9 @@ class _AddExpenseBottomSheetState extends ConsumerState<_AddExpenseBottomSheet> 
                     Expanded(
                       child: TextFormField(
                         controller: _customCategoryController,
+                        inputFormatters: [LengthLimitingTextInputFormatter(40)],
+                        maxLength: 40,
+                        buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                         decoration: const InputDecoration(
                           labelText: 'Nama Kategori Baru',
                           hintText: 'Cth: Photobooth, Honeymoon, Mobil Pengantin, dll',
@@ -979,6 +983,9 @@ class _AddExpenseBottomSheetState extends ConsumerState<_AddExpenseBottomSheet> 
               // Title
               TextFormField(
                 controller: _titleController,
+                inputFormatters: [LengthLimitingTextInputFormatter(60)],
+                maxLength: 60,
+                buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(
                   labelText: 'Nama Pos / Kebutuhan',
                   hintText: 'Contoh: Sewa Gedung Resepsi',
@@ -1010,6 +1017,8 @@ class _AddExpenseBottomSheetState extends ConsumerState<_AddExpenseBottomSheet> 
               // Notes
               TextFormField(
                 controller: _notesController,
+                inputFormatters: [LengthLimitingTextInputFormatter(200)],
+                maxLength: 200,
                 decoration: const InputDecoration(
                   labelText: 'Catatan Tambahan (Opsional)',
                   hintText: 'Paket termasuk listrik & AC',
@@ -1691,6 +1700,9 @@ class _AddPaymentRecordDialogState extends ConsumerState<_AddPaymentRecordDialog
             children: [
               TextFormField(
                 controller: _termNameController,
+                inputFormatters: [LengthLimitingTextInputFormatter(40)],
+                maxLength: 40,
+                buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(
                   labelText: 'Jenis Bayar (DP 1, Pelunasan, dll)',
                   hintText: 'Cth: DP 1, DP 2, Pelunasan',
