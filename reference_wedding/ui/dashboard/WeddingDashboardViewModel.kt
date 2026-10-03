@@ -1,0 +1,241 @@
+package com.trackit.app.ui.wedding.dashboard
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.trackit.app.data.local.entity.WeddingProfileEntity
+import com.trackit.app.data.local.entity.WeddingTaskEntity
+import com.trackit.app.data.local.entity.ProfileEntity
+import com.trackit.app.data.local.entity.WeddingExpenseEntity
+import com.trackit.app.data.local.entity.WeddingPaymentTermEntity
+import com.trackit.app.data.local.entity.WeddingVendorEntity
+import com.trackit.app.data.local.entity.WeddingSeserahanEntity
+import com.trackit.app.data.local.entity.WeddingCommitteeEntity
+import com.trackit.app.data.local.PreferencesManager
+import com.trackit.app.data.repository.ProfileRepository
+import com.trackit.app.data.repository.WeddingCommitteeRepository
+import com.trackit.app.data.repository.WeddingDocumentRepository
+import com.trackit.app.data.repository.WeddingExpenseRepository
+import com.trackit.app.data.repository.WeddingGuestRepository
+import com.trackit.app.data.repository.WeddingProfileRepository
+import com.trackit.app.data.repository.WeddingSeserahanRepository
+import com.trackit.app.data.repository.WeddingTaskRepository
+import com.trackit.app.data.repository.WeddingVendorRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+data class WeddingCategoryBudgetProgress(
+    val categoryKey: String,
+    val categoryName: String,
+    val totalPaid: Double,
+    val totalEstimated: Double,
+    val progress: Float,
+    val iconName: String
+)
+
+data class WeddingDashboardUiState(
+    val activeProfile: ProfileEntity? = null,
+    val allProfiles: List<ProfileEntity> = emptyList(),
+    val weddingProfile: WeddingProfileEntity? = null,
+    val daysUntilWedding: Long = 0,
+    val taskProgress: Float = 0f,       // selesai / total
+    val docProgress: Float = 0f,        // selesai / total
+    val vendorLunasCount: Int = 0,      // jumlah expense FULLY_PAID
+    val totalExpenseCount: Int = 0,     // total semua expense
+    val lastPaidExpenseName: String? = null,   // nama terakhir dibayar
+    val lastPaidAmount: Double = 0.0,          // nominal terakhir dibayar
+    val lastPaidDate: Long? = null,            // timestamp terakhir dibayar
+    val totalBudgetCap: Double = 0.0,
+    val totalEstimated: Double = 0.0,
+    val totalPaid: Double = 0.0,
+    val upcomingTasks: List<WeddingTaskEntity> = emptyList(),
+    val categoryBudgets: List<WeddingCategoryBudgetProgress> = emptyList(),
+    // Sprint 4 counters
+    val totalGuests: Int = 0,
+    val totalPax: Int = 0,
+    val totalVendors: Int = 0,
+    val contractedVendors: Int = 0,     // status KONTRAK atau SELESAI
+    val totalSeserahanItems: Int = 0,
+    val readySeserahanItems: Int = 0,
+    val totalCommitteeMembers: Int = 0,
+    val uniformReadyCount: Int = 0,
+    val isLoading: Boolean = true
+) {
+    val allModulesReady: Boolean get() =
+        taskProgress >= 1f && docProgress >= 1f &&
+        readySeserahanItems == totalSeserahanItems && totalSeserahanItems > 0
+}
+
+@HiltViewModel
+class WeddingDashboardViewModel @Inject constructor(
+    private val preferencesManager: PreferencesManager,
+    private val profileRepository: ProfileRepository,
+    private val weddingProfileRepository: WeddingProfileRepository,
+    private val taskRepository: WeddingTaskRepository,
+    private val documentRepository: WeddingDocumentRepository,
+    private val expenseRepository: WeddingExpenseRepository,
+    private val guestRepository: WeddingGuestRepository,
+    private val vendorRepository: WeddingVendorRepository,
+    private val seserahanRepository: WeddingSeserahanRepository,
+    private val committeeRepository: WeddingCommitteeRepository
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow(WeddingDashboardUiState())
+    val uiState: StateFlow<WeddingDashboardUiState> = _uiState.asStateFlow()
+
+    init {
+        // One-shot: fix legacy payment terms that were inserted without isPaid=true
+        viewModelScope.launch {
+            expenseRepository.markAllUnpaidAsPaid()
+        }
+        viewModelScope.launch {
+            combine(
+                profileRepository.getAllProfiles(),
+                preferencesManager.activeProfileId
+            ) { profiles, activeId ->
+                val activeProfile = profiles.find { it.id == activeId }
+                _uiState.update { it.copy(allProfiles = profiles, activeProfile = activeProfile) }
+                loadDashboard()
+            }.collect()
+        }
+    }
+
+    fun loadForProfile(weddingProfileId: String) {
+        viewModelScope.launch {
+            // Core flows (8 max untuk combine)
+            combine(
+                weddingProfileRepository.getById(weddingProfileId),
+                taskRepository.getTotalCount(weddingProfileId),
+                taskRepository.getCompletedCount(weddingProfileId),
+                documentRepository.getTotalCount(weddingProfileId),
+                documentRepository.getCompletedCount(weddingProfileId),
+                expenseRepository.getAllByProfile(weddingProfileId),
+                taskRepository.getUpcomingTasks(weddingProfileId)
+            ) { values ->
+                val profile    = values[0] as? WeddingProfileEntity
+                val totalTasks = (values[1] as? Int) ?: 0
+                val doneTasks  = (values[2] as? Int) ?: 0
+                val totalDocs  = (values[3] as? Int) ?: 0
+                val doneDocs   = (values[4] as? Int) ?: 0
+                @Suppress("UNCHECKED_CAST")
+                val expenses   = values[5] as? List<WeddingExpenseEntity> ?: emptyList()
+                @Suppress("UNCHECKED_CAST")
+                val upcoming   = values[6] as? List<WeddingTaskEntity> ?: emptyList()
+
+                val totalEst = expenses.sumOf { it.totalEstimated }
+                val totalPaid = expenses.sumOf { it.totalPaid }
+
+                val defaultCatMap = mapOf(
+                    "VENUE" to ("Venue & Gedung" to "apartment"),
+                    "CATERING" to ("Katering" to "restaurant"),
+                    "DECOR" to ("Dekorasi" to "brush"),
+                    "MUA" to ("MUA" to "face"),
+                    "BUSANA" to ("Busana" to "checkroom"),
+                    "DOKUMENTASI" to ("Foto & Video" to "camera"),
+                    "UNDANGAN" to ("Undangan" to "email"),
+                    "SESERAHAN" to ("Seserahan" to "giftcard"),
+                    "SOUVENIR" to ("Souvenir" to "redeem"),
+                    "TRANSPORTASI" to ("Transportasi" to "car"),
+                    "LAINNYA" to ("Lainnya" to "more")
+                )
+
+                val grouped = expenses.groupBy { it.category }
+                val budgets = grouped.map { (catKey, list) ->
+                    val totalPaidCat = list.sumOf { it.totalPaid }
+                    val totalEstCat = list.sumOf { it.totalEstimated }
+                    val progressCat = if (totalEstCat > 0) (totalPaidCat / totalEstCat).toFloat().coerceIn(0f, 1f) else 0f
+                    
+                    val (name, icon) = if (catKey.startsWith("CUSTOM:")) {
+                        val parts = catKey.split(":")
+                        val customName = parts.getOrNull(1) ?: catKey
+                        val customIcon = parts.getOrNull(2) ?: "more"
+                        customName to customIcon
+                    } else {
+                        val mapped = defaultCatMap[catKey]
+                        if (mapped != null) {
+                            mapped.first to mapped.second
+                        } else {
+                            catKey to "more"
+                        }
+                    }
+
+                    WeddingCategoryBudgetProgress(
+                        categoryKey = catKey,
+                        categoryName = name,
+                        totalPaid = totalPaidCat,
+                        totalEstimated = totalEstCat,
+                        progress = progressCat,
+                        iconName = icon
+                    )
+                }.sortedByDescending { it.totalEstimated }
+
+                val now = System.currentTimeMillis()
+                val days = ((( profile?.weddingDate ?: now) - now) / (1000L * 60 * 60 * 24)).coerceAtLeast(0)
+
+                Triple(
+                    profile, days,
+                    _uiState.value.copy(
+                        weddingProfile = profile,
+                        daysUntilWedding = days,
+                        taskProgress = if (totalTasks > 0) doneTasks.toFloat() / totalTasks else 0f,
+                        docProgress = if (totalDocs > 0) doneDocs.toFloat() / totalDocs else 0f,
+                        vendorLunasCount = expenses.count { it.paymentStatus == "FULLY_PAID" },
+                        totalExpenseCount = expenses.size,
+                        totalBudgetCap = profile?.totalBudgetCap ?: 0.0,
+                        totalEstimated = totalEst,
+                        totalPaid = totalPaid,
+                        upcomingTasks = upcoming,
+                        categoryBudgets = budgets,
+                        isLoading = false
+                    )
+                )
+            }.collectLatest { (_, _, coreState) ->
+                // Layer 2: Sprint 4 counters
+                combine(
+                    guestRepository.getTotalCount(weddingProfileId),
+                    guestRepository.getTotalPax(weddingProfileId),
+                    vendorRepository.getAllByProfile(weddingProfileId),
+                    seserahanRepository.getAllByProfile(weddingProfileId),
+                    committeeRepository.getAllByProfile(weddingProfileId),
+                    expenseRepository.getLastPaidTerm()
+                ) { args ->
+                    val guestCount       = args[0] as Int
+                    val guestPax         = args[1] as? Int ?: 0
+                    @Suppress("UNCHECKED_CAST")
+                    val vendors          = args[2] as List<WeddingVendorEntity>
+                    @Suppress("UNCHECKED_CAST")
+                    val seserahanItems   = args[3] as List<WeddingSeserahanEntity>
+                    @Suppress("UNCHECKED_CAST")
+                    val committeeMembers = args[4] as List<WeddingCommitteeEntity>
+                    val lastTerm         = args[5] as? WeddingPaymentTermEntity
+                    coreState.copy(
+                        totalGuests = guestCount,
+                        totalPax = guestPax,
+                        totalVendors = vendors.size,
+                        contractedVendors = vendors.count { it.status in listOf("KONTRAK", "SELESAI") },
+                        totalSeserahanItems = seserahanItems.size,
+                        readySeserahanItems = seserahanItems.count { it.status == "SIAP" },
+                        totalCommitteeMembers = committeeMembers.size,
+                        uniformReadyCount = committeeMembers.count { it.uniformStatus == "SIAP_PAKAI" },
+                        lastPaidExpenseName = lastTerm?.termName,
+                        lastPaidAmount = lastTerm?.amount ?: 0.0,
+                        lastPaidDate = lastTerm?.paidDate
+                    )
+                }.collect { fullState ->
+                    _uiState.value = fullState
+                }
+            }
+        }
+    }
+
+    private fun loadDashboard() {
+        _uiState.update { it.copy(isLoading = false) }
+    }
+
+    fun switchProfile(profileId: Long) {
+        viewModelScope.launch {
+            preferencesManager.setActiveProfileId(profileId)
+        }
+    }
+}

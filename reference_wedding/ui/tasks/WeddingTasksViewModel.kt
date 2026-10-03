@@ -1,0 +1,144 @@
+package com.trackit.app.ui.wedding.tasks
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.trackit.app.data.local.entity.WeddingTaskEntity
+import com.trackit.app.data.repository.WeddingTaskRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+data class WeddingTasksUiState(
+    val allTasks: List<WeddingTaskEntity> = emptyList(),
+    val filterPic: String = "ALL", // ALL, GROOM, BRIDE, BOTH, FAMILY, WO
+    val isLoading: Boolean = true,
+    val availablePics: List<Pair<String, String>> = emptyList()
+) {
+    val filtered get() = if (filterPic == "ALL") allTasks
+                         else allTasks.filter { it.pic == filterPic }
+
+    // Kelompok per fase dengan tugas belum selesai di atas dan tugas selesai di paling bawah
+    val grouped: Map<Int, List<WeddingTaskEntity>> get() =
+        filtered.groupBy { it.phaseMonth }
+            .mapValues { (_, tasks) ->
+                tasks.sortedWith(
+                    compareBy<WeddingTaskEntity> { it.isCompleted } // false di atas, true di paling bawah
+                        .thenBy { it.dueDate ?: Long.MAX_VALUE }
+                        .thenBy { it.sortOrder }
+                )
+            }
+            .toSortedMap(compareByDescending { it })
+
+    val totalCount get() = allTasks.size
+    val completedCount get() = allTasks.count { it.isCompleted }
+    val progressPct get() = if (totalCount > 0) completedCount.toFloat() / totalCount else 0f
+}
+
+fun Int.phaseLabel(): String = when (this) {
+    12 -> "H-12 Bulan — Perencanaan Awal"
+    6 -> "H-6 Bulan — Persiapan Detail"
+    3 -> "H-3 Bulan — Finalisasi"
+    1 -> "H-1 Bulan — Menjelang Hari-H"
+    0 -> "Hari-H"
+    else -> "H-$this Bulan"
+}
+
+val DEFAULT_PICS = listOf(
+    "GROOM" to "CPP",
+    "BRIDE" to "CPW",
+    "BOTH" to "Bersama",
+    "FAMILY" to "Panitia",
+    "WO" to "WO"
+)
+
+@HiltViewModel
+class WeddingTasksViewModel @Inject constructor(
+    private val repo: WeddingTaskRepository
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow(WeddingTasksUiState())
+    val uiState: StateFlow<WeddingTasksUiState> = _uiState.asStateFlow()
+
+    fun loadForProfile(weddingProfileId: String) {
+        viewModelScope.launch {
+            repo.getAllByProfile(weddingProfileId).collect { tasks ->
+                val defaultPicMap = DEFAULT_PICS.toMap()
+                val existingPicKeys = tasks.map { it.pic }.distinct()
+                val allPicKeys = (defaultPicMap.keys + existingPicKeys).distinct()
+                val availablePics = allPicKeys.map { key -> key to (defaultPicMap[key] ?: key) }
+
+                _uiState.update { it.copy(
+                    allTasks = tasks,
+                    availablePics = availablePics,
+                    isLoading = false
+                ) }
+            }
+        }
+    }
+
+    fun toggleCompleted(task: WeddingTaskEntity) {
+        val newCompleted = !task.isCompleted
+        val newCompletedDate = if (newCompleted) (task.completedDate ?: System.currentTimeMillis()) else null
+        viewModelScope.launch {
+            repo.update(task.copy(isCompleted = newCompleted, completedDate = newCompletedDate))
+        }
+    }
+
+    fun setFilter(pic: String) { _uiState.update { it.copy(filterPic = pic) } }
+
+    fun addTask(
+        weddingProfileId: String,
+        title: String,
+        desc: String?,
+        phaseMonth: Int,
+        pic: String,
+        dueDate: Long? = null,
+        completedDate: Long? = null
+    ) {
+        viewModelScope.launch {
+            repo.insert(
+                WeddingTaskEntity(
+                    weddingProfileId = weddingProfileId,
+                    phaseMonth = phaseMonth,
+                    title = title,
+                    description = desc,
+                    pic = pic,
+                    dueDate = dueDate,
+                    completedDate = completedDate,
+                    isCompleted = completedDate != null,
+                    sortOrder = _uiState.value.allTasks.size
+                )
+            )
+        }
+    }
+
+    fun updateTask(
+        task: WeddingTaskEntity,
+        title: String,
+        desc: String?,
+        phaseMonth: Int,
+        pic: String,
+        dueDate: Long? = null,
+        completedDate: Long? = null
+    ) {
+        viewModelScope.launch {
+            val isCompleted = completedDate != null || (task.isCompleted && completedDate == null && task.completedDate != null)
+            repo.update(
+                task.copy(
+                    title = title,
+                    description = desc,
+                    phaseMonth = phaseMonth,
+                    pic = pic,
+                    dueDate = dueDate,
+                    completedDate = completedDate,
+                    isCompleted = if (completedDate != null) true else task.isCompleted
+                )
+            )
+        }
+    }
+
+    fun deleteTask(task: WeddingTaskEntity) {
+        viewModelScope.launch { repo.delete(task) }
+    }
+}

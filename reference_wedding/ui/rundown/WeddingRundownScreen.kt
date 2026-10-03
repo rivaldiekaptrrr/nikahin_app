@@ -1,0 +1,764 @@
+package com.trackit.app.ui.wedding.rundown
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.trackit.app.data.local.entity.WeddingEventEntity
+import com.trackit.app.data.local.entity.WeddingRundownItemEntity
+import com.trackit.app.ui.wedding.common.DeleteConfirmDialog
+import com.trackit.app.ui.wedding.common.WeddingScreenGuideDialog
+import com.trackit.app.ui.wedding.common.WeddingGuideFeature
+import java.text.SimpleDateFormat
+import java.util.*
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun WeddingRundownScreen(
+    weddingProfileId: String,
+    onNavigateBack: () -> Unit,
+    viewModel: WeddingRundownViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    var showAddEventDialog by remember { mutableStateOf(false) }
+    var showAddItemDialog by remember { mutableStateOf(false) }
+    var showGuideDialog by remember { mutableStateOf(false) }
+    var editingItem by remember { mutableStateOf<WeddingRundownItemEntity?>(null) }
+
+    LaunchedEffect(weddingProfileId) { viewModel.loadForProfile(weddingProfileId) }
+
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+        topBar = {
+            TopAppBar(
+                title = {
+                    Column {
+                        Text("Rundown Acara", fontWeight = FontWeight.Bold)
+                        Text(
+                            "${uiState.events.size} event · ${uiState.currentRundown.size} sesi",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                },
+                navigationIcon = { IconButton(onClick = onNavigateBack) { Icon(Icons.Default.ArrowBack, contentDescription = "Kembali") } },
+                actions = {
+                    IconButton(onClick = { showGuideDialog = true }) {
+                        Icon(Icons.Default.Info, contentDescription = "Panduan Fitur")
+                    }
+                    IconButton(onClick = { showAddEventDialog = true }) {
+                        Icon(Icons.Default.LibraryAdd, contentDescription = "Tambah Event")
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
+            )
+        },
+        floatingActionButton = {
+            if (uiState.selectedEvent != null) {
+                FloatingActionButton(
+                    onClick = { showAddItemDialog = true },
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = "Tambah Sesi Rundown")
+                }
+            }
+        }
+    ) { padding ->
+        if (uiState.isLoading) {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
+            return@Scaffold
+        }
+
+        if (uiState.events.isEmpty()) {
+            // Empty state
+            Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(32.dp)) {
+                    Icon(
+                        imageVector = Icons.Default.Assignment,
+                        contentDescription = null,
+                        modifier = Modifier.size(64.dp),
+                        tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
+                    )
+                    Spacer(Modifier.height(16.dp))
+                    Text("Belum ada event", style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold)
+                    Text(
+                        "Tambahkan event acara pernikahan seperti Akad Nikah, Resepsi, Siraman, dll.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                    Spacer(Modifier.height(24.dp))
+                    Button(onClick = { showAddEventDialog = true }) {
+                        Icon(Icons.Default.Add, null, Modifier.size(18.dp))
+                        Spacer(Modifier.width(8.dp))
+                        Text("Tambah Event Pertama")
+                    }
+                }
+            }
+        } else {
+            Column(modifier = Modifier.padding(padding).fillMaxSize()) {
+                // Event Tabs scroll
+                ScrollableTabRow(
+                    selectedTabIndex = uiState.events.indexOfFirst { it.eventId == uiState.selectedEvent?.eventId }.coerceAtLeast(0),
+                    edgePadding = 16.dp,
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    uiState.events.forEachIndexed { index, event ->
+                        val isSelected = event.eventId == uiState.selectedEvent?.eventId
+                        Tab(
+                            selected = isSelected,
+                            onClick = { viewModel.selectEvent(event.eventId) },
+                            text = { 
+                                Text(
+                                    event.eventName, 
+                                    maxLines = 1,
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                                ) 
+                            }
+                        )
+                    }
+                }
+
+                // Rundown list for selected event
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(bottom = 88.dp)
+                ) {
+                    // Selected event header
+                    item {
+                        uiState.selectedEvent?.let { event ->
+                            val totalMinutes = uiState.currentRundown.sumOf { it.durationMinutes }
+                            val totalHours = totalMinutes / 60
+                            val remMinutes = totalMinutes % 60
+                            val durationText = if (totalHours > 0) "${totalHours}j ${remMinutes}m" else "${remMinutes}m"
+
+                            EventHeaderCard(
+                                event = event,
+                                sessionCount = uiState.currentRundown.size,
+                                durationText = durationText,
+                                onRename = { viewModel.renameEvent(event, it) },
+                                onDelete = {
+                                    viewModel.deleteEvent(event)
+                                }
+                            )
+                        }
+                    }
+
+                    if (uiState.currentRundown.isEmpty()) {
+                        item {
+                            Box(Modifier.fillMaxWidth().padding(48.dp), contentAlignment = Alignment.Center) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Icon(
+                                        imageVector = Icons.Default.Schedule,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(48.dp),
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                                    )
+                                    Spacer(Modifier.height(8.dp))
+                                    Text("Belum ada sesi rundown", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    TextButton(onClick = { showAddItemDialog = true }) { Text("Tambah Sesi") }
+                                }
+                            }
+                        }
+                    } else {
+                        items(uiState.currentRundown, key = { it.itemId }) { item ->
+                            RundownItemRow(
+                                item = item,
+                                onClick = { editingItem = item },
+                                onDelete = { viewModel.deleteRundownItem(item) }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (showGuideDialog) {
+        WeddingScreenGuideDialog(
+            title = "Susunan Acara (Rundown)",
+            screenPurpose = "Menyusun jadwal kegiatan hari H menit demi menit agar seluruh panitia keluarga, wedding organizer, MC, dan pengisi acara bergerak secara sinkron tanpa keterlambatan.",
+            features = listOf(
+                WeddingGuideFeature("Event Terpisah", "Buat event terpisah untuk Akad Nikah, Resepsi Siang/Malam, atau Temu Manten."),
+                WeddingGuideFeature("Jadwal Berurutan Otomatis", "Sesi rundown otomatis tersusun runtut berdasarkan jam mulai dan estimasi durasi."),
+                WeddingGuideFeature("Penanggung Jawab (PIC)", "Tentukan PIC khusus untuk setiap sesi (misal: PIC Cincin, PIC Mas Kawin, Soundman)."),
+                WeddingGuideFeature("Catatan Naskah & Audio", "Simpan petunjuk MC, cue musik pengiring, dan naskah doa pada detail sesi.")
+            ),
+            proTip = "Sediakan jeda waktu aman (*buffer*) 10–15 menit antar prosesi untuk mengantisipasi molornya sesi rias atau foto keluarga.",
+            onDismiss = { showGuideDialog = false }
+        )
+    }
+
+    if (showAddEventDialog) {
+        AddEventDialog(
+            onDismiss = { showAddEventDialog = false },
+            onAdd = { name, date, location ->
+                viewModel.addEvent(name, date, location)
+                showAddEventDialog = false
+            }
+        )
+    }
+
+    if (showAddItemDialog && uiState.selectedEvent != null) {
+        AddEditRundownItemDialog(
+            item = null,
+            onDismiss = { showAddItemDialog = false },
+            onConfirm = { time, duration, title, pic, script ->
+                viewModel.addRundownItem(uiState.selectedEvent!!.eventId, time, duration, title, pic, script)
+                showAddItemDialog = false
+            }
+        )
+    }
+
+    editingItem?.let { item ->
+        AddEditRundownItemDialog(
+            item = item,
+            onDismiss = { editingItem = null },
+            onConfirm = { time, duration, title, pic, script ->
+                viewModel.updateRundownItem(
+                    item.copy(
+                        timeStart = time,
+                        durationMinutes = duration,
+                        sessionTitle = title,
+                        pic = pic,
+                        mcScript = script
+                    )
+                )
+                editingItem = null
+            }
+        )
+    }
+}
+
+@Composable
+private fun EventHeaderCard(
+    event: WeddingEventEntity,
+    sessionCount: Int,
+    durationText: String,
+    onRename: (String) -> Unit,
+    onDelete: () -> Unit
+) {
+    var showRenameDialog by remember { mutableStateOf(false) }
+    var showDeleteConfirm by remember { mutableStateOf(false) }
+    val dateStr = remember(event.eventDate) {
+        SimpleDateFormat("EEEE, dd MMMM yyyy", Locale("id", "ID")).format(Date(event.eventDate))
+    }
+
+    ElevatedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        shape = RoundedCornerShape(24.dp),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
+    ) {
+        Column(modifier = Modifier.padding(20.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = event.eventName,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.DateRange, null, Modifier.size(14.dp), tint = MaterialTheme.colorScheme.primary)
+                        Spacer(Modifier.width(4.dp))
+                        Text(
+                            text = dateStr,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                    if (!event.eventLocation.isNullOrBlank()) {
+                        Spacer(Modifier.height(4.dp))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(Icons.Default.Place, null, Modifier.size(14.dp), tint = MaterialTheme.colorScheme.primary)
+                            Spacer(Modifier.width(4.dp))
+                            Text(
+                                text = event.eventLocation,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    }
+                }
+                Row {
+                    IconButton(onClick = { showRenameDialog = true }) {
+                        Icon(Icons.Default.Edit, contentDescription = "Edit Event", tint = MaterialTheme.colorScheme.primary)
+                    }
+                    IconButton(onClick = { showDeleteConfirm = true }) {
+                        Icon(Icons.Default.Delete, contentDescription = "Hapus Event", tint = MaterialTheme.colorScheme.error)
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(14.dp))
+
+            // Stat pills
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Surface(
+                    color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.6f),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(Icons.Default.FormatListNumbered, null, Modifier.size(14.dp), tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                        Spacer(Modifier.width(4.dp))
+                        Text(
+                            "$sessionCount Sesi",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    }
+                }
+
+                Surface(
+                    color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.6f),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(Icons.Default.Timer, null, Modifier.size(14.dp), tint = MaterialTheme.colorScheme.onSecondaryContainer)
+                        Spacer(Modifier.width(4.dp))
+                        Text(
+                            "Total $durationText",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    if (showRenameDialog) {
+        var newName by remember { mutableStateOf(event.eventName) }
+        AlertDialog(
+            onDismissRequest = { showRenameDialog = false },
+            title = { Text("Ubah Nama Event") },
+            text = {
+                OutlinedTextField(
+                    value = newName,
+                    onValueChange = { newName = it },
+                    label = { Text("Nama Event") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+            },
+            confirmButton = {
+                Button(onClick = {
+                    if (newName.isNotBlank()) {
+                        onRename(newName.trim())
+                        showRenameDialog = false
+                    }
+                }) {
+                    Text("Simpan")
+                }
+            },
+            dismissButton = { TextButton(onClick = { showRenameDialog = false }) { Text("Batal") } }
+        )
+    }
+
+    if (showDeleteConfirm) {
+        DeleteConfirmDialog(
+            title = "Hapus Event Acara?",
+            message = "Event \"${event.eventName}\" beserta seluruh daftar susunan acaranya akan dihapus permanen.",
+            onDismiss = { showDeleteConfirm = false },
+            onConfirm = onDelete
+        )
+    }
+}
+
+@Composable
+private fun RundownItemRow(
+    item: WeddingRundownItemEntity,
+    onClick: () -> Unit,
+    onDelete: () -> Unit
+) {
+    var showDeleteConfirm by remember { mutableStateOf(false) }
+
+    val endTime = remember(item.timeStart, item.durationMinutes) {
+        try {
+            val fmt = SimpleDateFormat("HH:mm", Locale.getDefault())
+            val start = fmt.parse(item.timeStart)!!
+            val cal = Calendar.getInstance().apply { time = start; add(Calendar.MINUTE, item.durationMinutes) }
+            fmt.format(cal.time)
+        } catch (e: Exception) { "??:??" }
+    }
+
+    ElevatedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 6.dp)
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 1.dp),
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
+    ) {
+        Row(
+            modifier = Modifier.padding(14.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Time column
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.widthIn(min = 58.dp, max = 68.dp)
+            ) {
+                Text(
+                    text = item.timeStart,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary,
+                    maxLines = 1
+                )
+                Text(
+                    text = endTime,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1
+                )
+                Surface(
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f),
+                    shape = RoundedCornerShape(4.dp),
+                    modifier = Modifier.padding(top = 2.dp)
+                ) {
+                    Text(
+                        text = "${item.durationMinutes}m",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp),
+                        maxLines = 1
+                    )
+                }
+            }
+
+            // Timeline Node Connector
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(10.dp)
+                        .background(MaterialTheme.colorScheme.primary, CircleShape)
+                )
+                Box(
+                    modifier = Modifier
+                        .width(2.dp)
+                        .height(48.dp)
+                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.25f))
+                )
+            }
+
+            // Content
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = item.sessionTitle,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(Modifier.height(4.dp))
+                if (!item.pic.isNullOrBlank()) {
+                    Surface(
+                        color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
+                        shape = RoundedCornerShape(4.dp)
+                    ) {
+                        Text(
+                            text = "PIC: ${item.pic}",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                    Spacer(Modifier.height(4.dp))
+                }
+                if (!item.mcScript.isNullOrBlank()) {
+                    Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Icon(
+                            Icons.Default.Mic,
+                            contentDescription = null,
+                            modifier = Modifier.size(14.dp).padding(top = 2.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(
+                            text = item.mcScript,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
+            }
+
+            IconButton(
+                onClick = { showDeleteConfirm = true },
+                modifier = Modifier
+                    .size(28.dp)
+                    .background(
+                        MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.12f),
+                        RoundedCornerShape(8.dp)
+                    )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Hapus",
+                    tint = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.size(14.dp)
+                )
+            }
+        }
+    }
+
+    if (showDeleteConfirm) {
+        DeleteConfirmDialog(
+            title = "Hapus Sesi?",
+            message = "\"${item.sessionTitle}\" akan dihapus dari susunan rundown.",
+            onDismiss = { showDeleteConfirm = false },
+            onConfirm = onDelete
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AddEventDialog(
+    onDismiss: () -> Unit,
+    onAdd: (name: String, date: Long, location: String?) -> Unit
+) {
+    var name by remember { mutableStateOf("") }
+    var selectedDate by remember { mutableStateOf(System.currentTimeMillis()) }
+    var location by remember { mutableStateOf("") }
+    var showDatePicker by remember { mutableStateOf(false) }
+    var submitted by remember { mutableStateOf(false) }
+
+    val formattedDate = remember(selectedDate) {
+        SimpleDateFormat("EEEE, dd MMMM yyyy", Locale("id", "ID")).format(Date(selectedDate))
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Tambah Event Acara") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it; submitted = false },
+                    label = { Text("Nama Event (mis. Akad Nikah, Resepsi)") },
+                    isError = submitted && name.isBlank(),
+                    supportingText = { if (submitted && name.isBlank()) Text("Nama event wajib diisi") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+
+                // Date Picker Field
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    OutlinedTextField(
+                        value = formattedDate,
+                        onValueChange = {},
+                        label = { Text("Tanggal Acara") },
+                        readOnly = true,
+                        trailingIcon = {
+                            IconButton(onClick = { showDatePicker = true }) {
+                                Icon(Icons.Default.DateRange, contentDescription = "Pilih Tanggal Acara")
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { showDatePicker = true }
+                    )
+                }
+
+                OutlinedTextField(
+                    value = location,
+                    onValueChange = { location = it },
+                    label = { Text("Lokasi (opsional)") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+            }
+        },
+        confirmButton = {
+            Button(onClick = {
+                submitted = true
+                if (name.isNotBlank()) {
+                    onAdd(name.trim(), selectedDate, location.ifBlank { null })
+                }
+            }) { Text("Tambah") }
+        },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Batal") } }
+    )
+
+    if (showDatePicker) {
+        val dpState = rememberDatePickerState(initialSelectedDateMillis = selectedDate)
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    dpState.selectedDateMillis?.let { selectedDate = it }
+                    showDatePicker = false
+                }) { Text("Pilih") }
+            },
+            dismissButton = { TextButton(onClick = { showDatePicker = false }) { Text("Batal") } }
+        ) {
+            DatePicker(state = dpState)
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AddEditRundownItemDialog(
+    item: WeddingRundownItemEntity?,
+    onDismiss: () -> Unit,
+    onConfirm: (time: String, duration: Int, title: String, pic: String?, script: String?) -> Unit
+) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    var time by remember { mutableStateOf(item?.timeStart ?: "08:00") }
+    var duration by remember { mutableStateOf(item?.durationMinutes?.toString() ?: "30") }
+    var title by remember { mutableStateOf(item?.sessionTitle ?: "") }
+    var pic by remember { mutableStateOf(item?.pic ?: "") }
+    var script by remember { mutableStateOf(item?.mcScript ?: "") }
+    var submitted by remember { mutableStateOf(false) }
+
+    val isEdit = item != null
+
+    fun showTimePicker() {
+        val parts = time.split(":")
+        val initialHour = parts.getOrNull(0)?.toIntOrNull() ?: 8
+        val initialMinute = parts.getOrNull(1)?.toIntOrNull() ?: 0
+        android.app.TimePickerDialog(
+            context,
+            { _, selectedHour, selectedMinute ->
+                time = String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute)
+            },
+            initialHour,
+            initialMinute,
+            true
+        ).show()
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(if (isEdit) "Edit Sesi Rundown" else "Tambah Sesi Rundown") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    // Time Picker Field
+                    Box(modifier = Modifier.weight(1f)) {
+                        OutlinedTextField(
+                            value = time,
+                            onValueChange = {},
+                            label = { Text("Mulai (Waktu)") },
+                            readOnly = true,
+                            trailingIcon = {
+                                IconButton(onClick = { showTimePicker() }) {
+                                    Icon(Icons.Default.AccessTime, contentDescription = "Pilih Waktu")
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { showTimePicker() }
+                        )
+                    }
+
+                    OutlinedTextField(
+                        value = duration,
+                        onValueChange = { duration = it.filter { c -> c.isDigit() } },
+                        label = { Text("Durasi (menit)") },
+                        singleLine = true,
+                        keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.Number),
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                OutlinedTextField(
+                    value = title,
+                    onValueChange = { title = it; submitted = false },
+                    label = { Text("Nama Sesi / Kegiatan") },
+                    isError = submitted && title.isBlank(),
+                    supportingText = { if (submitted && title.isBlank()) Text("Judul wajib diisi") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+                OutlinedTextField(
+                    value = pic,
+                    onValueChange = { pic = it },
+                    label = { Text("PIC (MC, WO, CPP, CPW, dll)") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+                OutlinedTextField(
+                    value = script,
+                    onValueChange = { script = it },
+                    label = { Text("Teks Panduan MC / Catatan (opsional)") },
+                    modifier = Modifier.fillMaxWidth(),
+                    maxLines = 3
+                )
+            }
+        },
+        confirmButton = {
+            Button(onClick = {
+                submitted = true
+                if (title.isNotBlank()) {
+                    onConfirm(
+                        time,
+                        duration.toIntOrNull() ?: 30,
+                        title.trim(),
+                        pic.ifBlank { null },
+                        script.ifBlank { null }
+                    )
+                }
+            }) { Text(if (isEdit) "Simpan" else "Tambah") }
+        },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Batal") } }
+    )
+}

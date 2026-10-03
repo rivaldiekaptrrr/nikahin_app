@@ -1,0 +1,855 @@
+package com.trackit.app.ui.wedding.dashboard
+
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.ui.window.Dialog
+import com.trackit.app.util.CategoryIconMapper
+import com.trackit.app.util.CurrencyUtils
+import kotlin.math.roundToInt
+
+@OptIn(ExperimentalMaterial3Api::class, androidx.compose.foundation.ExperimentalFoundationApi::class)
+@Composable
+fun WeddingDashboardScreen(
+    weddingProfileId: String,
+    onNavigateToTasks: () -> Unit = {},
+    onNavigateToDocuments: () -> Unit = {},
+    onNavigateToBudget: () -> Unit = {},
+    onNavigateToGuests: () -> Unit = {},
+    onNavigateToVendors: () -> Unit = {},
+    onNavigateToSeserahan: () -> Unit = {},
+    onNavigateToCommittee: () -> Unit = {},
+    onNavigateToRundown: () -> Unit = {},
+    onNavigateToSettings: () -> Unit = {},
+    onNavigateToProfile: () -> Unit = {},
+    viewModel: WeddingDashboardViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    var showProfileSwitcher by remember { mutableStateOf(false) }
+    val haptic = androidx.compose.ui.platform.LocalHapticFeedback.current
+
+    LaunchedEffect(weddingProfileId) {
+        viewModel.loadForProfile(weddingProfileId)
+    }
+
+    if (uiState.isLoading) {
+        Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+        }
+        return
+    }
+
+    val profile = uiState.weddingProfile
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)) // Subtle off-white/gray bg
+    ) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 120.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // === HERO COUNTDOWN (2x2 Span equivalent) ===
+            item {
+                ElevatedCard(
+                    shape = RoundedCornerShape(24.dp),
+                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 6.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                Brush.linearGradient(
+                                    colors = listOf(
+                                        MaterialTheme.colorScheme.primaryContainer,
+                                        MaterialTheme.colorScheme.secondaryContainer
+                                    )
+                                )
+                            )
+                            .padding(24.dp)
+                    ) {
+                        // === Top Bar (Date & Profile Pill) ===
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            // Current Date
+                            val currentDate = java.text.SimpleDateFormat("d MMMM yyyy", java.util.Locale("id", "ID")).format(java.util.Date())
+                            Text(
+                                text = currentDate,
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
+                                fontWeight = FontWeight.Medium,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(1f, fill = false)
+                            )
+
+                            Spacer(Modifier.width(8.dp))
+
+                            // Dynamic Profile Pill (Names + Icon + Dropdown)
+                            val activeProf = uiState.activeProfile
+                            val names = "${profile?.groomName ?: ""} & ${profile?.brideName ?: ""}".trim().removePrefix("&").removeSuffix("&").trim()
+                            Row(
+                                modifier = Modifier
+                                    .weight(1f, fill = false)
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .background(MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.1f))
+                                    .combinedClickable(
+                                        onClick = onNavigateToProfile,
+                                        onLongClick = { 
+                                            haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.LongPress)
+                                            showProfileSwitcher = true 
+                                        }
+                                    )
+                                    .padding(horizontal = 10.dp, vertical = 6.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                Text(
+                                    text = if (names.isEmpty()) "Profil" else names,
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    fontWeight = FontWeight.Bold,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.weight(1f, fill = false)
+                                )
+                                Icon(
+                                    imageVector = CategoryIconMapper.getIcon(activeProf?.iconName ?: "favorite"),
+                                    contentDescription = "Ikon Profil",
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Icon(
+                                    imageVector = Icons.Default.KeyboardArrowDown,
+                                    contentDescription = "Ganti Profil",
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            }
+                        }
+
+                        Spacer(Modifier.height(32.dp))
+
+                        // === Hero Texts (Centered Countdown) ===
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.Bottom,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    text = "${uiState.daysUntilWedding}",
+                                    style = MaterialTheme.typography.displayLarge,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text(
+                                    text = "Hari Lagi",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
+                                    modifier = Modifier.padding(bottom = 8.dp)
+                                )
+                            }
+
+                            // === Customizable Quote ===
+                            val weddingProfile = uiState.weddingProfile
+                            if (weddingProfile?.quoteEnabled != false) {
+                                Spacer(Modifier.height(24.dp))
+                                val quoteText = weddingProfile?.quote?.takeIf { it.isNotBlank() }
+                                    ?: "Perjalanan cinta yang luar biasa dimulai dari sini."
+                                val quoteFontSize = when (weddingProfile?.quoteFontSize) {
+                                    "KECIL" -> 11.sp
+                                    "BESAR" -> 16.sp
+                                    else -> 13.sp // SEDANG
+                                }
+                                val quoteFontWeight = when (weddingProfile?.quoteFontStyle) {
+                                    "BOLD", "BOLD_ITALIC" -> FontWeight.Bold
+                                    else -> FontWeight.Normal
+                                }
+                                val quoteFontStyle = when (weddingProfile?.quoteFontStyle) {
+                                    "ITALIC", "BOLD_ITALIC" -> androidx.compose.ui.text.font.FontStyle.Italic
+                                    else -> androidx.compose.ui.text.font.FontStyle.Normal
+                                }
+                                Text(
+                                    text = "\"$quoteText\"",
+                                    fontSize = quoteFontSize,
+                                    fontWeight = quoteFontWeight,
+                                    fontStyle = quoteFontStyle,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.85f),
+                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            // === BENTO WIDGET: FINANCIAL SUMMARY ===
+            item {
+                val totalPaid = uiState.totalPaid
+                val totalBudgetCap = uiState.totalBudgetCap
+                val progress = if (totalBudgetCap > 0) (totalPaid / totalBudgetCap).toFloat().coerceIn(0f, 1f) else 0f
+                val percentage = (progress * 100).roundToInt()
+                
+                ElevatedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(24.dp),
+                    colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
+                    onClick = onNavigateToBudget
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Left Side (Financial Details)
+                        Column(
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(
+                                text = "Ringkasan Anggaran",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                            Spacer(Modifier.height(6.dp))
+                            
+                            Text(
+                                text = CurrencyUtils.formatRupiah(totalPaid),
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                            Text(
+                                text = "dari ${CurrencyUtils.formatRupiah(totalBudgetCap)}",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                            Spacer(Modifier.height(8.dp))
+                            
+                            LinearProgressIndicator(
+                                progress = { progress },
+                                modifier = Modifier
+                                    .fillMaxWidth(0.7f)
+                                    .height(4.dp)
+                                    .clip(RoundedCornerShape(2.dp)),
+                                color = MaterialTheme.colorScheme.primary,
+                                trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                            )
+                            Spacer(Modifier.height(8.dp))
+                            
+                            Row(
+                                verticalAlignment = Alignment.Bottom,
+                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(
+                                    text = CurrencyUtils.formatRupiah((totalBudgetCap - totalPaid).coerceAtLeast(0.0)),
+                                    style = MaterialTheme.typography.titleSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.weight(1f, fill = false)
+                                )
+                                Text(
+                                    text = "Sisa Anggaran",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    maxLines = 1,
+                                    modifier = Modifier.padding(bottom = 2.dp)
+                                )
+                            }
+                        }
+                        
+                        // Right Side (Radial/Circular Progress)
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.padding(start = 12.dp)
+                        ) {
+                            CircularProgressIndicator(
+                                progress = { progress },
+                                modifier = Modifier.size(64.dp),
+                                color = MaterialTheme.colorScheme.primary,
+                                strokeWidth = 5.dp,
+                                trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
+                            )
+                            Text(
+                                text = "$percentage%",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    }
+                }
+            }
+
+            // === BENTO GRID 1: QUICK ACTIONS ===
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    BentoActionCard(
+                        modifier = Modifier.weight(1f),
+                        icon = Icons.Default.Add,
+                        label = "Catat\nPengeluaran",
+                        bgColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        onClick = onNavigateToBudget
+                    )
+                    BentoActionCard(
+                        modifier = Modifier.weight(1f),
+                        icon = Icons.Default.People,
+                        label = "Kelola\nTamu",
+                        bgColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.primary,
+                        onClick = onNavigateToGuests
+                    )
+                    BentoActionCard(
+                        modifier = Modifier.weight(1f),
+                        icon = Icons.Default.Event,
+                        label = "Cek\nRundown",
+                        bgColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.primary,
+                        onClick = onNavigateToRundown
+                    )
+                }
+            }
+
+            // === BENTO GRID 2: PROGRESS (2x1 and 1x1 mix) ===
+            item {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                    // Left Column (Tasks & Docs)
+                    Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                        BentoProgressCard(
+                            label = "Tugas Selesai",
+                            progress = uiState.taskProgress,
+                            color = MaterialTheme.colorScheme.primary,
+                            onClick = onNavigateToTasks
+                        )
+                        BentoProgressCard(
+                            label = "Berkas KUA",
+                            progress = uiState.docProgress,
+                            color = MaterialTheme.colorScheme.tertiary,
+                            onClick = onNavigateToDocuments
+                        )
+                    }
+                    // Right Column (Budget Summary)
+                    ElevatedCard(
+                        modifier = Modifier
+                            .weight(1f)
+                            .defaultMinSize(minHeight = 192.dp)
+                            .wrapContentHeight(),
+                        shape = RoundedCornerShape(24.dp),
+                        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface),
+                        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
+                        onClick = onNavigateToBudget
+                    ) {
+                        val lunasProgress = if (uiState.totalExpenseCount > 0)
+                            uiState.vendorLunasCount.toFloat() / uiState.totalExpenseCount else 0f
+                        Column(
+                            modifier = Modifier.padding(16.dp).fillMaxSize(),
+                            verticalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            // Top: Vendor Lunas
+                            Column {
+                                Icon(Icons.Default.CheckCircle, contentDescription = null, tint = Color(0xFF43A047), modifier = Modifier.size(28.dp))
+                                Spacer(Modifier.height(4.dp))
+                                Text("Vendor Lunas", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Spacer(Modifier.height(2.dp))
+                                Text(
+                                    "${uiState.vendorLunasCount} / ${uiState.totalExpenseCount}",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFF43A047)
+                                )
+                                Spacer(Modifier.height(6.dp))
+                                LinearProgressIndicator(
+                                    progress = { lunasProgress },
+                                    modifier = Modifier.fillMaxWidth().height(5.dp).clip(RoundedCornerShape(3.dp)),
+                                    color = Color(0xFF43A047),
+                                    trackColor = Color(0xFF43A047).copy(alpha = 0.15f)
+                                )
+                            }
+                            // Divider + Terakhir Dibayar
+                            if (uiState.lastPaidExpenseName != null) {
+                                HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.07f))
+                                Column {
+                                    Text("Terakhir Dibayar", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    Spacer(Modifier.height(2.dp))
+                                    val lastPaidName = uiState.lastPaidExpenseName ?: ""
+                                    Text(
+                                        lastPaidName,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        maxLines = 1,
+                                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                                    )
+                                    val relativeTime = uiState.lastPaidDate?.let { ts ->
+                                        val diff = (System.currentTimeMillis() - ts) / (1000 * 60 * 60 * 24)
+                                        when {
+                                            diff == 0L -> "Hari ini"
+                                            diff == 1L -> "Kemarin"
+                                            diff < 7L  -> "$diff hari lalu"
+                                            else       -> "${diff / 7} minggu lalu"
+                                        }
+                                    } ?: ""
+                                    Text(
+                                        "${CurrencyUtils.formatRupiah(uiState.lastPaidAmount)} • $relativeTime",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // === BENTO GRID 3: STATS (2x2 Grid) ===
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                        BentoStatCard(
+                            modifier = Modifier.weight(1f),
+                            icon = Icons.Default.Groups,
+                            value = "${uiState.totalGuests}",
+                            label = "Tamu Diundang",
+                            onClick = onNavigateToGuests
+                        )
+                        BentoStatCard(
+                            modifier = Modifier.weight(1f),
+                            icon = Icons.Default.Storefront,
+                            value = "${uiState.contractedVendors}/${uiState.totalVendors}",
+                            label = "Vendor Deal",
+                            onClick = onNavigateToVendors
+                        )
+                    }
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                        BentoStatCard(
+                            modifier = Modifier.weight(1f),
+                            icon = Icons.Default.CardGiftcard,
+                            value = "${uiState.readySeserahanItems}/${uiState.totalSeserahanItems}",
+                            label = "Seserahan Siap",
+                            onClick = onNavigateToSeserahan
+                        )
+                        BentoStatCard(
+                            modifier = Modifier.weight(1f),
+                            icon = Icons.Default.Checkroom,
+                            value = "${uiState.uniformReadyCount}/${uiState.totalCommitteeMembers}",
+                            label = "Panitia Siap",
+                            onClick = onNavigateToCommittee
+                        )
+                    }
+                }
+            }
+
+
+
+            // === BUDGET CATEGORIES (List) ===
+            if (uiState.categoryBudgets.isNotEmpty()) {
+                item {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp, bottom = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            "Budget per Kategori",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            "Lihat Semua",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.clickable { onNavigateToBudget() }
+                        )
+                    }
+                }
+                
+                items(uiState.categoryBudgets, key = { it.categoryKey }) { budget ->
+                    ElevatedCard(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(20.dp),
+                        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface),
+                        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 1.dp),
+                        onClick = onNavigateToBudget
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            // Icon Box (with soft background)
+                            Box(
+                                modifier = Modifier
+                                    .size(48.dp)
+                                    .background(
+                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                                        CircleShape
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = getWeddingCategoryIcon(budget.iconName),
+                                    contentDescription = budget.categoryName,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+                            Spacer(Modifier.width(16.dp))
+                            
+                            // Category name, nominal amounts, progress bar
+                            Column(modifier = Modifier.weight(1f)) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = budget.categoryName,
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        modifier = Modifier.weight(1f, fill = false)
+                                    )
+                                    Spacer(Modifier.width(8.dp))
+                                    Text(
+                                        text = "${(budget.progress * 100).roundToInt()}%",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        maxLines = 1
+                                    )
+                                }
+                                Spacer(Modifier.height(4.dp))
+                                
+                                Text(
+                                    text = "${CurrencyUtils.formatRupiah(budget.totalPaid)} / ${CurrencyUtils.formatRupiah(budget.totalEstimated)}",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                                Spacer(Modifier.height(6.dp))
+                                
+                                LinearProgressIndicator(
+                                    progress = { budget.progress },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(5.dp)
+                                        .clip(RoundedCornerShape(2.5.dp)),
+                                    color = MaterialTheme.colorScheme.primary,
+                                    trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // === Profile Switcher Dialog (Instagram Style) ===
+    if (showProfileSwitcher && uiState.allProfiles.isNotEmpty()) {
+        Dialog(onDismissRequest = { showProfileSwitcher = false }) {
+            Card(
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            ) {
+                Column(modifier = Modifier.padding(20.dp)) {
+                    Text(
+                        "Ganti Profil / Mode",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                    uiState.allProfiles.forEach { p ->
+                        val isActive = p.id == uiState.activeProfile?.id
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(if (isActive) MaterialTheme.colorScheme.surfaceVariant else Color.Transparent)
+                                .clickable {
+                                    if (!isActive) viewModel.switchProfile(p.id)
+                                    showProfileSwitcher = false
+                                }
+                                .padding(horizontal = 12.dp, vertical = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .clip(CircleShape)
+                                    .background(CategoryIconMapper.parseColor(p.colorHex)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = CategoryIconMapper.getIcon(p.iconName),
+                                    contentDescription = null,
+                                    tint = Color.White,
+                                    modifier = Modifier.size(22.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    p.name,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    fontWeight = if (isActive) FontWeight.Bold else FontWeight.Normal,
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                                if (isActive) {
+                                    Text(
+                                        "Aktif sekarang",
+                                        color = MaterialTheme.colorScheme.primary,
+                                        style = MaterialTheme.typography.labelSmall
+                                    )
+                                }
+                            }
+                            if (isActive) {
+                                Icon(
+                                    Icons.Default.Check,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
+                        if (p != uiState.allProfiles.last()) {
+                            HorizontalDivider(
+                                color = MaterialTheme.colorScheme.outlineVariant,
+                                modifier = Modifier.padding(horizontal = 12.dp)
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    TextButton(
+                        onClick = {
+                            showProfileSwitcher = false
+                            onNavigateToProfile()
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(Icons.Default.ManageAccounts, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Kelola Profil", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BentoActionCard(
+    modifier: Modifier = Modifier,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    label: String,
+    bgColor: Color,
+    contentColor: Color,
+    onClick: () -> Unit
+) {
+    ElevatedCard(
+        onClick = onClick,
+        modifier = modifier
+            .defaultMinSize(minHeight = 90.dp)
+            .wrapContentHeight(),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.elevatedCardColors(containerColor = bgColor),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(icon, null, tint = contentColor, modifier = Modifier.size(26.dp))
+            Spacer(Modifier.height(6.dp))
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelSmall,
+                color = contentColor,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                fontWeight = FontWeight.SemiBold,
+                lineHeight = 13.sp,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+
+@Composable
+private fun BentoProgressCard(
+    label: String,
+    progress: Float,
+    color: Color,
+    onClick: () -> Unit
+) {
+    val animatedProgress by animateFloatAsState(
+        targetValue = progress,
+        animationSpec = tween(800),
+        label = "progress_$label"
+    )
+    ElevatedCard(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .defaultMinSize(minHeight = 88.dp)
+            .wrapContentHeight(),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(14.dp).fillMaxWidth(),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.weight(1f),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(Modifier.width(4.dp))
+                Text(
+                    "${(animatedProgress * 100).roundToInt()}%",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = color,
+                    maxLines = 1
+                )
+            }
+            Spacer(Modifier.height(10.dp))
+            LinearProgressIndicator(
+                progress = { animatedProgress },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(8.dp)
+                    .clip(RoundedCornerShape(4.dp)),
+                color = color,
+                trackColor = color.copy(alpha = 0.15f)
+            )
+        }
+    }
+}
+
+@Composable
+private fun BentoStatCard(
+    modifier: Modifier = Modifier,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    value: String,
+    label: String,
+    onClick: () -> Unit
+) {
+    ElevatedCard(
+        onClick = onClick,
+        modifier = modifier
+            .defaultMinSize(minHeight = 96.dp)
+            .wrapContentHeight(),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(14.dp).fillMaxWidth(),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(icon, contentDescription = null, modifier = Modifier.size(22.dp), tint = MaterialTheme.colorScheme.primary)
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = value,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+            Spacer(Modifier.height(6.dp))
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+ 
+private fun getWeddingCategoryIcon(iconName: String): androidx.compose.ui.graphics.vector.ImageVector {
+    return when (iconName) {
+        "apartment" -> Icons.Default.Apartment
+        "restaurant" -> Icons.Default.Restaurant
+        "brush" -> Icons.Default.Brush
+        "face" -> Icons.Default.Face
+        "checkroom" -> Icons.Default.Checkroom
+        "camera" -> Icons.Default.PhotoCamera
+        "email" -> Icons.Default.Email
+        "giftcard" -> Icons.Default.CardGiftcard
+        "redeem" -> Icons.Default.Redeem
+        "car" -> Icons.Default.DirectionsCar
+        "music" -> Icons.Default.MusicNote
+        "celebration" -> Icons.Default.Celebration
+        else -> Icons.Default.MoreHoriz
+    }
+}
