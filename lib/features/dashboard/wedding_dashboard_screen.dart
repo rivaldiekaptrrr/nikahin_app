@@ -10,6 +10,8 @@ import '../../shared/utils/date_utils.dart';
 import '../../shared/widgets/error_state_view.dart';
 import '../../shared/widgets/skeleton_loading.dart';
 import '../../shared/widgets/wedding_guide_dialog.dart';
+import '../updater/presentation/update_notifier.dart';
+import '../updater/presentation/widgets/update_dialog.dart';
 
 class WeddingDashboardScreen extends ConsumerStatefulWidget {
   final String profileId;
@@ -21,6 +23,24 @@ class WeddingDashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkUpdateSilently();
+    });
+  }
+
+  Future<void> _checkUpdateSilently() async {
+    try {
+      final release = await ref
+          .read(updateNotifierProvider.notifier)
+          .checkForUpdate(silent: true);
+      if (release != null && mounted) {
+        UpdateDialog.show(context, release: release);
+      }
+    } catch (_) {}
+  }
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

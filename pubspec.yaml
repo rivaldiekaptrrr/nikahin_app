@@ -53,6 +53,8 @@ dependencies:
   printing: ^5.15.1
   shared_preferences: ^2.5.5
   http: ^1.6.0
+  package_info_plus: ^10.2.2
+  open_filex: ^4.7.0
 
 dev_dependencies:
   flutter_test:

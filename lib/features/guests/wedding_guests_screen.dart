@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../../app/config/platform_config.dart';
 import '../../data/repositories/wedding_repository.dart';
 import '../../domain/enums/wedding_enums.dart';
 import '../../domain/models/wedding_models.dart';
@@ -742,6 +743,17 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
   }
 
   Future<void> _pickSingleNativeContact(BuildContext context, WidgetRef ref) async {
+    if (!AppPlatformConfig.isContactsImportAvailable) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Fitur import kontak hanya didukung di perangkat smartphone (Android & iOS).'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+      return;
+    }
     try {
       final status = await Permission.contacts.request();
       if (!status.isGranted) {
@@ -793,6 +805,17 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
   }
 
   Future<void> _pickBatchContacts(BuildContext context, WidgetRef ref) async {
+    if (!AppPlatformConfig.isContactsImportAvailable) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Fitur import kontak hanya didukung di perangkat smartphone (Android & iOS).'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+      return;
+    }
     try {
       final status = await Permission.contacts.request();
       List<Contact> contacts = [];

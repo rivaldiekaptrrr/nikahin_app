@@ -14,6 +14,8 @@ import '../../shared/widgets/date_selector_button.dart';
 import '../../shared/widgets/delete_confirm_dialog.dart';
 import '../../shared/widgets/wedding_guide_dialog.dart';
 import '../../ui/theme/theme_controller.dart';
+import '../updater/presentation/update_notifier.dart';
+import '../updater/presentation/widgets/update_dialog.dart';
 
 class WeddingSettingsScreen extends ConsumerStatefulWidget {
   final String profileId;
@@ -545,7 +547,7 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                                 ),
                                 Text(
-                                  'Versi 1.0.0 (Build Stabil)',
+                                  'Versi ${ref.watch(updateNotifierProvider).currentVersion.isNotEmpty ? ref.watch(updateNotifierProvider).currentVersion : "1.0.0"} (Build Stabil)',
                                   style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurfaceVariant),
                                 ),
                               ],
@@ -556,24 +558,29 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                                 ? null
                                 : () async {
                                     setState(() => _isCheckingUpdate = true);
-                                    await Future.delayed(const Duration(milliseconds: 700));
-                                    if (!context.mounted) return;
-                                    setState(() => _isCheckingUpdate = false);
-                                    showDialog(
-                                      context: context,
-                                      builder: (ctx) => AlertDialog(
-                                        title: const Text('Status Pembaruan'),
-                                        content: const Text(
-                                          'Aplikasi Nikahin sudah dalam versi terbaru (v1.0.0).\nSeluruh fitur berjalan optimal.',
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () => Navigator.of(ctx).pop(),
-                                            child: const Text('Tutup'),
+                                    try {
+                                      final release = await ref
+                                          .read(updateNotifierProvider.notifier)
+                                          .checkForUpdate(silent: false);
+                                      if (!context.mounted) return;
+                                      if (release != null) {
+                                        UpdateDialog.show(context, release: release);
+                                      } else {
+                                        final currentVer = ref
+                                            .read(updateNotifierProvider)
+                                            .currentVersion;
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'Aplikasi Nikahin sudah dalam versi terbaru (v${currentVer.isNotEmpty ? currentVer : "1.0.0"}).',
+                                            ),
+                                            behavior: SnackBarBehavior.floating,
                                           ),
-                                        ],
-                                      ),
-                                    );
+                                        );
+                                      }
+                                    } finally {
+                                      if (mounted) setState(() => _isCheckingUpdate = false);
+                                    }
                                   },
                             child: _isCheckingUpdate
                                 ? const SizedBox(
