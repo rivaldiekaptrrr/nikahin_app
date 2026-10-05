@@ -566,17 +566,29 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                                       if (release != null) {
                                         UpdateDialog.show(context, release: release);
                                       } else {
-                                        final currentVer = ref
-                                            .read(updateNotifierProvider)
-                                            .currentVersion;
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              'Aplikasi Nikahin sudah dalam versi terbaru (v${currentVer.isNotEmpty ? currentVer : "1.0.0"}).',
+                                        final updateState =
+                                            ref.read(updateNotifierProvider);
+                                        if (updateState.status == UpdateStatus.error) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'Gagal memeriksa pembaruan: ${updateState.errorMessage ?? "Periksa koneksi internet"}',
+                                              ),
+                                              backgroundColor: theme.colorScheme.error,
+                                              behavior: SnackBarBehavior.floating,
                                             ),
-                                            behavior: SnackBarBehavior.floating,
-                                          ),
-                                        );
+                                          );
+                                        } else {
+                                          final currentVer = updateState.currentVersion;
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'Aplikasi Nikahin sudah dalam versi terbaru (v${currentVer.isNotEmpty ? currentVer : "1.0.0"}).',
+                                              ),
+                                              behavior: SnackBarBehavior.floating,
+                                            ),
+                                          );
+                                        }
                                       }
                                     } finally {
                                       if (mounted) setState(() => _isCheckingUpdate = false);

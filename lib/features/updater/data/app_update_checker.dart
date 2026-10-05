@@ -26,41 +26,41 @@ class AppUpdateChecker {
   /// Mengembalikan [AppReleaseInfo] jika versi di GitHub lebih baru dari lokal,
   /// atau `null` jika aplikasi sudah dalam versi terbaru / gagal terhubung.
   Future<AppReleaseInfo?> checkForUpdate() async {
-    try {
-      final currentVersion = await getCurrentVersion();
-      final uri = Uri.parse(UpdaterConfig.releasesApiUrl);
+    final currentVersion = await getCurrentVersion();
+    final uri = Uri.parse(UpdaterConfig.releasesApiUrl);
 
-      final response = await _client.get(
-        uri,
-        headers: {
-          'Accept': 'application/vnd.github.v3+json',
-          'User-Agent': 'NikahinApp-Flutter',
-        },
-      ).timeout(const Duration(seconds: 15));
+    final response = await _client.get(
+      uri,
+      headers: {
+        'Accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'NikahinApp-Flutter',
+      },
+    ).timeout(const Duration(seconds: 15));
 
-      if (response.statusCode != 200) {
-        debugPrint(
-          '[AppUpdateChecker] GitHub API responded with status ${response.statusCode}',
-        );
-        return null;
-      }
+    if (response.statusCode != 200) {
+      debugPrint(
+        '[AppUpdateChecker] GitHub API responded with status ${response.statusCode}: ${response.body}',
+      );
+      throw Exception('Gagal menghubungi GitHub API (HTTP ${response.statusCode})');
+    }
 
-      final dynamic data = jsonDecode(response.body);
-      if (data is! Map<String, dynamic>) {
-        return null;
-      }
-
-      final releaseInfo = AppReleaseInfo.fromJson(data);
-
-      if (isNewerVersion(currentVersion, releaseInfo.versionName)) {
-        return releaseInfo;
-      }
-
-      return null;
-    } catch (e) {
-      debugPrint('[AppUpdateChecker] Error saat cek pembaruan: $e');
+    final dynamic data = jsonDecode(response.body);
+    if (data is! Map<String, dynamic>) {
       return null;
     }
+
+    final releaseInfo = AppReleaseInfo.fromJson(data);
+    final isNewer = isNewerVersion(currentVersion, releaseInfo.versionName);
+
+    debugPrint(
+      '[AppUpdateChecker] Versi Lokal: $currentVersion, Versi Remote: ${releaseInfo.versionName}, Lebih Baru: $isNewer',
+    );
+
+    if (isNewer) {
+      return releaseInfo;
+    }
+
+    return null;
   }
 
   /// Membandingkan 2 string versi semantik (Semantic Versioning: Mayor.Minor.Patch)
