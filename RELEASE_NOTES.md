@@ -1,3 +1,3 @@
-• Pembaruan sistem in-app update otomatis.
-• Peningkatan stabilitas dan perbaikan izin instalasi aplikasi.
-• Optimasi performa dan perbaikan bug minor.
+• Pembaruan otomatis in-app update resmi bertanda tangan.
+• Peningkatan stabilitas sistem dan performa aplikasi.
+• Optimasi antarmuka dan perbaikan bug minor.
