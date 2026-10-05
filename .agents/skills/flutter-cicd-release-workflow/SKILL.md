@@ -120,3 +120,13 @@ class AppPlatformConfig {
 | **Installer** | [`lib/features/updater/data/app_update_installer.dart`](file:///c:/Rivaldi/nikahin_app/lib/features/updater/data/app_update_installer.dart) | Pemicu instalasi paket APK Android via `open_filex` |
 | **Notifier** | [`lib/features/updater/presentation/update_notifier.dart`](file:///c:/Rivaldi/nikahin_app/lib/features/updater/presentation/update_notifier.dart) | State notifier Riverpod untuk UI update |
 | **Dialog UI** | [`lib/features/updater/presentation/widgets/update_dialog.dart`](file:///c:/Rivaldi/nikahin_app/lib/features/updater/presentation/widgets/update_dialog.dart) | Dialog pop-up pembaruan bertema Bento M3 |
+
+---
+
+## 🔐 Penandatanganan Aplikasi (Android Release Signing)
+
+Untuk mencegah error bentrok paket (*signature mismatch*) saat pengguna melakukan in-app update:
+
+1. **Format Keystore**: Gunakan `upload-keystore.jks` dan konfigurasikan `android/key.properties` (lihat template [`android/key.properties.example`](file:///c:/Rivaldi/nikahin_app/android/key.properties.example)).
+2. **Panduan Lengkap**: Baca dokumentasi langkah demi langkah di [`docs/ANDROID_SIGNING_GUIDE.md`](file:///c:/Rivaldi/nikahin_app/docs/ANDROID_SIGNING_GUIDE.md).
+3. **GitHub Secrets**: Simpan `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, dan `ANDROID_KEY_PASSWORD` pada Settings > Secrets GitHub agar CI/CD build otomatis menggunakan tanda tangan resmi yang sama dengan build lokal.

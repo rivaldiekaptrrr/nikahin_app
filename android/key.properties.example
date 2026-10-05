@@ -1,0 +1,6 @@
+# Template Konfigurasi Android Keystore (JANGAN masukkan password asli ke Git)
+# Salin file ini menjadi 'android/key.properties' di komputer lokal Anda
+storePassword=password_keystore_anda
+keyPassword=password_kunci_anda
+keyAlias=nikahin_key
+storeFile=../upload-keystore.jks
