@@ -55,9 +55,11 @@ Gunakan saat versi baru siap didistribusikan ke pengguna (memicu pop-up In-App U
    version: 1.0.1+2   # Format: Mayor.Minor.Patch+BuildNumber
    ```
 2. **Tulis catatan rilis di [`RELEASE_NOTES.md`](file:///c:/Rivaldi/nikahin_app/RELEASE_NOTES.md)**:
-   ```markdown
-   ### 💍 Nikahin v1.0.1
-   - Deskripsi fitur baru / perbaikan bug.
+   > ⚠️ **PENTING**: Gunakan **plain text ringkas** (gunakan simbol bullet `•` atau `-`), **JANGAN** gunakan format markdown kompleks (seperti heading `###`, divider `---`, tebal/miring `**`/`*`) karena isi file ini dibaca langsung sebagai teks biasa pada dialog pop-up pembaruan di dalam aplikasi Flutter. Batasi 3–5 poin utama agar mudah dibaca pengguna di layar HP.
+   ```text
+   • Pembaruan sistem in-app update otomatis.
+   • Peningkatan stabilitas dan perbaikan izin instalasi aplikasi.
+   • Optimasi performa dan perbaikan bug minor.
    ```
 3. **Validasi & Build Lokal Wajib**:
    ```bash
