@@ -4,26 +4,39 @@ on:
   push:
     branches: [ main, master ]
     tags: [ 'v*' ]
+  workflow_dispatch:
 
 permissions:
   contents: write
 
-# =============================================================================
-# 🔘 SAKELAR PLATFORM CI/CD (Ubah 'true' / 'false' di bawah untuk aktifkan/nonaktifkan)
-# =============================================================================
-env:
-  BUILD_ANDROID: 'true'   # [Aktif] Build APK Release Android di Linux runner
-  BUILD_IOS: 'false'      # [Standby] Ubah ke 'true' untuk jalankan validasi iOS di macOS runner
-  BUILD_WEB: 'false'      # [Standby] Ubah ke 'true' untuk build rilis Web (HTML/JS/CanvasKit)
-  BUILD_WINDOWS: 'false'  # [Standby] Ubah ke 'true' untuk build rilis Windows Desktop (.exe/zip)
-
 jobs:
+  # ---------------------------------------------------------------------------
+  # 🔘 SAKELAR PLATFORM KENDALI (Ubah 'true' / 'false' di bawah)
+  # ---------------------------------------------------------------------------
+  platform-flags:
+    name: Platform Configuration
+    runs-on: ubuntu-latest
+    outputs:
+      build_android: ${{ steps.toggle.outputs.build_android }}
+      build_ios: ${{ steps.toggle.outputs.build_ios }}
+      build_web: ${{ steps.toggle.outputs.build_web }}
+      build_windows: ${{ steps.toggle.outputs.build_windows }}
+    steps:
+      - id: toggle
+        run: |
+          # Ubah nilai flag di bawah ini:
+          echo "build_android=true" >> $GITHUB_OUTPUT
+          echo "build_ios=false" >> $GITHUB_OUTPUT
+          echo "build_web=false" >> $GITHUB_OUTPUT
+          echo "build_windows=false" >> $GITHUB_OUTPUT
+
   # ---------------------------------------------------------------------------
   # JOB 1: Build Android Release APK & Publish GitHub Release (Push Tag v*)
   # ---------------------------------------------------------------------------
   build-android:
     name: Build Android APK
-    if: env.BUILD_ANDROID == 'true'
+    needs: platform-flags
+    if: needs.platform-flags.outputs.build_android == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -111,11 +124,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # ---------------------------------------------------------------------------
-  # JOB 2: Validate iOS Build (macOS Runner) — Diaktifkan via BUILD_IOS: 'true'
+  # JOB 2: Validate iOS Build (macOS Runner)
   # ---------------------------------------------------------------------------
   validate-ios:
     name: Validate iOS Build
-    if: env.BUILD_IOS == 'true'
+    needs: platform-flags
+    if: needs.platform-flags.outputs.build_ios == 'true'
     runs-on: macos-latest
 
     steps:
@@ -135,11 +149,12 @@ jobs:
         run: flutter build ios --no-codesign
 
   # ---------------------------------------------------------------------------
-  # JOB 3: Build Web Bundle — Diaktifkan via BUILD_WEB: 'true'
+  # JOB 3: Build Web Bundle
   # ---------------------------------------------------------------------------
   build-web:
     name: Build Web Application
-    if: env.BUILD_WEB == 'true'
+    needs: platform-flags
+    if: needs.platform-flags.outputs.build_web == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -167,11 +182,12 @@ jobs:
           retention-days: 14
 
   # ---------------------------------------------------------------------------
-  # JOB 4: Build Windows Desktop — Diaktifkan via BUILD_WINDOWS: 'true'
+  # JOB 4: Build Windows Desktop
   # ---------------------------------------------------------------------------
   build-windows:
     name: Build Windows Desktop App
-    if: env.BUILD_WINDOWS == 'true'
+    needs: platform-flags
+    if: needs.platform-flags.outputs.build_windows == 'true'
     runs-on: windows-latest
 
     steps:
