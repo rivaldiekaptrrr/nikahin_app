@@ -1,13 +1,9 @@
-### 💍 Nikahin v1.0.0 — Rilis Perdana
+### 💍 Nikahin v1.0.1 — Pembaruan & Fitur Baru
 
-Selamat datang di aplikasi **Nikahin**! Aplikasi Wedding Planner All-in-One modern berbasis offline-first untuk mempersiapkan momen pernikahan bahagia Anda dan pasangan.
+Pembaruan versi ini menghadirkan peningkatan stabilitas sistem dan fitur pembaruan aplikasi langsung:
 
-#### ✨ Fitur & Pembaruan:
-- 📊 **Dashboard & Countdown**: Hitung mundur hari-H, quotes romantis kustom, dan ringkasan progres rencana.
-- 💰 **Anggaran & Vendor**: Pelacakan pos biaya pengeluaran, termin pembayaran bertahap (DP s/d Lunas), serta katalog rekanan vendor.
-- 👥 **Buku Tamu & RSVP**: Pengelompokan pihak keluarga & teman, estimasi jumlah pax, serta ekspor data tamu ke CSV.
-- ⏱️ **Rundown Acara**: Penjadwalan multi-event dengan visual timeline node dan penanggung jawab (PIC) per sesi.
-- 📋 **Checklist Dokumen**: Persyaratan berkas KUA / Catatan Sipil dengan auto-sorting deadline.
-- 🎁 **Seserahan & Panitia**: Status packing hantaran mahar & pembagian kain seragam keluarga.
-- 📄 **Ekspor PDF Laporan**: Cetak buku panduan resmi pernikahan ukuran A4 siap pakai.
-- 🔄 **In-App Updater**: Kemudahan mengecek dan memperbarui aplikasi langsung dari dalam aplikasi.
+#### ✨ Catatan Rilis & Perubahan:
+- 🔄 **In-App Updater System**: Pengecekan otomatis versi terbaru saat aplikasi dibuka serta tombol cek pembaruan manual di menu Pengaturan.
+- ⚡ **Optimasi Performa & Database**: Koneksi universal SQLite lokal yang lebih cepat dan aman di berbagai platform.
+- 🛡️ **Peningkatan Kestabilan**: Perbaikan proteksi pembacaan kontak dan penanganan izin sistem.
+- 🎨 **Penyempurnaan UI**: Animasi progress bar unduhan pembaruan yang mulus dan dialog modern berbasis Material 3 Bento Card.
