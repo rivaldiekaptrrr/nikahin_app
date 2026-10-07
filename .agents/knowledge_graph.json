@@ -1,0 +1,93 @@
+{
+  "project": "nikahin_app",
+  "entities": [
+    {
+      "name": "Nikahin_App_Core",
+      "entityType": "Project",
+      "observations": [
+        "Nikahin is an all-in-one Flutter standalone mobile application for wedding planning (Android & iOS).",
+        "Spun off and evolved from the Wedding Planner module of TrackIt (Kotlin/Compose) into an independent cross-platform Flutter app.",
+        "Repository: rivaldiekaptrrr/nikahin_app, workspace located at c:/Rivaldi/nikahin_app.",
+        "Follows an Offline-First architectural pattern with Drift SQLite as the local single source of truth.",
+        "UI language and user-facing strings are strictly in Indonesian with Bento Grid and Material 3 design system."
+      ]
+    },
+    {
+      "name": "Nikahin_Tech_Stack",
+      "entityType": "TechStack",
+      "observations": [
+        "Framework: Flutter (SDK ^3.8.0) & Dart 3.",
+        "State Management: Flutter Riverpod.",
+        "Database: Drift (SQLite) + sqlite3_flutter_libs for offline-first data persistence.",
+        "Routing & Navigation: GoRouter.",
+        "Documents & Export: pdf, printing, and share_plus for A4 Wedding Guidebook PDF and CSV guest list exports.",
+        "Security: local_auth for Biometric (Fingerprint/Face) and PIN lock protection.",
+        "Key-Value Storage: shared_preferences for user settings, theme modes (Light/Dark/System), and reminders.",
+        "In-App Updater powered by package_info_plus, open_filex, and GitHub Releases REST API.",
+        "CI/CD Dual-Platform workflow on GitHub Actions (.github/workflows/multiplatform-build.yml) supporting automated APK releases from git tags (v*) and internal main builds."
+      ]
+    },
+    {
+      "name": "Nikahin_Features_Catalog",
+      "entityType": "FeatureCatalog",
+      "observations": [
+        "Dashboard & Countdown: Interactive D-day countdown timer, custom romantic quotes with typography styling, quick summary cards for budget, tasks, and documents.",
+        "Budget & Payment Terms: Itemized expense tracking (Venue, Catering, MUA, Dokumentasi, Seserahan, dll.) with milestone payment terms (Belum Bayar, DP Terbayar, Lunas).",
+        "Vendor Management: Vendor directory with PIC contact, contract value, and payment progress.",
+        "Guests & RSVP: Guestbook with classification (Keluarga CPP/CPW, Teman CPP/CPW, VIP, Umum), session targeting (Akad, Resepsi, Keduanya), pax counter, and CSV export for reception desk.",
+        "Rundown Timeline: Multi-event chronological timeline (Lamaran, Pengajian, Siraman, Akad Nikah, Resepsi) with visual timeline nodes and assigned PIC per session.",
+        "Documents Checklist: Legal KUA & Catatan Sipil administrative document checklist for CPP & CPW with deadline auto-sorting.",
+        "Seserahan & Committee: Hantaran/gift items status tracking (Belum Beli, Dibeli, Sedang Dihias, Siap) and committee roles with family fabric/uniform allocations.",
+        "PDF Guidebook Export: Full A4 printable wedding guidebook report generator with auto-pagination and clean table layout.",
+        "In-App Updater: Automatic silent background check on startup and manual check button in Settings with download progress bar and direct APK installation trigger.",
+        "Release Notes Generator: Automatic extraction of RELEASE_NOTES.md content to GitHub Releases."
+      ]
+    },
+    {
+      "name": "Nikahin_Architecture_Structure",
+      "entityType": "Architecture",
+      "observations": [
+        "lib/app: App entry point, MaterialApp configuration, theme mode provider, and GoRouter definitions.",
+        "lib/data: Local Drift SQLite database tables, DAOs, Firestore REST remote sync handlers, and repository layer.",
+        "lib/domain: Domain models, entities, and business logic enums.",
+        "lib/features: Feature-first module structure (auth, budget, committee, dashboard, documents, guests, profile_select, rundown, seserahan, settings, tasks, vendors).",
+        "lib/shared: Common utility helpers (currency/date formatters, PDF/CSV generators) and reusable UI widgets (Bento Card, Guide Dialogs, Pickers).",
+        "lib/ui/theme: Color palettes (Light/Dark/System), typography, and Bento Grid UI tokens."
+      ]
+    },
+    {
+      "name": "Nikahin_CI_CD_Release_Workflow",
+      "entityType": "DevOpsWorkflow",
+      "observations": [
+        "Project Nikahin uses an automated Dual-Platform CI/CD workflow on GitHub Actions (.github/workflows/multiplatform-build.yml).",
+        "GOLDEN RULE: Always run local validation (flutter analyze, flutter test, flutter build apk --release) BEFORE pushing to GitHub or tagging releases.",
+        "Push to master/main triggers internal artifact build (app-nikahin-main.apk) without creating public release.",
+        "Pushing version tag (v*, e.g., v1.0.0) automatically generates a GitHub Release with APK asset and uses RELEASE_NOTES.md as changelog.",
+        "Platform toggles are managed centrally via lib/app/config/platform_config.dart and the platform-flags job in multiplatform-build.yml.",
+        "Skill file stored locally in .agents/skills/flutter-cicd-release-workflow/SKILL.md."
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "from": "Nikahin_App_Core",
+      "to": "Nikahin_Tech_Stack",
+      "relationType": "uses_tech_stack"
+    },
+    {
+      "from": "Nikahin_App_Core",
+      "to": "Nikahin_Features_Catalog",
+      "relationType": "implements_features"
+    },
+    {
+      "from": "Nikahin_App_Core",
+      "to": "Nikahin_Architecture_Structure",
+      "relationType": "structured_by"
+    },
+    {
+      "from": "Nikahin_App_Core",
+      "to": "Nikahin_CI_CD_Release_Workflow",
+      "relationType": "followsWorkflow"
+    }
+  ]
+}
