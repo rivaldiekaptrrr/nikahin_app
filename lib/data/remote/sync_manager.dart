@@ -59,6 +59,72 @@ class SyncManager {
     }
   }
 
+  /// Push all local database items for a profile up to Firestore Cloud
+  Future<bool> pushAll(String profileId) async {
+    if (!isSyncEnabled || userId == null) return false;
+
+    try {
+      final profile = await db.getProfileById(profileId);
+      if (profile != null) {
+        await pushProfile(profile);
+      }
+
+      final expenses = await db.watchExpenses(profileId).first;
+      for (final e in expenses) {
+        await pushExpense(e);
+        final terms = await db.getPaymentTermsForExpense(e.expenseId);
+        for (final t in terms) {
+          await pushPaymentTerm(t);
+        }
+      }
+
+      final guests = await db.watchGuests(profileId).first;
+      for (final g in guests) {
+        await pushGuest(g);
+      }
+
+      final vendors = await db.watchVendors(profileId).first;
+      for (final v in vendors) {
+        await pushVendor(v);
+      }
+
+      final tasks = await db.watchTasks(profileId).first;
+      for (final t in tasks) {
+        await pushTask(t);
+      }
+
+      final committee = await db.watchCommittee(profileId).first;
+      for (final m in committee) {
+        await pushCommittee(m);
+      }
+
+      final events = await db.watchEvents(profileId).first;
+      for (final ev in events) {
+        await pushEvent(ev);
+        final items = await db.watchRundownItems(ev.eventId).first;
+        for (final item in items) {
+          await pushRundownItem(item);
+        }
+      }
+
+      final seserahan = await db.watchSeserahan(profileId).first;
+      for (final s in seserahan) {
+        await pushSeserahan(s);
+      }
+
+      final documents = await db.watchDocuments(profileId).first;
+      for (final d in documents) {
+        await pushDocument(d);
+      }
+
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  // ==================== PULL HELPER METHODS ====================
+
   Future<void> _pullExpenses(String userPath) async {
     final rawExpenses = await firestore.getCollection(
       collectionPath: '$userPath/wedding_expenses',
@@ -175,7 +241,8 @@ class SyncManager {
     }
   }
 
-  // Push single items
+  // ==================== PUSH & DELETE REMOTE METHODS ====================
+
   Future<void> pushProfile(WeddingProfile p) async {
     if (!isSyncEnabled || userId == null) return;
     await firestore.putDocument(
@@ -206,6 +273,159 @@ class SyncManager {
     if (!isSyncEnabled || userId == null) return;
     await firestore.deleteDocument(
       path: 'users/$userId/wedding_expenses/$id',
+      idToken: idToken,
+    );
+  }
+
+  Future<void> pushPaymentTerm(WeddingPaymentTerm t) async {
+    if (!isSyncEnabled || userId == null) return;
+    await firestore.putDocument(
+      path: 'users/$userId/wedding_payment_terms/${t.termId}',
+      data: t.toFirestoreMap(),
+      idToken: idToken,
+    );
+  }
+
+  Future<void> deleteRemotePaymentTerm(String id) async {
+    if (!isSyncEnabled || userId == null) return;
+    await firestore.deleteDocument(
+      path: 'users/$userId/wedding_payment_terms/$id',
+      idToken: idToken,
+    );
+  }
+
+  Future<void> pushGuest(WeddingGuest g) async {
+    if (!isSyncEnabled || userId == null) return;
+    await firestore.putDocument(
+      path: 'users/$userId/wedding_guests/${g.guestId}',
+      data: g.toFirestoreMap(),
+      idToken: idToken,
+    );
+  }
+
+  Future<void> deleteRemoteGuest(String id) async {
+    if (!isSyncEnabled || userId == null) return;
+    await firestore.deleteDocument(
+      path: 'users/$userId/wedding_guests/$id',
+      idToken: idToken,
+    );
+  }
+
+  Future<void> pushVendor(WeddingVendor v) async {
+    if (!isSyncEnabled || userId == null) return;
+    await firestore.putDocument(
+      path: 'users/$userId/wedding_vendors/${v.vendorId}',
+      data: v.toFirestoreMap(),
+      idToken: idToken,
+    );
+  }
+
+  Future<void> deleteRemoteVendor(String id) async {
+    if (!isSyncEnabled || userId == null) return;
+    await firestore.deleteDocument(
+      path: 'users/$userId/wedding_vendors/$id',
+      idToken: idToken,
+    );
+  }
+
+  Future<void> pushTask(WeddingTask t) async {
+    if (!isSyncEnabled || userId == null) return;
+    await firestore.putDocument(
+      path: 'users/$userId/wedding_tasks/${t.taskId}',
+      data: t.toFirestoreMap(),
+      idToken: idToken,
+    );
+  }
+
+  Future<void> deleteRemoteTask(String id) async {
+    if (!isSyncEnabled || userId == null) return;
+    await firestore.deleteDocument(
+      path: 'users/$userId/wedding_tasks/$id',
+      idToken: idToken,
+    );
+  }
+
+  Future<void> pushCommittee(WeddingCommitteeMember m) async {
+    if (!isSyncEnabled || userId == null) return;
+    await firestore.putDocument(
+      path: 'users/$userId/wedding_committee/${m.memberId}',
+      data: m.toFirestoreMap(),
+      idToken: idToken,
+    );
+  }
+
+  Future<void> deleteRemoteCommittee(String id) async {
+    if (!isSyncEnabled || userId == null) return;
+    await firestore.deleteDocument(
+      path: 'users/$userId/wedding_committee/$id',
+      idToken: idToken,
+    );
+  }
+
+  Future<void> pushEvent(WeddingEvent e) async {
+    if (!isSyncEnabled || userId == null) return;
+    await firestore.putDocument(
+      path: 'users/$userId/wedding_events/${e.eventId}',
+      data: e.toFirestoreMap(),
+      idToken: idToken,
+    );
+  }
+
+  Future<void> deleteRemoteEvent(String id) async {
+    if (!isSyncEnabled || userId == null) return;
+    await firestore.deleteDocument(
+      path: 'users/$userId/wedding_events/$id',
+      idToken: idToken,
+    );
+  }
+
+  Future<void> pushRundownItem(WeddingRundownItem item) async {
+    if (!isSyncEnabled || userId == null) return;
+    await firestore.putDocument(
+      path: 'users/$userId/wedding_rundown_items/${item.itemId}',
+      data: item.toFirestoreMap(),
+      idToken: idToken,
+    );
+  }
+
+  Future<void> deleteRemoteRundownItem(String id) async {
+    if (!isSyncEnabled || userId == null) return;
+    await firestore.deleteDocument(
+      path: 'users/$userId/wedding_rundown_items/$id',
+      idToken: idToken,
+    );
+  }
+
+  Future<void> pushSeserahan(WeddingSeserahan s) async {
+    if (!isSyncEnabled || userId == null) return;
+    await firestore.putDocument(
+      path: 'users/$userId/wedding_seserahan/${s.itemId}',
+      data: s.toFirestoreMap(),
+      idToken: idToken,
+    );
+  }
+
+  Future<void> deleteRemoteSeserahan(String id) async {
+    if (!isSyncEnabled || userId == null) return;
+    await firestore.deleteDocument(
+      path: 'users/$userId/wedding_seserahan/$id',
+      idToken: idToken,
+    );
+  }
+
+  Future<void> pushDocument(WeddingDocument d) async {
+    if (!isSyncEnabled || userId == null) return;
+    await firestore.putDocument(
+      path: 'users/$userId/wedding_documents/${d.docId}',
+      data: d.toFirestoreMap(),
+      idToken: idToken,
+    );
+  }
+
+  Future<void> deleteRemoteDocument(String id) async {
+    if (!isSyncEnabled || userId == null) return;
+    await firestore.deleteDocument(
+      path: 'users/$userId/wedding_documents/$id',
       idToken: idToken,
     );
   }

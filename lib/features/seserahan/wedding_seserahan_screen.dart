@@ -6,6 +6,7 @@ import '../../data/repositories/wedding_repository.dart';
 import '../../domain/enums/wedding_enums.dart';
 import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/currency_utils.dart';
+import '../../shared/utils/demo_guard.dart';
 import '../../shared/utils/uuid_utils.dart';
 import '../../shared/utils/validation_utils.dart';
 import '../../shared/widgets/app_feedback.dart';
@@ -426,6 +427,9 @@ class _WeddingSeserahanScreenState extends ConsumerState<WeddingSeserahanScreen>
                     if (action == 'edit') {
                       _showAddItemDialog(context, itemToEdit: item);
                     } else if (action == 'delete') {
+                      if (!DemoGuard.checkAction(context, ref: ref, actionName: 'Hapus Barang Seserahan')) {
+                        return;
+                      }
                       showDeleteConfirmDialog(
                         context: context,
                         itemName: item.itemName,
@@ -579,6 +583,13 @@ class _WeddingSeserahanScreenState extends ConsumerState<WeddingSeserahanScreen>
   }
 
   void _showAddItemDialog(BuildContext context, {String? initialDirection, WeddingSeserahan? itemToEdit}) {
+    if (!DemoGuard.checkAction(
+      context,
+      ref: ref,
+      actionName: itemToEdit != null ? 'Edit Barang Seserahan' : 'Tambah Barang Seserahan',
+    )) {
+      return;
+    }
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -592,6 +603,13 @@ class _WeddingSeserahanScreenState extends ConsumerState<WeddingSeserahanScreen>
   }
 
   void _showStatusPicker(BuildContext context, WeddingSeserahan item) {
+    if (!DemoGuard.checkAction(
+      context,
+      ref: ref,
+      actionName: 'Ubah Status Barang',
+    )) {
+      return;
+    }
     showModalBottomSheet(
       context: context,
       builder: (ctx) => SafeArea(

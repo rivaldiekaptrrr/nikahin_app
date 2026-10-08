@@ -1,0 +1,31 @@
+appId: com.nikahin.app
+name: "Nikahin App - Demo Mode Smoke Test"
+tags:
+  - smoke-test
+  - demo-mode
+---
+- launchApp:
+    clearState: false
+
+# Handle Onboarding jika muncul
+- runFlow:
+    when:
+      visible: "Lewati"
+    commands:
+      - tapOn: "Lewati"
+
+# Handle Login Screen -> Coba Mode Tamu
+- runFlow:
+    when:
+      visible: "Coba Mode Tamu (Demo)"
+    commands:
+      - tapOn: "Coba Mode Tamu (Demo)"
+
+# Verifikasi Berada di Dashboard
+- assertVisible:
+    text: "Rivaldi & Alya"
+    optional: true
+
+- assertVisible:
+    text: "Anggaran"
+    optional: true

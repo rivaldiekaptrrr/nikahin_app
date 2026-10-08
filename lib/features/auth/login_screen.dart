@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../data/local/preferences_manager.dart';
-import '../../data/repositories/wedding_repository.dart';
 import '../../shared/utils/validation_utils.dart';
+import '../../shared/widgets/google_logo.dart';
+import 'presentation/auth_notifier.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -42,43 +42,27 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
     });
 
     try {
-      final firestoreService = ref.read(firestoreServiceProvider);
       final email = _emailController.text.trim();
       final password = _passwordController.text.trim();
+      final authNotifier = ref.read(authNotifierProvider.notifier);
 
-      if (_isRegisterMode) {
-        final res = await firestoreService.signUpWithEmail(email: email, password: password);
-        if (res != null) {
-          await AppPreferences.setUserEmail(email);
-          await AppPreferences.setHasSkippedLogin(false);
-          ref.read(userEmailProvider.notifier).state = email;
-          if (mounted) context.go('/wedding/profile_rivaldi_alya');
+      final success = _isRegisterMode
+          ? await authNotifier.signUpWithEmail(email: email, password: password)
+          : await authNotifier.signInWithEmail(email: email, password: password);
+
+      if (success && mounted) {
+        final authState = ref.read(authNotifierProvider);
+        if (authState.isPendingVerification) {
+          context.go('/pending-verification');
         } else {
-          // If offline or mock fallback, allow smooth entry
-          await AppPreferences.setUserEmail(email);
-          ref.read(userEmailProvider.notifier).state = email;
-          if (mounted) context.go('/wedding/profile_rivaldi_alya');
+          // Cek apakah user sudah punya profil pernikahan nyata
+          context.go('/');
         }
-      } else {
-        final res = await firestoreService.signInWithEmail(email: email, password: password);
-        if (res != null) {
-          await AppPreferences.setUserEmail(email);
-          await AppPreferences.setHasSkippedLogin(false);
-          ref.read(userEmailProvider.notifier).state = email;
-          if (mounted) context.go('/wedding/profile_rivaldi_alya');
-        } else {
-          // Check credentials or fallback
-          await AppPreferences.setUserEmail(email);
-          ref.read(userEmailProvider.notifier).state = email;
-          if (mounted) context.go('/wedding/profile_rivaldi_alya');
-        }
+      } else if (mounted) {
+        setState(() {
+          _errorMessage = ref.read(authNotifierProvider).errorMessage ?? 'Gagal masuk akun. Silakan coba lagi.';
+        });
       }
-    } catch (e) {
-      // Fallback gracefully so testing is never blocked
-      final email = _emailController.text.trim();
-      await AppPreferences.setUserEmail(email);
-      ref.read(userEmailProvider.notifier).state = email;
-      if (mounted) context.go('/wedding/profile_rivaldi_alya');
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -91,20 +75,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
     });
 
     try {
-      await Future.delayed(const Duration(milliseconds: 600));
-      const simulatedEmail = 'rivaldi.alya.wedding@gmail.com';
-      await AppPreferences.setUserEmail(simulatedEmail);
-      await AppPreferences.setHasSkippedLogin(false);
-      ref.read(userEmailProvider.notifier).state = simulatedEmail;
-      if (mounted) context.go('/wedding/profile_rivaldi_alya');
+      final success = await ref.read(authNotifierProvider.notifier).signInWithGoogle();
+      if (success && mounted) {
+        context.go('/');
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
   }
 
-  Future<void> _handleSkipOffline() async {
-    await AppPreferences.setHasSkippedLogin(true);
-    if (mounted) context.go('/wedding/profile_rivaldi_alya');
+  Future<void> _handleDemoMode() async {
+    setState(() => _isLoading = true);
+    try {
+      await ref.read(authNotifierProvider.notifier).enterDemoMode();
+      if (mounted) context.go('/wedding/profile_rivaldi_alya');
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   void _showForgotPasswordDialog() {
@@ -482,7 +469,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                   ),
                   const SizedBox(height: 16),
 
-                  // Google Sign-In Button (Matching LoginScreen.kt)
+                  // Google Sign-In Button
                   SizedBox(
                     height: 52,
                     child: OutlinedButton(
@@ -491,23 +478,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                         backgroundColor: theme.colorScheme.surface,
                         side: BorderSide(color: theme.colorScheme.outlineVariant),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        elevation: 0,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // Google G Icon
-                          Container(
-                            padding: const EdgeInsets.all(2),
-                            decoration: const BoxDecoration(shape: BoxShape.circle),
-                            child: const Text(
-                              'G',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w900,
-                                color: Color(0xFF4285F4),
-                              ),
-                            ),
-                          ),
+                          const GoogleLogo(size: 20),
                           const SizedBox(width: 12),
                           Text(
                             'Lanjutkan dengan Google',
@@ -523,16 +499,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                   ),
                   const SizedBox(height: 14),
 
-                  // Skip / Guest Mode Button (Matching reference onSkip)
+                  // Demo Mode Button
                   TextButton.icon(
-                    onPressed: _handleSkipOffline,
-                    icon: Icon(Icons.offline_pin_outlined, size: 18, color: textDark.withValues(alpha: 0.7)),
+                    onPressed: _isLoading ? null : _handleDemoMode,
+                    icon: Icon(Icons.visibility_outlined, size: 18, color: textDark.withValues(alpha: 0.7)),
                     label: Text(
-                      'Masuk sebagai Tamu (Mode Offline)',
+                      'Coba Mode Demo (Hanya Lihat)',
                       style: TextStyle(
                         fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: textDark.withValues(alpha: 0.7),
+                        fontWeight: FontWeight.w600,
+                        color: textDark.withValues(alpha: 0.8),
                       ),
                     ),
                   ),

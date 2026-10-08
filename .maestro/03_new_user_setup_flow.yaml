@@ -1,0 +1,43 @@
+appId: com.nikahin.app
+name: "Nikahin App - Uji Coba Alur Setup User Baru Bersih Tanpa Mock"
+tags:
+  - onboarding
+  - clean-profile
+---
+# 1. Buka aplikasi Nikahin
+- launchApp
+
+# 2. Lewati Onboarding menuju Login
+- runFlow:
+    when:
+      visible: "Lewati"
+    commands:
+      - tapOn: "Lewati"
+
+# 3. Lakukan Registrasi User Baru
+- runFlow:
+    when:
+      visible: "Belum punya akun? Daftar"
+    commands:
+      - tapOn: "Belum punya akun? Daftar"
+
+- tapOn: "Nama Lengkap"
+- inputText: "Pengguna Baru"
+
+- tapOn: "Alamat Email"
+- inputText: "userbaru_test@nikahin.app"
+
+- tapOn: "Kata Sandi"
+- inputText: "password123"
+- hideKeyboard
+
+- tapOn: "Daftar Akun Baru"
+
+# 4. Verifikasi diarahkan ke Setup Rencana Pernikahan (Bukan Mock Profile!)
+- extendedWaitUntil:
+    visible: "Setup Rencana Pernikahan"
+    timeout: 8000
+
+- assertVisible: "Setup Rencana Pernikahan"
+- assertVisible: "Nama Lengkap CPP"
+- assertVisible: "Nama Lengkap CPW"

@@ -10,6 +10,7 @@ import '../../shared/utils/date_utils.dart';
 import '../../shared/widgets/error_state_view.dart';
 import '../../shared/widgets/skeleton_loading.dart';
 import '../../shared/widgets/wedding_guide_dialog.dart';
+import '../auth/presentation/widgets/demo_sticky_banner.dart';
 import '../updater/presentation/update_notifier.dart';
 import '../updater/presentation/widgets/update_dialog.dart';
 
@@ -255,6 +256,9 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           children: [
+            // 0. DEMO MODE STICKY BANNER
+            const DemoStickyBanner(),
+
             // 1. HERO COUNTDOWN (2x2 Span)
             _buildHeroCountdown(context, theme, profile, profiles),
             const SizedBox(height: 16),

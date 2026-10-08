@@ -6,6 +6,15 @@
         "-y",
         "@modelcontextprotocol/server-memory"
       ]
+    },
+    "maestro": {
+      "command": "C:\\maestro\\bin\\maestro.bat",
+      "args": [
+        "mcp"
+      ],
+      "env": {
+        "JAVA_HOME": "C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.17.10-hotspot"
+      }
     }
   }
 }

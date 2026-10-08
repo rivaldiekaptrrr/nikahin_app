@@ -11,7 +11,7 @@ class ThemeModeNotifier extends Notifier<ThemeMode> {
   @override
   ThemeMode build() {
     _loadPersistedTheme();
-    return ThemeMode.system;
+    return ThemeMode.light;
   }
 
   Future<void> _loadPersistedTheme() async {
@@ -20,6 +20,9 @@ class ThemeModeNotifier extends Notifier<ThemeMode> {
       final modeIndex = prefs.getInt(kPrefThemeMode);
       if (modeIndex != null) {
         switch (modeIndex) {
+          case 0:
+            state = ThemeMode.system;
+            break;
           case 1:
             state = ThemeMode.light;
             break;
@@ -27,7 +30,7 @@ class ThemeModeNotifier extends Notifier<ThemeMode> {
             state = ThemeMode.dark;
             break;
           default:
-            state = ThemeMode.system;
+            state = ThemeMode.light;
             break;
         }
       }

@@ -199,18 +199,24 @@ class WeddingRepository {
 
   Future<void> createGuest(WeddingGuest guest) async {
     await db.insertGuest(guest);
+    await sync.pushGuest(guest);
   }
 
   Future<void> createGuestsBatch(List<WeddingGuest> guests) async {
     await db.insertGuestsBatch(guests);
+    for (final g in guests) {
+      await sync.pushGuest(g);
+    }
   }
 
   Future<void> updateGuest(WeddingGuest guest) async {
     await db.updateGuest(guest);
+    await sync.pushGuest(guest);
   }
 
   Future<void> deleteGuest(String guestId) async {
     await db.deleteGuest(guestId);
+    await sync.deleteRemoteGuest(guestId);
   }
 
   // ==================== VENDORS ====================
@@ -218,14 +224,17 @@ class WeddingRepository {
 
   Future<void> createVendor(WeddingVendor vendor) async {
     await db.insertVendor(vendor);
+    await sync.pushVendor(vendor);
   }
 
   Future<void> updateVendor(WeddingVendor vendor) async {
     await db.updateVendor(vendor);
+    await sync.pushVendor(vendor);
   }
 
   Future<void> deleteVendor(String vendorId) async {
     await db.deleteVendor(vendorId);
+    await sync.deleteRemoteVendor(vendorId);
   }
 
   // ==================== TASKS ====================
@@ -233,6 +242,7 @@ class WeddingRepository {
 
   Future<void> createTask(WeddingTask task) async {
     await db.insertTask(task);
+    await sync.pushTask(task);
   }
 
   Future<void> toggleTaskCompletion(WeddingTask task, bool completed) async {
@@ -241,14 +251,17 @@ class WeddingRepository {
       completedDate: completed ? DateTime.now().millisecondsSinceEpoch : null,
     );
     await db.updateTask(updated);
+    await sync.pushTask(updated);
   }
 
   Future<void> updateTask(WeddingTask task) async {
     await db.updateTask(task);
+    await sync.pushTask(task);
   }
 
   Future<void> deleteTask(String taskId) async {
     await db.deleteTask(taskId);
+    await sync.deleteRemoteTask(taskId);
   }
 
   // ==================== COMMITTEE ====================
@@ -256,14 +269,17 @@ class WeddingRepository {
 
   Future<void> createCommittee(WeddingCommitteeMember member) async {
     await db.insertCommittee(member);
+    await sync.pushCommittee(member);
   }
 
   Future<void> updateCommittee(WeddingCommitteeMember member) async {
     await db.updateCommittee(member);
+    await sync.pushCommittee(member);
   }
 
   Future<void> deleteCommittee(String memberId) async {
     await db.deleteCommittee(memberId);
+    await sync.deleteRemoteCommittee(memberId);
   }
 
   // ==================== EVENTS & RUNDOWN ====================
@@ -271,28 +287,34 @@ class WeddingRepository {
 
   Future<void> createEvent(WeddingEvent event) async {
     await db.insertEvent(event);
+    await sync.pushEvent(event);
   }
 
   Future<void> updateEvent(WeddingEvent event) async {
     await db.updateEvent(event);
+    await sync.pushEvent(event);
   }
 
   Future<void> deleteEvent(String eventId) async {
     await db.deleteEvent(eventId);
+    await sync.deleteRemoteEvent(eventId);
   }
 
   Stream<List<WeddingRundownItem>> watchRundownItems(String eventId) => db.watchRundownItems(eventId);
 
   Future<void> createRundownItem(WeddingRundownItem item) async {
     await db.insertRundownItem(item);
+    await sync.pushRundownItem(item);
   }
 
   Future<void> updateRundownItem(WeddingRundownItem item) async {
     await db.updateRundownItem(item);
+    await sync.pushRundownItem(item);
   }
 
   Future<void> deleteRundownItem(String itemId) async {
     await db.deleteRundownItem(itemId);
+    await sync.deleteRemoteRundownItem(itemId);
   }
 
   // ==================== SESERAHAN ====================
@@ -300,14 +322,17 @@ class WeddingRepository {
 
   Future<void> createSeserahan(WeddingSeserahan item) async {
     await db.insertSeserahan(item);
+    await sync.pushSeserahan(item);
   }
 
   Future<void> updateSeserahan(WeddingSeserahan item) async {
     await db.updateSeserahan(item);
+    await sync.pushSeserahan(item);
   }
 
   Future<void> deleteSeserahan(String itemId) async {
     await db.deleteSeserahan(itemId);
+    await sync.deleteRemoteSeserahan(itemId);
   }
 
   // ==================== DOCUMENTS ====================
@@ -315,19 +340,23 @@ class WeddingRepository {
 
   Future<void> createDocument(WeddingDocument doc) async {
     await db.insertDocument(doc);
+    await sync.pushDocument(doc);
   }
 
   Future<void> toggleDocumentCompletion(WeddingDocument doc, bool completed) async {
     final updated = doc.copyWith(isCompleted: completed);
     await db.updateDocument(updated);
+    await sync.pushDocument(updated);
   }
 
   Future<void> updateDocument(WeddingDocument doc) async {
     await db.updateDocument(doc);
+    await sync.pushDocument(doc);
   }
 
   Future<void> deleteDocument(String docId) async {
     await db.deleteDocument(docId);
+    await sync.deleteRemoteDocument(docId);
   }
 
   // ==================== BACKUP & RESTORE ====================

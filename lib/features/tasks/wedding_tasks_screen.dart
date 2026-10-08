@@ -5,6 +5,7 @@ import '../../data/repositories/wedding_repository.dart';
 import '../../domain/enums/wedding_enums.dart';
 import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/date_utils.dart';
+import '../../shared/utils/demo_guard.dart';
 import '../../shared/utils/uuid_utils.dart';
 import '../../shared/utils/validation_utils.dart';
 import '../../shared/widgets/app_feedback.dart';
@@ -200,6 +201,9 @@ class _WeddingTasksScreenState extends ConsumerState<WeddingTasksScreen> {
             Checkbox(
               value: task.isCompleted,
               onChanged: (val) {
+                if (!DemoGuard.checkAction(context, ref: ref, actionName: 'Mengubah Status Tugas')) {
+                  return;
+                }
                 repo.toggleTaskCompletion(task, val ?? false);
               },
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
@@ -269,6 +273,9 @@ class _WeddingTasksScreenState extends ConsumerState<WeddingTasksScreen> {
                 if (action == 'edit') {
                   _showAddTaskDialog(context, taskToEdit: task);
                 } else if (action == 'delete') {
+                  if (!DemoGuard.checkAction(context, ref: ref, actionName: 'Hapus Tugas')) {
+                    return;
+                  }
                   showDeleteConfirmDialog(
                     context: context,
                     itemName: task.title,
@@ -327,6 +334,13 @@ class _WeddingTasksScreenState extends ConsumerState<WeddingTasksScreen> {
   }
 
   void _showAddTaskDialog(BuildContext context, {WeddingTask? taskToEdit}) {
+    if (!DemoGuard.checkAction(
+      context,
+      ref: ref,
+      actionName: taskToEdit != null ? 'Edit Tugas' : 'Tambah Tugas Baru',
+    )) {
+      return;
+    }
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,

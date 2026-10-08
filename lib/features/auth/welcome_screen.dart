@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/local/preferences_manager.dart';
+import 'presentation/auth_notifier.dart';
 
-class WelcomeScreen extends StatefulWidget {
+class WelcomeScreen extends ConsumerStatefulWidget {
   const WelcomeScreen({super.key});
 
   @override
-  State<WelcomeScreen> createState() => _WelcomeScreenState();
+  ConsumerState<WelcomeScreen> createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
+class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
@@ -59,7 +61,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   void _onDirectGuest() async {
     await AppPreferences.setHasSeenWelcome(true);
-    await AppPreferences.setHasSkippedLogin(true);
+    await ref.read(authNotifierProvider.notifier).enterDemoMode();
     if (mounted) context.go('/wedding/profile_rivaldi_alya');
   }
 

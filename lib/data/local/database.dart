@@ -21,6 +21,7 @@ part 'database.g.dart';
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(openConnection());
+  AppDatabase.forTesting(super.e);
 
   @override
   int get schemaVersion => 1;
@@ -56,6 +57,11 @@ class AppDatabase extends _$AppDatabase {
     return select(weddingProfiles).watch().map(
           (rows) => rows.map((r) => _profileFromRow(r)).toList(),
         );
+  }
+
+  Future<List<WeddingProfile>> getAllProfiles() async {
+    final rows = await select(weddingProfiles).get();
+    return rows.map((r) => _profileFromRow(r)).toList();
   }
 
   Stream<WeddingProfile?> watchSingleProfile() {

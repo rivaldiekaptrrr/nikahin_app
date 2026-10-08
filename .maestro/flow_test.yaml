@@ -1,0 +1,4 @@
+appId: com.nikahin.app
+---
+- launchApp
+- assertVisible: "Nikahin"

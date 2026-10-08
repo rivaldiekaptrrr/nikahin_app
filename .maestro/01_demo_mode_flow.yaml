@@ -1,0 +1,32 @@
+appId: com.nikahin.app
+name: "Nikahin App - Uji Coba Masuk Demo Mode"
+---
+- launchApp
+
+# 1. Jika di Welcome Screen, tekan 'Langsung Masuk Mode Tamu / Lokal' atau 'Lewati'
+- runFlow:
+    when:
+      visible: "Langsung Masuk Mode Tamu / Lokal"
+    commands:
+      - tapOn: "Langsung Masuk Mode Tamu / Lokal"
+
+- runFlow:
+    when:
+      visible: "Lewati"
+    commands:
+      - tapOn: "Lewati"
+
+# 2. Jika di Login Screen, tekan 'Coba Mode Demo (Hanya Lihat)'
+- runFlow:
+    when:
+      visible: "Coba Mode Demo (Hanya Lihat)"
+    commands:
+      - tapOn: "Coba Mode Demo (Hanya Lihat)"
+
+# 3. Assert Dashboard Terbuka dengan profil Mock
+- extendedWaitUntil:
+    visible: "Rivaldi & Alya"
+    timeout: 8000
+
+- assertVisible: "Hitung Mundur"
+- assertVisible: ".*Anggaran.*"

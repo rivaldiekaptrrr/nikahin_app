@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../app/config/mock_config.dart';
-import '../../data/local/mock_seeder.dart';
 import '../../data/repositories/wedding_repository.dart';
 import '../../domain/enums/wedding_enums.dart';
 import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/currency_utils.dart';
 import '../../shared/utils/date_utils.dart';
+import '../../shared/utils/demo_guard.dart';
 import '../../shared/utils/uuid_utils.dart';
 import '../../shared/utils/validation_utils.dart';
 import '../../shared/widgets/app_feedback.dart';
@@ -34,20 +33,10 @@ class _WeddingBudgetScreenState extends ConsumerState<WeddingBudgetScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkAndSeedPaymentTerms();
-    });
+
   }
 
-  void _checkAndSeedPaymentTerms() async {
-    if (kUseMockData) {
-      final db = ref.read(databaseProvider);
-      final existingTerms = await db.getPaymentTermsForExpense('exp_1');
-      if (existingTerms.isEmpty) {
-        await MockSeeder.seedAllMockData(db);
-      }
-    }
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -546,6 +535,13 @@ class _WeddingBudgetScreenState extends ConsumerState<WeddingBudgetScreen> {
 
   // ==================== DIALOGS & MODALS ====================
   void _showAddExpenseDialog(BuildContext context, {WeddingExpense? expenseToEdit}) {
+    if (!DemoGuard.checkAction(
+      context,
+      ref: ref,
+      actionName: expenseToEdit != null ? 'Edit Pengeluaran' : 'Tambah Pos Anggaran',
+    )) {
+      return;
+    }
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -576,6 +572,9 @@ class _WeddingBudgetScreenState extends ConsumerState<WeddingBudgetScreen> {
               title: const Text('Hapus Pengeluaran', style: TextStyle(color: Colors.red)),
               onTap: () {
                 Navigator.pop(ctx);
+                if (!DemoGuard.checkAction(context, ref: ref, actionName: 'Hapus Pengeluaran')) {
+                  return;
+                }
                 showDeleteConfirmDialog(
                   context: context,
                   itemName: expense.title,
@@ -1150,15 +1149,7 @@ class _ExpenseDetailBottomSheetState extends ConsumerState<_ExpenseDetailBottomS
   @override
   void initState() {
     super.initState();
-    if (kUseMockData) {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        final db = ref.read(databaseProvider);
-        final terms = await db.getPaymentTermsForExpense(widget.initialExpense.expenseId);
-        if (terms.isEmpty) {
-          await MockSeeder.seedAllMockData(db);
-        }
-      });
-    }
+
   }
 
   @override

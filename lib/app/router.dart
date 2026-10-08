@@ -1,12 +1,17 @@
 import 'package:go_router/go_router.dart';
+import '../data/local/database.dart';
+import '../data/local/preferences_manager.dart';
 import 'shell/wedding_shell_scaffold.dart';
+import '../features/admin/presentation/admin_dashboard_screen.dart';
 import '../features/auth/login_screen.dart';
 import '../features/auth/welcome_screen.dart';
+import '../features/auth/presentation/pending_verification_screen.dart';
 import '../features/budget/wedding_budget_screen.dart';
 import '../features/committee/wedding_committee_screen.dart';
 import '../features/dashboard/wedding_dashboard_screen.dart';
 import '../features/documents/wedding_documents_screen.dart';
 import '../features/guests/wedding_guests_screen.dart';
+import '../features/onboarding/wedding_setup_screen.dart';
 import '../features/rundown/wedding_rundown_screen.dart';
 import '../features/seserahan/wedding_seserahan_screen.dart';
 import '../features/settings/wedding_settings_screen.dart';
@@ -14,11 +19,53 @@ import '../features/tasks/wedding_tasks_screen.dart';
 import '../features/vendors/wedding_vendor_screen.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/wedding/profile_rivaldi_alya',
+  initialLocation: '/',
   routes: [
     GoRoute(
       path: '/',
-      redirect: (context, state) => '/wedding/profile_rivaldi_alya',
+      redirect: (context, state) async {
+        final hasSeenWelcome = await AppPreferences.hasSeenWelcome();
+        if (!hasSeenWelcome) {
+          return '/welcome';
+        }
+
+        // Demo mode → langsung ke mock profile
+        final isDemo = await AppPreferences.isDemoMode();
+        if (isDemo) {
+          final profileId = await AppPreferences.getActiveProfileId();
+          return '/wedding/$profileId';
+        }
+
+        final email = await AppPreferences.getUserEmail();
+        if (email == null || email.isEmpty) {
+          return '/login';
+        }
+
+        final accessLevel = await AppPreferences.getAccessLevel();
+        if (accessLevel == 'NONE') {
+          return '/pending-verification';
+        }
+
+        // User sudah premium/admin — cek apakah user ini sudah membuat profil pernikahannya sendiri
+        final userId = await AppPreferences.getUserId();
+        final userProfileId = await AppPreferences.getUserProfileId(userId);
+
+        if (userProfileId == null || userProfileId.isEmpty) {
+          return '/setup';
+        }
+
+        final db = AppDatabase();
+        try {
+          final profile = await db.getProfileById(userProfileId);
+          if (profile == null) {
+            return '/setup';
+          }
+          await AppPreferences.setActiveProfileId(userProfileId);
+          return '/wedding/$userProfileId';
+        } finally {
+          await db.close();
+        }
+      },
     ),
     GoRoute(
       path: '/welcome',
@@ -27,6 +74,18 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/login',
       builder: (context, state) => const LoginScreen(),
+    ),
+    GoRoute(
+      path: '/pending-verification',
+      builder: (context, state) => const PendingVerificationScreen(),
+    ),
+    GoRoute(
+      path: '/setup',
+      builder: (context, state) => const WeddingSetupScreen(),
+    ),
+    GoRoute(
+      path: '/admin',
+      builder: (context, state) => const AdminDashboardScreen(),
     ),
     ShellRoute(
       builder: (context, state, child) {

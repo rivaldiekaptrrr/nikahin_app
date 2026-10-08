@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/repositories/wedding_repository.dart';
 import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/currency_utils.dart';
+import '../../shared/utils/demo_guard.dart';
 import '../../shared/utils/date_utils.dart';
 import '../../shared/utils/uuid_utils.dart';
 import '../../shared/utils/validation_utils.dart';
@@ -163,7 +164,10 @@ class _WeddingDocumentsScreenState extends ConsumerState<WeddingDocumentsScreen>
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Tambah Dokumen',
-        onPressed: () => _showAddDocDialog(context),
+        onPressed: () {
+          if (!DemoGuard.checkAction(context, ref: ref, actionName: 'menambah dokumen')) return;
+          _showAddDocDialog(context);
+        },
         child: const Icon(Icons.note_add_rounded),
       ),
     );
@@ -224,6 +228,7 @@ class _WeddingDocumentsScreenState extends ConsumerState<WeddingDocumentsScreen>
             Checkbox(
               value: doc.isCompleted,
               onChanged: (val) {
+                if (!DemoGuard.checkAction(context, ref: ref, actionName: 'mengubah status dokumen')) return;
                 repo.toggleDocumentCompletion(doc, val ?? false);
               },
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
@@ -334,8 +339,10 @@ class _WeddingDocumentsScreenState extends ConsumerState<WeddingDocumentsScreen>
               icon: Icon(Icons.more_vert_rounded, size: 18, color: theme.colorScheme.outline),
               onSelected: (action) {
                 if (action == 'edit') {
+                  if (!DemoGuard.checkAction(context, ref: ref, actionName: 'mengedit dokumen')) return;
                   _showAddDocDialog(context, docToEdit: doc);
                 } else if (action == 'delete') {
+                  if (!DemoGuard.checkAction(context, ref: ref, actionName: 'menghapus dokumen')) return;
                   showDeleteConfirmDialog(
                     context: context,
                     itemName: doc.docName,
@@ -402,7 +409,10 @@ class _WeddingDocumentsScreenState extends ConsumerState<WeddingDocumentsScreen>
             ),
             const SizedBox(height: 18),
             FilledButton.tonalIcon(
-              onPressed: () => _showAddDocDialog(context),
+              onPressed: () {
+                if (!DemoGuard.checkAction(context, ref: ref, actionName: 'menambah dokumen')) return;
+                _showAddDocDialog(context);
+              },
               icon: const Icon(Icons.add_rounded),
               label: const Text('Tambah Dokumen Pertama'),
             ),

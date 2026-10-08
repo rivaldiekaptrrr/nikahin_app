@@ -66,6 +66,19 @@
         "Platform toggles are managed centrally via lib/app/config/platform_config.dart and the platform-flags job in multiplatform-build.yml.",
         "Skill file stored locally in .agents/skills/flutter-cicd-release-workflow/SKILL.md."
       ]
+    },
+    {
+      "name": "Nikahin_Environment_Setup",
+      "entityType": "DevOpsWorkflow",
+      "observations": [
+        "Standard environment: Flutter SDK 3.47.6+ (Dart ^3.13.5) on stable channel at C:/src/flutter.",
+        "Java JDK: Eclipse Adoptium / Temurin JDK 17 (JAVA_HOME).",
+        "Android SDK: C:/Android/sdk with Android SDK Platforms 36/35, Build-Tools 36.0.0/35.0.0, Android NDK r28c (28.2.x), CMake 3.22.1.",
+        "Environment variables: JAVA_HOME, ANDROID_HOME, ANDROID_SDK_ROOT, and PATH containing flutter/bin, platform-tools, cmdline-tools/latest/bin.",
+        "Project initialization: flutter pub get, followed by mandatory Drift SQLite generation: dart run build_runner build --delete-conflicting-outputs.",
+        "Validation pipeline: flutter analyze (0 errors), flutter test (51 tests passed), flutter build apk --release.",
+        "Skill file stored locally in .agents/skills/flutter-environment-setup/SKILL.md."
+      ]
     }
   ],
   "relations": [
@@ -88,6 +101,11 @@
       "from": "Nikahin_App_Core",
       "to": "Nikahin_CI_CD_Release_Workflow",
       "relationType": "followsWorkflow"
+    },
+    {
+      "from": "Nikahin_App_Core",
+      "to": "Nikahin_Environment_Setup",
+      "relationType": "setupWith"
     }
   ]
 }

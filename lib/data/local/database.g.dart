@@ -8338,15 +8338,19 @@ class $$WeddingExpensesTableTableManager
                         >
                       >(state) {
                         if (weddingProfileId) {
-                          state = state.withJoin(
-                            currentTable: table,
-                            currentColumn: table.weddingProfileId,
-                            referencedTable: $$WeddingExpensesTableReferences
-                                ._weddingProfileIdTable(db),
-                            referencedColumn: $$WeddingExpensesTableReferences
-                                ._weddingProfileIdTable(db)
-                                .id,
-                          ) as T;
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.weddingProfileId,
+                                    referencedTable:
+                                        $$WeddingExpensesTableReferences
+                                            ._weddingProfileIdTable(db),
+                                    referencedColumn:
+                                        $$WeddingExpensesTableReferences
+                                            ._weddingProfileIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
                         }
 
                         return state;
@@ -8738,15 +8742,19 @@ class $$WeddingPaymentTermsTableTableManager
                     >
                   >(state) {
                     if (expenseId) {
-                      state = state.withJoin(
-                        currentTable: table,
-                        currentColumn: table.expenseId,
-                        referencedTable: $$WeddingPaymentTermsTableReferences
-                            ._expenseIdTable(db),
-                        referencedColumn: $$WeddingPaymentTermsTableReferences
-                            ._expenseIdTable(db)
-                            .expenseId,
-                      ) as T;
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.expenseId,
+                                referencedTable:
+                                    $$WeddingPaymentTermsTableReferences
+                                        ._expenseIdTable(db),
+                                referencedColumn:
+                                    $$WeddingPaymentTermsTableReferences
+                                        ._expenseIdTable(db)
+                                        .expenseId,
+                              )
+                              as T;
                     }
 
                     return state;
@@ -9132,15 +9140,17 @@ class $$WeddingGuestsTableTableManager
                     >
                   >(state) {
                     if (weddingProfileId) {
-                      state = state.withJoin(
-                        currentTable: table,
-                        currentColumn: table.weddingProfileId,
-                        referencedTable: $$WeddingGuestsTableReferences
-                            ._weddingProfileIdTable(db),
-                        referencedColumn: $$WeddingGuestsTableReferences
-                            ._weddingProfileIdTable(db)
-                            .id,
-                      ) as T;
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.weddingProfileId,
+                                referencedTable: $$WeddingGuestsTableReferences
+                                    ._weddingProfileIdTable(db),
+                                referencedColumn: $$WeddingGuestsTableReferences
+                                    ._weddingProfileIdTable(db)
+                                    .id,
+                              )
+                              as T;
                     }
 
                     return state;
@@ -9581,15 +9591,18 @@ class $$WeddingVendorsTableTableManager
                     >
                   >(state) {
                     if (weddingProfileId) {
-                      state = state.withJoin(
-                        currentTable: table,
-                        currentColumn: table.weddingProfileId,
-                        referencedTable: $$WeddingVendorsTableReferences
-                            ._weddingProfileIdTable(db),
-                        referencedColumn: $$WeddingVendorsTableReferences
-                            ._weddingProfileIdTable(db)
-                            .id,
-                      ) as T;
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.weddingProfileId,
+                                referencedTable: $$WeddingVendorsTableReferences
+                                    ._weddingProfileIdTable(db),
+                                referencedColumn:
+                                    $$WeddingVendorsTableReferences
+                                        ._weddingProfileIdTable(db)
+                                        .id,
+                              )
+                              as T;
                     }
 
                     return state;
@@ -10005,15 +10018,17 @@ class $$WeddingTasksTableTableManager
                     >
                   >(state) {
                     if (weddingProfileId) {
-                      state = state.withJoin(
-                        currentTable: table,
-                        currentColumn: table.weddingProfileId,
-                        referencedTable: $$WeddingTasksTableReferences
-                            ._weddingProfileIdTable(db),
-                        referencedColumn: $$WeddingTasksTableReferences
-                            ._weddingProfileIdTable(db)
-                            .id,
-                      ) as T;
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.weddingProfileId,
+                                referencedTable: $$WeddingTasksTableReferences
+                                    ._weddingProfileIdTable(db),
+                                referencedColumn: $$WeddingTasksTableReferences
+                                    ._weddingProfileIdTable(db)
+                                    .id,
+                              )
+                              as T;
                     }
 
                     return state;
@@ -10450,17 +10465,19 @@ class $$WeddingCommitteeMembersTableTableManager
                     >
                   >(state) {
                     if (weddingProfileId) {
-                      state = state.withJoin(
-                        currentTable: table,
-                        currentColumn: table.weddingProfileId,
-                        referencedTable:
-                            $$WeddingCommitteeMembersTableReferences
-                                ._weddingProfileIdTable(db),
-                        referencedColumn:
-                            $$WeddingCommitteeMembersTableReferences
-                                ._weddingProfileIdTable(db)
-                                .id,
-                      ) as T;
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.weddingProfileId,
+                                referencedTable:
+                                    $$WeddingCommitteeMembersTableReferences
+                                        ._weddingProfileIdTable(db),
+                                referencedColumn:
+                                    $$WeddingCommitteeMembersTableReferences
+                                        ._weddingProfileIdTable(db)
+                                        .id,
+                              )
+                              as T;
                     }
 
                     return state;
@@ -10884,15 +10901,19 @@ class $$WeddingEventsTableTableManager
                         >
                       >(state) {
                         if (weddingProfileId) {
-                          state = state.withJoin(
-                            currentTable: table,
-                            currentColumn: table.weddingProfileId,
-                            referencedTable: $$WeddingEventsTableReferences
-                                ._weddingProfileIdTable(db),
-                            referencedColumn: $$WeddingEventsTableReferences
-                                ._weddingProfileIdTable(db)
-                                .id,
-                          ) as T;
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.weddingProfileId,
+                                    referencedTable:
+                                        $$WeddingEventsTableReferences
+                                            ._weddingProfileIdTable(db),
+                                    referencedColumn:
+                                        $$WeddingEventsTableReferences
+                                            ._weddingProfileIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
                         }
 
                         return state;
@@ -11305,15 +11326,19 @@ class $$WeddingRundownItemsTableTableManager
                     >
                   >(state) {
                     if (eventId) {
-                      state = state.withJoin(
-                        currentTable: table,
-                        currentColumn: table.eventId,
-                        referencedTable: $$WeddingRundownItemsTableReferences
-                            ._eventIdTable(db),
-                        referencedColumn: $$WeddingRundownItemsTableReferences
-                            ._eventIdTable(db)
-                            .eventId,
-                      ) as T;
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.eventId,
+                                referencedTable:
+                                    $$WeddingRundownItemsTableReferences
+                                        ._eventIdTable(db),
+                                referencedColumn:
+                                    $$WeddingRundownItemsTableReferences
+                                        ._eventIdTable(db)
+                                        .eventId,
+                              )
+                              as T;
                     }
 
                     return state;
@@ -11717,15 +11742,19 @@ class $$WeddingSeserahansTableTableManager
                     >
                   >(state) {
                     if (weddingProfileId) {
-                      state = state.withJoin(
-                        currentTable: table,
-                        currentColumn: table.weddingProfileId,
-                        referencedTable: $$WeddingSeserahansTableReferences
-                            ._weddingProfileIdTable(db),
-                        referencedColumn: $$WeddingSeserahansTableReferences
-                            ._weddingProfileIdTable(db)
-                            .id,
-                      ) as T;
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.weddingProfileId,
+                                referencedTable:
+                                    $$WeddingSeserahansTableReferences
+                                        ._weddingProfileIdTable(db),
+                                referencedColumn:
+                                    $$WeddingSeserahansTableReferences
+                                        ._weddingProfileIdTable(db)
+                                        .id,
+                              )
+                              as T;
                     }
 
                     return state;
@@ -12108,15 +12137,19 @@ class $$WeddingDocumentsTableTableManager
                     >
                   >(state) {
                     if (weddingProfileId) {
-                      state = state.withJoin(
-                        currentTable: table,
-                        currentColumn: table.weddingProfileId,
-                        referencedTable: $$WeddingDocumentsTableReferences
-                            ._weddingProfileIdTable(db),
-                        referencedColumn: $$WeddingDocumentsTableReferences
-                            ._weddingProfileIdTable(db)
-                            .id,
-                      ) as T;
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.weddingProfileId,
+                                referencedTable:
+                                    $$WeddingDocumentsTableReferences
+                                        ._weddingProfileIdTable(db),
+                                referencedColumn:
+                                    $$WeddingDocumentsTableReferences
+                                        ._weddingProfileIdTable(db)
+                                        .id,
+                              )
+                              as T;
                     }
 
                     return state;

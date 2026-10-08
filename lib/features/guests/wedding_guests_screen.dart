@@ -7,6 +7,7 @@ import '../../app/config/platform_config.dart';
 import '../../data/repositories/wedding_repository.dart';
 import '../../domain/enums/wedding_enums.dart';
 import '../../domain/models/wedding_models.dart';
+import '../../shared/utils/demo_guard.dart';
 import '../../shared/utils/export_utils.dart';
 import '../../shared/utils/performance_utils.dart';
 import '../../shared/utils/uuid_utils.dart';
@@ -343,6 +344,9 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
                 if (action == 'edit') {
                   _showAddGuestDialog(context, guestToEdit: guest);
                 } else if (action == 'delete') {
+                  if (!DemoGuard.checkAction(context, ref: ref, actionName: 'Hapus Tamu')) {
+                    return;
+                  }
                   showDeleteConfirmDialog(
                     context: context,
                     itemName: guest.guestName,
@@ -592,6 +596,13 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
 
   // ==================== ACTIONS & DIALOGS ====================
   void _showAddGuestDialog(BuildContext context, {WeddingGuest? guestToEdit}) {
+    if (!DemoGuard.checkAction(
+      context,
+      ref: ref,
+      actionName: guestToEdit != null ? 'Edit Data Tamu' : 'Tambah Tamu Undangan',
+    )) {
+      return;
+    }
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -604,6 +615,13 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
   }
 
   void _showRsvpQuickPicker(BuildContext context, WeddingGuest guest) {
+    if (!DemoGuard.checkAction(
+      context,
+      ref: ref,
+      actionName: 'Ubah Status RSVP',
+    )) {
+      return;
+    }
     showModalBottomSheet(
       context: context,
       builder: (ctx) => SafeArea(
@@ -743,6 +761,9 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
   }
 
   Future<void> _pickSingleNativeContact(BuildContext context, WidgetRef ref) async {
+    if (!DemoGuard.checkAction(context, ref: ref, actionName: 'Impor Kontak HP')) {
+      return;
+    }
     if (!AppPlatformConfig.isContactsImportAvailable) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -805,6 +826,9 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
   }
 
   Future<void> _pickBatchContacts(BuildContext context, WidgetRef ref) async {
+    if (!DemoGuard.checkAction(context, ref: ref, actionName: 'Impor Kontak Sekaligus')) {
+      return;
+    }
     if (!AppPlatformConfig.isContactsImportAvailable) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

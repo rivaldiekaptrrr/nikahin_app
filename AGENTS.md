@@ -11,7 +11,7 @@
 ---
 
 ## 2. Tech Stack & Dependencies
-- **Framework**: Flutter (SDK `^3.8.0`) & Dart 3
+- **Framework**: Flutter (SDK `^3.13.5` / `3.47.6+`) & Dart 3
 - **State Management**: Flutter Riverpod
 - **Local Persistence**: Drift (SQLite) + `sqlite3_flutter_libs`
 - **Routing**: GoRouter
@@ -55,6 +55,10 @@
 
 ## 5. Knowledge Graph & MCP Memory
 Knowledge graph data and MCP configurations are versioned inside `.agents/`:
-- `.agents/mcp_config.json`: Automatic MCP Memory server registration.
+- `.agents/mcp_config.json`: Automatic MCP Memory & Maestro server registration.
 - `.agents/knowledge_graph.json`: Machine-readable snapshot of entities and relations.
+- `.agents/skills/flutter-environment-setup/SKILL.md`: Complete environment setup, toolchain requirements, and new machine onboarding guide.
 - `.agents/skills/flutter-cicd-release-workflow/SKILL.md`: Detailed CI/CD and release workflow guide.
+- `.agents/skills/maestro-testing/SKILL.md`: Complete Maestro E2E automated UI testing & MCP integration guide.
+- `.agents/skills/clean-response-formatting/SKILL.md`: Standar penulisan format respon bersih, bebas dari raw LaTeX syntax ($...$, \rightarrow).
+- `docs/MAESTRO_AND_EMULATOR_SETUP_GUIDE.md`: Complete guide for Android Emulator (CLI without Android Studio) and Maestro MCP testing.

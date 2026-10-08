@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/repositories/wedding_repository.dart';
 import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/date_utils.dart';
+import '../../shared/utils/demo_guard.dart';
 import '../../shared/utils/uuid_utils.dart';
 import '../../shared/utils/validation_utils.dart';
 import '../../shared/widgets/app_feedback.dart';
@@ -427,6 +428,9 @@ class _WeddingRundownScreenState extends ConsumerState<WeddingRundownScreen>
                             if (action == 'edit') {
                               _showAddRundownItemDialog(context, item.eventId, itemToEdit: item);
                             } else if (action == 'delete') {
+                              if (!DemoGuard.checkAction(context, ref: ref, actionName: 'Hapus Sesi Rundown')) {
+                                return;
+                              }
                               showDeleteConfirmDialog(
                                 context: context,
                                 itemName: item.sessionTitle,
@@ -567,6 +571,13 @@ class _WeddingRundownScreenState extends ConsumerState<WeddingRundownScreen>
 
   // ==================== ACTIONS & MODALS ====================
   void _showAddEventDialog(BuildContext context, {WeddingEvent? eventToEdit}) {
+    if (!DemoGuard.checkAction(
+      context,
+      ref: ref,
+      actionName: eventToEdit != null ? 'Edit Acara' : 'Buat Acara Baru',
+    )) {
+      return;
+    }
     showDialog(
       context: context,
       builder: (ctx) => _AddEventDialog(
@@ -577,6 +588,13 @@ class _WeddingRundownScreenState extends ConsumerState<WeddingRundownScreen>
   }
 
   void _showAddRundownItemDialog(BuildContext context, String eventId, {WeddingRundownItem? itemToEdit}) {
+    if (!DemoGuard.checkAction(
+      context,
+      ref: ref,
+      actionName: itemToEdit != null ? 'Edit Sesi Rundown' : 'Tambah Sesi Rundown',
+    )) {
+      return;
+    }
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,

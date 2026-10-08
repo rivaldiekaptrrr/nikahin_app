@@ -1,0 +1,26 @@
+appId: com.nikahin.app
+name: "Nikahin App - Full E2E Test (Dashboard & Navigation)"
+tags:
+  - smoke-test
+  - dashboard
+---
+# 1. Buka aplikasi Nikahin
+- launchApp
+
+# 2. Verifikasi Tab Navigasi Utama Tampil di Layar
+- assertVisible: ".*Beranda.*"
+- assertVisible: ".*Tugas.*"
+- assertVisible: ".*Anggaran.*"
+- assertVisible: ".*Menu.*"
+
+# 3. Uji Coba Navigasi ke Tab 'Anggaran'
+- tapOn: ".*Anggaran.*"
+
+# 4. Uji Coba Navigasi ke Tab 'Tugas'
+- tapOn: ".*Tugas.*"
+
+# 5. Uji Coba Navigasi ke Tab 'Menu'
+- tapOn: ".*Menu.*"
+
+# 6. Kembali ke Tab 'Beranda'
+- tapOn: ".*Beranda.*"

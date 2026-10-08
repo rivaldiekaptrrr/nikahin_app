@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/repositories/wedding_repository.dart';
 import '../../domain/enums/wedding_enums.dart';
 import '../../domain/models/wedding_models.dart';
+import '../../shared/utils/demo_guard.dart';
 import '../../shared/utils/uuid_utils.dart';
 import '../../shared/utils/validation_utils.dart';
 import '../../shared/widgets/app_feedback.dart';
@@ -333,6 +334,9 @@ class _WeddingCommitteeScreenState extends ConsumerState<WeddingCommitteeScreen>
                     if (action == 'edit') {
                       _showAddMemberDialog(context, memberToEdit: member);
                     } else if (action == 'delete') {
+                      if (!DemoGuard.checkAction(context, ref: ref, actionName: 'Hapus Panitia')) {
+                        return;
+                      }
                       showDeleteConfirmDialog(
                         context: context,
                         itemName: member.memberName,
@@ -485,6 +489,13 @@ class _WeddingCommitteeScreenState extends ConsumerState<WeddingCommitteeScreen>
   }
 
   void _showAddMemberDialog(BuildContext context, {WeddingCommitteeMember? memberToEdit}) {
+    if (!DemoGuard.checkAction(
+      context,
+      ref: ref,
+      actionName: memberToEdit != null ? 'Edit Data Panitia' : 'Tambah Panitia Baru',
+    )) {
+      return;
+    }
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -497,6 +508,13 @@ class _WeddingCommitteeScreenState extends ConsumerState<WeddingCommitteeScreen>
   }
 
   void _showUniformStatusPicker(BuildContext context, WeddingCommitteeMember member) {
+    if (!DemoGuard.checkAction(
+      context,
+      ref: ref,
+      actionName: 'Ubah Status Seragam',
+    )) {
+      return;
+    }
     showModalBottomSheet(
       context: context,
       builder: (ctx) => SafeArea(

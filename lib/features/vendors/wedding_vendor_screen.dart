@@ -6,6 +6,7 @@ import '../../data/repositories/wedding_repository.dart';
 import '../../domain/enums/wedding_enums.dart';
 import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/currency_utils.dart';
+import '../../shared/utils/demo_guard.dart';
 import '../../shared/utils/uuid_utils.dart';
 import '../../shared/utils/validation_utils.dart';
 import '../../shared/widgets/app_feedback.dart';
@@ -438,6 +439,9 @@ class _WeddingVendorScreenState extends ConsumerState<WeddingVendorScreen> {
               title: const Text('Hapus Vendor', style: TextStyle(color: Colors.red)),
               onTap: () {
                 Navigator.pop(ctx);
+                if (!DemoGuard.checkAction(context, ref: ref, actionName: 'Hapus Vendor')) {
+                  return;
+                }
                 showDeleteConfirmDialog(
                   context: context,
                   itemName: vendor.name,
@@ -462,6 +466,13 @@ class _WeddingVendorScreenState extends ConsumerState<WeddingVendorScreen> {
   }
 
   void _showAddVendorDialog(BuildContext context, {WeddingVendor? vendorToEdit}) {
+    if (!DemoGuard.checkAction(
+      context,
+      ref: ref,
+      actionName: vendorToEdit != null ? 'Edit Data Vendor' : 'Tambah Vendor Baru',
+    )) {
+      return;
+    }
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
