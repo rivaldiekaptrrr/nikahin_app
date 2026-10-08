@@ -90,7 +90,18 @@ jobs:
           fi
 
       - name: Build Release APK
-        run: flutter build apk --release
+        env:
+          MIDTRANS_PROD_KEY: ${{ secrets.MIDTRANS_PRODUCTION_SERVER_KEY }}
+          MIDTRANS_SANDBOX_KEY: ${{ secrets.MIDTRANS_SANDBOX_SERVER_KEY }}
+        run: |
+          DART_DEFINES=""
+          if [ -n "$MIDTRANS_PROD_KEY" ]; then
+            DART_DEFINES="$DART_DEFINES --dart-define=MIDTRANS_PRODUCTION_SERVER_KEY=$MIDTRANS_PROD_KEY"
+          fi
+          if [ -n "$MIDTRANS_SANDBOX_KEY" ]; then
+            DART_DEFINES="$DART_DEFINES --dart-define=MIDTRANS_SANDBOX_SERVER_KEY=$MIDTRANS_SANDBOX_KEY"
+          fi
+          flutter build apk --release $DART_DEFINES
 
       # Skenario 1: Push ke branch main / master (Build Internal Developer)
       - name: Rename APK for Main/Master Branch
