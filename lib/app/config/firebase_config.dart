@@ -15,7 +15,7 @@ class FirebaseConfig {
   /// Web API Key dari Firebase Console (Project Settings -> General -> Web API Key)
   static const String apiKey = String.fromEnvironment(
     'FIREBASE_API_KEY',
-    defaultValue: 'AIzaSyB7Nxopm8-yWXGH3cF_0MEK2K5IL6Nq0Oc',
+    defaultValue: 'AIzaSyCn7inD6bx8Smc3vwAr9fA6zR1wgrRgHH8',
   );
 
   /// Status apakah kredensial API Key Firebase telah diisi

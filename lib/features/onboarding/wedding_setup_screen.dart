@@ -106,6 +106,12 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
       appBar: AppBar(
         title: const Text('Setup Rencana Pernikahan'),
         actions: [
+          if (auth.isAdmin)
+            IconButton(
+              icon: const Icon(Icons.shield_rounded, color: Color(0xFFD97706)),
+              tooltip: 'Buka Panel Super Admin',
+              onPressed: () => context.push('/admin'),
+            ),
           TextButton(
             onPressed: () async {
               await ref.read(authNotifierProvider.notifier).signOut();

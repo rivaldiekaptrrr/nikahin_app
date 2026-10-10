@@ -17,7 +17,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _nameController = TextEditingController();
 
   bool _isRegisterMode = false;
   bool _passwordVisible = false;
@@ -26,10 +25,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
   String? _errorMessage;
 
   @override
+  void initState() {
+    super.initState();
+    // Otomatis bersihkan sesi aktif lama saat membuka layar login
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(authNotifierProvider.notifier).signOut();
+    });
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _nameController.dispose();
     super.dispose();
   }
 
@@ -77,7 +84,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
     try {
       final success = await ref.read(authNotifierProvider.notifier).signInWithGoogle();
       if (success && mounted) {
-        context.go('/');
+        final authState = ref.read(authNotifierProvider);
+        if (authState.isPendingVerification) {
+          context.go('/pending-verification');
+        } else {
+          context.go('/');
+        }
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -95,8 +107,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
   }
 
   void _showForgotPasswordDialog() {
-    final emailResetCtrl = TextEditingController(text: _emailController.text);
+    final emailResetCtrl = TextEditingController(text: _emailController.text.trim());
     String? resetError;
+    bool isSending = false;
+
     showDialog(
       context: context,
       builder: (dialogCtx) {
@@ -104,20 +118,32 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
           builder: (context, setDialogState) {
             return AlertDialog(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-              title: const Text('Lupa Password?', style: TextStyle(fontWeight: FontWeight.bold)),
+              title: const Row(
+                children: [
+                  Icon(Icons.lock_reset_rounded, color: Color(0xFFE11D48)),
+                  SizedBox(width: 8),
+                  Text('Lupa Password?', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                ],
+              ),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Masukkan email akun Anda untuk menerima tautan reset kata sandi.'),
-                  const SizedBox(height: 14),
+                  const Text(
+                    'Masukkan email akun Anda. Kami akan mengirimkan tautan resmi dari Firebase untuk mengatur ulang kata sandi Anda.',
+                    style: TextStyle(fontSize: 13),
+                  ),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: emailResetCtrl,
                     keyboardType: TextInputType.emailAddress,
+                    enabled: !isSending,
                     inputFormatters: [LengthLimitingTextInputFormatter(60)],
                     maxLength: 60,
                     buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                     decoration: InputDecoration(
                       labelText: 'Email Terdaftar',
+                      hintText: 'nama@example.com',
                       prefixIcon: const Icon(Icons.email_outlined),
                       errorText: resetError,
                     ),
@@ -126,22 +152,65 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
               ),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.of(dialogCtx).pop(),
+                  onPressed: isSending ? null : () => Navigator.of(dialogCtx).pop(),
                   child: const Text('Batal'),
                 ),
                 FilledButton(
-                  onPressed: () {
-                    final emailErr = ValidationUtils.validateEmail(emailResetCtrl.text.trim(), isRequired: true);
-                    if (emailErr != null) {
-                      setDialogState(() => resetError = emailErr);
-                      return;
-                    }
-                    Navigator.of(dialogCtx).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Tautan pemulihan kata sandi telah dikirim ke ${emailResetCtrl.text.trim()}')),
-                    );
-                  },
-                  child: const Text('Kirim Link'),
+                  onPressed: isSending
+                      ? null
+                      : () async {
+                          final email = emailResetCtrl.text.trim();
+                          final emailErr = ValidationUtils.validateEmail(email, isRequired: true);
+                          if (emailErr != null) {
+                            setDialogState(() => resetError = emailErr);
+                            return;
+                          }
+
+                          setDialogState(() {
+                            isSending = true;
+                            resetError = null;
+                          });
+
+                          final error = await ref.read(authNotifierProvider.notifier).sendPasswordResetEmail(email);
+
+                          if (dialogCtx.mounted) {
+                            if (error == null) {
+                              Navigator.of(dialogCtx).pop();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Row(
+                                    children: [
+                                      const Icon(Icons.mark_email_read_rounded, color: Colors.white, size: 20),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          'Tautan reset kata sandi telah dikirim ke $email. Periksa kotak masuk atau spam.',
+                                          style: const TextStyle(fontWeight: FontWeight.w600),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Colors.green.shade700,
+                                  duration: const Duration(seconds: 4),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                ),
+                              );
+                            } else {
+                              setDialogState(() {
+                                isSending = false;
+                                resetError = error;
+                              });
+                            }
+                          }
+                        },
+                  child: isSending
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        )
+                      : const Text('Kirim Link Reset'),
                 ),
               ],
             );
@@ -258,39 +327,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                   ],
 
                   // 4. Form Fields
-                  if (_isRegisterMode) ...[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Nama Lengkap',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: textDark.withValues(alpha: 0.8),
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        TextFormField(
-                          controller: _nameController,
-                          inputFormatters: [
-                            LengthLimitingTextInputFormatter(50),
-                            ValidationUtils.nameInputFormatter,
-                          ],
-                          maxLength: 50,
-                          buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
-                          decoration: InputDecoration(
-                            hintText: 'Contoh: Rivaldi / Alya',
-                            prefixIcon: Icon(Icons.person_outline_rounded, color: primaryColor),
-                          ),
-                          validator: (val) =>
-                              _isRegisterMode ? ValidationUtils.validateName(val, 'Nama Lengkap') : null,
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-                    ),
-                  ],
-
                   // Email Field
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

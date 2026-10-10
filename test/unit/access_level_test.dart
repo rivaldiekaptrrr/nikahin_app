@@ -76,14 +76,17 @@ void main() {
     test('BusinessConfig WhatsApp URL generation', () {
       final uri = BusinessConfig.getWhatsAppConfirmationUri(
         userEmail: 'user@example.com',
-        userName: 'Rivaldi',
       );
+
+      final expectedNumber = BusinessConfig.useManualPaymentMode
+          ? BusinessConfig.manualPaymentWhatsAppNumber
+          : BusinessConfig.adminWhatsAppNumber;
 
       expect(uri.scheme, equals('https'));
       expect(uri.host, equals('wa.me'));
-      expect(uri.path, contains(BusinessConfig.adminWhatsAppNumber));
+      expect(uri.path, contains(expectedNumber));
       expect(uri.queryParameters['text'], contains('user@example.com'));
-      expect(uri.queryParameters['text'], contains('Rivaldi'));
+      expect(uri.queryParameters['text'], contains('Rp 49.000'));
     });
   });
 }

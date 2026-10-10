@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import '../../../app/config/business_config.dart';
 import '../../../data/local/mock_seeder.dart';
 import '../../../data/local/preferences_manager.dart';
@@ -193,10 +194,29 @@ class AuthNotifier extends Notifier<AuthState> {
     state = state.copyWith(isLoading: true, errorMessage: null);
     try {
       final firestoreService = ref.read(firestoreServiceProvider);
-      final res = await firestoreService.signUpWithEmail(
+      var res = await firestoreService.signUpWithEmail(
         email: email,
         password: password,
       );
+
+      // Jika email sudah pernah terdaftar di Firebase Auth (misal: profil Firestore sebelumnya dihapus oleh Super Admin):
+      if (res != null && !res.isSuccess && (res.errorMessage?.contains('sudah terdaftar') ?? false)) {
+        // Coba login otomatis dengan kata sandi yang diinput pengguna
+        final loginRes = await firestoreService.signInWithEmail(
+          email: email,
+          password: password,
+        );
+        if (loginRes != null && loginRes.isSuccess) {
+          res = loginRes; // Autentikasi valid, lanjutkan sinkronisasi ulang ke Firestore
+        } else {
+          // Kata sandi tidak cocok dengan akun terdaftar di Auth
+          state = state.copyWith(
+            isLoading: false,
+            errorMessage: 'Email ini sudah terdaftar. Kata sandi tidak cocok, atau silakan gunakan tab "Masuk".',
+          );
+          return false;
+        }
+      }
 
       if (res != null && !res.isSuccess) {
         state = state.copyWith(
@@ -208,21 +228,27 @@ class AuthNotifier extends Notifier<AuthState> {
 
       final uid = res?.localId ?? 'user_${email.hashCode.abs()}';
       final isAdmin = email.toLowerCase() == BusinessConfig.adminEmail.toLowerCase();
-      final level = isAdmin ? AccessLevel.admin : AccessLevel.none;
+      var level = isAdmin ? AccessLevel.admin : AccessLevel.none;
 
-      // Register new user doc in Firestore
+      // Cek apakah dokumen user sudah ada di Firestore atau perlu didaftarkan ulang sebagai akun baru
       try {
-        await firestoreService.syncUserInfo(
-          AppUserInfo(
-            uid: uid,
-            email: email,
-            displayName: email.split('@').first,
-            accessLevel: level,
-            createdAt: DateTime.now().millisecondsSinceEpoch,
-            updatedAt: DateTime.now().millisecondsSinceEpoch,
-          ),
-          idToken: res?.idToken,
-        );
+        final remoteUser = await firestoreService.getUserInfo(uid, idToken: res?.idToken);
+        if (remoteUser != null) {
+          level = isAdmin ? AccessLevel.admin : remoteUser.accessLevel;
+        } else {
+          // Dokumen tidak ada (karena baru atau baru saja dihapus oleh admin) -> Buat profil baru
+          await firestoreService.syncUserInfo(
+            AppUserInfo(
+              uid: uid,
+              email: email,
+              displayName: email.split('@').first,
+              accessLevel: level,
+              createdAt: DateTime.now().millisecondsSinceEpoch,
+              updatedAt: DateTime.now().millisecondsSinceEpoch,
+            ),
+            idToken: res?.idToken,
+          );
+        }
       } catch (_) {}
 
       await AppPreferences.setUserEmail(email);
@@ -257,14 +283,80 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
+  /// Kirim link pemulihan kata sandi resmi via Firebase Auth REST
+  /// Mengembalikan null jika sukses terkirim, atau pesan error jika gagal.
+  Future<String?> sendPasswordResetEmail(String email) async {
+    try {
+      final firestoreService = ref.read(firestoreServiceProvider);
+      return await firestoreService.sendPasswordResetEmail(email: email.trim());
+    } catch (e) {
+      return 'Gagal mengirim email reset kata sandi: $e';
+    }
+  }
+
   Future<bool> signInWithGoogle() async {
     state = state.copyWith(isLoading: true, errorMessage: null);
     try {
-      await Future.delayed(const Duration(milliseconds: 600));
-      const email = 'rivaldi.alya.wedding@gmail.com';
-      const uid = 'google_user_rivaldi_alya';
-      final isAdmin = email.toLowerCase() == BusinessConfig.adminEmail.toLowerCase();
-      final level = isAdmin ? AccessLevel.admin : AccessLevel.premium;
+      final googleSignIn = GoogleSignIn(scopes: ['email', 'profile']);
+      // Selalu signOut dari sesi cache lokal agar sistem selalu memunculkan native Google Account Picker
+      try {
+        await googleSignIn.signOut();
+      } catch (_) {}
+
+      final GoogleSignInAccount? account = await googleSignIn.signIn();
+      if (account == null) {
+        // Pengguna membatalkan pemilihan akun di dialog bawaan sistem
+        state = state.copyWith(isLoading: false);
+        return false;
+      }
+
+      final email = account.email.trim().toLowerCase();
+      final displayName = account.displayName ?? email.split('@').first;
+      final isAdmin = email == BusinessConfig.adminEmail.toLowerCase();
+      var level = isAdmin ? AccessLevel.admin : AccessLevel.none;
+
+      final googleAuth = await account.authentication;
+      final googleIdToken = googleAuth.idToken ?? '';
+      final firestoreService = ref.read(firestoreServiceProvider);
+
+      String? firebaseIdToken;
+      String uid = 'google_user_${account.id.isNotEmpty ? account.id : email.hashCode.abs()}';
+
+      // Tukar Google ID Token dengan Firebase Auth ID Token jika tersedia
+      if (googleIdToken.isNotEmpty) {
+        final firebaseAuthRes = await firestoreService.signInWithGoogleIdToken(
+          googleIdToken: googleIdToken,
+        );
+        if (firebaseAuthRes != null && firebaseAuthRes.isSuccess) {
+          firebaseIdToken = firebaseAuthRes.idToken;
+          if (firebaseAuthRes.localId.isNotEmpty) {
+            uid = firebaseAuthRes.localId;
+          }
+        }
+      }
+
+      firebaseIdToken ??= (googleIdToken.isNotEmpty ? googleIdToken : null);
+      await AppPreferences.setIdToken(firebaseIdToken);
+
+      // Cek apakah akun ini sudah ada di Firestore atau daftarkan doc user baru
+      try {
+        final remoteUser = await firestoreService.getUserInfo(uid, idToken: firebaseIdToken);
+        if (remoteUser != null) {
+          level = isAdmin ? AccessLevel.admin : remoteUser.accessLevel;
+        } else {
+          await firestoreService.syncUserInfo(
+            AppUserInfo(
+              uid: uid,
+              email: email,
+              displayName: displayName,
+              accessLevel: level,
+              createdAt: DateTime.now().millisecondsSinceEpoch,
+              updatedAt: DateTime.now().millisecondsSinceEpoch,
+            ),
+            idToken: firebaseIdToken,
+          );
+        }
+      } catch (_) {}
 
       await AppPreferences.setUserEmail(email);
       await AppPreferences.setUserId(uid);
@@ -275,18 +367,21 @@ class AuthNotifier extends Notifier<AuthState> {
       ref.read(userEmailProvider.notifier).state = email;
       ref.read(syncManagerProvider).configure(
             newUserId: uid,
-            enabled: true,
+            newIdToken: firebaseIdToken,
+            enabled: level.isPremium,
           );
 
       state = AuthState(
         status: AuthStatus.authenticated,
         userId: uid,
         email: email,
-        displayName: 'Rivaldi & Alya',
+        displayName: displayName,
         accessLevel: level,
       );
 
-      ref.read(syncManagerProvider).pullAll();
+      if (level.isPremium) {
+        ref.read(syncManagerProvider).pullAll();
+      }
       return true;
     } catch (e) {
       state = state.copyWith(isLoading: false, errorMessage: e.toString());
@@ -376,12 +471,39 @@ class AuthNotifier extends Notifier<AuthState> {
     );
   }
 
+  /// Cek dan sinkronkan status hak akses lisensi terbaru dari Firestore
+  Future<AccessLevel> refreshAccessLevel() async {
+    final uid = state.userId;
+    if (uid == null) return state.accessLevel;
+
+    try {
+      final firestoreService = ref.read(firestoreServiceProvider);
+      final remoteUser = await firestoreService.getUserInfo(uid);
+      if (remoteUser != null) {
+        final level = state.isAdmin ? AccessLevel.admin : remoteUser.accessLevel;
+        await AppPreferences.setAccessLevel(level.code);
+        state = state.copyWith(accessLevel: level);
+
+        ref.read(syncManagerProvider).configure(
+              newUserId: uid,
+              enabled: level.isPremium,
+            );
+        if (level.isPremium) {
+          ref.read(syncManagerProvider).pullAll();
+        }
+        return level;
+      }
+    } catch (_) {}
+
+    return state.accessLevel;
+  }
   /// Update hak akses lisensi user lain (Fitur Super Admin)
   Future<bool> updateTargetUserAccess(String targetUserId, AccessLevel newLevel) async {
     if (!state.isAdmin) return false;
     try {
       final firestoreService = ref.read(firestoreServiceProvider);
-      return await firestoreService.updateUserAccessLevel(targetUserId, newLevel);
+      final idToken = await AppPreferences.getIdToken();
+      return await firestoreService.updateUserAccessLevel(targetUserId, newLevel, idToken: idToken);
     } catch (_) {
       return false;
     }
@@ -392,14 +514,32 @@ class AuthNotifier extends Notifier<AuthState> {
     if (!state.isAdmin) return [];
     try {
       final firestoreService = ref.read(firestoreServiceProvider);
-      return await firestoreService.getAllAppUsers();
+      final idToken = await AppPreferences.getIdToken();
+      return await firestoreService.getAllAppUsers(idToken: idToken);
     } catch (_) {
       return [];
     }
   }
 
+  /// Hapus akun pengguna dari Firestore (Fitur Super Admin)
+  Future<bool> deleteTargetUser(String targetUserId) async {
+    if (!state.isAdmin) return false;
+    try {
+      final firestoreService = ref.read(firestoreServiceProvider);
+      final idToken = await AppPreferences.getIdToken();
+      return await firestoreService.deleteUser(targetUserId, idToken: idToken);
+    } catch (_) {
+      return false;
+    }
+  }
+
   Future<void> signOut() async {
     state = state.copyWith(isLoading: true);
+    try {
+      final googleSignIn = GoogleSignIn();
+      await googleSignIn.signOut();
+    } catch (_) {}
+
     await AppPreferences.setUserEmail(null);
     await AppPreferences.setUserId(null);
     await AppPreferences.setAccessLevel('NONE');

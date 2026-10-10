@@ -61,4 +61,5 @@ Knowledge graph data and MCP configurations are versioned inside `.agents/`:
 - `.agents/skills/flutter-cicd-release-workflow/SKILL.md`: Detailed CI/CD and release workflow guide.
 - `.agents/skills/maestro-testing/SKILL.md`: Complete Maestro E2E automated UI testing & MCP integration guide.
 - `.agents/skills/clean-response-formatting/SKILL.md`: Standar penulisan format respon bersih, bebas dari raw LaTeX syntax ($...$, \rightarrow).
+- `.agents/skills/interactive-agent-workflow/SKILL.md`: Standar alur kerja interaktif, konfirmasi sebelum eksekusi, dan larangan menjalankan tes/analisis otomatis tanpa persetujuan pengguna.
 - `docs/MAESTRO_AND_EMULATOR_SETUP_GUIDE.md`: Complete guide for Android Emulator (CLI without Android Studio) and Maestro MCP testing.

@@ -29,13 +29,6 @@ final appRouter = GoRouter(
           return '/welcome';
         }
 
-        // Demo mode → langsung ke mock profile
-        final isDemo = await AppPreferences.isDemoMode();
-        if (isDemo) {
-          final profileId = await AppPreferences.getActiveProfileId();
-          return '/wedding/$profileId';
-        }
-
         final email = await AppPreferences.getUserEmail();
         if (email == null || email.isEmpty) {
           return '/login';

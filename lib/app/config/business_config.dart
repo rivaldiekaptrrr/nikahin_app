@@ -6,8 +6,19 @@ class BusinessConfig {
   /// Email Akun Super Admin
   static const String adminEmail = 'rivaldiekaputr@gmail.com';
 
-  /// Nomor WhatsApp Admin untuk Konfirmasi Pembayaran (Format Internasional tanpa +)
-  static const String adminWhatsAppNumber = '6285156064977';
+  /// Toggle Mode Pembayaran Manual (QRIS Statis & Konfirmasi WhatsApp)
+  /// Nilai `true` mengaktifkan mode manual (QRIS statis + kirim bukti via WhatsApp + aktivasi Admin Panel).
+  /// Nilai `false` mengaktifkan mode direct payment otomatis Midtrans Core API.
+  static const bool useManualPaymentMode = true;
+
+  /// Nomor WhatsApp Admin Utama (Format Internasional tanpa +)
+  static const String adminWhatsAppNumber = '6287834284141';
+
+  /// Nomor WhatsApp Khusus Konfirmasi Pembayaran Manual (+6287834284141)
+  static const String manualPaymentWhatsAppNumber = '6287834284141';
+
+  /// Lokasi Asset Gambar QRIS Statis untuk Mode Manual
+  static const String manualQrisAssetPath = 'assets/images/qris.jpeg';
 
   /// Backend URL Midtrans Snap Token Generator (Vercel Serverless Function)
   static const String midtransBackendUrl = String.fromEnvironment(
@@ -50,21 +61,19 @@ class BusinessConfig {
   /// Generator URL WhatsApp untuk Konfirmasi Pembeli
   static Uri getWhatsAppConfirmationUri({
     required String userEmail,
-    String? userName,
   }) {
+    final targetNumber = useManualPaymentMode ? manualPaymentWhatsAppNumber : adminWhatsAppNumber;
     final message = '''
-Halo Admin Nikahin, saya ingin konfirmasi aktivasi lisensi aplikasi:
+Halo Tim Nikahin, saya sudah melakukan pembayaran lisensi via QRIS (Rp 49.000):
 
-📧 *Email Terdaftar:* $userEmail
-👤 *Nama:* ${userName ?? '-'}
-💎 *Paket:* $packageName (Rp 49.000)
+Email Terdaftar: $userEmail
 
-Mohon untuk diverifikasi dan diaktifkan akun saya. Terima kasih!
+Berikut saya lampirkan bukti pembayaran QRIS. Mohon untuk diverifikasi dan diaktifkan akses akun saya. Terima kasih!
 '''
         .trim();
 
     return Uri.parse(
-      'https://wa.me/$adminWhatsAppNumber?text=${Uri.encodeComponent(message)}',
+      'https://wa.me/$targetNumber?text=${Uri.encodeComponent(message)}',
     );
   }
 

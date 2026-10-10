@@ -136,8 +136,41 @@ class FirestoreRestService {
     return null;
   }
 
-  /// Send password reset email
-  Future<bool> sendPasswordResetEmail({required String email}) async {
+  /// Sign in / exchange Google ID Token with Firebase Auth via accounts:signInWithIdp
+  Future<AuthResponse?> signInWithGoogleIdToken({
+    required String googleIdToken,
+  }) async {
+    if (isRemoteConfigured && googleIdToken.isNotEmpty) {
+      try {
+        final url = Uri.parse('https://identitytoolkit.googleapis.com/v1/accounts:signInWithIdp?key=$apiKey');
+        final response = await _client.post(
+          url,
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'postBody': 'id_token=$googleIdToken&providerId=google.com',
+            'requestUri': 'http://localhost',
+            'returnIdpCredential': true,
+            'returnSecureToken': true,
+          }),
+        );
+
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          return AuthResponse(
+            idToken: data['idToken'] ?? googleIdToken,
+            email: data['email'] ?? '',
+            localId: data['localId'] ?? '',
+            refreshToken: data['refreshToken'],
+          );
+        }
+      } catch (_) {}
+    }
+    return null;
+  }
+
+  /// Send password reset email via Firebase Auth REST API
+  /// Returns null on success, or an error message on failure.
+  Future<String?> sendPasswordResetEmail({required String email}) async {
     if (isRemoteConfigured) {
       try {
         final url = Uri.parse('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=$apiKey');
@@ -149,10 +182,16 @@ class FirestoreRestService {
             'email': email,
           }),
         );
-        return response.statusCode == 200;
-      } catch (_) {}
+        if (response.statusCode == 200) {
+          return null; // Sukses terkirim!
+        } else {
+          return _parseFirebaseAuthError(response.body);
+        }
+      } catch (e) {
+        return 'Gagal menghubungi server. Periksa koneksi internet Anda.';
+      }
     }
-    return email.contains('@');
+    return email.contains('@') ? null : 'Format email tidak valid.';
   }
 
   String get _baseUrl =>
@@ -272,6 +311,14 @@ class FirestoreRestService {
     );
   }
 
+  /// Delete user document (For Admin Dashboard)
+  Future<bool> deleteUser(String targetUserId, {String? idToken}) async {
+    return deleteDocument(
+      path: 'users/$targetUserId',
+      idToken: idToken,
+    );
+  }
+
   /// Get all documents in a collection via REST API
   Future<List<Map<String, dynamic>>> getCollection({
     required String collectionPath,
@@ -351,8 +398,9 @@ class FirestoreRestService {
 
       if (rawError.contains('EMAIL_EXISTS')) {
         return 'Email ini sudah terdaftar. Silakan login ke akun Anda.';
+      } else if (rawError.contains('EMAIL_NOT_FOUND')) {
+        return 'Email tidak terdaftar di sistem Nikahin.';
       } else if (rawError.contains('INVALID_LOGIN_CREDENTIALS') ||
-          rawError.contains('EMAIL_NOT_FOUND') ||
           rawError.contains('INVALID_PASSWORD')) {
         return 'Email atau kata sandi tidak cocok. Silakan periksa kembali.';
       } else if (rawError.contains('WEAK_PASSWORD')) {
