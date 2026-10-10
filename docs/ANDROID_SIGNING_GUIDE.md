@@ -8,7 +8,14 @@ Dokumentasi ini menjelaskan langkah-langkah membuat kunci penandatanganan aplika
 Android mewajibkan setiap aplikasi ditandatangani dengan sertifikat digital. Jika sertifikat/tanda tangan pada APK baru berbeda dengan APK yang sudah terpasang di HP, sistem Android akan menolak update dengan error:
 > *"Aplikasi tidak diinstall karena paket ini bentrok dengan paket yang sudah ada."*
 
-Dengan menggunakan Release Keystore yang sama, Anda bisa melakukan update in-app secara mulus selamanya.
+### Perbedaan Debug Keystore vs Release Keystore
+
+| Kategori | Debug Keystore (Development) | Release Keystore (Production) |
+|---|---|---|
+| **Fase Penggunaan** | Saat ngoding sehari-hari di laptop (`flutter run`, testing HP/emulator). | Saat rilis APK final (`flutter build apk --release`, GitHub Actions, Play Store). |
+| **Lokasi File** | `$HOME/.android/debug.keystore` (dibuat otomatis oleh Android SDK). | `upload-keystore.jks` di root proyek (dibuat manual oleh developer). |
+| **Keamanan** | Password default: `android` (tidak untuk disebar ke publik). | Dilindungi password rahasia & disimpan di GitHub Repository Secrets. |
+| **Firebase OAuth** | SHA-1 Debug didaftarkan di Firebase Console agar Google Sign-In jalan saat dev. | SHA-1 Release didaftarkan di Firebase Console agar Google Sign-In jalan pada APK rilis. |
 
 ---
 

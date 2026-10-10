@@ -8,42 +8,35 @@ Dokumen ini menjelaskan arsitektur, konfigurasi kredensial, alur antarmuka (*UI 
 
 Aplikasi Nikahin menggunakan integrasi **100% Native Midtrans Core API** (tanpa ketergantungan pada Snap WebView / popup browser eksternal) untuk memberikan pengalaman pengguna (*user experience*) yang cepat, mulus, dan bertema *Bridal Luxury Bento*.
 
-```
-┌────────────────────────────────┐
-│   📱 Flutter App (Nikahin)     │
-│   (PendingVerificationScreen)  │
-└───────────────┬────────────────┘
-                │ 1. Pilih Channel (BCA / Mandiri / BNI / BRI / Permata / QRIS / GoPay)
-                ▼
-┌────────────────────────────────┐       2. Request Charge API       ┌────────────────────────────────┐
-│  🌐 Vercel Serverless Function ├──────────────────────────────────►│  💳 Midtrans Core API Gateway  │
-│  (/api/charge-core-api)        │◄──────────────────────────────────┤  (Sandbox / Production)        │
-└───────────────┬────────────────┘       3. Return VA / QR / Deeplink └───────────────┬────────────────┘
-                │                                                                     │
-                ▼                                                                     │ 4. Pengguna Bayar
-┌────────────────────────────────┐                                                    │    (m-Banking / QRIS)
-│  📱 Custom Instruction Screen  │                                                    │
-│  (midtrans_custom_payment)     │                                                    │
-└───────────────┬────────────────┘                                                    │
-                │                                                                     │
-                │ 5. Auto-Polling Check & Real-time Webhook                           ▼
-                │ ◄─────────────────────────────────────────────────── [5. Webhook HTTP Notification]
-                ▼                                                                     │
-┌────────────────────────────────┐                                                    │
-│  🔥 Cloud Firestore (users/{id})│ ◄───────────────────────────────────────────────────┘
-│     accessLevel: "PREMIUM"     │ (Instant Role-Based Access Control Upgrade)
-└───────────────┬────────────────┘
-                │
-                ▼
-┌────────────────────────────────┐
-│  🎉 PaymentCelebrationScreen   │
-│  (Confetti & Luxury Outro)     │
-└───────────────┬────────────────┘
-                │ Otomatis Navigasi ke Dashboard
-                ▼
-┌────────────────────────────────┐
-│  👰 Wedding Dashboard Screen   │
-└────────────────────────────────┘
+```mermaid
+flowchart LR
+    subgraph Client ["Flutter App Layer"]
+        AppUI[Layar Pending Verification]
+        CustomPaymentScreen[Layar Instruksi VA / QRIS]
+        CelebrationScreen[Layar Selebrasi Konfeti]
+    end
+
+    subgraph Serverless ["Vercel Backend Layer"]
+        ChargeAPI[Endpoint /charge-core-api]
+        WebhookAPI[Endpoint /midtrans-webhook]
+    end
+
+    subgraph Gateway ["Midtrans Core API Engine"]
+        CoreCharge[Direct Charge API]
+        WebhookEmitter[Payment Webhook Notifier]
+    end
+
+    subgraph Database ["Cloud Firestore"]
+        UserDoc[(Dokumen users/uid: accessLevel)]
+    end
+
+    AppUI --> ChargeAPI
+    ChargeAPI --> CoreCharge
+    CoreCharge --> CustomPaymentScreen
+    CustomPaymentScreen -.->|Selesaikan Pembayaran| Gateway
+    WebhookEmitter -->|Status Settlement| WebhookAPI
+    WebhookAPI -->|accessLevel = PREMIUM| UserDoc
+    UserDoc --> CelebrationScreen
 ```
 
 ---

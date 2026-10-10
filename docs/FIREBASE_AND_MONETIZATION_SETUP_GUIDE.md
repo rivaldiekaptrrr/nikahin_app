@@ -117,39 +117,89 @@ class BusinessConfig {
   /// Harga Paket Lisensi
   static const double lifetimePrice = 49000.0;
   static const double originalPrice = 99000.0;
-  static const String packageName = 'Paket Wedding Planner Seumur Hidup (Lifetime)';
-}
+## 4. Konfigurasi Google Sign-In & Keystore Fingerprint (Debug vs Release)
+
+Google Sign-In pada Android membutuhkan pendaftaran **SHA-1 Fingerprint** dari sertifikat aplikasi di Firebase Console. Dalam pengembangan Android, terdapat 2 jenis keystore:
+
+| Tipe Keystore | Fase Penggunaan | Asal Berkas | Tujuan |
+|---|---|---|---|
+| **Debug Keystore** | **Development** (Ngoding di laptop, `flutter run`, live reload) | Dibuat otomatis oleh Android SDK di `$HOME/.android/debug.keystore` | Memudahkan pengujian tanpa perlu input password sertifikat setiap kali run |
+| **Release Keystore** | **Production** (Rilis APK final, GitHub Actions, Google Play Store) | Dibuat manual oleh developer (`upload-keystore.jks`) | Menjamin integritas dan otentisitas resmi aplikasi rilis |
+
+> [!NOTE]
+> Firebase Console dapat menampung **banyak fingerprint SHA-1 sekaligus**. Sangat disarankan mendaftarkan **SHA-1 Debug** (milik laptop developer) dan **SHA-1 Release** agar Google Sign-In dapat berjalan lancar di kedua lingkungan.
+
+### A. Cara Mengambil Fingerprint SHA-1 & SHA-256
+
+#### 1. Debug Keystore (Laptop Anda):
+Jalankan perintah berikut di PowerShell:
+```powershell
+keytool -list -v -keystore "$env:USERPROFILE\.android\debug.keystore" -alias androiddebugkey -storepass android -keypass android
 ```
+
+Nilai fingerprint debug standar laptop Anda:
+- **SHA-1**: `31:20:11:9D:D6:91:E5:BA:B6:A4:0C:B2:C9:A8:15:F0:96:A0:8B:B6`
+- **SHA-256**: `97:AD:D0:CE:C3:E7:0D:29:2D:68:99:F8:8A:5E:0A:B1:BE:31:BA:D7:C7:FF:0B:94:AB:A0:C4:BC:B0:59:DC:BF`
+
+#### 2. Release Keystore (Produksi):
+Jalankan perintah ini di folder tempat berkas `upload-keystore.jks` berada:
+```powershell
+keytool -list -v -keystore upload-keystore.jks -alias nikahin_key
+```
+
+### B. Mendaftarkan Fingerprint di Firebase Console
+1. Buka [Firebase Console](https://console.firebase.google.com/) > Pilih project `nikahin-wedding-app`.
+2. Klik ikon **Gerigi (Project Settings)** > Tab **General**.
+3. Gulir ke bawah ke bagian **Your apps** > Pilih aplikasi Android (`com.nikahin.app`).
+4. Klik tombol **"Add fingerprint"**, masukkan nilai SHA-1 dan SHA-256, lalu klik **Save**.
+5. Unduh berkas **`google-services.json`** terbaru dan letakkan di:
+   `android/app/google-services.json`
 
 ---
 
-## 5. Alur Pembayaran Otomatis Midtrans & Operasional Super Admin
+## 5. Konfigurasi Mode Pembayaran (Manual vs Otomatis Midtrans)
 
-```
-   [Pengguna Baru]                                    [Midtrans / Webhook]
-          │                                                    │
-   1. Buka Aplikasi & Daftar Akun                              │
-          │                                                    │
-   2. Jika Akun Baru (AccessLevel: NONE):                      │
-      👉 Otomatis diarahkan ke Layar Paywall                   │
-         "Aktivasi Lisensi" (Rp 49.000)                        │
-          │                                                    │
-   3. Pengguna Klik "Bayar via Midtrans" ─────────────────────► 4. Membuka Midtrans Snap Checkout
-          │                                                       (QRIS / GoPay / ShopeePay / VA)
-          │                                                    5. Pengguna Selesaikan Pembayaran
-          │                                                       │
-          │                                                       ▼
-          │                                                 6. Webhook Vercel Update Firestore:
-          │                                                    users/{uid}.accessLevel = "PREMIUM"
-          │                                                       │
-   7. Auto-Polling / Klik "Cek Status" ◄──────────────────────────┘
-      👉 Akses Terbuka Penuh Seketika (PREMIUM)! 🎉
+Aplikasi mendukung 2 mode pembayaran yang dapat diganti kapan saja melalui 1 baris kode di `lib/app/config/business_config.dart`:
+
+```dart
+class BusinessConfig {
+  // true = QRIS Statis + WhatsApp + Verifikasi Admin Panel
+  // false = Direct Midtrans Core API (Otomatis)
+  static const bool useManualPaymentMode = true;
+
+  // Nomor WhatsApp konfirmasi pembayaran (+6287834284141)
+  static const String manualPaymentWhatsAppNumber = '6287834284141';
+
+  // Email Super Admin
+  static const String adminEmail = 'rivaldiekaputr@gmail.com';
+}
 ```
 
-*(Catatan: Tombol konfirmasi manual via WhatsApp dan Panel Super Admin tetap aktif sebagai alternatif).*
+```mermaid
+flowchart TD
+    subgraph UserFlow ["Alur Pengguna"]
+        A["Buka Aplikasi & Masuk / Daftar"] --> B{"Cek Status Lisensi"}
+        B -->|Belum Bayar| C["Layar Aktivasi Lisensi (Rp 49.000)"]
+        B -->|Premium / Admin| D["Akses Penuh Aplikasi Planner"]
+        C -->|Mode Manual| E["Scan QRIS & Download Gambar"]
+        E --> F["Kirim Bukti Pembayaran ke WhatsApp"]
+        C -->|Mode Otomatis| G["Bayar via Midtrans Snap / Core API"]
+    end
 
-### Cara Mengakses Panel Super Admin:
-1. Masuk ke aplikasi menggunakan akun email admin: `rivaldiekaputr@gmail.com`.
+    subgraph BackendFlow ["Verifikasi & Aktivasi"]
+        F --> H["Admin Verifikasi di Admin Panel"]
+        H -->|1 Ketukan Aktifkan| D
+        G --> I["Webhook Vercel Update Firestore: PREMIUM"]
+        I --> D
+    end
+```
+
+### 🔐 Kredensial & Cara Mengakses Panel Super Admin:
+- **Email Super Admin**: `rivaldiekaputr@gmail.com`
+- **Kata Sandi (Password)**: Password yang Anda masukkan saat membuat akun pertama kali via form Sign Up aplikasi (atau langsung masuk via *Sign in with Google*).
+
+#### Prosedur Akses & Aktivasi Pengguna:
+1. Masuk ke aplikasi menggunakan email: `rivaldiekaputr@gmail.com`.
 2. Buka menu **Pengaturan**, lalu klik tombol emas **"Buka Panel Super Admin"** atau ikon perisai di AppBar.
 3. Di panel ini Admin dapat:
    - Melihat total pengguna terdaftar, jumlah pending, dan jumlah akun aktif.

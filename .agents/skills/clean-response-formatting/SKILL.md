@@ -13,7 +13,13 @@ Skill ini menetapkan standar wajib dalam penulisan pesan respon percakapan, ring
 1. **DILARANG menggunakan sintaks LaTeX math mode** (`$...$`, `$$...$$`, `\rightarrow`, `\leftarrow`, `\times`, `\ge`, `\le`) untuk teks alur, diagram alir, opsi, atau percakapan biasa.
    - ❌ *Contoh Buruk*: `Opsi C: Terapkan alur (Paywall $\rightarrow$ Modal $\rightarrow$ Instruksi)`
    - ❌ *Contoh Buruk*: `Waktu kompilasi $\le$ 10 detik`
-2. **DILARANG meninggalkan teks atau placeholder mentah** yang tidak ter-render dengan baik di Markdown standar.
+2. **DILARANG menggunakan emoji dekoratif berlebihan** (seperti 📧, 👤, 💎, 💍, dsb) pada output respon, template pesan WhatsApp, atau draf konfirmasi. Teks harus bersih, rapi, dan profesional.
+   - ❌ *Contoh Buruk*: `📧 Email Terdaftar: a@b.com`
+   - ✅ *Contoh Bersih*: `Email Terdaftar: a@b.com`
+3. **DILARANG menggunakan istilah teknis/internal pada teks antarmuka pengguna (UI & Pesan)**. Jangan gunakan kata seperti *developer*, *admin panel*, *database*, atau *server backend* pada teks yang dibaca oleh pengguna akhir. Gunakan bahasa yang hangat, ramah, dan berpusat pada calon pengantin.
+   - ❌ *Contoh Buruk*: `Developer akan mengaktifkan akun Anda melalui Admin Panel.`
+   - ✅ *Contoh Bersih*: `Tim Nikahin akan segera memverifikasi pembayaran Anda.`
+4. **DILARANG meninggalkan teks atau placeholder mentah** yang tidak ter-render dengan baik di Markdown standar.
 
 ---
 
