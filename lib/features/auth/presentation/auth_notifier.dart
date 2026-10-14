@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../../app/config/business_config.dart';
+import '../../../app/config/firebase_config.dart';
 import '../../../data/local/mock_seeder.dart';
 import '../../../data/local/preferences_manager.dart';
 import '../../../data/remote/midtrans_payment_service.dart';
