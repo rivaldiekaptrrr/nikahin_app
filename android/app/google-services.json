@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "341345982329-4bkjfiensntnqeogjb3pgj9n2o3epcks.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nikahin.app",
+            "certificate_hash": "3120119dd691e5bab6a40cb2c9a815f096a08bb6"
+          }
+        },
+        {
+          "client_id": "341345982329-68nobr9rahilojq6g32eovkri32je18k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nikahin.app",
+            "certificate_hash": "60c898f6930a1e44697cb9730eded6c344bd56a8"
+          }
+        },
+        {
           "client_id": "341345982329-l6fcmgpoi17qh8okbk3c6vmftq4qsgb4.apps.googleusercontent.com",
           "client_type": 3
         }

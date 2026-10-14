@@ -49,6 +49,7 @@ app.*.map.json
 *.jks
 *.keystore
 *.p12
+keystore_base64.txt
 
 # Widget Preview related
 .widget_preview/

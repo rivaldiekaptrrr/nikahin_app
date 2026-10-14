@@ -90,6 +90,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
         } else {
           context.go('/');
         }
+      } else if (!success && mounted) {
+        final err = ref.read(authNotifierProvider).errorMessage;
+        if (err != null && err.isNotEmpty) {
+          setState(() {
+            _errorMessage = err;
+          });
+        }
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);

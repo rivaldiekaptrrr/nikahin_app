@@ -18,6 +18,12 @@ class FirebaseConfig {
     defaultValue: 'AIzaSyCn7inD6bx8Smc3vwAr9fA6zR1wgrRgHH8',
   );
 
+  /// Web Client ID untuk Google Sign-In di Android
+  static const String webClientId = String.fromEnvironment(
+    'FIREBASE_WEB_CLIENT_ID',
+    defaultValue: '341345982329-l6fcmgpoi17qh8okbk3c6vmftq4qsgb4.apps.googleusercontent.com',
+  );
+
   /// Status apakah kredensial API Key Firebase telah diisi
   static bool get isConfigured => apiKey.isNotEmpty && projectId.isNotEmpty;
 

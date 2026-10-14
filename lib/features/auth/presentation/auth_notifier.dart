@@ -297,7 +297,10 @@ class AuthNotifier extends Notifier<AuthState> {
   Future<bool> signInWithGoogle() async {
     state = state.copyWith(isLoading: true, errorMessage: null);
     try {
-      final googleSignIn = GoogleSignIn(scopes: ['email', 'profile']);
+      final googleSignIn = GoogleSignIn(
+        serverClientId: FirebaseConfig.webClientId,
+        scopes: ['email', 'profile'],
+      );
       // Selalu signOut dari sesi cache lokal agar sistem selalu memunculkan native Google Account Picker
       try {
         await googleSignIn.signOut();
