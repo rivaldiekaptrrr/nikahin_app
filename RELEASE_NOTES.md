@@ -1,4 +1,5 @@
-• Peluncuran identitas visual dan logo resmi Nikahin App.
-• Pembaruan ikon launcher aplikasi untuk Android (Adaptive Icons) dan iOS.
-• Penambahan varian aset logo master beresolusi tinggi (Light & Dark mode).
-• Peningkatan performa dan optimasi struktur aset aplikasi.
+• Pembaruan identitas brand resmi (Cincin Emas, Grafik Pertumbuhan, & Puncak Cinta).
+• Desain baru ikon launcher Android & iOS dengan latar Warm Champagne.
+• Ilustrasi vektor kustom eksklusif untuk ketiga layar Onboarding Welcome Screen.
+• Integrasi logo resmi pada layar Login dan Kartu Info Aplikasi di Pengaturan.
+• Optimasi aset visual dan peningkatan stabilitas aplikasi.

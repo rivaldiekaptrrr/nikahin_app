@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <title>Nikahin - Konsep 1: Faithful &amp; Balanced (Cincin, Grafik &amp; Hati)</title>
+  <defs>
+    <!-- Gradasi Emas Cincin -->
+    <linearGradient id="gGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE68A"/>
+      <stop offset="35%" stop-color="#F59E0B"/>
+      <stop offset="70%" stop-color="#D97706"/>
+      <stop offset="100%" stop-color="#92400E"/>
+    </linearGradient>
+
+    <!-- Gradasi Deep Rose ke Magenta -->
+    <linearGradient id="gRose" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#831843"/>
+      <stop offset="50%" stop-color="#BE185D"/>
+      <stop offset="100%" stop-color="#DB2777"/>
+    </linearGradient>
+
+    <!-- Gradasi Garis Tren Naik -->
+    <linearGradient id="gLine" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#9D174D"/>
+      <stop offset="60%" stop-color="#DB2777"/>
+      <stop offset="100%" stop-color="#F43F5E"/>
+    </linearGradient>
+
+    <!-- Shadow halus untuk kedalaman -->
+    <filter id="softGlow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#softGlow)">
+    <!-- 1. Cincin Emas Melingkar dengan Celah di Kanan Atas -->
+    <!-- Lingkaran Luar R=330, Lingkaran Dalam R=270, Celah dari sudut ~38 deg ke ~78 deg -->
+    <path d="
+      M 690 318
+      A 330 330 0 1 0 762 430
+      L 712 452
+      A 272 272 0 1 1 650 354
+      Z"
+      fill="url(#gGold)"/>
+
+    <!-- 2. Tiga Batang Grafik (Bar Chart Bertingkat) dengan Ujung Miring Naik -->
+    <g fill="url(#gRose)">
+      <!-- Batang 1 (Kiri - Rendah) -->
+      <path d="
+        M 340 765
+        L 404 765
+        L 404 650
+        L 340 690
+        Z"/>
+
+      <!-- Batang 2 (Tengah - Sedang) -->
+      <path d="
+        M 444 790
+        L 512 790
+        L 512 550
+        L 444 595
+        Z"/>
+
+      <!-- Batang 3 (Kanan - Tinggi) -->
+      <path d="
+        M 552 760
+        L 624 760
+        L 624 435
+        L 552 485
+        Z"/>
+    </g>
+
+    <!-- 3. Garis Tren Grafik Berliku (Zigzag Trendline) Menanjak -->
+    <!-- Tebal 28px, sudut membulat, menembus keluar cincin -->
+    <path d="
+      M 302 755
+      L 366 640
+      L 426 695
+      L 488 535
+      L 552 590
+      L 670 375
+      "
+      fill="none"
+      stroke="url(#gLine)"
+      stroke-width="32"
+      stroke-linecap="round"
+      stroke-linejoin="round"/>
+
+    <!-- 4. Simpul Hati di Ujung Kanan Atas (Melengkapi Garis Tren) -->
+    <!-- Hati berongga anggun melengkung dari titik tembus (670, 375) -->
+    <g transform="translate(710, 245) rotate(18)">
+      <path d="
+        M 0 110
+        C -65 50 -105 -15 -60 -75
+        C -20 -115 40 -80 0 -15
+        C -40 -80 20 -115 60 -75
+        C 105 -15 65 50 0 110
+        Z"
+        fill="none"
+        stroke="url(#gLine)"
+        stroke-width="32"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+    </g>
+  </g>
+</svg>

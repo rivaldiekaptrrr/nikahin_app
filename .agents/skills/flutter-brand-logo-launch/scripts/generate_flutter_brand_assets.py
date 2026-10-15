@@ -14,7 +14,8 @@ sys.dont_write_bytecode = True
 
 # Path resolution
 SKILL_DIR = os.path.dirname(os.path.abspath(__file__))
-WORKSPACE = os.path.abspath(os.path.join(SKILL_DIR, "..", "..", ".."))
+candidate = os.path.abspath(os.path.join(SKILL_DIR, "..", "..", "..", ".."))
+WORKSPACE = candidate if os.path.exists(os.path.join(candidate, "pubspec.yaml")) else os.path.abspath(".")
 LOGO_DESIGN_SCRIPTS = os.path.join(WORKSPACE, ".agents", "skills", "logo-design", "scripts")
 if LOGO_DESIGN_SCRIPTS not in sys.path:
     sys.path.insert(0, LOGO_DESIGN_SCRIPTS)
@@ -70,7 +71,7 @@ def main():
     master_icon_path = os.path.join(PNG_DIR, "nikahin-app-icon.png")
     if os.path.exists(master_icon_path):
         master_icon = Image.open(master_icon_path).convert("RGBA")
-        ios_1024 = Image.new("RGB", (1024, 1024), (61, 15, 33))  # #3D0F21 Midnight Wine Solid
+        ios_1024 = Image.new("RGB", (1024, 1024), (253, 242, 233))  # Warm Champagne / Blush Solid
         ios_1024.paste(master_icon, (0, 0), master_icon)
         ios_1024.save(os.path.join(APP_ICON_DIR, "ios", "icon-1024.png"), quality=95)
 

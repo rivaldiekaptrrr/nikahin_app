@@ -1,15 +1,37 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
-  <title>Nikahin - Symbol Monochrome Black</title>
-  <g transform="translate(0, -24)" fill="#000000">
-    <!-- 5 Kelopak Bunga Melati Monokrom -->
-    <path d="M512 520C440 470 400 380 408 300C470 330 520 420 512 520Z" transform="rotate(-24 512 520)" opacity=".78"/>
-    <path d="M512 520C584 470 624 380 616 300C554 330 504 420 512 520Z" transform="rotate(24 512 520)" opacity=".78"/>
-    <path d="M512 520C440 470 400 380 408 300C470 330 520 420 512 520Z" transform="rotate(-52 512 520)" opacity=".50"/>
-    <path d="M512 520C584 470 624 380 616 300C554 330 504 420 512 520Z" transform="rotate(52 512 520)" opacity=".50"/>
-    <path d="M512 250C566 330 578 430 512 530C446 430 458 330 512 250Z"/>
-    <!-- Busur Bawah -->
-    <path d="M 363 606 A 27 27 0 0 0 309 606 A 203 203 0 0 0 715 606 A 27 27 0 0 0 661 606 A 149 149 0 0 1 363 606 Z"/>
-    <!-- Cincin Kecil -->
-    <path d="M 512 560 A 38 38 0 1 0 512 636 A 38 38 0 1 0 512 560 Z M 512 576 A 22 22 0 1 1 512 620 A 22 22 0 1 1 512 576 Z" fill-rule="evenodd"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <title>Nikahin - Master Symbol (Monochrome Black)</title>
+  <defs>
+    <clipPath id="innerCircleClipBlack">
+      <circle cx="195" cy="215" r="113" />
+    </clipPath>
+    <clipPath id="lineAndHeartClipBlack">
+      <circle cx="195" cy="215" r="113" />
+      <rect x="195" y="0" width="205" height="225" />
+    </clipPath>
+    <mask id="ringBehindLoveMaskBlack">
+      <rect x="0" y="0" width="400" height="400" fill="#FFFFFF" />
+      <polygon points="248,105 259,120 278,128 262,145" fill="#000000" />
+      <path d="M 262,145 C 275,126 298,116 320,104 C 346,90 354,60 332,46 C 314,35 295,48 289,66 C 285,46 268,31 249,38 C 226,46 230,80 250,108 L 259,120 Z" fill="#000000" />
+    </mask>
+  </defs>
+
+  <!-- 1. Diagram Batang (Black) -->
+  <g clip-path="url(#innerCircleClipBlack)">
+    <polygon points="122,350 122,276 145,250 164,265 164,350" fill="#000000" />
+    <polygon points="180,350 180,238 202,210 222,228 222,350" fill="#000000" />
+    <polygon points="238,350 238,215 280,156 280,350" fill="#000000" />
+  </g>
+
+  <!-- 2. Cincin (Black) -->
+  <g mask="url(#ringBehindLoveMaskBlack)">
+    <circle cx="195" cy="215" r="124" fill="none" stroke="#000000" stroke-width="24" />
+  </g>
+
+  <!-- 3. Garis Zig-Zag & Love (Black with White Boundary / Outline for clarity) -->
+  <g clip-path="url(#lineAndHeartClipBlack)">
+    <path d="M 85,295 L 138,225 L 158,240 L 198,184 L 222,202 L 262,145 C 275,126 298,116 320,104 C 346,90 354,60 332,46 C 314,35 295,48 289,66 C 285,46 268,31 249,38 C 226,46 230,80 250,108 L 259,120"
+      fill="none" stroke="#FFFFFF" stroke-width="29" stroke-linecap="butt" stroke-linejoin="round" />
+    <path d="M 85,295 L 138,225 L 158,240 L 198,184 L 222,202 L 262,145 C 275,126 298,116 320,104 C 346,90 354,60 332,46 C 314,35 295,48 289,66 C 285,46 268,31 249,38 C 226,46 230,80 250,108 L 259,120"
+      fill="none" stroke="#000000" stroke-width="21" stroke-linecap="butt" stroke-linejoin="round" />
   </g>
 </svg>

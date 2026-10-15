@@ -20,19 +20,19 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
       title: 'Nikahin',
       description:
           'Aplikasi komprehensif untuk merencanakan pernikahan impian Anda bersama pasangan secara terorganisir, transparan, dan terintegrasi.',
-      icon: Icons.favorite_rounded,
+      imageAsset: 'assets/images/welcome_slide_1.png',
     ),
     const _OnboardingPage(
       title: 'Atur Anggaran & Pos Biaya',
       description:
           'Catat setiap estimasi pos pengeluaran, termin pembayaran DP & pelunasan vendor, serta pantau sisa anggaran real-time.',
-      icon: Icons.account_balance_wallet_rounded,
+      imageAsset: 'assets/images/welcome_slide_2.png',
     ),
     const _OnboardingPage(
       title: 'Kelola Tamu, Vendor & Rundown',
       description:
           'Impor kontak tamu dari HP, susun rundown acara dengan skrip MC, hingga kelola seragam panitia dan ceklist seserahan.',
-      icon: Icons.event_available_rounded,
+      imageAsset: 'assets/images/welcome_slide_3.png',
     ),
   ];
 
@@ -100,27 +100,15 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.primaryContainer,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: theme.colorScheme.primary.withValues(alpha: 0.25),
-                                  blurRadius: 24,
-                                  offset: const Offset(0, 10),
-                                ),
-                              ],
-                            ),
-                            child: Icon(
-                              page.icon,
-                              size: 50,
-                              color: theme.colorScheme.primary,
+                          SizedBox(
+                            width: 190,
+                            height: 190,
+                            child: Image.asset(
+                              page.imageAsset,
+                              fit: BoxFit.contain,
                             ),
                           ),
-                          const SizedBox(height: 28),
+                          const SizedBox(height: 24),
                           Text(
                             page.title,
                             style: theme.textTheme.headlineSmall?.copyWith(
@@ -206,11 +194,11 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
 class _OnboardingPage {
   final String title;
   final String description;
-  final IconData icon;
+  final String imageAsset;
 
   const _OnboardingPage({
     required this.title,
     required this.description,
-    required this.icon,
+    required this.imageAsset,
   });
 }

@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <!-- Gradasi Emas untuk Lingkaran Luar -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4AF37" />
+      <stop offset="20%" stop-color="#FFF3A8" />
+      <stop offset="40%" stop-color="#AA771C" />
+      <stop offset="65%" stop-color="#FDF0A6" />
+      <stop offset="85%" stop-color="#C59B27" />
+      <stop offset="100%" stop-color="#8B6508" />
+    </linearGradient>
+
+    <!-- Gradasi Merah Muda / Magenta untuk Garis dan Hati -->
+    <linearGradient id="pinkLineGrad" x1="15%" y1="85%" x2="85%" y2="15%" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#B00B52" />
+      <stop offset="45%" stop-color="#E3246B" />
+      <stop offset="75%" stop-color="#F04E89" />
+      <stop offset="100%" stop-color="#B00B52" />
+    </linearGradient>
+
+    <!-- Gradasi Diagram Batang dengan Efek Kilau Diagonal -->
+    <linearGradient id="barGrad" x1="15%" y1="15%" x2="85%" y2="85%">
+      <stop offset="0%" stop-color="#FF9EBB" />
+      <stop offset="22%" stop-color="#E31C64" />
+      <stop offset="45%" stop-color="#B30047" />
+      <stop offset="58%" stop-color="#FF7DA7" />
+      <stop offset="75%" stop-color="#D4145A" />
+      <stop offset="100%" stop-color="#9E0039" />
+    </linearGradient>
+
+    <!-- Clip Path agar bagian bawah batang menyatu rapi di dalam lingkaran emas -->
+    <clipPath id="innerCircleClip">
+      <circle cx="195" cy="215" r="113" />
+    </clipPath>
+
+    <!-- Clip Path khusus untuk menggabungkan area dalam lingkaran + area kanan atas tempat hati keluar -->
+    <clipPath id="lineAndHeartClip">
+      <circle cx="195" cy="215" r="113" />
+      <rect x="200" y="0" width="200" height="240" />
+    </clipPath>
+  </defs>
+
+  <!-- Bagian Dalam: Diagram Batang (Dipotong mengikuti lengkungan dalam cincin emas) -->
+  <g clip-path="url(#innerCircleClip)">
+    <!-- Batang 1 (Kiri) -->
+    <polygon points="122,350 122,282 146,256 164,270 164,350" fill="url(#barGrad)" />
+    
+    <!-- Batang 2 (Tengah) -->
+    <polygon points="180,350 180,248 202,220 222,238 222,350" fill="url(#barGrad)" />
+    
+    <!-- Batang 3 (Kanan) -->
+    <polygon points="238,350 238,225 280,162 280,350" fill="url(#barGrad)" />
+  </g>
+
+  <!-- Cincin Emas Utuh Tanpa Putus -->
+  <circle cx="195" cy="215" r="124" fill="none" stroke="url(#goldGrad)" stroke-width="24" />
+
+  <!-- Garis Grafik Zig-Zag & Hati Menyatu Utuh Tanpa Sambungan -->
+  <g clip-path="url(#lineAndHeartClip)">
+    <path d="M 85,301 
+             L 138,233 
+             L 158,248 
+             L 198,195 
+             L 222,213 
+             L 265,150 
+             C 278,132 305,122 320,113 
+             C 340,100 342,72 320,62 
+             C 305,55 290,68 286,78 
+             C 282,64 268,45 250,48 
+             C 228,50 225,80 242,108 
+             L 255,127" fill="none" stroke="url(#pinkLineGrad)" stroke-width="20" stroke-linecap="butt" stroke-linejoin="round" />
+  </g>
+</svg>

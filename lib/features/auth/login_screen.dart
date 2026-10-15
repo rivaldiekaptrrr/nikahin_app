@@ -245,34 +245,31 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // 1. Header Illustration (Matching Welcome Screen & 2-in-1 theme)
+                  // 1. Official Brand Logo Header
                   Center(
                     child: Container(
-                      width: 90,
-                      height: 90,
+                      width: 92,
+                      height: 92,
+                      padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            primaryColor,
-                            theme.colorScheme.secondary,
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        shape: BoxShape.circle,
+                        color: const Color(0xFFFDF2E9), // Warm Champagne / Blush
+                        borderRadius: BorderRadius.circular(26),
                         boxShadow: [
                           BoxShadow(
-                            color: primaryColor.withValues(alpha: 0.35),
-                            blurRadius: 20,
-                            offset: const Offset(0, 8),
+                            color: const Color(0xFFD4AF37).withValues(alpha: 0.22),
+                            blurRadius: 18,
+                            offset: const Offset(0, 6),
                           ),
                         ],
+                        border: Border.all(
+                          color: const Color(0xFFD4AF37).withValues(alpha: 0.3),
+                          width: 1.2,
+                        ),
                       ),
                       alignment: Alignment.center,
-                      child: const Icon(
-                        Icons.favorite_rounded,
-                        color: Colors.white,
-                        size: 48,
+                      child: Image.asset(
+                        'assets/logo/png/nikahin-symbol-master.png',
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ),

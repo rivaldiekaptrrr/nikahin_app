@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <title>Nikahin - Konsep 3: Duo-Tone Editorial Wedding (Arsitektur Cinta &amp; Finansial)</title>
+  <defs>
+    <!-- Gradasi Wedding Gold Mewah -->
+    <linearGradient id="gGold3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE68A"/>
+      <stop offset="40%" stop-color="#F59E0B"/>
+      <stop offset="80%" stop-color="#C2410C"/>
+      <stop offset="100%" stop-color="#7C2D12"/>
+    </linearGradient>
+
+    <!-- Gradasi Deep Wine ke Rose -->
+    <linearGradient id="gPlumRose" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4A1328"/>
+      <stop offset="50%" stop-color="#881337"/>
+      <stop offset="100%" stop-color="#E11D48"/>
+    </linearGradient>
+
+    <!-- Gradasi Pilar Finansial M3 Bento -->
+    <linearGradient id="gPillar" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E11D48"/>
+      <stop offset="100%" stop-color="#4A1328"/>
+    </linearGradient>
+
+    <filter id="shadow3" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#shadow3)">
+    <!-- 1. Cincin Emas Berkarakter Tebal dengan Celah Bersih -->
+    <path d="
+      M 690 310
+      A 335 335 0 1 0 780 435
+      L 712 458
+      A 265 265 0 1 1 640 350
+      Z"
+      fill="url(#gGold3)"/>
+
+    <!-- 2. Pilar Finansial Bento Segitiga Dinamis -->
+    <g fill="url(#gPillar)">
+      <!-- Pilar 1 (Tahap Awal / Budget) -->
+      <path d="
+        M 345 765
+        L 410 765
+        L 410 635
+        L 345 680
+        Z"/>
+
+      <!-- Pilar 2 (Tahap Menengah / Vendor) -->
+      <path d="
+        M 450 790
+        L 520 790
+        L 520 530
+        L 450 580
+        Z"/>
+
+      <!-- Pilar 3 (Tahap Puncak / D-Day) -->
+      <path d="
+        M 560 765
+        L 635 765
+        L 635 410
+        L 560 465
+        Z"/>
+    </g>
+
+    <!-- 3. Garis Tren Geometris Presisi -->
+    <path d="
+      M 295 760
+      L 375 635
+      L 440 690
+      L 505 530
+      L 575 585
+      L 675 365
+      "
+      fill="none"
+      stroke="url(#gPlumRose)"
+      stroke-width="36"
+      stroke-linecap="round"
+      stroke-linejoin="round"/>
+
+    <!-- 4. Simpul Hati Tegak Presisi di Puncak Cincin -->
+    <g transform="translate(735, 230) rotate(15)">
+      <!-- Siluet Hati Bold Elegan -->
+      <path d="
+        M 0 115
+        C -85 55 -125 -20 -70 -85
+        C -25 -135 45 -95 0 -20
+        C -45 -95 25 -135 70 -85
+        C 125 -20 85 55 0 115
+        Z"
+        fill="none"
+        stroke="url(#gPlumRose)"
+        stroke-width="36"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+    </g>
+  </g>
+</svg>

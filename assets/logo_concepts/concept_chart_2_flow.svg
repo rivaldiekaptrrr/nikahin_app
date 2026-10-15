@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <title>Nikahin - Konsep 2: Continuous Flow Ribbon (Aliran Pita Kasih)</title>
+  <defs>
+    <!-- Gradasi Emas Mewah -->
+    <linearGradient id="gGold2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE68A"/>
+      <stop offset="30%" stop-color="#F59E0B"/>
+      <stop offset="70%" stop-color="#D97706"/>
+      <stop offset="100%" stop-color="#78350F"/>
+    </linearGradient>
+
+    <!-- Gradasi Deep Rose Ribbon -->
+    <linearGradient id="gRibbon" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#831843"/>
+      <stop offset="40%" stop-color="#BE185D"/>
+      <stop offset="80%" stop-color="#E11D48"/>
+      <stop offset="100%" stop-color="#FB7185"/>
+    </linearGradient>
+
+    <!-- Gradasi Bar Bertingkat -->
+    <linearGradient id="gBar" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#4C0519"/>
+      <stop offset="60%" stop-color="#9F1239"/>
+      <stop offset="100%" stop-color="#E11D48"/>
+    </linearGradient>
+
+    <filter id="softShadow2" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000000" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#softShadow2)">
+    <!-- 1. Cincin Emas Lingkaran Dinamis (Open Top-Right) -->
+    <path d="
+      M 695 330
+      A 325 325 0 1 0 775 440
+      L 718 460
+      A 265 265 0 1 1 650 365
+      Z"
+      fill="url(#gGold2)"/>
+
+    <!-- 2. Batang Finansial 3 Pilar Berujung Rounded Miring -->
+    <g fill="url(#gBar)">
+      <!-- Pilar 1 -->
+      <path d="
+        M 335 770
+        L 395 770
+        L 395 645
+        Q 395 635 385 640
+        L 345 665
+        Q 335 670 335 680
+        Z"/>
+
+      <!-- Pilar 2 -->
+      <path d="
+        M 440 795
+        L 505 795
+        L 505 540
+        Q 505 530 495 536
+        L 450 565
+        Q 440 572 440 582
+        Z"/>
+
+      <!-- Pilar 3 -->
+      <path d="
+        M 550 765
+        L 620 765
+        L 620 425
+        Q 620 415 610 422
+        L 560 455
+        Q 550 462 550 472
+        Z"/>
+    </g>
+
+    <!-- 3. Garis Tren Pita Satu Tarikan Menembus ke Bentuk Hati -->
+    <!-- Aliran garis kontinu meliuk lembut dan membentuk simpul hati -->
+    <path d="
+      M 290 770
+      C 320 740 335 680 365 635
+      C 390 600 405 660 435 680
+      C 465 700 480 570 500 525
+      C 520 480 535 560 565 570
+      C 610 585 645 440 685 365
+      C 705 325 725 305 745 285
+      C 765 265 795 240 795 210
+      C 795 175 765 150 730 150
+      C 695 150 670 175 660 205
+      C 650 175 625 150 590 150
+      C 555 150 525 175 525 210
+      C 525 255 580 305 655 375
+      "
+      fill="none"
+      stroke="url(#gRibbon)"
+      stroke-width="36"
+      stroke-linecap="round"
+      stroke-linejoin="round"/>
+  </g>
+</svg>

@@ -105,12 +105,21 @@ class _SettingsAppInfoCardState extends ConsumerState<SettingsAppInfoCard> {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                width: 44,
+                height: 44,
+                padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primaryContainer,
-                  shape: BoxShape.circle,
+                  color: const Color(0xFFFDF2E9),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: const Color(0xFFD4AF37).withValues(alpha: 0.35),
+                    width: 1,
+                  ),
                 ),
-                child: Icon(Icons.system_update_rounded, color: theme.colorScheme.primary, size: 22),
+                child: Image.asset(
+                  'assets/logo/png/nikahin-symbol-master.png',
+                  fit: BoxFit.contain,
+                ),
               ),
               const SizedBox(width: 14),
               Expanded(

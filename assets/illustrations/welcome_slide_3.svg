@@ -1,0 +1,240 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <title>Nikahin Onboarding - Kelola Tamu, Vendor &amp; Rundown</title>
+  <defs>
+    <!-- Background Gradients -->
+    <radialGradient id="bgGrad3" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#FFFDF9" />
+      <stop offset="55%" stop-color="#FDF3E7" />
+      <stop offset="100%" stop-color="#F5E3D0" />
+    </radialGradient>
+
+    <linearGradient id="plateBorderGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ECD499" />
+      <stop offset="40%" stop-color="#AA771C" />
+      <stop offset="70%" stop-color="#F7E7B4" />
+      <stop offset="100%" stop-color="#B8860B" />
+    </linearGradient>
+
+    <!-- Master Gold Gradient -->
+    <linearGradient id="goldGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4AF37" />
+      <stop offset="22%" stop-color="#FFF3A8" />
+      <stop offset="42%" stop-color="#AA771C" />
+      <stop offset="68%" stop-color="#FDF0A6" />
+      <stop offset="85%" stop-color="#C59B27" />
+      <stop offset="100%" stop-color="#8B6508" />
+    </linearGradient>
+
+    <!-- Envelope Paper Gradient -->
+    <linearGradient id="envelopeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="60%" stop-color="#F9F2EB" />
+      <stop offset="100%" stop-color="#EEDECD" />
+    </linearGradient>
+
+    <linearGradient id="envelopeFlapGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#E8D5C1" />
+    </linearGradient>
+
+    <!-- Rundown Board Gradient -->
+    <linearGradient id="boardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#F8EFE4" />
+    </linearGradient>
+
+    <!-- Wax Seal Wine Gradient -->
+    <radialGradient id="waxGrad" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#B80D57" />
+      <stop offset="40%" stop-color="#881A42" />
+      <stop offset="85%" stop-color="#540822" />
+      <stop offset="100%" stop-color="#3D0518" />
+    </radialGradient>
+
+    <!-- Jasmine Flower Petal Gradient -->
+    <linearGradient id="petalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="70%" stop-color="#FFF8F0" />
+      <stop offset="100%" stop-color="#F4E2CD" />
+    </linearGradient>
+
+    <!-- Leaf Green Gradient -->
+    <linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#93B48B" />
+      <stop offset="100%" stop-color="#587A50" />
+    </linearGradient>
+
+    <!-- Shadows -->
+    <filter id="dropShadow3" x="-10%" y="-10%" width="125%" height="125%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#8B572A" flood-opacity="0.18" />
+    </filter>
+
+    <filter id="cardShadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#501826" flood-opacity="0.2" />
+    </filter>
+  </defs>
+
+  <!-- Outer Halo & Orbit -->
+  <circle cx="256" cy="256" r="244" fill="none" stroke="#E8D5BE" stroke-width="1.5" stroke-dasharray="5 5" opacity="0.8" />
+  
+  <!-- Main Plate -->
+  <circle cx="256" cy="256" r="230" fill="url(#bgGrad3)" stroke="url(#plateBorderGrad3)" stroke-width="3.5" filter="url(#dropShadow3)" />
+
+  <!-- Inner Golden Ring -->
+  <circle cx="256" cy="256" r="208" fill="none" stroke="#F0DCBA" stroke-width="1" opacity="0.6" />
+
+  <!-- Sparkles -->
+  <g transform="translate(100, 115) scale(0.9)">
+    <path d="M 0,-18 Q 0,0 18,0 Q 0,0 0,18 Q 0,0 -18,0 Q 0,0 0,-18 Z" fill="url(#goldGrad3)" />
+    <circle cx="0" cy="0" r="2" fill="#FFFFFF" />
+  </g>
+  <g transform="translate(415, 120) scale(1.1)">
+    <path d="M 0,-20 Q 0,0 20,0 Q 0,0 0,20 Q 0,0 -20,0 Q 0,0 0,-20 Z" fill="url(#goldGrad3)" />
+    <circle cx="0" cy="0" r="3" fill="#FFFFFF" />
+  </g>
+  <g transform="translate(90, 360) scale(0.7)">
+    <path d="M 0,-14 Q 0,0 14,0 Q 0,0 0,14 Q 0,0 -14,0 Q 0,0 0,-14 Z" fill="url(#goldGrad3)" opacity="0.85" />
+  </g>
+  <g transform="translate(415, 360) scale(0.85)">
+    <path d="M 0,-16 Q 0,0 16,0 Q 0,0 0,16 Q 0,0 -16,0 Q 0,0 0,-16 Z" fill="url(#goldGrad3)" opacity="0.9" />
+  </g>
+
+  <!-- BACKGROUND: Rundown Checklist Card & Clock Dial (Tilted Left) -->
+  <g transform="translate(195, 220) rotate(-6) translate(-110, -115)" filter="url(#cardShadow)">
+    <!-- Board Base -->
+    <rect x="0" y="0" width="220" height="235" rx="16" fill="url(#boardGrad)" stroke="#E5CEB5" stroke-width="2" />
+    
+    <!-- Top Header Clip / Bar -->
+    <rect x="70" y="0" width="80" height="14" rx="4" fill="url(#goldGrad3)" />
+    <circle cx="110" cy="7" r="3" fill="#FFF" />
+
+    <!-- Title line on checklist -->
+    <rect x="22" y="32" width="85" height="8" rx="4" fill="#881A42" opacity="0.75" />
+    <rect x="22" y="46" width="55" height="5" rx="2.5" fill="#AA771C" opacity="0.6" />
+
+    <!-- Checklist Item 1: Akad Nikah (08:00) -->
+    <g transform="translate(22, 68)">
+      <circle cx="12" cy="12" r="10" fill="#2E7D32" />
+      <path d="M 7,12 L 10,15 L 17,8" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      <rect x="30" y="5" width="80" height="7" rx="3.5" fill="#4A1328" />
+      <rect x="30" y="15" width="45" height="5" rx="2.5" fill="#8C650A" opacity="0.7" />
+    </g>
+
+    <!-- Checklist Item 2: Temu Manten (10:30) -->
+    <g transform="translate(22, 104)">
+      <circle cx="12" cy="12" r="10" fill="#2E7D32" />
+      <path d="M 7,12 L 10,15 L 17,8" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      <rect x="30" y="5" width="95" height="7" rx="3.5" fill="#4A1328" />
+      <rect x="30" y="15" width="50" height="5" rx="2.5" fill="#8C650A" opacity="0.7" />
+    </g>
+
+    <!-- Checklist Item 3: Resepsi & Sesi Foto (11:30) -->
+    <g transform="translate(22, 140)">
+      <circle cx="12" cy="12" r="10" fill="#DE1A66" />
+      <path d="M 7,12 L 10,15 L 17,8" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      <rect x="30" y="5" width="110" height="7" rx="3.5" fill="#4A1328" />
+      <rect x="30" y="15" width="60" height="5" rx="2.5" fill="#8C650A" opacity="0.7" />
+    </g>
+
+    <!-- Checklist Item 4: Doa & Closing -->
+    <g transform="translate(22, 176)">
+      <circle cx="12" cy="12" r="10" fill="none" stroke="#B8860B" stroke-width="2" />
+      <rect x="30" y="5" width="75" height="7" rx="3.5" fill="#8E6A5A" opacity="0.6" />
+      <rect x="30" y="15" width="40" height="5" rx="2.5" fill="#8C650A" opacity="0.5" />
+    </g>
+
+    <!-- Connecting Timeline Track -->
+    <line x1="34" y1="92" x2="34" y2="104" stroke="#2E7D32" stroke-width="2" stroke-dasharray="2 2" />
+    <line x1="34" y1="128" x2="34" y2="140" stroke="#DE1A66" stroke-width="2" stroke-dasharray="2 2" />
+    <line x1="34" y1="164" x2="34" y2="176" stroke="#B8860B" stroke-width="2" stroke-dasharray="2 2" />
+  </g>
+
+  <!-- FOREGROUND: Wedding Invitation Envelope with Gold Border & Wax Seal (Tilted Right) -->
+  <g transform="translate(325, 290) rotate(8) translate(-115, -80)" filter="url(#cardShadow)">
+    <!-- Envelope Body Base -->
+    <rect x="0" y="0" width="230" height="150" rx="12" fill="url(#envelopeGrad)" stroke="url(#goldGrad3)" stroke-width="2" />
+
+    <!-- Gold Foil Border Inset on Envelope -->
+    <rect x="8" y="8" width="214" height="134" rx="8" fill="none" stroke="#DFB743" stroke-width="1.2" opacity="0.7" stroke-dasharray="6 3" />
+
+    <!-- Folded Envelope Lines -->
+    <path d="M 0,0 L 115,80 L 230,0" fill="none" stroke="#D9C2A9" stroke-width="1.5" />
+    <path d="M 0,150 L 85,75 M 230,150 L 145,75" fill="none" stroke="#D9C2A9" stroke-width="1.2" />
+
+    <!-- RSVP / Guest List Card Peeking Out of Envelope -->
+    <g transform="translate(25, -45)">
+      <rect x="0" y="0" width="180" height="70" rx="8" fill="#FFFFFF" stroke="#E5CEB5" stroke-width="1.5" />
+      <rect x="15" y="14" width="70" height="7" rx="3.5" fill="#4A1328" />
+      <rect x="15" y="27" width="110" height="5" rx="2.5" fill="#AA771C" opacity="0.6" />
+      <!-- VIP Guest Badge -->
+      <g transform="translate(135, 12)">
+        <rect x="0" y="0" width="35" height="16" rx="8" fill="url(#goldGrad3)" />
+        <text x="17.5" y="11" font-family="'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="900" fill="#4A1328" text-anchor="middle">VIP</text>
+      </g>
+    </g>
+
+    <!-- Triangular Upper Flap (folded down over seal) -->
+    <path d="M 0,0 L 230,0 L 115,78 Z" fill="url(#envelopeFlapGrad)" stroke="#DFB743" stroke-width="1.5" />
+
+    <!-- WAX SEAL: Royal Deep Wine with Gold Monogram -->
+    <g transform="translate(115, 78)">
+      <!-- Outer Wax Irregular Edge -->
+      <path d="M 0,-24 
+               C 8,-25 18,-20 22,-14 
+               C 27,-7 26,4 23,12 
+               C 19,21 11,26 0,26 
+               C -12,26 -21,19 -24,10 
+               C -27,0 -24,-12 -18,-19 
+               C -12,-25 -7,-24 0,-24 Z" fill="url(#waxGrad)" stroke="#3D0518" stroke-width="1.5" />
+      
+      <!-- Inner Stamped Circle -->
+      <circle cx="0" cy="1" r="16" fill="#6A0C30" stroke="url(#goldGrad3)" stroke-width="1.5" />
+      
+      <!-- Stamped Letter N / Ring in Wax -->
+      <path d="M -6,9 L -6,-7 L 6,9 L 6,-7" fill="none" stroke="url(#goldGrad3)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+
+  <!-- POCKET WATCH / TIMELINE BADGE (Bottom Center-Left) -->
+  <g transform="translate(130, 370)" filter="url(#dropShadow3)">
+    <!-- Pocket Watch Body -->
+    <circle cx="0" cy="0" r="34" fill="url(#goldGrad3)" stroke="#7A5306" stroke-width="2" />
+    <!-- Watch Top Loop -->
+    <path d="M -6,-34 L -6,-40 L 6,-40 L 6,-34" fill="url(#goldGrad3)" stroke="#7A5306" stroke-width="1.5" />
+    <circle cx="0" cy="-42" r="7" fill="none" stroke="url(#goldGrad3)" stroke-width="2.5" />
+
+    <!-- Watch Face Dial -->
+    <circle cx="0" cy="0" r="28" fill="#FFFFFF" stroke="#D4AF37" stroke-width="1" />
+    <!-- Hour Dots -->
+    <circle cx="0" cy="-22" r="1.5" fill="#4A1328" />
+    <circle cx="22" cy="0" r="1.5" fill="#4A1328" />
+    <circle cx="0" cy="22" r="1.5" fill="#4A1328" />
+    <circle cx="-22" cy="0" r="1.5" fill="#4A1328" />
+    <!-- Clock Hands (Pointing to 08:00 - Waktu Sakral Akad) -->
+    <line x1="0" y1="0" x2="-12" y2="8" stroke="#4A1328" stroke-width="2.5" stroke-linecap="round" />
+    <line x1="0" y1="0" x2="0" y2="-17" stroke="#DE1A66" stroke-width="2" stroke-linecap="round" />
+    <circle cx="0" cy="0" r="3" fill="#D4AF37" />
+  </g>
+
+  <!-- JASMINE FLOWER (Bunga Melati Sakral) at Bottom Right -->
+  <g transform="translate(390, 390)">
+    <!-- Leaf 1 -->
+    <path d="M 0,0 Q 15,-15 30,-5 Q 15,10 0,0 Z" fill="url(#leafGrad)" />
+    <!-- Leaf 2 -->
+    <path d="M 0,0 Q -10,20 5,30 Q 12,15 0,0 Z" fill="url(#leafGrad)" />
+    <!-- Melati Petals -->
+    <g transform="translate(8, 5) scale(0.9)">
+      <ellipse cx="0" cy="-12" rx="6" ry="11" fill="url(#petalGrad)" stroke="#E5CEB5" stroke-width="0.8" />
+      <ellipse cx="11" cy="-4" rx="6" ry="11" transform="rotate(72 11 -4)" fill="url(#petalGrad)" stroke="#E5CEB5" stroke-width="0.8" />
+      <ellipse cx="7" cy="10" rx="6" ry="11" transform="rotate(144 7 10)" fill="url(#petalGrad)" stroke="#E5CEB5" stroke-width="0.8" />
+      <ellipse cx="-7" cy="10" rx="6" ry="11" transform="rotate(216 -7 10)" fill="url(#petalGrad)" stroke="#E5CEB5" stroke-width="0.8" />
+      <ellipse cx="-11" cy="-4" rx="6" ry="11" transform="rotate(288 -11 -4)" fill="url(#petalGrad)" stroke="#E5CEB5" stroke-width="0.8" />
+      <circle cx="0" cy="0" r="4.5" fill="#FFF3A8" stroke="#D4AF37" stroke-width="0.8" />
+    </g>
+  </g>
+
+  <!-- Floating golden sparkles -->
+  <circle cx="160" cy="120" r="3.5" fill="url(#goldGrad3)" opacity="0.8" />
+  <circle cx="365" cy="105" r="3" fill="url(#goldGrad3)" opacity="0.75" />
+  <circle cx="270" cy="425" r="4" fill="url(#goldGrad3)" opacity="0.85" />
+</svg>

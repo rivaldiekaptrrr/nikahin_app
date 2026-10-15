@@ -8,44 +8,84 @@
         font-size: 108px;
         font-weight: 700;
         letter-spacing: -0.02em;
-        fill: #FFF3DF;
+        fill: #4A1328;
       }
       .brand-tagline {
         font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
         font-size: 26px;
         font-weight: 600;
         letter-spacing: 0.26em;
-        fill: #F0BE5A;
+        fill: #AA771C;
       }
     </style>
-    <linearGradient id="gGold" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#F0BE5A"/>
-      <stop offset="1" stop-color="#C47A1E"/>
+    <linearGradient id="gPlumPlate" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFFBF5"/>
+      <stop offset="50%" stop-color="#FDF2E9"/>
+      <stop offset="100%" stop-color="#F8E7D8"/>
     </linearGradient>
-    <linearGradient id="gPlum" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#3D0F21"/>
-      <stop offset="1" stop-color="#1E0710"/>
+
+    <!-- Gradasi Emas untuk Lingkaran Luar -->
+    <linearGradient id="goldGradHD" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4AF37" />
+      <stop offset="22%" stop-color="#FFF3A8" />
+      <stop offset="42%" stop-color="#AA771C" />
+      <stop offset="68%" stop-color="#FDF0A6" />
+      <stop offset="85%" stop-color="#C59B27" />
+      <stop offset="100%" stop-color="#8B6508" />
     </linearGradient>
+
+    <!-- Gradasi Merah Muda / Magenta untuk Garis dan Hati -->
+    <linearGradient id="pinkLineGradHD" x1="80" y1="300" x2="345" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#B80D57" />
+      <stop offset="45%" stop-color="#DE1A66" />
+      <stop offset="78%" stop-color="#EE3B80" />
+      <stop offset="100%" stop-color="#B80D57" />
+    </linearGradient>
+
+    <!-- Gradasi Diagram Batang dengan Efek Kilau Diagonal -->
+    <linearGradient id="barGradHD" x1="15%" y1="15%" x2="85%" y2="85%">
+      <stop offset="0%" stop-color="#FF9EBB" />
+      <stop offset="22%" stop-color="#E31C64" />
+      <stop offset="45%" stop-color="#B30047" />
+      <stop offset="58%" stop-color="#FF7DA7" />
+      <stop offset="75%" stop-color="#D4145A" />
+      <stop offset="100%" stop-color="#9E0039" />
+    </linearGradient>
+
+    <clipPath id="innerCircleClipHD">
+      <circle cx="195" cy="215" r="113" />
+    </clipPath>
+
+    <clipPath id="lineAndHeartClipHD">
+      <circle cx="195" cy="215" r="113" />
+      <rect x="195" y="0" width="205" height="225" />
+    </clipPath>
+
+    <mask id="ringBehindLoveMaskHD">
+      <rect x="0" y="0" width="400" height="400" fill="#FFFFFF" />
+      <polygon points="248,105 259,120 278,128 262,145" fill="#000000" />
+      <path d="M 262,145 C 275,126 298,116 320,104 C 346,90 354,60 332,46 C 314,35 295,48 289,66 C 285,46 268,31 249,38 C 226,46 230,80 250,108 L 259,120 Z" fill="#000000" />
+    </mask>
   </defs>
 
   <!-- Dark Background Plate -->
-  <rect width="1200" height="400" rx="32" fill="url(#gPlum)"/>
+  <rect width="1200" height="400" rx="32" fill="url(#gPlumPlate)"/>
 
-  <!-- Left Symbol (Scaled to 320px Box) -->
-  <g transform="translate(50, 40) scale(0.3125)">
-    <g transform="translate(0, -24)">
-      <!-- 5 Kelopak Bunga Melati (Krem) -->
-      <g fill="#FFF3DF">
-        <path d="M512 520C440 470 400 380 408 300C470 330 520 420 512 520Z" transform="rotate(-24 512 520)" opacity=".78"/>
-        <path d="M512 520C584 470 624 380 616 300C554 330 504 420 512 520Z" transform="rotate(24 512 520)" opacity=".78"/>
-        <path d="M512 520C440 470 400 380 408 300C470 330 520 420 512 520Z" transform="rotate(-52 512 520)" opacity=".50"/>
-        <path d="M512 520C584 470 624 380 616 300C554 330 504 420 512 520Z" transform="rotate(52 512 520)" opacity=".50"/>
-        <path d="M512 250C566 330 578 430 512 530C446 430 458 330 512 250Z"/>
-      </g>
-      <!-- Busur Emas -->
-      <path d="M 363 606 A 27 27 0 0 0 309 606 A 203 203 0 0 0 715 606 A 27 27 0 0 0 661 606 A 149 149 0 0 1 363 606 Z" fill="url(#gGold)"/>
-      <!-- Cincin Kecil -->
-      <path d="M 512 560 A 38 38 0 1 0 512 636 A 38 38 0 1 0 512 560 Z M 512 576 A 22 22 0 1 1 512 620 A 22 22 0 1 1 512 576 Z" fill="#FFF3DF" fill-rule="evenodd"/>
+  <!-- Left Symbol -->
+  <g transform="translate(50, 40) scale(0.8)">
+    <g clip-path="url(#innerCircleClipHD)">
+      <polygon points="122,350 122,276 145,250 164,265 164,350" fill="url(#barGradHD)" />
+      <polygon points="180,350 180,238 202,210 222,228 222,350" fill="url(#barGradHD)" />
+      <polygon points="238,350 238,215 280,156 280,350" fill="url(#barGradHD)" />
+    </g>
+
+    <g mask="url(#ringBehindLoveMaskHD)">
+      <circle cx="195" cy="215" r="124" fill="none" stroke="url(#goldGradHD)" stroke-width="24" />
+    </g>
+
+    <g clip-path="url(#lineAndHeartClipHD)">
+      <path d="M 85,295 L 138,225 L 158,240 L 198,184 L 222,202 L 262,145 C 275,126 298,116 320,104 C 346,90 354,60 332,46 C 314,35 295,48 289,66 C 285,46 268,31 249,38 C 226,46 230,80 250,108 L 259,120"
+        fill="none" stroke="url(#pinkLineGradHD)" stroke-width="21" stroke-linecap="butt" stroke-linejoin="round" />
     </g>
   </g>
 

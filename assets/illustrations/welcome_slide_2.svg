@@ -1,0 +1,216 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <title>Nikahin Onboarding - Atur Anggaran &amp; Pos Biaya</title>
+  <defs>
+    <!-- Background Gradients -->
+    <radialGradient id="bgGrad2" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#FFFDF9" />
+      <stop offset="55%" stop-color="#FDF3E7" />
+      <stop offset="100%" stop-color="#F5E3D0" />
+    </radialGradient>
+
+    <linearGradient id="plateBorderGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ECD499" />
+      <stop offset="40%" stop-color="#AA771C" />
+      <stop offset="70%" stop-color="#F7E7B4" />
+      <stop offset="100%" stop-color="#B8860B" />
+    </linearGradient>
+
+    <!-- Master Gold Gradient -->
+    <linearGradient id="goldGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4AF37" />
+      <stop offset="22%" stop-color="#FFF3A8" />
+      <stop offset="42%" stop-color="#AA771C" />
+      <stop offset="68%" stop-color="#FDF0A6" />
+      <stop offset="85%" stop-color="#C59B27" />
+      <stop offset="100%" stop-color="#8B6508" />
+    </linearGradient>
+
+    <!-- Coin Gold Gradient (Horizontal Shine) -->
+    <linearGradient id="coinFaceGrad" x1="0%" y1="30%" x2="100%" y2="70%">
+      <stop offset="0%" stop-color="#FFF7C2" />
+      <stop offset="35%" stop-color="#E5BE4A" />
+      <stop offset="70%" stop-color="#AA771C" />
+      <stop offset="100%" stop-color="#7A5306" />
+    </linearGradient>
+
+    <!-- Velvet Wine Gradient for Wallet/Pouch -->
+    <linearGradient id="wineVelvetGrad" x1="15%" y1="10%" x2="85%" y2="90%">
+      <stop offset="0%" stop-color="#781136" />
+      <stop offset="35%" stop-color="#540822" />
+      <stop offset="70%" stop-color="#3D0518" />
+      <stop offset="100%" stop-color="#24020E" />
+    </linearGradient>
+
+    <linearGradient id="wineFlapGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#9E1949" />
+      <stop offset="60%" stop-color="#6E0E31" />
+      <stop offset="100%" stop-color="#4F0821" />
+    </linearGradient>
+
+    <!-- Bar Chart Gradients -->
+    <linearGradient id="chartBar1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FF9EBB" />
+      <stop offset="100%" stop-color="#DE1A66" />
+    </linearGradient>
+
+    <linearGradient id="chartBar2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FF7DA7" />
+      <stop offset="100%" stop-color="#B80D57" />
+    </linearGradient>
+
+    <linearGradient id="chartBar3" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFE082" />
+      <stop offset="50%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#996515" />
+    </linearGradient>
+
+    <!-- Card Background Grad -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#FAF1E6" />
+    </linearGradient>
+
+    <!-- Shadows -->
+    <filter id="dropShadow2" x="-10%" y="-10%" width="125%" height="125%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#8B572A" flood-opacity="0.18" />
+    </filter>
+
+    <filter id="elementShadow" x="-20%" y="-15%" width="140%" height="135%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#501826" flood-opacity="0.22" />
+    </filter>
+  </defs>
+
+  <!-- Outer Halo & Decorative Orbit -->
+  <circle cx="256" cy="256" r="244" fill="none" stroke="#E8D5BE" stroke-width="1.5" stroke-dasharray="5 5" opacity="0.8" />
+  
+  <!-- Main Plate -->
+  <circle cx="256" cy="256" r="230" fill="url(#bgGrad2)" stroke="url(#plateBorderGrad2)" stroke-width="3.5" filter="url(#dropShadow2)" />
+
+  <!-- Inner Golden Ring -->
+  <circle cx="256" cy="256" r="208" fill="none" stroke="#F0DCBA" stroke-width="1" opacity="0.6" />
+
+  <!-- Sparkles -->
+  <g transform="translate(105, 120) scale(0.9)">
+    <path d="M 0,-18 Q 0,0 18,0 Q 0,0 0,18 Q 0,0 -18,0 Q 0,0 0,-18 Z" fill="url(#goldGrad2)" />
+    <circle cx="0" cy="0" r="2" fill="#FFFFFF" />
+  </g>
+  <g transform="translate(415, 125) scale(1.1)">
+    <path d="M 0,-20 Q 0,0 20,0 Q 0,0 0,20 Q 0,0 -20,0 Q 0,0 0,-20 Z" fill="url(#goldGrad2)" />
+    <circle cx="0" cy="0" r="3" fill="#FFFFFF" />
+  </g>
+  <g transform="translate(90, 360) scale(0.7)">
+    <path d="M 0,-14 Q 0,0 14,0 Q 0,0 0,14 Q 0,0 -14,0 Q 0,0 0,-14 Z" fill="url(#goldGrad2)" opacity="0.85" />
+  </g>
+  <g transform="translate(410, 355) scale(0.85)">
+    <path d="M 0,-16 Q 0,0 16,0 Q 0,0 0,16 Q 0,0 -16,0 Q 0,0 0,-16 Z" fill="url(#goldGrad2)" opacity="0.9" />
+  </g>
+
+  <!-- Floating Coins in Background -->
+  <!-- Floating Coin 1 (Top Left) -->
+  <g transform="translate(140, 160) rotate(-15) scale(0.75)" filter="url(#elementShadow)">
+    <ellipse cx="0" cy="0" rx="30" ry="20" fill="url(#goldGrad2)" stroke="#AA771C" stroke-width="2" />
+    <ellipse cx="0" cy="0" rx="24" ry="15" fill="none" stroke="#FFF7C2" stroke-width="1.5" />
+    <text x="0" y="5" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="900" fill="#6A4904" text-anchor="middle">Rp</text>
+  </g>
+
+  <!-- Floating Coin 2 (Top Right) -->
+  <g transform="translate(370, 185) rotate(20) scale(0.65)" filter="url(#elementShadow)">
+    <ellipse cx="0" cy="0" rx="28" ry="18" fill="url(#goldGrad2)" stroke="#AA771C" stroke-width="2" />
+    <ellipse cx="0" cy="0" rx="22" ry="13" fill="none" stroke="#FFF7C2" stroke-width="1.5" />
+    <!-- Heart Monogram on Coin -->
+    <path d="M -5,-2 C -8,-6 -1,-8 0,-4 C 1,-8 8,-6 5,-2 L 0,4 Z" fill="#6A4904" />
+  </g>
+
+  <!-- BACKING: Budget Analytic Dashboard Card (Tilted) -->
+  <g transform="translate(256, 235) rotate(-4) translate(-140, -110)" filter="url(#elementShadow)">
+    <!-- Main Card Body -->
+    <rect x="0" y="0" width="280" height="175" rx="18" fill="url(#cardGrad)" stroke="#E8D5BE" stroke-width="2" />
+    
+    <!-- Top Header Line of Card -->
+    <rect x="20" y="22" width="70" height="9" rx="4.5" fill="#C59B27" opacity="0.6" />
+    <circle cx="245" cy="26" r="6" fill="#DE1A66" opacity="0.5" />
+    <circle cx="225" cy="26" r="6" fill="#D4AF37" opacity="0.5" />
+    
+    <!-- Dotted Grid Lines -->
+    <line x1="20" y1="65" x2="260" y2="65" stroke="#EFE4D6" stroke-width="1.5" stroke-dasharray="4 4" />
+    <line x1="20" y1="105" x2="260" y2="105" stroke="#EFE4D6" stroke-width="1.5" stroke-dasharray="4 4" />
+    <line x1="20" y1="145" x2="260" y2="145" stroke="#EFE4D6" stroke-width="1.5" stroke-dasharray="4 4" />
+
+    <!-- 3 Rising Budget Bars -->
+    <!-- Bar 1 (Estimasi) -->
+    <rect x="65" y="90" width="32" height="55" rx="7" fill="url(#chartBar1)" />
+    <!-- Bar 2 (Termin DP) -->
+    <rect x="124" y="60" width="32" height="85" rx="7" fill="url(#chartBar2)" />
+    <!-- Bar 3 (Lunas / Anggaran Terkendali) -->
+    <rect x="183" y="35" width="32" height="110" rx="7" fill="url(#chartBar3)" />
+
+    <!-- Trend Line across bars -->
+    <path d="M 81,80 L 140,50 L 199,25" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" />
+    <circle cx="81" cy="80" r="4.5" fill="#DE1A66" stroke="#FFF" stroke-width="2" />
+    <circle cx="140" cy="50" r="4.5" fill="#B80D57" stroke="#FFF" stroke-width="2" />
+    <circle cx="199" cy="25" r="5.5" fill="#D4AF37" stroke="#FFF" stroke-width="2.5" />
+
+    <!-- Lunas Badge with Checkmark -->
+    <g transform="translate(199, 12)">
+      <circle cx="0" cy="0" r="13" fill="#2E7D32" stroke="#FFFFFF" stroke-width="2" />
+      <path d="M -5,0 L -2,4 L 6,-4" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+
+  <!-- FOREGROUND: Luxury Velvet Wedding Clutch / Angpao Vault -->
+  <g transform="translate(256, 335)" filter="url(#dropShadow2)">
+    <!-- Shadow beneath clutch -->
+    <ellipse cx="0" cy="48" rx="145" ry="16" fill="#4A1328" opacity="0.3" filter="url(#softGlow)" />
+
+    <!-- Clutch Base Body -->
+    <path d="M -125,-15 
+             L 125,-15 
+             C 136,-15 142, -5 138, 25 
+             C 134, 46 122, 52 108, 52 
+             L -108, 52 
+             C -122, 52 -134, 46 -138, 25 
+             C -142, -5 -136, -15 -125,-15 Z" fill="url(#wineVelvetGrad)" stroke="#AA771C" stroke-width="2" />
+
+    <!-- Texture / Stitches on Clutch -->
+    <path d="M -115,-5 L 115,-5 M -120,42 L 120,42" fill="none" stroke="#D4AF37" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.65" />
+
+    <!-- Triangular Velvet Flap (Top Fold) -->
+    <path d="M -125,-15 
+             L 125,-15 
+             L 25, 22 
+             C 10, 28 -10, 28 -25, 22 
+             Z" fill="url(#wineFlapGrad)" stroke="#D4AF37" stroke-width="1.8" />
+
+    <!-- Golden Lock Clasp with Heart Jewel -->
+    <g transform="translate(0, 24)">
+      <!-- Outer Gold Clasp Ornament -->
+      <circle cx="0" cy="0" r="16" fill="url(#goldGrad2)" stroke="#8B6508" stroke-width="1.5" />
+      <circle cx="0" cy="0" r="12" fill="none" stroke="#FFF7C2" stroke-width="1" />
+      <!-- Inner Ruby Heart Gem -->
+      <path d="M -5,-3 C -8,-7 -1,-8 0,-4 C 1,-8 8,-7 5,-3 L 0,4 Z" fill="#9E0039" />
+    </g>
+  </g>
+
+  <!-- Big Gleaming Foreground Gold Coins Stacking on Left Bottom -->
+  <g transform="translate(145, 375)" filter="url(#elementShadow)">
+    <!-- Base Coin Edge -->
+    <ellipse cx="0" cy="8" rx="36" ry="18" fill="#7A5306" />
+    <ellipse cx="0" cy="0" rx="36" ry="18" fill="url(#coinFaceGrad)" stroke="#AA771C" stroke-width="2" />
+    <ellipse cx="0" cy="0" rx="30" ry="14" fill="none" stroke="#FFF3A8" stroke-width="1.5" />
+    <!-- Embossed Wedding Ring Monogram on Coin -->
+    <circle cx="-5" cy="0" r="7" fill="none" stroke="#7A5306" stroke-width="2" />
+    <circle cx="5" cy="0" r="7" fill="none" stroke="#7A5306" stroke-width="2" />
+  </g>
+
+  <g transform="translate(180, 395) rotate(12)" filter="url(#elementShadow)">
+    <ellipse cx="0" cy="7" rx="32" ry="16" fill="#7A5306" />
+    <ellipse cx="0" cy="0" rx="32" ry="16" fill="url(#coinFaceGrad)" stroke="#AA771C" stroke-width="2" />
+    <ellipse cx="0" cy="0" rx="26" ry="12" fill="none" stroke="#FFF3A8" stroke-width="1.5" />
+    <text x="0" y="4" font-family="'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="900" fill="#6A4904" text-anchor="middle">Rp</text>
+  </g>
+
+  <!-- Small floating sparkles near coins -->
+  <circle cx="110" cy="345" r="3" fill="#FFE082" />
+  <circle cx="215" cy="415" r="3" fill="#FFE082" />
+  <circle cx="395" cy="305" r="4" fill="url(#goldGrad2)" opacity="0.8" />
+</svg>
