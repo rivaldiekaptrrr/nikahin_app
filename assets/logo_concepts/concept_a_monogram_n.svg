@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <title>Nikahin - Konsep A: Monogram N &amp; Cincin</title>
+  <!-- Background: Marun Pekat -->
+  <rect width="256" height="256" rx="56" fill="#621324"/>
+  
+  <!-- Cincin Emas (Bagian Belakang / Back Arc) -->
+  <path d="M 88 128 A 40 40 0 0 1 168 128 A 40 40 0 0 1 154 157 L 142 145 A 24 24 0 0 0 152 128 A 24 24 0 0 0 104 128 A 24 24 0 0 0 114 145 L 102 157 A 40 40 0 0 1 88 128 Z" fill="#CB8C36"/>
+  
+  <!-- Huruf N Krem (Satu Tarikan Garis Menyatu Mulus) -->
+  <path d="M 60 206 L 60 50 L 196 206 L 196 50" fill="none" stroke="#FAF6EE" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Cincin Emas (Bagian Depan / Front Arc - Menganyam di atas diagonal) -->
+  <path d="M 102 157 A 40 40 0 0 0 154 157 L 142 145 A 24 24 0 0 1 114 145 Z" fill="#CB8C36"/>
+</svg>

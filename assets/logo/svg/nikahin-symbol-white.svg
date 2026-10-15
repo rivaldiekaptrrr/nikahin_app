@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <title>Nikahin - Symbol Monochrome White</title>
+  <g transform="translate(0, -24)" fill="#FFFFFF">
+    <!-- 5 Kelopak Bunga Melati Putih -->
+    <path d="M512 520C440 470 400 380 408 300C470 330 520 420 512 520Z" transform="rotate(-24 512 520)" opacity=".85"/>
+    <path d="M512 520C584 470 624 380 616 300C554 330 504 420 512 520Z" transform="rotate(24 512 520)" opacity=".85"/>
+    <path d="M512 520C440 470 400 380 408 300C470 330 520 420 512 520Z" transform="rotate(-52 512 520)" opacity=".60"/>
+    <path d="M512 520C584 470 624 380 616 300C554 330 504 420 512 520Z" transform="rotate(52 512 520)" opacity=".60"/>
+    <path d="M512 250C566 330 578 430 512 530C446 430 458 330 512 250Z"/>
+    <!-- Busur Bawah -->
+    <path d="M 363 606 A 27 27 0 0 0 309 606 A 203 203 0 0 0 715 606 A 27 27 0 0 0 661 606 A 149 149 0 0 1 363 606 Z"/>
+    <!-- Cincin Kecil -->
+    <path d="M 512 560 A 38 38 0 1 0 512 636 A 38 38 0 1 0 512 560 Z M 512 576 A 22 22 0 1 1 512 620 A 22 22 0 1 1 512 576 Z" fill-rule="evenodd"/>
+  </g>
+</svg>

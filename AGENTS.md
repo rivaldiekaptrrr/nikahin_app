@@ -64,4 +64,6 @@ Knowledge graph data and MCP configurations are versioned inside `.agents/`:
 - `.agents/skills/interactive-agent-workflow/SKILL.md`: Standar alur kerja interaktif, konfirmasi sebelum eksekusi, dan larangan menjalankan tes/analisis otomatis tanpa persetujuan pengguna.
 - `.agents/skills/local-knowledge-sync/SKILL.md`: Prosedur sinkronisasi pengetahuan Local-First antara .agents/knowledge_graph.json (Git) dan server MCP Memory.
 - `.agents/skills/logo-design/SKILL.md`: Panduan profesional desain logo, brand-mark SVG, lockups, dan identitas visual merek.
+- `.agents/skills/flutter-brand-logo-launch/SKILL.md`: Prosedur standar (SOP) end-to-end pembuatan, kurasi geometri, rendering, dan peluncuran logo/ikon ke framework Flutter.
 - `docs/MAESTRO_AND_EMULATOR_SETUP_GUIDE.md`: Complete guide for Android Emulator (CLI without Android Studio) and Maestro MCP testing.
+- `docs/BRAND_GUIDELINES.md`: Panduan identitas visual resmi Nikahin App, palet warna, tipografi, dan aturan penggunaan logo.

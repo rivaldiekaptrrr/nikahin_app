@@ -90,6 +90,19 @@
         "Read Flow: On new machines or when MCP Memory lacks Nikahin entities, read .agents/knowledge_graph.json and hydrate MCP Memory using create_entities and create_relations.",
         "Skill documentation stored locally in .agents/skills/local-knowledge-sync/SKILL.md."
       ]
+    },
+    {
+      "name": "Nikahin_Brand_Identity",
+      "entityType": "BrandDesignSystem",
+      "observations": [
+        "Winning brand visual identity is Konsep C: Kuncup Melati & Janji Suci Pernikahan (5 sacred melati petals, golden crescent arc, central commitment ring).",
+        "Design guidelines documented in docs/BRAND_GUIDELINES.md following Warm Editorial Wedding aesthetics.",
+        "Color system: Deep Wine / Plum (#4A1328, #3D0F21 -> #1E0710), Sacred Melati Cream (#FFF3DF), Warm Wedding Gold (#F5CE7A -> #C47A1E), Romantic Deep Rose (#9A1F47).",
+        "Master scalable vector assets stored in assets/logo/svg/: symbol (master/black/white), horizontal lockup (1200x400 light/dark), stacked vertical lockup (600x680 light/dark), app-icon plates.",
+        "Raster high-res deliverables stored in assets/logo/png/ and registered in pubspec.yaml.",
+        "Mobile icon suites integrated directly into android/app/src/main/res/ (legacy & adaptive) and ios/Runner/Assets.xcassets/AppIcon.appiconset/.",
+        "End-to-end launch workflow standard documented in .agents/skills/flutter-brand-logo-launch/SKILL.md with turnkey generator script."
+      ]
     }
   ],
   "relations": [
@@ -122,6 +135,11 @@
       "from": "Nikahin_App_Core",
       "to": "Nikahin_Knowledge_Sync",
       "relationType": "synchronizesWith"
+    },
+    {
+      "from": "Nikahin_App_Core",
+      "to": "Nikahin_Brand_Identity",
+      "relationType": "brandedWith"
     }
   ]
 }

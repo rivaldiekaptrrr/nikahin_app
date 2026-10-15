@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <title>Nikahin - Konsep C: Kuncup Melati &amp; Cincin</title>
+  <!-- Background: Ungu Tua / Deep Plum -->
+  <rect width="256" height="256" rx="56" fill="#321021"/>
+  
+  <!-- Busur Emas Penopang (U-Shaped Golden Crescent) -->
+  <path d="M 72 146 A 56 56 0 0 0 184 146 L 166 146 A 38 38 0 0 1 90 146 Z" fill="#CB8C36"/>
+  
+  <!-- Cincin Kecil Emas dengan Inti Mutiara Krem -->
+  <circle cx="128" cy="148" r="14" fill="#CB8C36"/>
+  <circle cx="128" cy="148" r="7" fill="#321021"/>
+  <circle cx="128" cy="148" r="4" fill="#FAF6EE"/>
+
+  <!-- Kelopak Samping Bawah (Mauve / Dusty Rose Accent) -->
+  <path d="M 80 132 C 94 122 112 120 128 122 C 144 120 162 122 176 132 C 162 142 146 144 128 144 C 110 144 94 142 80 132 Z" fill="#916778"/>
+  
+  <!-- Kelopak Melati Kiri (Krem) -->
+  <path d="M 124 136 C 110 128 92 110 84 92 C 78 78 80 66 82 62 C 86 65 98 75 108 92 C 117 106 122 124 124 136 Z" fill="#FAF6EE"/>
+  
+  <!-- Kelopak Melati Kanan (Krem) -->
+  <path d="M 132 136 C 146 128 164 110 172 92 C 178 78 176 66 174 62 C 170 65 158 75 148 92 C 139 106 134 124 132 136 Z" fill="#FAF6EE"/>
+  
+  <!-- Kuncup Melati Tengah (Krem) -->
+  <path d="M 128 44 C 138 68 144 94 144 114 C 144 130 136 138 128 142 C 120 138 112 130 112 114 C 112 94 118 68 128 44 Z" fill="#FAF6EE"/>
+</svg>
