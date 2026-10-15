@@ -21,6 +21,7 @@ class UpdateState {
   final double downloadProgress; // 0.0 - 1.0
   final int receivedBytes;
   final int totalBytes;
+  final double bytesPerSecond;
   final String? downloadedFilePath;
   final String? errorMessage;
 
@@ -31,9 +32,39 @@ class UpdateState {
     this.downloadProgress = 0.0,
     this.receivedBytes = 0,
     this.totalBytes = 0,
+    this.bytesPerSecond = 0.0,
     this.downloadedFilePath,
     this.errorMessage,
   });
+
+  /// Format teks kecepatan unduhan (misal: "2.1 MB/s" atau "450 KB/s")
+  String get formattedSpeed {
+    if (bytesPerSecond <= 0) return '';
+    final mbps = bytesPerSecond / (1024 * 1024);
+    if (mbps >= 1.0) {
+      return '${mbps.toStringAsFixed(1)} MB/s';
+    } else {
+      final kbps = bytesPerSecond / 1024;
+      return '${kbps.toStringAsFixed(0)} KB/s';
+    }
+  }
+
+  /// Format estimasi sisa waktu unduhan (misal: "Sisa ~15d" atau "Sisa ~1m 20d")
+  String get formattedRemainingTime {
+    if (bytesPerSecond <= 0 || totalBytes <= 0 || receivedBytes >= totalBytes) {
+      return '';
+    }
+    final remainingBytes = totalBytes - receivedBytes;
+    final remainingSeconds = (remainingBytes / bytesPerSecond).round();
+    if (remainingSeconds <= 0) return 'Hampir selesai';
+    if (remainingSeconds < 60) {
+      return 'Sisa ~$remainingSeconds dtk';
+    } else {
+      final minutes = remainingSeconds ~/ 60;
+      final seconds = remainingSeconds % 60;
+      return 'Sisa ~${minutes}m ${seconds}d';
+    }
+  }
 
   UpdateState copyWith({
     UpdateStatus? status,
@@ -42,6 +73,7 @@ class UpdateState {
     double? downloadProgress,
     int? receivedBytes,
     int? totalBytes,
+    double? bytesPerSecond,
     String? downloadedFilePath,
     String? errorMessage,
   }) {
@@ -52,6 +84,7 @@ class UpdateState {
       downloadProgress: downloadProgress ?? this.downloadProgress,
       receivedBytes: receivedBytes ?? this.receivedBytes,
       totalBytes: totalBytes ?? this.totalBytes,
+      bytesPerSecond: bytesPerSecond ?? this.bytesPerSecond,
       downloadedFilePath: downloadedFilePath ?? this.downloadedFilePath,
       errorMessage: errorMessage ?? this.errorMessage,
     );
@@ -141,11 +174,12 @@ class UpdateNotifier extends Notifier<UpdateState> {
       final file = await _downloader.downloadApk(
         downloadUrl: release.apkDownloadUrl!,
         fileName: release.apkFileName ?? 'app-nikahin-${release.tagName}.apk',
-        onProgress: (progress, received, total) {
+        onProgress: (progress, received, total, speed) {
           state = state.copyWith(
             downloadProgress: progress,
             receivedBytes: received,
             totalBytes: total,
+            bytesPerSecond: speed,
           );
         },
       );

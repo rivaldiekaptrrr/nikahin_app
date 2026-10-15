@@ -12,16 +12,25 @@ class AppUpdateDownloader {
       : _client = client ?? http.Client();
 
   /// Mengunduh APK dari [downloadUrl] ke direktori cache lokal.
-  /// Memanggil callback [onProgress] dengan nilai persentase 0.0 s/d 1.0.
+  /// Memanggil callback [onProgress] dengan nilai persentase 0.0 s/d 1.0, byte diterima, total byte, dan kecepatan (bytes/sec).
   /// Mengembalikan [File] APK yang telah selesai diunduh.
   Future<File> downloadApk({
     required String downloadUrl,
     required String fileName,
-    required void Function(double progress, int received, int total)
-        onProgress,
+    required void Function(
+      double progress,
+      int received,
+      int total,
+      double bytesPerSecond,
+    ) onProgress,
   }) async {
     final uri = Uri.parse(downloadUrl);
     final request = http.Request('GET', uri);
+    request.headers.addAll({
+      'Accept': 'application/octet-stream',
+      'User-Agent': 'NikahinApp-Flutter',
+    });
+
     final response = await _client.send(request);
 
     if (response.statusCode != 200) {
@@ -46,24 +55,57 @@ class AppUpdateDownloader {
     final sink = file.openWrite();
     int receivedBytes = 0;
 
+    final stopwatch = Stopwatch()..start();
+    int lastNotifiedMs = 0;
+    int lastSpeedSampleMs = 0;
+    int lastReceivedForSpeed = 0;
+    double currentSpeedBps = 0.0;
+
     try {
       await for (final chunk in response.stream) {
         sink.add(chunk);
         receivedBytes += chunk.length;
 
-        if (totalBytes > 0) {
-          final progress = receivedBytes / totalBytes;
-          onProgress(progress, receivedBytes, totalBytes);
-        } else {
-          // Jika content-length tidak disediakan server
-          onProgress(-1.0, receivedBytes, 0);
+        final elapsedMs = stopwatch.elapsedMilliseconds;
+
+        // Hitung estimasi kecepatan setiap ~400ms agar pembacaan stabil dan tidak fluktuatif
+        if (elapsedMs - lastSpeedSampleMs >= 400) {
+          final timeDeltaSec = (elapsedMs - lastSpeedSampleMs) / 1000.0;
+          final bytesDelta = receivedBytes - lastReceivedForSpeed;
+          if (timeDeltaSec > 0) {
+            final instantSpeed = bytesDelta / timeDeltaSec;
+            currentSpeedBps = currentSpeedBps == 0
+                ? instantSpeed
+                : (currentSpeedBps * 0.65) + (instantSpeed * 0.35);
+          }
+          lastSpeedSampleMs = elapsedMs;
+          lastReceivedForSpeed = receivedBytes;
+        }
+
+        // Throttle pemanggilan callback ke UI (maksimal setiap 120ms) untuk mencegah jank/lag main-thread
+        if (elapsedMs - lastNotifiedMs >= 120) {
+          lastNotifiedMs = elapsedMs;
+          final progress =
+              totalBytes > 0 ? (receivedBytes / totalBytes) : -1.0;
+          onProgress(progress, receivedBytes, totalBytes, currentSpeedBps);
         }
       }
+
       await sink.flush();
+
+      // Notifikasi final 100% tepat setelah stream selesai
+      final finalProgress = totalBytes > 0 ? 1.0 : -1.0;
+      onProgress(
+        finalProgress,
+        receivedBytes,
+        totalBytes > 0 ? totalBytes : receivedBytes,
+        currentSpeedBps,
+      );
     } catch (e) {
       debugPrint('[AppUpdateDownloader] Error saat streaming download: $e');
       rethrow;
     } finally {
+      stopwatch.stop();
       await sink.close();
     }
 

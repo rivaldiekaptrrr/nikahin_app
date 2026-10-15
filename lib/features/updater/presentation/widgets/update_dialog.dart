@@ -303,11 +303,40 @@ class UpdateDialog extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            totalMb != null ? '$receivedMb MB / $totalMb MB' : '$receivedMb MB',
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.outline,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                totalMb != null
+                    ? '$receivedMb MB / $totalMb MB'
+                    : '$receivedMb MB',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.outline,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              if (state.formattedSpeed.isNotEmpty)
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      state.formattedSpeed,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                    if (state.formattedRemainingTime.isNotEmpty) ...[
+                      Text(
+                        ' • ${state.formattedRemainingTime}',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.outline,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+            ],
           ),
         ],
       ),

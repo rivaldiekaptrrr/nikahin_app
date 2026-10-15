@@ -89,7 +89,7 @@ jobs:
             echo "No Keystore Secret found. Building with debug fallback."
           fi
 
-      - name: Build Release APK
+      - name: Build Release APKs
         env:
           MIDTRANS_PROD_KEY: ${{ secrets.MIDTRANS_PRODUCTION_SERVER_KEY }}
           MIDTRANS_SANDBOX_KEY: ${{ secrets.MIDTRANS_SANDBOX_SERVER_KEY }}
@@ -101,20 +101,30 @@ jobs:
           if [ -n "$MIDTRANS_SANDBOX_KEY" ]; then
             DART_DEFINES="$DART_DEFINES --dart-define=MIDTRANS_SANDBOX_SERVER_KEY=$MIDTRANS_SANDBOX_KEY"
           fi
+
+          # 1. Build Universal APK (armeabi-v7a + arm64-v8a)
           flutter build apk --release $DART_DEFINES
+          cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/app-universal.apk
+
+          # 2. Build Optimized ARM64 APK (~22MB) khusus HP Android modern
+          flutter build apk --release --target-platform android-arm64 $DART_DEFINES
+          cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/app-arm64.apk
 
       # Skenario 1: Push ke branch main / master (Build Internal Developer)
       - name: Rename APK for Main/Master Branch
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         run: |
-          cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/app-nikahin-main.apk
+          cp build/app/outputs/flutter-apk/app-universal.apk build/app/outputs/flutter-apk/app-nikahin-main.apk
+          cp build/app/outputs/flutter-apk/app-arm64.apk build/app/outputs/flutter-apk/app-nikahin-main-arm64.apk
 
       - name: Upload Main Artifact
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         uses: actions/upload-artifact@v4
         with:
           name: app-nikahin-main
-          path: build/app/outputs/flutter-apk/app-nikahin-main.apk
+          path: |
+            build/app/outputs/flutter-apk/app-nikahin-main.apk
+            build/app/outputs/flutter-apk/app-nikahin-main-arm64.apk
           if-no-files-found: error
           retention-days: 14
 
@@ -125,14 +135,17 @@ jobs:
         run: |
           TAG_NAME="${GITHUB_REF#refs/tags/}"
           echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_OUTPUT
-          cp build/app/outputs/flutter-apk/app-release.apk "build/app/outputs/flutter-apk/app-nikahin-${TAG_NAME}.apk"
+          cp build/app/outputs/flutter-apk/app-universal.apk "build/app/outputs/flutter-apk/app-nikahin-${TAG_NAME}.apk"
+          cp build/app/outputs/flutter-apk/app-arm64.apk "build/app/outputs/flutter-apk/app-nikahin-${TAG_NAME}-arm64.apk"
 
       - name: Upload Release Artifact
         if: startsWith(github.ref, 'refs/tags/v')
         uses: actions/upload-artifact@v4
         with:
           name: app-nikahin-${{ steps.release_env.outputs.TAG_NAME }}
-          path: build/app/outputs/flutter-apk/app-nikahin-${{ steps.release_env.outputs.TAG_NAME }}.apk
+          path: |
+            build/app/outputs/flutter-apk/app-nikahin-${{ steps.release_env.outputs.TAG_NAME }}-arm64.apk
+            build/app/outputs/flutter-apk/app-nikahin-${{ steps.release_env.outputs.TAG_NAME }}.apk
           if-no-files-found: error
           retention-days: 30
 
@@ -151,7 +164,9 @@ jobs:
           body_path: RELEASE_NOTES.md
           draft: false
           prerelease: false
-          files: build/app/outputs/flutter-apk/app-nikahin-${{ steps.release_env.outputs.TAG_NAME }}.apk
+          files: |
+            build/app/outputs/flutter-apk/app-nikahin-${{ steps.release_env.outputs.TAG_NAME }}-arm64.apk
+            build/app/outputs/flutter-apk/app-nikahin-${{ steps.release_env.outputs.TAG_NAME }}.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

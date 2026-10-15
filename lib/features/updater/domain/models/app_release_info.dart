@@ -1,3 +1,5 @@
+import 'dart:io';
+
 /// Model data representasi rilis dari GitHub Releases API
 class AppReleaseInfo {
   final String tagName;
@@ -38,15 +40,46 @@ class AppReleaseInfo {
 
     final assets = json['assets'] as List<dynamic>?;
     if (assets != null && assets.isNotEmpty) {
-      // Cari aset berformat .apk
-      for (final asset in assets) {
-        final name = (asset['name'] as String?) ?? '';
-        if (name.toLowerCase().endsWith('.apk')) {
-          apkUrl = asset['browser_download_url'] as String?;
-          apkName = name;
-          apkSize = (asset['size'] as int?) ?? 0;
-          break;
+      final apkAssets = assets.where((a) {
+        if (a is! Map<String, dynamic>) return false;
+        final name = (a['name'] as String? ?? '').toLowerCase();
+        return name.endsWith('.apk');
+      }).cast<Map<String, dynamic>>().toList();
+
+      if (apkAssets.isNotEmpty) {
+        Map<String, dynamic>? selectedAsset;
+
+        final isArm64 = Platform.version.toLowerCase().contains('arm64') ||
+            Platform.version.toLowerCase().contains('aarch64');
+
+        if (isArm64) {
+          // Cari aset yang dioptimasi khusus arm64 jika perangkat mendukung 64-bit
+          for (final a in apkAssets) {
+            final name = (a['name'] as String? ?? '').toLowerCase();
+            if (name.contains('arm64')) {
+              selectedAsset = a;
+              break;
+            }
+          }
         }
+
+        // Jika bukan arm64 atau tidak ada aset khusus arm64, cari universal APK (tanpa label abi khusus)
+        if (selectedAsset == null) {
+          for (final a in apkAssets) {
+            final name = (a['name'] as String? ?? '').toLowerCase();
+            if (!name.contains('x86') && !name.contains('armeabi')) {
+              selectedAsset = a;
+              break;
+            }
+          }
+        }
+
+        // Fallback: gunakan aset APK pertama yang ada
+        selectedAsset ??= apkAssets.first;
+
+        apkUrl = selectedAsset['browser_download_url'] as String?;
+        apkName = selectedAsset['name'] as String?;
+        apkSize = (selectedAsset['size'] as int?) ?? 0;
       }
     }
 
