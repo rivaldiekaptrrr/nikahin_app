@@ -63,4 +63,5 @@ Knowledge graph data and MCP configurations are versioned inside `.agents/`:
 - `.agents/skills/clean-response-formatting/SKILL.md`: Standar penulisan format respon bersih, bebas dari raw LaTeX syntax ($...$, \rightarrow).
 - `.agents/skills/interactive-agent-workflow/SKILL.md`: Standar alur kerja interaktif, konfirmasi sebelum eksekusi, dan larangan menjalankan tes/analisis otomatis tanpa persetujuan pengguna.
 - `.agents/skills/local-knowledge-sync/SKILL.md`: Prosedur sinkronisasi pengetahuan Local-First antara .agents/knowledge_graph.json (Git) dan server MCP Memory.
+- `.agents/skills/logo-design/SKILL.md`: Panduan profesional desain logo, brand-mark SVG, lockups, dan identitas visual merek.
 - `docs/MAESTRO_AND_EMULATOR_SETUP_GUIDE.md`: Complete guide for Android Emulator (CLI without Android Studio) and Maestro MCP testing.

@@ -9,7 +9,8 @@
         "Spun off and evolved from the Wedding Planner module of TrackIt (Kotlin/Compose) into an independent cross-platform Flutter app.",
         "Repository: rivaldiekaptrrr/nikahin_app, workspace located at c:/Rivaldi/nikahin_app.",
         "Follows an Offline-First architectural pattern with Drift SQLite as the local single source of truth.",
-        "UI language and user-facing strings are strictly in Indonesian with Bento Grid and Material 3 design system."
+        "UI language and user-facing strings are strictly in Indonesian with Bento Grid and Material 3 design system.",
+        "Brand design guidelines and logo craft powered by logo-design skill (.agents/skills/logo-design/SKILL.md) and DESIGN.md."
       ]
     },
     {
