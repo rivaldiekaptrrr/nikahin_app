@@ -79,6 +79,16 @@
         "Validation pipeline: flutter analyze (0 errors), flutter test (51 tests passed), flutter build apk --release.",
         "Skill file stored locally in .agents/skills/flutter-environment-setup/SKILL.md."
       ]
+    },
+    {
+      "name": "Nikahin_Knowledge_Sync",
+      "entityType": "ArchitectureRule",
+      "observations": [
+        "Local-First Single Source of Truth: .agents/knowledge_graph.json is the master knowledge reference stored in Git.",
+        "Write Flow: Every new entity, observation, or architectural discovery must first be saved into .agents/knowledge_graph.json, then synced to active MCP Memory via create_entities / add_observations.",
+        "Read Flow: On new machines or when MCP Memory lacks Nikahin entities, read .agents/knowledge_graph.json and hydrate MCP Memory using create_entities and create_relations.",
+        "Skill documentation stored locally in .agents/skills/local-knowledge-sync/SKILL.md."
+      ]
     }
   ],
   "relations": [
@@ -106,6 +116,12 @@
       "from": "Nikahin_App_Core",
       "to": "Nikahin_Environment_Setup",
       "relationType": "setupWith"
+    },
+    {
+      "from": "Nikahin_App_Core",
+      "to": "Nikahin_Knowledge_Sync",
+      "relationType": "synchronizesWith"
     }
   ]
 }
+
