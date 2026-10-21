@@ -1,118 +1,125 @@
 ---
 name: flutter-brand-logo-launch
-description: Standard operating procedure (SOP) end-to-end pembuatan, kurasi geometri, rendering varian warna, dan peluncuran logo/ikon aplikasi ke framework Flutter (Android Adaptive Icons, iOS xcassets, Web favicon, dan pubspec registration).
+description: Standard operating procedure (SOP) end-to-end pembuatan, kurasi geometri, rendering varian warna, dan peluncuran logo/ikon aplikasi ke framework Flutter untuk semua platform (Android, iOS, Windows, macOS, Web, dan Welcome Screen Onboarding).
 ---
 
-# Flutter Brand Logo Launch - End-to-End Workflow & SOP
+# 🚀 Flutter Brand Logo Launch & Multi-Platform Assets SOP
 
-Skill ini mendokumentasikan panduan operasional standar (SOP) lengkap dari proses awal pembuatan logo brand, penyempurnaan geometri vektor, pembuatan varian lockup dan palet warna, ekspor raster multi-resolusi, hingga integrasi langsung ke platform mobile Flutter (Android & iOS) dan Web.
+Panduan referensi operasional standar (SOP) definitif ketika ingin **mengubah, merombak, atau memperbarui desain logo aplikasi Nikahin**. Dokumen ini mencatat seluruh daftar berkas yang wajib diubah di folder `assets/`, ilustrasi **Welcome Screen**, ikon seluruh platform (**Android, iOS, Windows, macOS, Web**), serta titik pemanggilan di kode Flutter.
 
 ---
 
-## 1. Alur Kerja 7 Langkah (End-to-End Roadmap)
+## ⚡ 1. Eksekusi Cepat (One-Command Automation)
 
-```
-[Tahap 1: Konseptualisasi]
-         │
-         ▼
-[Tahap 2: Tinjauan & Pemilihan Konsep]
-         │
-         ▼
-[Tahap 3: Refinement Geometri & Koreksi Optik] ──► (Audit SVG, Expand Stroke, Optical dy)
-         │
-         ▼
-[Tahap 4: Sistem Varian & Lockup] ───────────────► (Symbol, Horizontal, Stacked, Dark/Light)
-         │
-         ▼
-[Tahap 5: Ekspor Raster & Platform Icon Suite] ──► (Android Mipmaps, iOS xcassets, Web Favicon)
-         │
-         ▼
-[Tahap 6: Integrasi ke Proyek Flutter] ──────────► (pubspec.yaml & flutter pub get)
-         │
-         ▼
-[Tahap 7: Dokumentasi Brand Guidelines] ─────────► (docs/BRAND_GUIDELINES.md)
+Setelah berkas vektor SVG master baru disiapkan di `assets/logo/svg/` dan `assets/illustrations/`, **cukup jalankan satu perintah berikut** untuk merender dan mendistribusikan seluruh ikon ke semua platform secara otomatis:
+
+```bash
+python .agents/skills/flutter-brand-logo-launch/scripts/generate_flutter_brand_assets.py
 ```
 
----
-
-## 2. Rincian Langkah Demi Langkah
-
-### Tahap 1: Konseptualisasi & Definisi Visual
-1. Tentukan tema dan esensi aplikasi (contoh: *Warm Editorial Wedding* untuk Nikahin App).
-2. Bangun 2 hingga 3 konsep logo berbeda pada kanvas viewBox `0 0 1024 1024`:
-   - **Konsep A**: Monogram / Lettermark tipografis.
-   - **Konsep B**: Simbol Geometris / Metafora murni.
-   - **Konsep C**: Simbol Budaya / Bentuk Organik bercerita.
-3. Simpan konsep awal di `assets/logo_concepts/`.
+Skrip ini akan otomatis merender 7 tahapan:
+1. Master Logo PNG (`assets/logo/png/`).
+2. Welcome Screen Onboarding PNG (`assets/images/`).
+3. iOS AppIcon xcassets (`ios/Runner/Assets.xcassets/AppIcon.appiconset/`).
+4. Android Adaptive & Legacy Mipmaps (`android/app/src/main/res/mipmap-*/`).
+5. Windows App Icon (`windows/runner/resources/app_icon.ico`).
+6. macOS AppIcon xcassets (`macos/Runner/Assets.xcassets/AppIcon.appiconset/`).
+7. Web Favicon & PWA Suite (`web/`, `web/icons/`, dan `assets/logo/app_icon/web/`).
 
 ---
 
-### Tahap 2: Tinjauan & Pemilihan Konsep
-1. Render seluruh konsep awal ke resolusi setara (misal 512×512 PNG).
-2. Tampilkan kepada pengguna menggunakan presentation board atau carousel artefak markdown.
-3. Kumpulkan masukan dan mintalah pengguna memilih 1 konsep pemenang sebelum melangkah ke tahap produksi aset.
+## 📁 2. Daftar Lengkap Berkas yang Wajib Diubah/Dibuat
+
+### A. Vektor Master Logo (`assets/logo/svg/`)
+Ini adalah sumber kebenaran (*single source of truth*) desain logo:
+
+| Berkas SVG | Dimensi Kanvas | Kegunaan & Karakteristik |
+|---|---|---|
+| [`nikahin-symbol-master.svg`](file:///c:/Rivaldi/nikahin_app/assets/logo/svg/nikahin-symbol-master.svg) | `400×400` / `1024×1024` | Simbol resmi warna penuh (Cincin Emas, 3 Bar Anggaran, Simpul Hati) dengan latar transparan. |
+| [`nikahin-symbol-black.svg`](file:///c:/Rivaldi/nikahin_app/assets/logo/svg/nikahin-symbol-black.svg) | `400×400` / `1024×1024` | 100% Solid Black (`#000000`) untuk stempel, watermark dokumen, dan cetak struk/nota. |
+| [`nikahin-symbol-white.svg`](file:///c:/Rivaldi/nikahin_app/assets/logo/svg/nikahin-symbol-white.svg) | `400×400` / `1024×1024` | 100% Solid White (`#FFFFFF`) untuk latar belakang gelap, video, dan fotografi. |
+| [`nikahin-lockup-horizontal.svg`](file:///c:/Rivaldi/nikahin_app/assets/logo/svg/nikahin-lockup-horizontal.svg) | `1200×400` (Rasio 3:1) | Logo + Teks horizontal latar transparan/terang untuk navbar web dan kop surat. |
+| [`nikahin-lockup-horizontal-dark.svg`](file:///c:/Rivaldi/nikahin_app/assets/logo/svg/nikahin-lockup-horizontal-dark.svg) | `1200×400` (Rasio 3:1) | Logo + Teks horizontal di atas piringan bento Warm Champagne (`#FFFBF5` → `#F8E7D8`). |
+| [`nikahin-lockup-stacked.svg`](file:///c:/Rivaldi/nikahin_app/assets/logo/svg/nikahin-lockup-stacked.svg) | `600×680` (Vertikal) | Logo di atas, Wordmark di tengah, Tagline di bawah. Ideal untuk poster dan splash screen. |
+| [`nikahin-lockup-stacked-dark.svg`](file:///c:/Rivaldi/nikahin_app/assets/logo/svg/nikahin-lockup-stacked-dark.svg) | `600×680` (Vertikal) | Format bertumpuk di atas piringan bento Warm Champagne dengan teks Deep Wine (`#4A1328`). |
+| [`nikahin-app-icon.svg`](file:///c:/Rivaldi/nikahin_app/assets/logo/svg/nikahin-app-icon.svg) | `1024×1024` | Master ikon aplikasi penuh (Simbol ~80% coverage di atas latar Warm Champagne). |
+| [`nikahin-app-icon-fg.svg`](file:///c:/Rivaldi/nikahin_app/assets/logo/svg/nikahin-app-icon-fg.svg) | `512×512` | Foreground layer untuk Android Adaptive Icon (Simbol berada di dalam safe zone lingkaran tengah 66%). |
+| [`nikahin-app-icon-bg.svg`](file:///c:/Rivaldi/nikahin_app/assets/logo/svg/nikahin-app-icon-bg.svg) | `512×512` | Background layer solid/gradasi Warm Champagne untuk Android Adaptive Icon. |
 
 ---
 
-### Tahap 3: Refinement Geometri & Koreksi Optik (Wajib & Krusial)
-Sebelum membuat varian ukuran, lakukan audit ketat pada vektor terpilih:
-1. **Audit & Ekspansi Stroke**:
-   - Jalankan audit SVG untuk memastikan tidak ada ketergantungan `stroke-width` atau `stroke-dasharray` murni yang akan rusak jika di-scale ke 16px.
-   - Ubah elemen busur/lingkaran menjadi path kurva tertutup (`M ... A ... Z`) dengan `fill-rule="evenodd"`.
-2. **Koreksi Optik Pusat Massa (*Optical Center of Gravity*)**:
-   - Simbol dengan busur atau dasar melengkung sering mengalami ilusi optik "melorot" ke bawah jika diposisikan tepat di pusat geometris kanvas.
-   - Berikan offset optik vertikal ke atas (`dy = -24 px` pada kanvas 1024) agar logo terlihat seimbang sempurna di mata manusia.
-3. Simpan file master yang telah disempurnakan:
-   - `assets/logo_concepts/concept_refined_master.svg`
-   - `assets/logo_concepts/concept_refined_transparent.svg`
+### B. Ilustrasi Vektor & Raster Welcome Screen (Onboarding)
+Ketika logo diubah, ketiga layar Welcome Screen wajib diselaraskan agar identitas brand tetap harmonis:
+
+| Berkas Master Vektor (SVG) | Berkas Target Flutter (PNG 512×512) | Tema & Deskripsi Layar Onboarding |
+|---|---|---|
+| [`assets/illustrations/welcome_slide_1.svg`](file:///c:/Rivaldi/nikahin_app/assets/illustrations/welcome_slide_1.svg) | [`assets/images/welcome_slide_1.png`](file:///c:/Rivaldi/nikahin_app/assets/images/welcome_slide_1.png) | **Layar 1 (Nikahin)**: Lambang master baru di atas piringan bento bertabur kilau bintang emas (*sparkles*). |
+| [`assets/illustrations/welcome_slide_2.svg`](file:///c:/Rivaldi/nikahin_app/assets/illustrations/welcome_slide_2.svg) | [`assets/images/welcome_slide_2.png`](file:///c:/Rivaldi/nikahin_app/assets/images/welcome_slide_2.png) | **Layar 2 (Atur Anggaran & Pos Biaya)**: Kartu analitik bertingkat, dompet beludru Deep Wine kunci emas ruby, dan koin emas mahar Rp. |
+| [`assets/illustrations/welcome_slide_3.svg`](file:///c:/Rivaldi/nikahin_app/assets/illustrations/welcome_slide_3.svg) | [`assets/images/welcome_slide_3.png`](file:///c:/Rivaldi/nikahin_app/assets/images/welcome_slide_3.png) | **Layar 3 (Kelola Tamu, Vendor & Rundown)**: Amplop undangan mewah stempel lilin anggur `N`, ceklist rundown, jam saku akad 08:00, dan melati sakral. |
 
 ---
 
-### Tahap 4: Sistem Varian Warna & Lockup
-Strukturkan logo ke dalam standar industri di `assets/logo/svg/`:
-1. **Master Symbol**:
-   - `nikahin-symbol-master.svg` (Warna orisinal transparan).
-   - `nikahin-symbol-black.svg` (100% Solid Black `#000000` untuk stempel & cetak nota/resi).
-   - `nikahin-symbol-white.svg` (100% Solid White `#FFFFFF` untuk penempatan di latar foto/gelap).
-2. **Horizontal Lockup (Rasio 3:1, 1200×400 px)**:
-   - `nikahin-lockup-horizontal.svg` (Latar transparan/terang).
-   - `nikahin-lockup-horizontal-dark.svg` (Dengan plate latar belakang gelap resmi).
-   - Ideal untuk header web, navbar, dan kop surat dokumen PDF.
-3. **Stacked / Vertical Lockup (Rasio Vertikal, 600×680 px)**:
-   - `nikahin-lockup-stacked.svg` (Latar transparan/terang).
-   - `nikahin-lockup-stacked-dark.svg` (Latar gelap).
-   - Simbol di atas, wordmark di tengah, tagline di bawah. Ideal untuk splash screen dan poster.
-4. **Master App Icon Plates**:
-   - `nikahin-app-icon.svg` (Plate kotak penuh 1024×1024 untuk iOS & Store).
-   - `nikahin-app-icon-fg.svg` (Simbol diatur di dalam safe-zone 66% untuk Android Adaptive Icon).
-   - `nikahin-app-icon-bg.svg` (Plate background solid/gradasi untuk Android Adaptive Icon).
+### C. Berkas Hasil Render Logo Raster (`assets/logo/png/`)
+Dihasilkan otomatis oleh skrip Python ke format PNG beresolusi tinggi:
+- `nikahin-symbol-master.png` (1024×1024 px) & `nikahin-symbol-master-512.png` (512×512 px)
+- `nikahin-symbol-black.png` (1024×1024 px) & `nikahin-symbol-black-512.png` (512×512 px)
+- `nikahin-symbol-white.png` (1024×1024 px) & `nikahin-symbol-white-512.png` (512×512 px)
+- `nikahin-lockup-horizontal.png` & `nikahin-lockup-horizontal-dark.png` (1200×400 px)
+- `nikahin-lockup-stacked.png` & `nikahin-lockup-stacked-dark.png` (600×680 px)
+- `nikahin-app-icon.png` (1024×1024 px)
+- `nikahin-app-icon-fg.png` (512×512 px)
+- `nikahin-app-icon-bg.png` (512×512 px)
 
 ---
 
-### Tahap 5: Ekspor Raster & Platform Icon Suite
-Jalankan skrip otomatisasi Python (`generate_flutter_brand_assets.py`) untuk merender dan mendistribusikan aset:
+### D. Ikon Seluruh Platform (Android, iOS, Windows, macOS, Web)
 
-1. **Rendering Master PNG (`assets/logo/png/`)**:
-   - Render seluruh SVG ke PNG resolusi 1024×1024, 512×512, dan lockup 1200×400 menggunakan headless Chrome / CairoSVG.
-2. **Android Adaptive & Legacy Icons (`android/app/src/main/res/`)**:
-   - Turunkan ukuran ikon ke setiap density mipmap:
-     * `mipmap-mdpi`: 48×48 px (legacy), 108×108 px (adaptive fg/bg).
-     * `mipmap-hdpi`: 72×72 px (legacy), 162×162 px (adaptive fg/bg).
-     * `mipmap-xhdpi`: 96×96 px (legacy), 216×216 px (adaptive fg/bg).
-     * `mipmap-xxhdpi`: 144×144 px (legacy), 324×324 px (adaptive fg/bg).
-     * `mipmap-xxxhdpi`: 192×192 px (legacy), 432×432 px (adaptive fg/bg).
-3. **iOS App Icon Set (`ios/Runner/Assets.xcassets/AppIcon.appiconset/`)**:
-   - **PENTING**: Apple App Store menolak ikon 1024×1024 yang memiliki transparansi/alpha channel. Kanvas master `Icon-App-1024x1024@1x.png` WAJIB berupa RGB solid tanpa alpha.
-   - Baca file `Contents.json` bawaan iOS dan lakukan resize Lanczos ke seluruh ukuran iPhone & iPad (20px, 29px, 40px, 60px, 76px, 83.5px).
-4. **Favicon & Web Suite (`assets/logo/app_icon/web/`)**:
-   - `favicon.ico` berisi multi-resolusi (16×16, 32×32, 48×48 px).
-   - `apple-touch-icon.png` (180×180 px).
-   - `android-chrome-192x192.png` & `android-chrome-512x512.png` (PWA).
+#### 1. Android (`android/app/src/main/res/`)
+Setiap density mipmap wajib memiliki 3 berkas:
+- `mipmap-mdpi/`: `ic_launcher.png` (48px), `ic_launcher_foreground.png` (108px), `ic_launcher_background.png` (108px)
+- `mipmap-hdpi/`: `ic_launcher.png` (72px), `ic_launcher_foreground.png` (162px), `ic_launcher_background.png` (162px)
+- `mipmap-xhdpi/`: `ic_launcher.png` (96px), `ic_launcher_foreground.png` (216px), `ic_launcher_background.png` (216px)
+- `mipmap-xxhdpi/`: `ic_launcher.png` (144px), `ic_launcher_foreground.png` (324px), `ic_launcher_background.png` (324px)
+- `mipmap-xxxhdpi/`: `ic_launcher.png` (192px), `ic_launcher_foreground.png` (432px), `ic_launcher_background.png` (432px)
+
+#### 2. iOS (`ios/Runner/Assets.xcassets/AppIcon.appiconset/`)
+- `Icon-App-1024x1024@1x.png`: **WAJIB Solid RGB tanpa transparansi/alpha channel** (Apple App Store akan menolak binary jika ada alpha channel).
+- Seluruh ukuran perangkat iPhone & iPad yang terdaftar di `Contents.json` (20px, 29px, 40px, 60px, 76px, 83.5px).
+
+#### 3. Windows Desktop (`windows/runner/resources/`)
+- [`windows/runner/resources/app_icon.ico`](file:///c:/Rivaldi/nikahin_app/windows/runner/resources/app_icon.ico): File ICO multi-resolusi yang berisi sub-gambar 16×16, 24×24, 32×32, 48×48, 64×64, 128×128, dan 256×256 px.
+
+#### 4. macOS Desktop (`macos/Runner/Assets.xcassets/AppIcon.appiconset/`)
+- Berkas ikon Apple Mac sesuai `Contents.json`: `app_icon_16.png`, `app_icon_32.png`, `app_icon_64.png`, `app_icon_128.png`, `app_icon_256.png`, `app_icon_512.png`, `app_icon_1024.png`.
+
+#### 5. Web Platform (`web/` dan `assets/logo/app_icon/web/`)
+- `web/favicon.png` (32×32 px)
+- `web/icons/Icon-192.png` & `Icon-512.png` (PWA Icons)
+- `web/icons/Icon-maskable-192.png` & `Icon-maskable-512.png` (Android Chrome PWA Maskable)
+- `assets/logo/app_icon/web/favicon.ico` (Multi-size 16, 32, 48 px)
+- `assets/logo/app_icon/web/apple-touch-icon.png` (180×180 px)
 
 ---
 
-### Tahap 6: Integrasi ke Framework Flutter
-1. Daftarkan folder aset PNG di `pubspec.yaml`:
+## 💻 3. Berkas Kode Flutter yang Memanggil Logo & Ilustrasi
+
+Jika mengganti nama berkas aset, pastikan memperbarui titik-titik kode berikut:
+
+1. **Layar Onboarding**: [`lib/features/auth/welcome_screen.dart`](file:///c:/Rivaldi/nikahin_app/lib/features/auth/welcome_screen.dart)
+   ```dart
+   imageAsset: 'assets/images/welcome_slide_1.png',
+   imageAsset: 'assets/images/welcome_slide_2.png',
+   imageAsset: 'assets/images/welcome_slide_3.png',
+   ```
+2. **Layar Login**: [`lib/features/auth/login_screen.dart`](file:///c:/Rivaldi/nikahin_app/lib/features/auth/login_screen.dart)
+   ```dart
+   Image.asset('assets/logo/png/nikahin-symbol-master.png', width: 68, height: 68)
+   ```
+3. **Kartu Info Aplikasi (Pengaturan)**: [`lib/features/settings/presentation/widgets/settings_app_info_card.dart`](file:///c:/Rivaldi/nikahin_app/lib/features/settings/presentation/widgets/settings_app_info_card.dart)
+   ```dart
+   Image.asset('assets/logo/png/nikahin-symbol-master.png', width: 48, height: 48)
+   ```
+4. **Pendaftaran Aset**: [`pubspec.yaml`](file:///c:/Rivaldi/nikahin_app/pubspec.yaml)
    ```yaml
    flutter:
      uses-material-design: true
@@ -120,32 +127,20 @@ Jalankan skrip otomatisasi Python (`generate_flutter_brand_assets.py`) untuk mer
        - assets/images/
        - assets/logo/png/
    ```
-2. Jalankan sinkronisasi dependensi:
-   ```bash
-   flutter pub get
-   ```
-3. Logo kini siap dipanggil di kode Dart manapun:
-   ```dart
-   Image.asset('assets/logo/png/nikahin-lockup-horizontal.png')
-   ```
 
 ---
 
-### Tahap 7: Dokumentasi Brand Guidelines
-Buat dokumen panduan resmi di `docs/BRAND_GUIDELINES.md` yang memuat:
-1. Esensi & narasi simbolis.
-2. Palet warna presisi (HEX, RGB, CMYK).
-3. Aturan tipografi (Wordmark font, Tagline font, ukuran, dan tracking).
-4. Ruang aman (*clear space*) dan batas ukuran minimum.
-5. Larangan penggunaan (*misuse rules*).
+## 📖 4. Berkas Dokumentasi Brand & CI/CD
+- **Panduan Identitas Brand**: [`docs/BRAND_GUIDELINES.md`](file:///c:/Rivaldi/nikahin_app/docs/BRAND_GUIDELINES.md) (Wajib diperbarui narasi filosofi, palet warna HEX, dan contoh lockup).
+- **Catatan Rilis**: [`RELEASE_NOTES.md`](file:///c:/Rivaldi/nikahin_app/RELEASE_NOTES.md) (Cantumkan pembaruan logo saat rilis versi baru).
+- **Skrip Generator**: [`.agents/skills/flutter-brand-logo-launch/scripts/generate_flutter_brand_assets.py`](file:///c:/Rivaldi/nikahin_app/.agents/skills/flutter-brand-logo-launch/scripts/generate_flutter_brand_assets.py).
 
 ---
 
-## 3. Skrip Otomatisasi Terintegrasi
-Skrip siap pakai telah disertakan di:
-`.agents/skills/flutter-brand-logo-launch/scripts/generate_flutter_brand_assets.py`
-
-Untuk menjalankan ekspor ulang kapan saja:
-```bash
-python .agents/skills/flutter-brand-logo-launch/scripts/generate_flutter_brand_assets.py
-```
+## 🎨 5. Aturan Desain & Safe Zone Penting
+1. **Safe-Zone 66% Android Adaptive Icon**:
+   - Kanvas Android Adaptive berukuran `512×512` px, tetapi hanya lingkaran berdiameter **338 px (66%)** di tengah yang dijamin tidak terpotong oleh launcher OS (seperti Samsung OneUI lingkaran atau Xiaomi squircle).
+2. **App Store Zero-Alpha**:
+   - iOS App Store mewajibkan latar belakang solid penuh tanpa transparansi sedikit pun pada ikon `1024×1024`.
+3. **Optical Weighting**:
+   - Berikan offset optik vertikal ke atas (`dy = -10` s/d `-20` px) jika simbol memiliki dasar kurva atau melingkar agar terlihat seimbang sempurna di mata manusia.

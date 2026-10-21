@@ -95,13 +95,14 @@
       "name": "Nikahin_Brand_Identity",
       "entityType": "BrandDesignSystem",
       "observations": [
-        "Winning brand visual identity is Konsep C: Kuncup Melati & Janji Suci Pernikahan (5 sacred melati petals, golden crescent arc, central commitment ring).",
+        "Official brand visual identity combines the Sacred Wedding Gold Ring, 3-Bar Financial Growth Chart, and Heart Peak Knot on Warm Champagne plate (#FFFBF5 -> #F8E7D8).",
         "Design guidelines documented in docs/BRAND_GUIDELINES.md following Warm Editorial Wedding aesthetics.",
-        "Color system: Deep Wine / Plum (#4A1328, #3D0F21 -> #1E0710), Sacred Melati Cream (#FFF3DF), Warm Wedding Gold (#F5CE7A -> #C47A1E), Romantic Deep Rose (#9A1F47).",
-        "Master scalable vector assets stored in assets/logo/svg/: symbol (master/black/white), horizontal lockup (1200x400 light/dark), stacked vertical lockup (600x680 light/dark), app-icon plates.",
-        "Raster high-res deliverables stored in assets/logo/png/ and registered in pubspec.yaml.",
-        "Mobile icon suites integrated directly into android/app/src/main/res/ (legacy & adaptive) and ios/Runner/Assets.xcassets/AppIcon.appiconset/.",
-        "End-to-end launch workflow standard documented in .agents/skills/flutter-brand-logo-launch/SKILL.md with turnkey generator script."
+        "Color system: Deep Wine / Plum (#4A1328), Warm Champagne Cream (#FFFBF5 -> #FDF2E9), Multi-Tone Wedding Gold (#DFB743 -> #AA771C), Romantic Magenta/Rose (#DE1A66 -> #B80D57).",
+        "Master scalable vector assets stored in assets/logo/svg/: symbol (master/black/white), horizontal lockup (1200x400 light/dark), stacked vertical lockup (600x680 light/dark), app-icon plates (full/fg/bg).",
+        "Onboarding Welcome Screen custom vector illustrations in assets/illustrations/ (welcome_slide_1.svg, welcome_slide_2.svg, welcome_slide_3.svg) rendered to assets/images/ (PNG 512x512).",
+        "Multi-platform app icon suites integrated across Android (android/app/src/main/res/mipmap-*/), iOS (ios/Runner/Assets.xcassets/AppIcon.appiconset/), Windows (windows/runner/resources/app_icon.ico), macOS (macos/Runner/Assets.xcassets/AppIcon.appiconset/), and Web (web/favicon.png, web/icons/, assets/logo/app_icon/web/).",
+        "Code integration points: lib/features/auth/welcome_screen.dart, lib/features/auth/login_screen.dart, lib/features/settings/presentation/widgets/settings_app_info_card.dart, and pubspec.yaml.",
+        "End-to-end launch workflow standard and file change checklist documented in .agents/skills/flutter-brand-logo-launch/SKILL.md with turnkey generator script generate_flutter_brand_assets.py."
       ]
     }
   ],
