@@ -1,4 +1,4 @@
-• Optimasi kecepatan download pembaruan in-app hingga 3x lebih cepat.
-• Penyusutan ukuran berkas APK khusus perangkat Android 64-bit modern.
-• Penambahan indikator kecepatan download (MB/s) dan estimasi sisa waktu.
-• Peningkatan responsivitas antarmuka dan kestabilan streaming unduhan.
+• Pembaruan identitas visual dan logo resmi baru Nikahin (Infinity Heart & Sacred Handshake).
+• Peningkatan kualitas ikon aplikasi resolusi tinggi di semua platform (Android, iOS, Windows, macOS, Web).
+• Penyegaran visual piringan sambutan pada layar Onboarding.
+• Penyelarasan estetika warna Deep Wine Maroon (#8B204A) dan Romantic Coral.

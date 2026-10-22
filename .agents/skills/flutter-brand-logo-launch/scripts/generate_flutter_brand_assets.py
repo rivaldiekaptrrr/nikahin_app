@@ -99,7 +99,7 @@ def main():
     master_icon = Image.open(master_icon_path).convert("RGBA")
 
     print("[3/7] Memperbarui aset iOS AppIcon (xcassets)...")
-    ios_1024 = Image.new("RGB", (1024, 1024), (253, 242, 233))  # Warm Champagne Solid
+    ios_1024 = Image.new("RGB", (1024, 1024), (139, 32, 74))  # Deep Wine Solid #8B204A
     ios_1024.paste(master_icon, (0, 0), master_icon)
     ios_1024.save(os.path.join(APP_ICON_DIR, "ios", "icon-1024.png"), quality=95)
 

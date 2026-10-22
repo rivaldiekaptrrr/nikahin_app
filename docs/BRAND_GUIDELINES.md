@@ -1,7 +1,7 @@
 # Panduan Identitas Visual & Brand Guidelines: Nikahin App
 
-> **Versi Dokumen**: 2.0.0  
-> **Arah Desain**: Warm Editorial Wedding & Modern Financial Planning  
+> **Versi Dokumen**: 2.1.0  
+> **Arah Desain**: Warm Editorial Wedding & Modern Couple Partnership  
 > **Aset Master**: [`assets/logo/`](file:///c:/Rivaldi/nikahin_app/assets/logo/)
 
 ---
@@ -10,10 +10,10 @@
 
 **Nikahin** adalah aplikasi perencana pernikahan (*wedding planner & budget management*) yang mengusung prinsip *offline-first*, privat, dan elegan.
 
-Identitas visual Nikahin didasarkan pada **Sinergi Cincin Emas, Grafik Pertumbuhan Finansial, dan Puncak Kasih**:
-- **Cincin Emas Logam Melingkar**: Simbol ikatan sakral dan komitmen seumur hidup yang tak terputus. Cincin memiliki celah terbuka di kuadran kanan atas tempat garis grafik bertumbuh keluar melintasi batas cincin.
-- **3 Pilar Diagram Batang (*Bar Chart*)**: Menggambarkan 3 pilar utama manajemen persiapan pernikahan: *Budgeting*, *Vendor Management*, dan *Rundown D-Day*. Efek kilau diagonal melambangkan transparansi dan keteraturan finansial.
-- **Garis Tren Menanjak & Simpul Hati (*Love Peak*)**: Garis grafik yang menanjak ke kanan atas dan membentuk simpul hati (*heart*), menegaskan bahwa puncak dari seluruh perencanaan anggaran dan persiapan teknis adalah **cinta, komitmen, dan kebahagiaan suci**.
+Identitas visual Nikahin didasarkan pada **Janji Suci Akad, Genggaman Tangan Harmonis, dan Pita Cinta Abadi (*Infinity Love Ribbon & Sacred Handshake*)**:
+- **Dua Tangan yang Saling Bertaut (*Sacred Handshake*)**: Melambangkan ikrar ijab kabul, janji suci akad nikah, serta kemitraan setara antara kedua mempelai dalam merencanakan masa depan dan mengelola rumah tangga bersama.
+- **Pita Melingkar Tanpa Akhir (*Infinity Ribbon*)**: Lengan yang meliuk membentuk lambang tak terhingga (*infinity*), melambangkan komitmen cinta yang abadi, kesetiaan, dan doa keberkahan yang tak berujung.
+- **Siluet Hati (*Heart Silhouette*)**: Keseluruhan komposisi menyatu membentuk siluet hati yang proporsional, menegaskan bahwa cinta kasih adalah poros utama dari setiap persiapan pernikahan.
 
 ---
 
@@ -21,12 +21,13 @@ Identitas visual Nikahin didasarkan pada **Sinergi Cincin Emas, Grafik Pertumbuh
 
 | Peran Warna | Nama Warna | HEX | Kegunaan |
 | :--- | :--- | :--- | :--- |
-| **App Icon Plate** | Warm Champagne / Blush | `#FFFBF5` → `#FDF2E9` → `#F8E7D8` | Latar belakang ikon aplikasi, memberi kesan hangat & romantis |
-| **Metallic Gold** | Multi-Tone Wedding Gold | `#D4AF37` / `#FFF3A8` / `#AA771C` | Cincin luar, aksen kemewahan, dan highlight premium |
-| **Vibrant Rose** | Romantic Magenta Rose | `#B80D57` → `#DE1A66` → `#EE3B80` | Garis grafik zigzag, simpul hati, dan batang diagram finansial |
-| **Primary Text** | Deep Wine / Plum | `#4A1328` | Tipografi Wordmark mode terang, header web, dan kop panduan PDF |
-| **Dark Plate** | Midnight Wine | `#3D0F21` → `#1E0710` | Latar belakang lockup mode gelap |
+| **App Icon Plate / Background** | Deep Wine Maroon | `#8B204A` | Latar belakang utama ikon aplikasi, kartu identitas, dan lockup gelap |
+| **Romantic Coral** | Warm Coral Ribbon | `#F86D64` → `#EB5B56` | Pita atas dan tangan kanan, melambangkan kehangatan, antusiasme, dan ketegasan |
+| **Soft Blush** | Sacred Blush Pink | `#FBA4A8` → `#F8969C` | Tangan kiri dan pita bawah, melambangkan kelembutan, ketulusan, dan ketenangan |
+| **Dark Burgundy** | Royal Plum / Velvet Burgundy | `#91274C` → `#7D1F3F` | Simpul pita belakang dan bayangan kedalaman dimensi |
+| **Primary Text (Dark)** | Deep Wine / Plum | `#4A1328` | Tipografi Wordmark pada mode terang, dokumen PDF, dan kop surat |
 | **Floral Cream** | Sacred Melati Cream | `#FFF3DF` | Teks judul pada latar belakang gelap |
+| **Wedding Gold** | Royal Champagne Gold | `#D4AF37` / `#AA771C` | Tagline "WEDDING PLANNER", aksen kemewahan, dan highlight bintang |
 
 ---
 
@@ -81,5 +82,5 @@ Aset SVG lockup telah dipersiapkan secara presisi di direktori [`assets/logo/svg
 | **SVG Master** | `assets/logo/svg/` | File vektor scalable tak terbatas untuk web & cetak |
 | **PNG High-Res** | `assets/logo/png/` | Raster 1024×1024, 512×512, dan 1200×400 |
 | **Android Launcher** | `android/app/src/main/res/mipmap-*/` | `ic_launcher.png`, `ic_launcher_foreground.png`, `ic_launcher_background.png` |
-| **iOS App Icon** | `ios/Runner/Assets.xcassets/AppIcon.appiconset/` | Seluruh resolusi ikon iPhone & iPad + Store 1024×1024 (Latar Warm Champagne) |
+| **iOS App Icon** | `ios/Runner/Assets.xcassets/AppIcon.appiconset/` | Seluruh resolusi ikon iPhone & iPad + Store 1024×1024 (Latar Solid Deep Wine `#8B204A` tanpa alpha) |
 | **Favicon & Web** | `assets/logo/app_icon/web/` | `favicon.ico`, `apple-touch-icon.png`, PWA webmanifest icons |
