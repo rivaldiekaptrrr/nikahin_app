@@ -104,6 +104,19 @@
         "Code integration points: lib/features/auth/welcome_screen.dart, lib/features/auth/login_screen.dart, lib/features/settings/presentation/widgets/settings_app_info_card.dart, and pubspec.yaml.",
         "End-to-end launch workflow standard and file change checklist documented in .agents/skills/flutter-brand-logo-launch/SKILL.md with turnkey generator script generate_flutter_brand_assets.py."
       ]
+    },
+    {
+      "name": "Nikahin_Payment_Gateway_System",
+      "entityType": "BusinessPaymentArchitecture",
+      "observations": [
+        "Sistem pembayaran & monetisasi lisensi VIP Nikahin dikelola secara sentral di lib/app/config/business_config.dart.",
+        "Sakelar Toggle Pembayaran: BusinessConfig.useManualPaymentMode.",
+        "Mode Manual (useManualPaymentMode = true): Mengaktifkan QRIS statis (assets/images/qris.jpeg) dengan fitur download/zoom/salin nominal, tombol konfirmasi WhatsApp otomatis ke Admin (+6287834284141), dan verifikasi aktivasi manual melalui Admin Panel/Supabase.",
+        "Mode Otomatis Midtrans (useManualPaymentMode = false): Mengaktifkan Midtrans Core API direct payment dengan modal seleksi channel (PaymentChannelSelectionModal: GoPay, ShopeePay, QRIS Dinamis, Virtual Accounts), diproses melalui endpoint Vercel serverless (midtransCoreChargeBackendUrl) dan layar instruksi dinamis MidtransCustomPaymentScreen.",
+        "Implementasi UI berada pada lib/features/auth/presentation/pending_verification_screen.dart yang secara reaktif memilih antara _buildManualPaymentContent() dan _buildDirectPaymentContent() berdasarkan nilai toggle.",
+        "Layanan remote pembayaran dikelola oleh lib/data/remote/midtrans_payment_service.dart dan diintegrasikan ke auth state notifier di lib/features/auth/presentation/auth_notifier.dart.",
+        "Detail Lisensi: Paket Wedding Planner Seumur Hidup (Lifetime Pass) seharga Rp 49.000 (diskon 50% dari harga normal Rp 99.000)."
+      ]
     }
   ],
   "relations": [
@@ -141,6 +154,11 @@
       "from": "Nikahin_App_Core",
       "to": "Nikahin_Brand_Identity",
       "relationType": "brandedWith"
+    },
+    {
+      "from": "Nikahin_App_Core",
+      "to": "Nikahin_Payment_Gateway_System",
+      "relationType": "managesPaymentWith"
     }
   ]
 }
