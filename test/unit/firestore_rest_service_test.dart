@@ -3,8 +3,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:nikahin_app/data/remote/firestore_rest_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
+  setUp(() {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences.setMockInitialValues({});
+  });
+
   group('FirestoreRestService Unit Tests', () {
     test('signUpWithEmail offline fallback produces local AuthResponse', () async {
       final service = FirestoreRestService(apiKey: '', projectId: 'nikahin-test');

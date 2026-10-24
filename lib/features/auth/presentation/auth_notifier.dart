@@ -61,11 +61,14 @@ class AuthNotifier extends Notifier<AuthState> {
             enabled: level.isPremium,
           );
 
+      final photoUrl = await AppPreferences.getUserPhotoUrl();
+
       state = AuthState(
         status: AuthStatus.authenticated,
         userId: uid,
         email: email,
         displayName: email.split('@').first,
+        photoUrl: photoUrl,
         accessLevel: level,
       );
 
@@ -365,6 +368,7 @@ class AuthNotifier extends Notifier<AuthState> {
 
       final email = account.email.trim().toLowerCase();
       final displayName = account.displayName ?? email.split('@').first;
+      final photoUrl = account.photoUrl;
       final isAdmin = email == BusinessConfig.adminEmail.toLowerCase();
       var level = isAdmin ? AccessLevel.admin : AccessLevel.none;
 
@@ -429,6 +433,7 @@ class AuthNotifier extends Notifier<AuthState> {
 
       await AppPreferences.setUserEmail(email);
       await AppPreferences.setUserId(uid);
+      await AppPreferences.setUserPhotoUrl(photoUrl);
       await AppPreferences.setAccessLevel(level.code);
       await AppPreferences.setRefreshToken(firebaseAuthRes?.refreshToken);
       await AppPreferences.setDemoMode(false);
@@ -446,6 +451,7 @@ class AuthNotifier extends Notifier<AuthState> {
         userId: uid,
         email: email,
         displayName: displayName,
+        photoUrl: photoUrl,
         accessLevel: level,
       );
 
@@ -611,6 +617,7 @@ class AuthNotifier extends Notifier<AuthState> {
     } catch (_) {}
 
     await AppPreferences.setUserEmail(null);
+    await AppPreferences.setUserPhotoUrl(null);
     await AppPreferences.setUserId(null);
     await AppPreferences.setAccessLevel('NONE');
     await AppPreferences.setIdToken(null);

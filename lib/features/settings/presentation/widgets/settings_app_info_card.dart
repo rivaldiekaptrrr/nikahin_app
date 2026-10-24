@@ -92,6 +92,105 @@ class _SettingsAppInfoCardState extends ConsumerState<SettingsAppInfoCard> {
     );
   }
 
+  void _showFeatureSheet(BuildContext context) {
+    final theme = Theme.of(context);
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: theme.colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) => DraggableScrollableSheet(
+        initialChildSize: 0.65,
+        minChildSize: 0.4,
+        maxChildSize: 0.85,
+        expand: false,
+        builder: (context, scrollController) => Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          child: ListView(
+            controller: scrollController,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.outlineVariant.withValues(alpha: 0.6),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 18),
+              Row(
+                children: [
+                  Icon(Icons.stars_rounded, color: theme.colorScheme.primary, size: 22),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Fitur Unggulan Nikahin',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Nikahin dirancang khusus untuk mempermudah perencanaan pernikahan Anda secara offline-first dan terstruktur.',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 18),
+              _buildFeatureItem(
+                theme,
+                icon: Icons.account_balance_wallet_outlined,
+                title: 'Anggaran & Vendor',
+                desc: 'Pelacakan pos biaya, pembayaran bertahap (DP / Lunas), dan daftar kontak vendor.',
+              ),
+              const SizedBox(height: 12),
+              _buildFeatureItem(
+                theme,
+                icon: Icons.event_note_outlined,
+                title: 'Timeline Rundown Acara',
+                desc: 'Penjadwalan urutan sesi kegiatan acara akad & resepsi beserta penanggung jawab (PIC).',
+              ),
+              const SizedBox(height: 12),
+              _buildFeatureItem(
+                theme,
+                icon: Icons.people_outline_rounded,
+                title: 'Buku Tamu & RSVP',
+                desc: 'Manajemen alokasi tamu per sesi (Akad/Resepsi), kelompok pihak, dan status kehadiran.',
+              ),
+              const SizedBox(height: 12),
+              _buildFeatureItem(
+                theme,
+                icon: Icons.assignment_outlined,
+                title: 'Berkas Dokumen Nikah',
+                desc: 'Checklist berkas KUA / Catatan Sipil dengan penentuan target deadline otomatis.',
+              ),
+              const SizedBox(height: 12),
+              _buildFeatureItem(
+                theme,
+                icon: Icons.card_giftcard_outlined,
+                title: 'Seserahan & Panitia',
+                desc: 'Rincian hantaran mahar CPP/CPW serta pembagian tugas & seragam panitia keluarga.',
+              ),
+              const SizedBox(height: 12),
+              _buildFeatureItem(
+                theme,
+                icon: Icons.print_outlined,
+                title: 'Ekspor PDF & CSV',
+                desc: 'Cetak buku panduan resmi pernikahan berformat tabel rapi siap bagikan ke keluarga & WO.',
+              ),
+              const SizedBox(height: 24),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -149,56 +248,37 @@ class _SettingsAppInfoCardState extends ConsumerState<SettingsAppInfoCard> {
               ),
             ],
           ),
-          const Divider(height: 24),
-          Text(
-            'Fitur Unggulan Nikahin',
-            style: TextStyle(
-              fontSize: 12.5,
-              fontWeight: FontWeight.bold,
-              color: theme.colorScheme.primary,
+          const Divider(height: 20),
+          InkWell(
+            onTap: () => _showFeatureSheet(context),
+            borderRadius: BorderRadius.circular(10),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.stars_rounded,
+                    size: 18,
+                    color: theme.colorScheme.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Panduan & Ringkasan Fitur Aplikasi',
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    size: 18,
+                    color: theme.colorScheme.primary,
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 10),
-          _buildFeatureItem(
-            theme,
-            icon: Icons.account_balance_wallet_outlined,
-            title: 'Anggaran & Vendor',
-            desc: 'Pelacakan pos biaya, pembayaran bertahap (DP / Lunas), dan daftar kontak vendor.',
-          ),
-          const SizedBox(height: 8),
-          _buildFeatureItem(
-            theme,
-            icon: Icons.event_note_outlined,
-            title: 'Timeline Rundown Acara',
-            desc: 'Penjadwalan urutan sesi kegiatan acara akad & resepsi beserta penanggung jawab (PIC).',
-          ),
-          const SizedBox(height: 8),
-          _buildFeatureItem(
-            theme,
-            icon: Icons.people_outline_rounded,
-            title: 'Buku Tamu & RSVP',
-            desc: 'Manajemen alokasi tamu per sesi (Akad/Resepsi), kelompok pihak, dan status kehadiran.',
-          ),
-          const SizedBox(height: 8),
-          _buildFeatureItem(
-            theme,
-            icon: Icons.assignment_outlined,
-            title: 'Berkas Dokumen Nikah',
-            desc: 'Checklist berkas KUA / Catatan Sipil dengan penentuan target deadline otomatis.',
-          ),
-          const SizedBox(height: 8),
-          _buildFeatureItem(
-            theme,
-            icon: Icons.card_giftcard_outlined,
-            title: 'Seserahan & Panitia',
-            desc: 'Rincian hantaran mahar CPP/CPW serta pembagian tugas & seragam panitia keluarga.',
-          ),
-          const SizedBox(height: 8),
-          _buildFeatureItem(
-            theme,
-            icon: Icons.print_outlined,
-            title: 'Ekspor PDF & CSV',
-            desc: 'Cetak buku panduan resmi pernikahan berformat tabel rapi siap bagikan ke keluarga & WO.',
           ),
         ],
       ),

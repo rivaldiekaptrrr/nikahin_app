@@ -10,6 +10,9 @@ const String kPrefAccessLevel = 'user_access_level';
 const String kPrefActiveProfileId = 'active_profile_id';
 const String kPrefIdToken = 'user_id_token';
 const String kPrefRefreshToken = 'user_refresh_token';
+const String kPrefUserPhotoUrl = 'user_photo_url';
+const String kPrefDailyReminderHour = 'wedding_daily_reminder_hour';
+const String kPrefDailyReminderMinute = 'wedding_daily_reminder_minute';
 
 class AppPreferences {
   static Future<String> getAccessLevel() async {
@@ -79,6 +82,20 @@ class AppPreferences {
     }
   }
 
+  static Future<String?> getUserPhotoUrl() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(kPrefUserPhotoUrl);
+  }
+
+  static Future<void> setUserPhotoUrl(String? url) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (url != null && url.isNotEmpty) {
+      await prefs.setString(kPrefUserPhotoUrl, url);
+    } else {
+      await prefs.remove(kPrefUserPhotoUrl);
+    }
+  }
+
   static Future<String?> getIdToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(kPrefIdToken);
@@ -141,6 +158,22 @@ class AppPreferences {
   static Future<void> setDailyReminderEnabled(bool val) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('wedding_daily_reminder', val);
+  }
+
+  static Future<int> getDailyReminderHour() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(kPrefDailyReminderHour) ?? 20;
+  }
+
+  static Future<int> getDailyReminderMinute() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(kPrefDailyReminderMinute) ?? 0;
+  }
+
+  static Future<void> setDailyReminderTime(int hour, int minute) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(kPrefDailyReminderHour, hour);
+    await prefs.setInt(kPrefDailyReminderMinute, minute);
   }
 
   static Future<bool> isBiometricEnabled() async {

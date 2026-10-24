@@ -10,14 +10,17 @@ import '../../shared/utils/export_utils.dart';
 import '../../shared/widgets/delete_confirm_dialog.dart';
 import '../../shared/widgets/wedding_guide_dialog.dart';
 import '../auth/presentation/auth_notifier.dart';
+import '../../domain/enums/wedding_enums.dart';
+import '../../shared/utils/validation_utils.dart';
+import '../../shared/widgets/currency_text_field.dart';
+import '../../shared/widgets/date_selector_button.dart';
 import 'presentation/widgets/settings_app_info_card.dart';
 import 'presentation/widgets/settings_backup_card.dart';
-import 'presentation/widgets/settings_cloud_sync_card.dart';
 import 'presentation/widgets/settings_danger_zone_card.dart';
-import 'presentation/widgets/settings_hero_profile_card.dart';
 import 'presentation/widgets/settings_preferences_card.dart';
-import 'presentation/widgets/settings_profile_form_card.dart';
 import 'presentation/widgets/settings_quote_card.dart';
+import 'presentation/widgets/settings_support_card.dart';
+import 'presentation/widgets/settings_unified_profile_card.dart';
 
 class WeddingSettingsScreen extends ConsumerStatefulWidget {
   final String profileId;
@@ -41,9 +44,10 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
   String _quoteFontSize = 'SEDANG';
   String _quoteFontStyle = 'ITALIC';
   bool _dailyReminderEnabled = true;
+  int _dailyReminderHour = 20;
+  int _dailyReminderMinute = 0;
   bool _biometricEnabled = false;
   bool _isInit = false;
-  bool _isSaving = false;
 
   @override
   void initState() {
@@ -53,10 +57,14 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
 
   Future<void> _loadPreferences() async {
     final daily = await AppPreferences.isDailyReminderEnabled();
+    final hour = await AppPreferences.getDailyReminderHour();
+    final minute = await AppPreferences.getDailyReminderMinute();
     final bio = await AppPreferences.isBiometricEnabled();
     if (mounted) {
       setState(() {
         _dailyReminderEnabled = daily;
+        _dailyReminderHour = hour;
+        _dailyReminderMinute = minute;
         _biometricEnabled = bio;
       });
     }
@@ -131,41 +139,18 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               children: [
-                // 1. Hero Profile Banner (Bento Header)
-                SettingsHeroProfileCard(profile: profile),
-                const SizedBox(height: 16),
-
-                // 2. Cloud Sync Status Card
-                const SettingsCloudSyncCard(),
-                const SizedBox(height: 24),
-
-                // 3. Profile & Budget Section
-                _buildSectionHeader(
-                  context,
-                  title: 'Data Mempelai & Anggaran',
+                // 1. Unified Profile Box (All-in-One: Avatar Google, Identitas, Status Akun)
+                SettingsUnifiedProfileCard(
+                  profile: profile,
+                  onEditProfile: () => _showEditProfileModal(context, profile),
                 ),
-                const SizedBox(height: 10),
-                SettingsProfileFormCard(
-                  formKey: _formKey,
-                  groomController: _groomController,
-                  brideController: _brideController,
-                  weddingDate: _weddingDate,
-                  budgetCap: _budgetCap,
-                  culturalGroom: _culturalGroom,
-                  culturalBride: _culturalBride,
-                  isSaving: _isSaving,
-                  onDateSelected: (millis) => setState(() => _weddingDate = millis),
-                  onBudgetChanged: (val) => _budgetCap = val,
-                  onCulturalGroomChanged: (val) => setState(() => _culturalGroom = val),
-                  onCulturalBrideChanged: (val) => setState(() => _culturalBride = val),
-                  onSave: () => _saveProfileSettings(profile),
-                ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
 
-                // 4. Quote Customization Section
+                // 2. Quote Customization Section
                 _buildSectionHeader(
                   context,
                   title: 'Kutipan Cinta di Dashboard',
+                  icon: Icons.format_quote_rounded,
                 ),
                 const SizedBox(height: 10),
                 SettingsQuoteCard(
@@ -173,37 +158,57 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                   quoteController: _quoteController,
                   quoteFontSize: _quoteFontSize,
                   quoteFontStyle: _quoteFontStyle,
-                  onQuoteEnabledChanged: (val) => setState(() => _quoteEnabled = val),
-                  onQuoteFontSizeChanged: (val) => setState(() => _quoteFontSize = val),
-                  onQuoteFontStyleChanged: (val) => setState(() => _quoteFontStyle = val),
-                  onQuoteTextChanged: () => setState(() {}),
+                  onQuoteEnabledChanged: (val) {
+                    setState(() => _quoteEnabled = val);
+                    _saveQuoteSettings(profile);
+                  },
+                  onQuoteFontSizeChanged: (val) {
+                    setState(() => _quoteFontSize = val);
+                    _saveQuoteSettings(profile);
+                  },
+                  onQuoteFontStyleChanged: (val) {
+                    setState(() => _quoteFontStyle = val);
+                    _saveQuoteSettings(profile);
+                  },
+                  onQuoteTextChanged: () => _saveQuoteSettings(profile),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
 
-                // 5. System Preferences (Theme, Notifications, Biometrics)
+                // 3. System Preferences (Theme, Notifications, Biometrics)
                 _buildSectionHeader(
                   context,
                   title: 'Tampilan & Keamanan',
+                  icon: Icons.tune_rounded,
                 ),
                 const SizedBox(height: 10),
                 SettingsPreferencesCard(
                   dailyReminderEnabled: _dailyReminderEnabled,
+                  dailyReminderHour: _dailyReminderHour,
+                  dailyReminderMinute: _dailyReminderMinute,
                   biometricEnabled: _biometricEnabled,
                   onDailyReminderChanged: (val) async {
                     setState(() => _dailyReminderEnabled = val);
                     await AppPreferences.setDailyReminderEnabled(val);
+                  },
+                  onDailyReminderTimeChanged: (hour, minute) async {
+                    setState(() {
+                      _dailyReminderHour = hour;
+                      _dailyReminderMinute = minute;
+                    });
+                    await AppPreferences.setDailyReminderTime(hour, minute);
                   },
                   onBiometricChanged: (val) async {
                     setState(() => _biometricEnabled = val);
                     await AppPreferences.setBiometricEnabled(val);
                   },
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
 
-                // 6. Export Center & Data Backup
+                // 4. Export Center & Data Backup
                 _buildSectionHeader(
                   context,
-                  title: 'Ekspor Data & Cadangan (Backup)',
+                  title: 'Ekspor Data & Cadangan',
+                  icon: Icons.archive_outlined,
                 ),
                 const SizedBox(height: 10),
                 SettingsBackupCard(
@@ -213,21 +218,33 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                   onExportJson: () => _exportFullBackupJson(context, profile),
                   onRestoreJson: () => _showRestoreBackupDialog(context),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
 
-                // 7. App Info & Feature Showcase
+                // 5. App Info & Feature Showcase
                 _buildSectionHeader(
                   context,
-                  title: 'Informasi Aplikasi & Fitur',
+                  title: 'Tentang Aplikasi',
+                  icon: Icons.info_outline_rounded,
                 ),
                 const SizedBox(height: 10),
                 const SettingsAppInfoCard(),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
 
-                // 8. Danger Zone
+                // 6. Support & Feedback
+                _buildSectionHeader(
+                  context,
+                  title: 'Bantuan & Dukungan',
+                  icon: Icons.support_agent_rounded,
+                ),
+                const SizedBox(height: 10),
+                const SettingsSupportCard(),
+                const SizedBox(height: 20),
+
+                // 7. Danger Zone
                 _buildSectionHeader(
                   context,
                   title: 'Zona Berbahaya',
+                  icon: Icons.warning_amber_rounded,
                   color: theme.colorScheme.error,
                 ),
                 const SizedBox(height: 10),
@@ -235,7 +252,33 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                   profile: profile,
                   onDeleteProfile: () => _deleteEntireProfile(context, profile),
                 ),
-                const SizedBox(height: 80),
+                const SizedBox(height: 28),
+
+                // 8. Log Out Button (Production Grade)
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: () => _showLogoutConfirmDialog(context),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: theme.colorScheme.error,
+                      side: BorderSide(
+                        color: theme.colorScheme.error.withValues(alpha: 0.4),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                    icon: const Icon(Icons.logout_rounded, size: 18),
+                    label: Text(
+                      ref.watch(authNotifierProvider).isDemoMode
+                          ? 'Keluar dari Mode Demo'
+                          : 'Keluar dari Akun',
+                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 48),
               ],
             ),
           );
@@ -247,52 +290,294 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
   Widget _buildSectionHeader(
     BuildContext context, {
     required String title,
+    IconData? icon,
     Color? color,
   }) {
     final theme = Theme.of(context);
-    return Text(
-      title,
-      style: theme.textTheme.titleSmall?.copyWith(
-        fontWeight: FontWeight.bold,
-        color: color ?? theme.colorScheme.onSurface,
-        letterSpacing: -0.2,
+    return Padding(
+      padding: const EdgeInsets.only(left: 2, bottom: 2),
+      child: Row(
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: 16, color: color ?? theme.colorScheme.primary),
+            const SizedBox(width: 8),
+          ],
+          Text(
+            title,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: color ?? theme.colorScheme.onSurface,
+              letterSpacing: -0.2,
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Future<void> _saveProfileSettings(WeddingProfile profile) async {
-    if (!DemoGuard.checkAction(context, ref: ref, actionName: 'Menyimpan Pengaturan Profil')) {
-      return;
-    }
-    if (!_formKey.currentState!.validate()) return;
-    setState(() => _isSaving = true);
+  Future<void> _showLogoutConfirmDialog(BuildContext context) async {
+    final authState = ref.read(authNotifierProvider);
+    final isDemo = authState.isDemoMode;
+    final email = authState.email ?? 'Akun Anda';
 
-    try {
-      final updated = profile.copyWith(
-        groomName: _groomController.text.trim(),
-        brideName: _brideController.text.trim(),
-        weddingDate: _weddingDate,
-        totalBudgetCap: _budgetCap,
-        culturalPresetGroom: _culturalGroom,
-        culturalPresetBride: _culturalBride,
-        quote: _quoteController.text.trim(),
-        quoteEnabled: _quoteEnabled,
-        quoteFontSize: _quoteFontSize,
-        quoteFontStyle: _quoteFontStyle,
-      );
-
-      await ref.read(weddingRepositoryProvider).updateProfile(updated);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Pengaturan profil & anggaran berhasil disimpan!'),
-            behavior: SnackBarBehavior.floating,
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(Icons.logout_rounded, color: Theme.of(ctx).colorScheme.error, size: 22),
+            const SizedBox(width: 10),
+            Text(isDemo ? 'Keluar Mode Demo' : 'Keluar Akun'),
+          ],
+        ),
+        content: Text(
+          isDemo
+              ? 'Apakah Anda yakin ingin keluar dari Mode Demo? Anda akan dialihkan ke halaman masuk.'
+              : 'Apakah Anda yakin ingin keluar dari akun $email? Data yang telah tersinkronisasi tetap aman di penyimpanan cloud.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Batal'),
           ),
-        );
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(ctx).colorScheme.error,
+              foregroundColor: Theme.of(ctx).colorScheme.onError,
+            ),
+            child: const Text('Keluar'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true && context.mounted) {
+      await ref.read(authNotifierProvider.notifier).signOut();
+      if (context.mounted) {
+        context.go('/login');
       }
-    } finally {
-      if (mounted) setState(() => _isSaving = false);
     }
+  }
+
+  Future<void> _saveQuoteSettings(WeddingProfile profile) async {
+    final updated = profile.copyWith(
+      quote: _quoteController.text.trim(),
+      quoteEnabled: _quoteEnabled,
+      quoteFontSize: _quoteFontSize,
+      quoteFontStyle: _quoteFontStyle,
+    );
+    await ref.read(weddingRepositoryProvider).updateProfile(updated);
+  }
+
+  void _showEditProfileModal(BuildContext context, WeddingProfile profile) {
+    final theme = Theme.of(context);
+    final modalFormKey = GlobalKey<FormState>();
+
+    final groomCtrl = TextEditingController(text: _groomController.text);
+    final brideCtrl = TextEditingController(text: _brideController.text);
+    int modalWeddingDate = _weddingDate;
+    double modalBudgetCap = _budgetCap;
+    String modalCulturalGroom = _culturalGroom;
+    String modalCulturalBride = _culturalBride;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: theme.colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: DraggableScrollableSheet(
+                initialChildSize: 0.85,
+                minChildSize: 0.5,
+                maxChildSize: 0.95,
+                expand: false,
+                builder: (context, scrollController) {
+                  return Form(
+                    key: modalFormKey,
+                    child: ListView(
+                      controller: scrollController,
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                      children: [
+                        Center(
+                          child: Container(
+                            width: 40,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.6),
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(Icons.favorite_rounded, color: theme.colorScheme.primary, size: 22),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Edit Data Mempelai',
+                                  style: theme.textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.close_rounded),
+                              onPressed: () => Navigator.pop(ctx),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          'Ubah identitas pasangan pengantin, tanggal hari-H, dan target alokasi anggaran.',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          controller: groomCtrl,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(50),
+                            ValidationUtils.nameInputFormatter,
+                          ],
+                          maxLength: 50,
+                          buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
+                          decoration: const InputDecoration(
+                            labelText: 'Nama Mempelai Pria (CPP)',
+                            hintText: 'Cth: Dimas Arya',
+                          ),
+                          validator: (v) => ValidationUtils.validateName(v, 'Nama CPP'),
+                        ),
+                        const SizedBox(height: 14),
+                        TextFormField(
+                          controller: brideCtrl,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(50),
+                            ValidationUtils.nameInputFormatter,
+                          ],
+                          maxLength: 50,
+                          buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
+                          decoration: const InputDecoration(
+                            labelText: 'Nama Mempelai Wanita (CPW)',
+                            hintText: 'Cth: Larasati',
+                          ),
+                          validator: (v) => ValidationUtils.validateName(v, 'Nama CPW'),
+                        ),
+                        const SizedBox(height: 14),
+                        DateSelectorButton(
+                          label: 'Tanggal Pernikahan (Hari-H)',
+                          selectedEpochMillis: modalWeddingDate,
+                          onDateSelected: (millis) {
+                            setModalState(() => modalWeddingDate = millis);
+                          },
+                        ),
+                        const SizedBox(height: 14),
+                        CurrencyTextField(
+                          labelText: 'Batas Total Anggaran (Budget Target)',
+                          initialValue: modalBudgetCap,
+                          onChanged: (val) {
+                            modalBudgetCap = val;
+                          },
+                        ),
+                        const SizedBox(height: 14),
+                        DropdownButtonFormField<String>(
+                          initialValue: modalCulturalGroom,
+                          decoration: const InputDecoration(labelText: 'Adat Tradisi Mempelai Pria'),
+                          items: CulturalPreset.values
+                              .map((c) => DropdownMenuItem(value: c.value, child: Text(c.label)))
+                              .toList(),
+                          onChanged: (val) {
+                            if (val != null) {
+                              HapticFeedback.selectionClick();
+                              setModalState(() => modalCulturalGroom = val);
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 14),
+                        DropdownButtonFormField<String>(
+                          initialValue: modalCulturalBride,
+                          decoration: const InputDecoration(labelText: 'Adat Tradisi Mempelai Wanita'),
+                          items: CulturalPreset.values
+                              .map((c) => DropdownMenuItem(value: c.value, child: Text(c.label)))
+                              .toList(),
+                          onChanged: (val) {
+                            if (val != null) {
+                              HapticFeedback.selectionClick();
+                              setModalState(() => modalCulturalBride = val);
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 24),
+                        FilledButton.icon(
+                          onPressed: () async {
+                            if (!modalFormKey.currentState!.validate()) return;
+                            if (!DemoGuard.checkAction(context, ref: ref, actionName: 'Menyimpan Pengaturan Profil')) {
+                              return;
+                            }
+                            HapticFeedback.mediumImpact();
+
+                            setState(() {
+                              _groomController.text = groomCtrl.text.trim();
+                              _brideController.text = brideCtrl.text.trim();
+                              _weddingDate = modalWeddingDate;
+                              _budgetCap = modalBudgetCap;
+                              _culturalGroom = modalCulturalGroom;
+                              _culturalBride = modalCulturalBride;
+                            });
+
+                            final updated = profile.copyWith(
+                              groomName: groomCtrl.text.trim(),
+                              brideName: brideCtrl.text.trim(),
+                              weddingDate: modalWeddingDate,
+                              totalBudgetCap: modalBudgetCap,
+                              culturalPresetGroom: modalCulturalGroom,
+                              culturalPresetBride: modalCulturalBride,
+                              quote: _quoteController.text.trim(),
+                              quoteEnabled: _quoteEnabled,
+                              quoteFontSize: _quoteFontSize,
+                              quoteFontStyle: _quoteFontStyle,
+                            );
+
+                            await ref.read(weddingRepositoryProvider).updateProfile(updated);
+
+                            if (ctx.mounted) {
+                              Navigator.pop(ctx);
+                            }
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Profil & anggaran berhasil disimpan!'),
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                            }
+                          },
+                          icon: const Icon(Icons.check_circle_outline_rounded),
+                          label: const Text('Simpan Perubahan'),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   Future<void> _exportSummaryPdf(BuildContext context, WeddingProfile profile) async {

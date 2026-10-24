@@ -10,12 +10,13 @@ class NikahinApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentThemeMode = ref.watch(themeModeProvider);
+    final currentPalette = ref.watch(weddingPaletteProvider);
 
     return MaterialApp.router(
       title: 'Nikahin',
       debugShowCheckedModeBanner: false,
-      theme: NikahinTheme.lightTheme(isWeddingMode: true),
-      darkTheme: NikahinTheme.darkTheme(isWeddingMode: true),
+      theme: NikahinTheme.lightTheme(palette: currentPalette, isWeddingMode: true),
+      darkTheme: NikahinTheme.darkTheme(palette: currentPalette, isWeddingMode: true),
       themeMode: currentThemeMode,
       routerConfig: appRouter,
       localizationsDelegates: const [
