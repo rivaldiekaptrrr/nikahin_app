@@ -65,5 +65,17 @@ Knowledge graph data and MCP configurations are versioned inside `.agents/`:
 - `.agents/skills/local-knowledge-sync/SKILL.md`: Prosedur sinkronisasi pengetahuan Local-First antara .agents/knowledge_graph.json (Git) dan server MCP Memory.
 - `.agents/skills/logo-design/SKILL.md`: Panduan profesional desain logo, brand-mark SVG, lockups, dan identitas visual merek.
 - `.agents/skills/flutter-brand-logo-launch/SKILL.md`: Prosedur standar (SOP) end-to-end pembuatan, kurasi geometri, rendering, dan peluncuran logo/ikon ke framework Flutter.
+- `.agents/skills/firebase-firestore/SKILL.md`: Panduan resmi pengelolaan Cloud Firestore, data modeling, index, dan REST/SDK operations.
+- `.agents/skills/firebase-auth-basics/SKILL.md`: Panduan autentikasi Firebase, token lifecycle, dan manajemen pengguna.
+- `.agents/skills/firestore-rules-creation/SKILL.md`: Panduan pembuatan dan optimasi Firestore Security Rules.
+- `.agents/skills/firebase-security-rules-auditor/SKILL.md`: Panduan audit keamanan aturan Firestore & Storage.
 - `docs/MAESTRO_AND_EMULATOR_SETUP_GUIDE.md`: Complete guide for Android Emulator (CLI without Android Studio) and Maestro MCP testing.
 - `docs/BRAND_GUIDELINES.md`: Panduan identitas visual resmi Nikahin App, palet warna, tipografi, dan aturan penggunaan logo.
+
+---
+
+## 6. Firebase & Cloud Firestore Operations
+- **Mandatory Skills**: Setiap kali tugas bersinggungan dengan Firestore, Firebase Authentication, atau Security Rules, agen **WAJIB** membaca dan menerapkan pedoman dari skills Firebase resmi yang terpasang di `.agents/skills/`:
+  - `firebase-firestore`: Data model, REST API calls, updateMask patterns, query & pagination.
+  - `firebase-auth-basics`: ID Token exchange, user management, dan session lifecycle.
+  - `firestore-rules-creation` & `firebase-security-rules-auditor`: Audit dan penyusunan security rules yang ketat.

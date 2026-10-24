@@ -117,6 +117,16 @@
         "Layanan remote pembayaran dikelola oleh lib/data/remote/midtrans_payment_service.dart dan diintegrasikan ke auth state notifier di lib/features/auth/presentation/auth_notifier.dart.",
         "Detail Lisensi: Paket Wedding Planner Seumur Hidup (Lifetime Pass) seharga Rp 49.000 (diskon 50% dari harga normal Rp 99.000)."
       ]
+    },
+    {
+      "name": "Firebase_Official_Skills",
+      "entityType": "AgentSkillsIntegration",
+      "observations": [
+        "Repository Sumber: https://github.com/firebase/agent-skills.git",
+        "Lokasi Lokal: .agents/skills/ (firebase-firestore, firebase-auth-basics, firestore-rules-creation, firebase-security-rules-auditor, firebase-basics, dll.)",
+        "Mandatory Rule: Setiap tugas yang menyangkut Firebase Authentication, Cloud Firestore, REST API fields, updateMask, dan Security Rules WAJIB merujuk dan menerapkan panduan resmi dari skill ini.",
+        "Kunci Arsitektur Firestore REST: Operasi PATCH ke Firestore wajib menggunakan updateMask.fieldPaths agar tidak menghapus field lain pada dokumen."
+      ]
     }
   ],
   "relations": [
@@ -159,6 +169,11 @@
       "from": "Nikahin_App_Core",
       "to": "Nikahin_Payment_Gateway_System",
       "relationType": "managesPaymentWith"
+    },
+    {
+      "from": "Nikahin_App_Core",
+      "to": "Firebase_Official_Skills",
+      "relationType": "guidedBy"
     }
   ]
 }
