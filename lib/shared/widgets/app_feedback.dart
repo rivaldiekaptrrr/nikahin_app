@@ -70,11 +70,12 @@ class AppFeedback {
     BuildContext context, {
     required String message,
     required VoidCallback onUndo,
-    Duration duration = const Duration(seconds: 5),
+    Duration duration = const Duration(seconds: 3),
   }) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.clearSnackBars();
 
-    ScaffoldMessenger.of(context).showSnackBar(
+    final controller = messenger.showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -100,5 +101,13 @@ class AppFeedback {
         duration: duration,
       ),
     );
+
+    // Material 3 secara default mempertahankan SnackBar yang memiliki SnackBarAction (persistensi aksesibilitas).
+    // Timer eksplisit ini menjamin pop up otomatis hilang sesuai durasi yang ditentukan jika tidak ditekan pengguna.
+    Future.delayed(duration, () {
+      try {
+        controller.close();
+      } catch (_) {}
+    });
   }
 }

@@ -17,8 +17,9 @@ import '../../shared/widgets/bento_card.dart';
 import '../../shared/widgets/delete_confirm_dialog.dart';
 import '../../shared/widgets/error_state_view.dart';
 import '../../shared/widgets/skeleton_loading.dart';
-import '../../shared/widgets/status_chip.dart';
 import '../../shared/widgets/wedding_guide_dialog.dart';
+import 'presentation/widgets/guest_filter_bottom_sheet.dart';
+import 'presentation/widgets/guest_list_item_card.dart';
 
 class WeddingGuestsScreen extends ConsumerStatefulWidget {
   final String profileId;
@@ -34,7 +35,29 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
   late TabController _tabController;
   final Debouncer _searchDebouncer = Debouncer(delay: const Duration(milliseconds: 250));
   String _selectedGroup = 'SEMUA';
+  String _selectedRsvp = 'SEMUA';
+  String _selectedSession = 'SEMUA';
   String _searchQuery = '';
+
+  bool get _hasActiveFilters =>
+      _selectedGroup != 'SEMUA' || _selectedRsvp != 'SEMUA' || _selectedSession != 'SEMUA';
+
+  void _openFilterSheet(List<WeddingGuest> allGuests) {
+    GuestFilterBottomSheet.show(
+      context: context,
+      currentGroup: _selectedGroup,
+      currentRsvp: _selectedRsvp,
+      currentSession: _selectedSession,
+      allGuests: allGuests,
+      onApply: ({required selectedGroup, required selectedRsvp, required selectedSession}) {
+        setState(() {
+          _selectedGroup = selectedGroup;
+          _selectedRsvp = selectedRsvp;
+          _selectedSession = selectedSession;
+        });
+      },
+    );
+  }
 
   // Catering Calculator state
   int _resepsiPax = 500;
@@ -139,6 +162,12 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
     if (_selectedGroup != 'SEMUA') {
       filtered = filtered.where((g) => g.groupAllocation == _selectedGroup).toList();
     }
+    if (_selectedRsvp != 'SEMUA') {
+      filtered = filtered.where((g) => g.rsvpStatus == _selectedRsvp).toList();
+    }
+    if (_selectedSession != 'SEMUA') {
+      filtered = filtered.where((g) => g.sessionTarget == _selectedSession).toList();
+    }
     if (_searchQuery.trim().isNotEmpty) {
       final q = _searchQuery.toLowerCase();
       filtered = filtered.where((g) => g.guestName.toLowerCase().contains(q)).toList();
@@ -166,21 +195,55 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
         ),
         const SizedBox(height: 14),
 
-        // Search Field
-        TextFormField(
-          inputFormatters: [LengthLimitingTextInputFormatter(50)],
-          maxLength: 50,
-          buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
-          decoration: InputDecoration(
-            hintText: 'Cari nama tamu...',
-            prefixIcon: const Icon(Icons.search_rounded),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            filled: true,
-            fillColor: theme.colorScheme.surface,
-          ),
-          onChanged: (val) => _searchDebouncer.run(() {
-            if (mounted) setState(() => _searchQuery = val);
-          }),
+        // Search Field with Integrated Filter Button
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                inputFormatters: [LengthLimitingTextInputFormatter(50)],
+                maxLength: 50,
+                buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
+                decoration: InputDecoration(
+                  hintText: 'Cari nama tamu...',
+                  prefixIcon: const Icon(Icons.search_rounded),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  filled: true,
+                  fillColor: theme.colorScheme.surface,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: BorderSide(
+                      color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+                    ),
+                  ),
+                ),
+                onChanged: (val) => _searchDebouncer.run(() {
+                  if (mounted) setState(() => _searchQuery = val);
+                }),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Container(
+              decoration: BoxDecoration(
+                color: _hasActiveFilters
+                    ? theme.colorScheme.primaryContainer
+                    : theme.colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: IconButton(
+                icon: Badge(
+                  isLabelVisible: _hasActiveFilters,
+                  child: Icon(
+                    Icons.tune_rounded,
+                    color: _hasActiveFilters
+                        ? theme.colorScheme.onPrimaryContainer
+                        : theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                tooltip: 'Filter & Urutkan Tamu',
+                onPressed: () => _openFilterSheet(allGuests),
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 12),
 
@@ -262,118 +325,37 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
   }
 
   Widget _buildGuestItem(BuildContext context, WidgetRef ref, WeddingGuest guest) {
-    final theme = Theme.of(context);
     final repo = ref.read(weddingRepositoryProvider);
-    final sessionLabel = SessionTarget.fromString(guest.sessionTarget).label;
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: BentoCard(
-        onTap: () => _showRsvpQuickPicker(context, guest),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(Icons.person, size: 18, color: theme.colorScheme.primary),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          guest.guestName,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13.5),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.surfaceContainerHighest,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          '${guest.estimatedPax} Pax',
-                          style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          guest.phoneNumber ?? 'Tanpa nomor',
-                          style: TextStyle(fontSize: 11, color: Colors.grey[600]),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Text('•', style: TextStyle(color: Colors.grey[400])),
-                      const SizedBox(width: 6),
-                      Flexible(
-                        child: Text(
-                          sessionLabel,
-                          style: TextStyle(fontSize: 10, color: theme.colorScheme.primary, fontWeight: FontWeight.w500),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 8),
-            StatusChip(status: guest.rsvpStatus),
-            PopupMenuButton<String>(
-              icon: Icon(Icons.more_vert_rounded, size: 18, color: theme.colorScheme.outline),
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
-              onSelected: (action) {
-                if (action == 'edit') {
-                  _showAddGuestDialog(context, guestToEdit: guest);
-                } else if (action == 'delete') {
-                  if (!DemoGuard.checkAction(context, ref: ref, actionName: 'Hapus Tamu')) {
-                    return;
-                  }
-                  showDeleteConfirmDialog(
-                    context: context,
-                    itemName: guest.guestName,
-                    onConfirm: () async {
-                      await repo.deleteGuest(guest.guestId);
-                      if (context.mounted) {
-                        AppFeedback.showUndo(
-                          context,
-                          message: '"${guest.guestName}" berhasil dihapus',
-                          onUndo: () => repo.createGuest(guest),
-                        );
-                      }
-                    },
-                  );
-                }
-              },
-              itemBuilder: (ctx) => [
-                const PopupMenuItem(value: 'edit', child: Text('Edit Data')),
-                const PopupMenuItem(value: 'delete', child: Text('Hapus', style: TextStyle(color: Colors.red))),
-              ],
-            ),
-          ],
-        ),
-      ),
+    return GuestListItemCard(
+      guest: guest,
+      onTap: () => _showRsvpQuickPicker(context, guest),
+      onRsvpChanged: (newStatus) {
+        if (!DemoGuard.checkAction(context, ref: ref, actionName: 'Ubah Status RSVP')) {
+          return;
+        }
+        repo.updateGuest(guest.copyWith(rsvpStatus: newStatus));
+      },
+      onEdit: () => _showAddGuestDialog(context, guestToEdit: guest),
+      onDelete: () {
+        if (!DemoGuard.checkAction(context, ref: ref, actionName: 'Hapus Tamu')) {
+          return;
+        }
+        showDeleteConfirmDialog(
+          context: context,
+          itemName: guest.guestName,
+          onConfirm: () async {
+            await repo.deleteGuest(guest.guestId);
+            if (context.mounted) {
+              AppFeedback.showUndo(
+                context,
+                message: '"${guest.guestName}" berhasil dihapus',
+                onUndo: () => repo.createGuest(guest),
+              );
+            }
+          },
+        );
+      },
     );
   }
 
@@ -404,18 +386,19 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
               style: TextStyle(color: theme.colorScheme.onSurfaceVariant, fontSize: 13),
             ),
             const SizedBox(height: 18),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 10,
+              runSpacing: 10,
               children: [
                 FilledButton.icon(
                   onPressed: () => _showAddGuestDialog(context),
-                  icon: const Icon(Icons.person_add_rounded),
+                  icon: const Icon(Icons.person_add_rounded, size: 18),
                   label: const Text('Tambah Tamu'),
                 ),
-                const SizedBox(width: 10),
                 FilledButton.tonalIcon(
                   onPressed: () => _importContacts(context, ref),
-                  icon: const Icon(Icons.contacts_rounded),
+                  icon: const Icon(Icons.contacts_rounded, size: 18),
                   label: const Text('Import Kontak'),
                 ),
               ],
@@ -639,7 +622,7 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
             ),
             ListTile(
               leading: const Icon(Icons.check_circle_outline, color: Colors.green),
-              title: const Text('Hadir (Attending)'),
+              title: const Text('Hadir'),
               onTap: () {
                 Navigator.pop(ctx);
                 ref.read(weddingRepositoryProvider).updateGuest(guest.copyWith(rsvpStatus: 'ATTENDING'));
@@ -647,7 +630,7 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
             ),
             ListTile(
               leading: const Icon(Icons.help_outline, color: Colors.orange),
-              title: const Text('Menunggu Konfirmasi (Pending)'),
+              title: const Text('Menunggu Konfirmasi'),
               onTap: () {
                 Navigator.pop(ctx);
                 ref.read(weddingRepositoryProvider).updateGuest(guest.copyWith(rsvpStatus: 'PENDING'));
@@ -655,7 +638,7 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
             ),
             ListTile(
               leading: const Icon(Icons.cancel_outlined, color: Colors.red),
-              title: const Text('Tidak Hadir (Declined)'),
+              title: const Text('Tidak Hadir'),
               onTap: () {
                 Navigator.pop(ctx);
                 ref.read(weddingRepositoryProvider).updateGuest(guest.copyWith(rsvpStatus: 'DECLINED'));
@@ -1676,10 +1659,12 @@ class _BatchContactPickerDialogState
 
       if (mounted) {
         Navigator.pop(context);
+        ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${guestsToAdd.length} kontak berhasil diimpor sebagai tamu!'),
             behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 2),
           ),
         );
       }

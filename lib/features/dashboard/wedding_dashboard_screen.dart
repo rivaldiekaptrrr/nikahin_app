@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import '../../data/repositories/wedding_repository.dart';
 import '../../domain/enums/wedding_enums.dart';
 import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/currency_utils.dart';
-import '../../shared/utils/date_utils.dart';
 import '../../shared/widgets/error_state_view.dart';
 import '../../shared/widgets/skeleton_loading.dart';
 import '../../shared/widgets/wedding_guide_dialog.dart';
 import '../auth/presentation/widgets/demo_sticky_banner.dart';
 import '../updater/presentation/update_notifier.dart';
 import '../updater/presentation/widgets/update_dialog.dart';
+import 'presentation/widgets/dashboard_budget_progress_ring.dart';
+import 'presentation/widgets/dashboard_dday_hero_card.dart';
 
 class WeddingDashboardScreen extends ConsumerStatefulWidget {
   final String profileId;
@@ -71,86 +71,29 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
           builder: (context, expensesSnap) {
             final expenses = expensesSnap.data ?? [];
 
-            return StreamBuilder<List<WeddingTask>>(
-              stream: repo.watchTasks(widget.profileId),
-              builder: (context, tasksSnap) {
-                final tasks = tasksSnap.data ?? [];
+            if (profilesSnap.hasError || expensesSnap.hasError) {
+              return Scaffold(
+                appBar: AppBar(title: const Text('Dashboard Pernikahan')),
+                body: ErrorStateView(
+                  errorMessage: 'Terjadi kendala saat memuat data dashboard',
+                  onRetry: () => setState(() {}),
+                ),
+              );
+            }
 
-                return StreamBuilder<List<WeddingDocument>>(
-                  stream: repo.watchDocuments(widget.profileId),
-                  builder: (context, docsSnap) {
-                    final docs = docsSnap.data ?? [];
+            if (profilesSnap.connectionState == ConnectionState.waiting ||
+                expensesSnap.connectionState == ConnectionState.waiting) {
+              return Scaffold(
+                appBar: AppBar(title: const Text('Dashboard Pernikahan')),
+                body: const SkeletonListView(showHeader: true),
+              );
+            }
 
-                    return StreamBuilder<List<WeddingGuest>>(
-                      stream: repo.watchGuests(widget.profileId),
-                      builder: (context, guestsSnap) {
-                        final guests = guestsSnap.data ?? [];
-
-                        return StreamBuilder<List<WeddingVendor>>(
-                          stream: repo.watchVendors(widget.profileId),
-                          builder: (context, vendorsSnap) {
-                            final vendors = vendorsSnap.data ?? [];
-
-                            return StreamBuilder<List<WeddingSeserahan>>(
-                              stream: repo.watchSeserahan(widget.profileId),
-                              builder: (context, seserahanSnap) {
-                                final seserahan = seserahanSnap.data ?? [];
-
-                                return StreamBuilder<List<WeddingCommitteeMember>>(
-                                  stream: repo.watchCommittee(widget.profileId),
-                                  builder: (context, committeeSnap) {
-                                    final committee = committeeSnap.data ?? [];
-
-                                    if (profilesSnap.hasError ||
-                                        expensesSnap.hasError ||
-                                        tasksSnap.hasError ||
-                                        docsSnap.hasError ||
-                                        guestsSnap.hasError ||
-                                        vendorsSnap.hasError ||
-                                        seserahanSnap.hasError ||
-                                        committeeSnap.hasError) {
-                                      return Scaffold(
-                                        appBar: AppBar(title: const Text('Dashboard Pernikahan')),
-                                        body: ErrorStateView(
-                                          errorMessage: 'Terjadi kendala saat memuat data dashboard',
-                                          onRetry: () => setState(() {}),
-                                        ),
-                                      );
-                                    }
-
-                                    if (profilesSnap.connectionState == ConnectionState.waiting ||
-                                        expensesSnap.connectionState == ConnectionState.waiting ||
-                                        tasksSnap.connectionState == ConnectionState.waiting) {
-                                      return Scaffold(
-                                        appBar: AppBar(title: const Text('Dashboard Pernikahan')),
-                                        body: const SkeletonListView(showHeader: true),
-                                      );
-                                    }
-
-                                    return _buildDashboardContent(
-                                      context: context,
-                                      theme: theme,
-                                      profile: profile,
-                                      profiles: profiles,
-                                      expenses: expenses,
-                                      tasks: tasks,
-                                      docs: docs,
-                                      guests: guests,
-                                      vendors: vendors,
-                                      seserahan: seserahan,
-                                      committee: committee,
-                                    );
-                                  },
-                                );
-                              },
-                            );
-                          },
-                        );
-                      },
-                    );
-                  },
-                );
-              },
+            return _buildDashboardContent(
+              context: context,
+              theme: theme,
+              profile: profile,
+              expenses: expenses,
             );
           },
         );
@@ -162,54 +105,13 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
     required BuildContext context,
     required ThemeData theme,
     required WeddingProfile profile,
-    required List<WeddingProfile> profiles,
     required List<WeddingExpense> expenses,
-    required List<WeddingTask> tasks,
-    required List<WeddingDocument> docs,
-    required List<WeddingGuest> guests,
-    required List<WeddingVendor> vendors,
-    required List<WeddingSeserahan> seserahan,
-    required List<WeddingCommitteeMember> committee,
   }) {
     // Computations matching reference ViewModel
     final totalBudgetCap = profile.totalBudgetCap > 0
         ? profile.totalBudgetCap
         : expenses.fold(0.0, (sum, e) => sum + e.totalEstimated);
     final totalPaid = expenses.fold(0.0, (sum, e) => sum + e.totalPaid);
-    final budgetProgress = totalBudgetCap > 0 ? (totalPaid / totalBudgetCap).clamp(0.0, 1.0) : 0.0;
-    final budgetPercentage = (budgetProgress * 100).round();
-
-    final taskDoneCount = tasks.where((t) => t.isCompleted).length;
-    final taskProgress = tasks.isNotEmpty ? (taskDoneCount / tasks.length).clamp(0.0, 1.0) : 0.0;
-
-    final docDoneCount = docs.where((d) => d.isCompleted).length;
-    final docProgress = docs.isNotEmpty ? (docDoneCount / docs.length).clamp(0.0, 1.0) : 0.0;
-
-    final vendorLunasCount = expenses.where((e) => e.paymentStatus == 'FULLY_PAID' || (e.totalEstimated > 0 && e.totalPaid >= e.totalEstimated)).length;
-    final totalExpenseCount = expenses.length;
-    final vendorLunasProgress = totalExpenseCount > 0 ? (vendorLunasCount / totalExpenseCount).clamp(0.0, 1.0) : 0.0;
-
-    // Last paid expense
-    final paidExpenses = expenses.where((e) => e.totalPaid > 0).toList();
-    final lastPaidExpense = paidExpenses.isNotEmpty ? paidExpenses.last : null;
-
-    // Stats
-    final totalGuests = guests.length;
-    final contractedVendors = vendors.where((v) => v.status == 'KONTRAK' || v.status == 'SELESAI' || v.status == 'TANDA_JADI').length;
-    final totalVendors = vendors.length;
-
-    final readySeserahanItems = seserahan.where((s) => s.status == 'SIAP' || s.status == 'DIBELI').length;
-    final totalSeserahanItems = seserahan.length;
-
-    final uniformReadyCount = committee.where((c) => c.uniformStatus == 'SIAP_PAKAI').length;
-    final totalCommitteeMembers = committee.length;
-
-    // Upcoming tasks (top 5 incomplete)
-    final upcomingTasks = tasks
-        .where((t) => !t.isCompleted)
-        .toList()
-      ..sort((a, b) => (a.dueDate ?? 0).compareTo(b.dueDate ?? 0));
-    final displayUpcomingTasks = upcomingTasks.take(5).toList();
 
     // Grouped category budgets
     final categoryMap = <String, _CategoryProgress>{};
@@ -259,399 +161,32 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
             // 0. DEMO MODE STICKY BANNER
             const DemoStickyBanner(),
 
-            // 1. HERO COUNTDOWN (2x2 Span)
-            _buildHeroCountdown(context, theme, profile, profiles),
+            // 1. HERO COUNTDOWN (Modular Component)
+            DashboardDDayHeroCard(
+              profileId: widget.profileId,
+              profile: profile,
+            ),
             const SizedBox(height: 16),
 
-            // 2. BENTO FINANCIAL SUMMARY CARD
-            _buildFinancialSummaryCard(
-              context,
-              theme,
-              totalPaid: totalPaid,
+            // 2. FINANCIAL SUMMARY & RADIAL PROGRESS RING (Appllama Benchmark)
+            DashboardBudgetProgressRing(
+              profileId: widget.profileId,
               totalBudgetCap: totalBudgetCap,
-              budgetProgress: budgetProgress,
-              budgetPercentage: budgetPercentage,
+              totalEstimated: expenses.fold(0.0, (sum, e) => sum + e.totalEstimated),
+              totalPaid: totalPaid,
             ),
             const SizedBox(height: 16),
 
             // 3. BENTO QUICK ACTIONS (3 in 1 Row)
             _buildQuickActions(context, theme),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
 
-            // 4. BENTO PROGRESS GRID (2x1 Left, 1x1 Right)
-            _buildProgressGrid(
-              context,
-              theme,
-              taskProgress: taskProgress,
-              docProgress: docProgress,
-              vendorLunasCount: vendorLunasCount,
-              totalExpenseCount: totalExpenseCount,
-              vendorLunasProgress: vendorLunasProgress,
-              lastPaidExpense: lastPaidExpense,
-            ),
-            const SizedBox(height: 16),
-
-            // 5. BENTO STATS GRID (2x2)
-            _buildStatsGrid(
-              context,
-              theme,
-              totalGuests: totalGuests,
-              contractedVendors: contractedVendors,
-              totalVendors: totalVendors,
-              readySeserahanItems: readySeserahanItems,
-              totalSeserahanItems: totalSeserahanItems,
-              uniformReadyCount: uniformReadyCount,
-              totalCommitteeMembers: totalCommitteeMembers,
-            ),
-            const SizedBox(height: 24),
-
-            // 6. BUDGET CATEGORIES SECTION
+            // 4. BUDGET CATEGORIES SECTION
             if (categoryBudgets.isNotEmpty) ...[
               _buildCategoryBudgetsSection(context, theme, categoryBudgets),
               const SizedBox(height: 24),
             ],
-
-            // 7. UPCOMING TASKS (Top 5)
-            if (displayUpcomingTasks.isNotEmpty) ...[
-              _buildUpcomingTasksSection(context, theme, displayUpcomingTasks),
-              const SizedBox(height: 32),
-            ],
           ],
-        ),
-      ),
-    );
-  }
-
-  // ==================== 1. HERO COUNTDOWN CARD ====================
-  Widget _buildHeroCountdown(
-    BuildContext context,
-    ThemeData theme,
-    WeddingProfile profile,
-    List<WeddingProfile> profiles,
-  ) {
-    final days = WeddingDateUtils.daysUntil(profile.weddingDate);
-    final daysString = days >= 0 ? '$days' : '${days.abs()}';
-    final subText = days == 0 ? 'Hari Ini!' : (days > 0 ? 'Hari Lagi' : 'Hari Lalu');
-    final formattedDate = DateFormat('d MMMM yyyy', 'id_ID').format(DateTime.now());
-
-    final names = '${profile.groomName} & ${profile.brideName}'.trim().replaceAll(RegExp(r'^&|&$'), '').trim();
-
-    return Card(
-      elevation: 0,
-      margin: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-        side: BorderSide(
-          color: theme.colorScheme.primary.withValues(alpha: 0.16),
-          width: 1,
-        ),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              theme.colorScheme.primaryContainer.withValues(alpha: 0.7),
-              theme.colorScheme.secondaryContainer.withValues(alpha: 0.45),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.02),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            // Top Bar: Date & Profile Pill
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    formattedDate,
-                    style: theme.textTheme.labelLarge?.copyWith(
-                      color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.85),
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.2,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Container(
-                  constraints: const BoxConstraints(maxWidth: 170),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surface.withValues(alpha: 0.88),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.18),
-                      width: 1,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Flexible(
-                        child: Text(
-                          names.isNotEmpty ? names : 'Rivaldi & Alya',
-                          style: TextStyle(
-                            fontSize: 11.5,
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.onSurface,
-                            letterSpacing: 0.1,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                      Icon(
-                        Icons.favorite_rounded,
-                        size: 13,
-                        color: theme.colorScheme.primary,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 22),
-
-            // Centered Countdown
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
-              children: [
-                Text(
-                  daysString,
-                  style: theme.textTheme.displayLarge?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    color: theme.colorScheme.onPrimaryContainer,
-                    letterSpacing: -1.5,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  subText,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.85),
-                    letterSpacing: 0.2,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 6),
-            Text(
-              WeddingDateUtils.formatFull(profile.weddingDate),
-              style: theme.textTheme.labelMedium?.copyWith(
-                color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
-                fontWeight: FontWeight.w500,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-
-            // Romantic Quote
-            if (profile.quoteEnabled && profile.quote != null && profile.quote!.isNotEmpty) ...[
-              const SizedBox(height: 18),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surface.withValues(alpha: 0.85),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: theme.colorScheme.primary.withValues(alpha: 0.12),
-                    width: 1,
-                  ),
-                ),
-                child: Text(
-                  '"${profile.quote}"',
-                  textAlign: TextAlign.center,
-                  style: _resolveQuoteStyle(profile).copyWith(
-                    color: theme.colorScheme.onSurface,
-                  ),
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  TextStyle _resolveQuoteStyle(WeddingProfile profile) {
-    double fontSize = 13.0;
-    if (profile.quoteFontSize == 'KECIL') fontSize = 11.0;
-    if (profile.quoteFontSize == 'BESAR') fontSize = 15.0;
-
-    FontWeight fontWeight = FontWeight.normal;
-    FontStyle fontStyle = FontStyle.normal;
-
-    switch (profile.quoteFontStyle) {
-      case 'BOLD':
-        fontWeight = FontWeight.bold;
-        break;
-      case 'ITALIC':
-        fontStyle = FontStyle.italic;
-        break;
-      case 'BOLD_ITALIC':
-        fontWeight = FontWeight.bold;
-        fontStyle = FontStyle.italic;
-        break;
-    }
-
-    return TextStyle(
-      fontSize: fontSize,
-      fontWeight: fontWeight,
-      fontStyle: fontStyle,
-      height: 1.35,
-    );
-  }
-
-  // ==================== 2. FINANCIAL SUMMARY CARD ====================
-  Widget _buildFinancialSummaryCard(
-    BuildContext context,
-    ThemeData theme, {
-    required double totalPaid,
-    required double totalBudgetCap,
-    required double budgetProgress,
-    required int budgetPercentage,
-  }) {
-    final remainingBudget = (totalBudgetCap - totalPaid).clamp(0.0, double.infinity);
-
-    return Card(
-      elevation: 0,
-      margin: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-        side: BorderSide(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
-          width: 1,
-        ),
-      ),
-      color: theme.colorScheme.surface,
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => context.go('/wedding/${widget.profileId}/budget'),
-        borderRadius: BorderRadius.circular(24),
-        child: Padding(
-          padding: const EdgeInsets.all(18),
-          child: Row(
-            children: [
-              // Left Details
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Ringkasan Anggaran',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.onSurface,
-                        letterSpacing: 0.1,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      CurrencyUtils.formatRupiah(totalPaid),
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w800,
-                        color: theme.colorScheme.onSurface,
-                        letterSpacing: -0.5,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Text(
-                      'dari total ${CurrencyUtils.formatRupiah(totalBudgetCap)}',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 12),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: LinearProgressIndicator(
-                        value: budgetProgress,
-                        minHeight: 6,
-                        backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.12),
-                        valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Flexible(
-                          child: Text(
-                            CurrencyUtils.formatRupiah(remainingBudget),
-                            style: theme.textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.w800,
-                              color: remainingBudget > 0 ? const Color(0xFF059669) : theme.colorScheme.error,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          'Sisa Anggaran',
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 16),
-
-              // Right Circular Radial Gauge (68x68)
-              SizedBox(
-                width: 68,
-                height: 68,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    SizedBox(
-                      width: 62,
-                      height: 62,
-                      child: CircularProgressIndicator(
-                        value: budgetProgress,
-                        strokeWidth: 6,
-                        strokeCap: StrokeCap.round,
-                        backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.12),
-                        valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
-                      ),
-                    ),
-                    Text(
-                      '$budgetPercentage%',
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w800,
-                        color: theme.colorScheme.onSurface,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );
@@ -753,357 +288,7 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
     );
   }
 
-  // ==================== 4. PROGRESS GRID ====================
-  Widget _buildProgressGrid(
-    BuildContext context,
-    ThemeData theme, {
-    required double taskProgress,
-    required double docProgress,
-    required int vendorLunasCount,
-    required int totalExpenseCount,
-    required double vendorLunasProgress,
-    required WeddingExpense? lastPaidExpense,
-  }) {
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Left Column (Tasks + Docs)
-          Expanded(
-            child: Column(
-              children: [
-                Expanded(
-                  child: _buildProgressCard(
-                    context,
-                    theme,
-                    title: 'Tugas Selesai',
-                    progress: taskProgress,
-                    color: theme.colorScheme.primary,
-                    onTap: () => context.go('/wedding/${widget.profileId}/tasks'),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Expanded(
-                  child: _buildProgressCard(
-                    context,
-                    theme,
-                    title: 'Berkas KUA',
-                    progress: docProgress,
-                    color: theme.colorScheme.tertiary,
-                    onTap: () => context.go('/wedding/${widget.profileId}/documents'),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 12),
-
-          // Right Column (Tall Vendor Lunas Card)
-          Expanded(
-            child: Card(
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(22),
-                side: BorderSide(
-                  color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
-                  width: 1,
-                ),
-              ),
-              color: theme.colorScheme.surface,
-              clipBehavior: Clip.antiAlias,
-              margin: EdgeInsets.zero,
-              child: InkWell(
-                onTap: () => context.go('/wedding/${widget.profileId}/budget'),
-                borderRadius: BorderRadius.circular(22),
-                child: Container(
-                  constraints: const BoxConstraints(minHeight: 180),
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Icon(
-                            Icons.check_circle_rounded,
-                            color: Color(0xFF059669),
-                            size: 26,
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            'Vendor Lunas',
-                            style: theme.textTheme.labelMedium?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            '$vendorLunasCount / $totalExpenseCount',
-                            style: theme.textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.w800,
-                              color: const Color(0xFF059669),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(3),
-                            child: LinearProgressIndicator(
-                              value: vendorLunasProgress,
-                              minHeight: 6,
-                              backgroundColor: const Color(0xFF059669).withValues(alpha: 0.15),
-                              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF059669)),
-                            ),
-                          ),
-                        ],
-                      ),
-                      if (lastPaidExpense != null) ...[
-                        const Divider(height: 20),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Terakhir Dibayar',
-                              style: theme.textTheme.labelSmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              lastPaidExpense.title,
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: theme.colorScheme.onSurface,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Text(
-                              CurrencyUtils.formatRupiah(lastPaidExpense.totalPaid),
-                              style: theme.textTheme.labelSmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildProgressCard(
-    BuildContext context,
-    ThemeData theme, {
-    required String title,
-    required double progress,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    final percentage = (progress * 100).round();
-
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: BorderSide(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
-          width: 1,
-        ),
-      ),
-      color: theme.colorScheme.surface,
-      clipBehavior: Clip.antiAlias,
-      margin: EdgeInsets.zero,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    title,
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(
-                    '$percentage%',
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: color,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  value: progress,
-                  minHeight: 6,
-                  backgroundColor: color.withValues(alpha: 0.15),
-                  valueColor: AlwaysStoppedAnimation<Color>(color),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ==================== 5. STATS GRID (2x2) ====================
-  Widget _buildStatsGrid(
-    BuildContext context,
-    ThemeData theme, {
-    required int totalGuests,
-    required int contractedVendors,
-    required int totalVendors,
-    required int readySeserahanItems,
-    required int totalSeserahanItems,
-    required int uniformReadyCount,
-    required int totalCommitteeMembers,
-  }) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: _buildStatCard(
-                context,
-                theme,
-                icon: Icons.groups_rounded,
-                value: '$totalGuests',
-                label: 'Tamu Diundang',
-                onTap: () => context.go('/wedding/${widget.profileId}/guests'),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildStatCard(
-                context,
-                theme,
-                icon: Icons.storefront_rounded,
-                value: '$contractedVendors / $totalVendors',
-                label: 'Vendor Deal',
-                onTap: () => context.go('/wedding/${widget.profileId}/vendors'),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: _buildStatCard(
-                context,
-                theme,
-                icon: Icons.card_giftcard_rounded,
-                value: '$readySeserahanItems / $totalSeserahanItems',
-                label: 'Seserahan Siap',
-                onTap: () => context.go('/wedding/${widget.profileId}/seserahan'),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildStatCard(
-                context,
-                theme,
-                icon: Icons.checkroom_rounded,
-                value: '$uniformReadyCount / $totalCommitteeMembers',
-                label: 'Panitia Siap',
-                onTap: () => context.go('/wedding/${widget.profileId}/committee'),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildStatCard(
-    BuildContext context,
-    ThemeData theme, {
-    required IconData icon,
-    required String value,
-    required String label,
-    required VoidCallback onTap,
-  }) {
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: BorderSide(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
-          width: 1,
-        ),
-      ),
-      color: theme.colorScheme.surface,
-      clipBehavior: Clip.antiAlias,
-      margin: EdgeInsets.zero,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      label,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Icon(
-                    icon,
-                    color: theme.colorScheme.primary.withValues(alpha: 0.8),
-                    size: 18,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(
-                value,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  color: theme.colorScheme.onSurface,
-                  letterSpacing: -0.2,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ==================== 6. BUDGET CATEGORIES ====================
+  // ==================== 4. BUDGET CATEGORIES ====================
   Widget _buildCategoryBudgetsSection(
     BuildContext context,
     ThemeData theme,
@@ -1256,80 +441,6 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
     }
   }
 
-  // ==================== 7. UPCOMING TASKS ====================
-  Widget _buildUpcomingTasksSection(
-    BuildContext context,
-    ThemeData theme,
-    List<WeddingTask> upcomingTasks,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Tugas Mendatang',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            TextButton(
-              onPressed: () => context.go('/wedding/${widget.profileId}/tasks'),
-              child: const Text('Lihat Semua'),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        ...upcomingTasks.map((task) {
-          final picEnum = TaskPic.fromString(task.pic);
-          return Card(
-            elevation: 0,
-            margin: const EdgeInsets.only(bottom: 8),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-              side: BorderSide(
-                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.45),
-                width: 1,
-              ),
-            ),
-            color: theme.colorScheme.surface,
-            child: ListTile(
-              leading: Checkbox(
-                value: task.isCompleted,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                onChanged: (val) {
-                  ref.read(weddingRepositoryProvider).toggleTaskCompletion(task, val ?? false);
-                },
-              ),
-              title: Text(
-                task.title,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  decoration: task.isCompleted ? TextDecoration.lineThrough : null,
-                ),
-              ),
-              subtitle: task.dueDate != null
-                  ? Text(
-                      'Tenggat: ${WeddingDateUtils.formatShort(task.dueDate!)} • PIC: ${picEnum.label}',
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    )
-                  : Text(
-                      'PIC: ${picEnum.label}',
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-              onTap: () => context.go('/wedding/${widget.profileId}/tasks'),
-            ),
-          );
-        }),
-      ],
-    );
-  }
-
   void _showGuideDialog(BuildContext context) {
     showWeddingGuideDialog(
       context: context,
@@ -1353,8 +464,8 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
         ),
         WeddingGuideFeature(
           icon: Icons.bolt_rounded,
-          title: 'Aksi Cepat & Progres',
-          description: 'Pintasan langsung untuk mencatat biaya, kelola tamu, dan cek susunan acara, serta melihat progres tugas dan berkas KUA.',
+          title: 'Aksi Cepat & Kategori',
+          description: 'Pintasan langsung untuk mencatat biaya, kelola tamu, cek susunan acara, serta melihat rincian anggaran per kategori.',
         ),
       ],
     );

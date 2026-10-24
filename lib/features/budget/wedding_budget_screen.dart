@@ -1832,9 +1832,11 @@ IconData _getCategoryIcon(String key) {
     case 'DEKORASI':
       return Icons.celebration_rounded;
     case 'MUA':
-    case 'BUSANA':
     case 'MAKEUP':
       return Icons.brush_rounded;
+    case 'BUSANA':
+    case 'ATTIRE':
+      return Icons.checkroom_rounded;
     case 'DOKUMENTASI':
     case 'FOTO':
     case 'VIDEO':

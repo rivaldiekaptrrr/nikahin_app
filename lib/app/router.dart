@@ -19,7 +19,7 @@ import '../features/tasks/wedding_tasks_screen.dart';
 import '../features/vendors/wedding_vendor_screen.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/setup',
   routes: [
     GoRoute(
       path: '/',
@@ -27,6 +27,12 @@ final appRouter = GoRouter(
         final hasSeenWelcome = await AppPreferences.hasSeenWelcome();
         if (!hasSeenWelcome) {
           return '/welcome';
+        }
+
+        final isDemo = await AppPreferences.isDemoMode();
+        if (isDemo) {
+          final activeId = await AppPreferences.getActiveProfileId();
+          return '/wedding/$activeId';
         }
 
         final email = await AppPreferences.getUserEmail();

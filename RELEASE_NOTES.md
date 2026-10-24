@@ -1,5 +1,4 @@
-• Pembaruan desain kartu profil akun terpadu pada menu Pengaturan.
-• Penambahan pemilih jam pengingat harian (Notification Time Picker).
-• Fitur 5 palet warna aksen tema pernikahan bergaya Telegram.
-• Penambahan Pusat Bantuan WhatsApp, kirim masukan, dan FAQ.
-• Tombol Keluar Akun (Log Out) dengan konfirmasi keamanan.
+• Tombol navigasi langkah awal persiapan pernikahan kini lebih proporsional dan mudah digunakan.
+• Perbaikan tata letak tombol import kontak dan durasi otomatis pop-up hapus tamu.
+• Desain beranda (Dashboard) baru yang lebih bersih, rapi, dan bebas dari distraksi.
+• Pemisahan kategori anggaran dan vendor baru "Busana" terpisah secara mandiri dari MUA.

@@ -62,7 +62,14 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
   void _onDirectGuest() async {
     await AppPreferences.setHasSeenWelcome(true);
     await ref.read(authNotifierProvider.notifier).enterDemoMode();
-    if (mounted) context.go('/wedding/profile_rivaldi_alya');
+    final activeId = await AppPreferences.getActiveProfileId();
+    if (mounted) {
+      if (activeId == 'profile_rivaldi_alya') {
+        context.go('/setup');
+      } else {
+        context.go('/wedding/$activeId');
+      }
+    }
   }
 
   @override

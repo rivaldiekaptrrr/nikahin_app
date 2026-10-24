@@ -60,7 +60,11 @@ class WeddingRepository {
   Future<WeddingProfile?> getSingleProfile() => db.getSingleProfile();
   Future<WeddingProfile?> getProfile(String id) => db.getProfileById(id);
 
-  Future<void> createProfile(WeddingProfile profile, {bool seedDefaults = true}) async {
+  Future<void> createProfile(
+    WeddingProfile profile, {
+    bool seedDefaults = true,
+    bool generateStarterExpenses = true,
+  }) async {
     await db.insertProfile(profile);
     await sync.pushProfile(profile);
 
@@ -76,6 +80,14 @@ class WeddingRepository {
       // Seed default events
       final events = SeedData.generateDefaultEvents(profile.id, profile.weddingDate);
       await db.insertEventsBatch(events);
+
+      // Seed starter expenses if budget cap is configured and requested
+      if (generateStarterExpenses && profile.totalBudgetCap > 0) {
+        final expenses = SeedData.generateStarterExpenses(profile.id, profile.totalBudgetCap);
+        for (final exp in expenses) {
+          await db.insertExpense(exp);
+        }
+      }
     }
   }
 

@@ -1,8 +1,8 @@
 // Domain enums for Nikahin Wedding Planner
 
 enum ReligionType {
-  islam('ISLAM', 'Islam (KUA)'),
-  nonIslam('NON_ISLAM', 'Non-Islam (Catatan Sipil)');
+  islam('ISLAM', 'KUA'),
+  nonIslam('NON_ISLAM', 'Catatan Sipil');
 
   final String value;
   final String label;
@@ -40,12 +40,12 @@ enum CulturalPreset {
   sunda('SUNDA', 'Sunda'),
   batak('BATAK', 'Batak'),
   minang('MINANG', 'Minang'),
-  bugisMakassar('BUGIS_MAKASSAR', 'Bugis / Makassar'),
+  bugisMakassar('BUGIS_MAKASSAR', 'Bugis'),
   bali('BALI', 'Bali'),
   betawi('BETAWI', 'Betawi'),
   tionghoa('TIONGHOA', 'Tionghoa'),
-  modern('MODERN', 'Modern / Nasional'),
-  lainnya('LAINNYA', 'Lainnya / Umum');
+  modern('MODERN', 'Modern'),
+  lainnya('LAINNYA', 'Lainnya');
 
   final String value;
   final String label;
@@ -60,13 +60,14 @@ enum CulturalPreset {
 }
 
 enum ExpenseCategory {
-  venue('VENUE', 'Venue & Gedung'),
+  venue('VENUE', 'Venue'),
   catering('CATERING', 'Katering'),
   decor('DECOR', 'Dekorasi'),
-  mua('MUA', 'MUA & Busana'),
-  dokumentasi('DOKUMENTASI', 'Dokumentasi & Video'),
-  seserahan('SESERAHAN', 'Seserahan & Mahar'),
-  undangan('UNDANGAN', 'Undangan & Souvenir'),
+  mua('MUA', 'MUA'),
+  busana('BUSANA', 'Busana'),
+  dokumentasi('DOKUMENTASI', 'Dokumentasi'),
+  seserahan('SESERAHAN', 'Seserahan'),
+  undangan('UNDANGAN', 'Undangan'),
   lainnya('LAINNYA', 'Lainnya');
 
   final String value;
@@ -88,11 +89,12 @@ enum ExpenseCategory {
       case 'DEKORASI':
         return ExpenseCategory.decor;
       case 'MUA':
-      case 'ATTIRE':
-      case 'BUSANA':
-      case 'MUA_BUSANA':
       case 'MAKEUP':
         return ExpenseCategory.mua;
+      case 'BUSANA':
+      case 'ATTIRE':
+      case 'MUA_BUSANA':
+        return ExpenseCategory.busana;
       case 'DOKUMENTASI':
       case 'PHOTOGRAPHY':
       case 'FOTO':
@@ -163,8 +165,8 @@ enum GuestGroup {
   keluargaCpw('KELUARGA_CPW', 'Keluarga CPW'),
   temanCpp('TEMAN_CPP', 'Teman CPP'),
   temanCpw('TEMAN_CPW', 'Teman CPW'),
-  vip('VIP', 'Tamu VIP'),
-  lainnya('LAINNYA', 'Umum / Lainnya');
+  vip('VIP', 'VIP'),
+  lainnya('LAINNYA', 'Umum');
 
   final String value;
   final String label;
@@ -179,8 +181,8 @@ enum GuestGroup {
 }
 
 enum SessionTarget {
-  akad('AKAD', 'Akad / Pemberkatan Saja'),
-  resepsi('RESEPSI', 'Resepsi Saja'),
+  akad('AKAD', 'Akad'),
+  resepsi('RESEPSI', 'Resepsi'),
   keduanya('KEDUANYA', 'Akad & Resepsi');
 
   final String value;
@@ -213,9 +215,9 @@ enum RsvpStatus {
 }
 
 enum VendorStatus {
-  prospek('PROSPEK', 'Prospek / Riset'),
-  tandaJadi('TANDA_JADI', 'Tanda Jadi / Booking'),
-  kontrak('KONTRAK', 'Kontrak Aktif'),
+  prospek('PROSPEK', 'Riset'),
+  tandaJadi('TANDA_JADI', 'Booking'),
+  kontrak('KONTRAK', 'Kontrak'),
   selesai('SELESAI', 'Selesai');
 
   final String value;
@@ -231,8 +233,8 @@ enum VendorStatus {
 }
 
 enum TaskPic {
-  groom('GROOM', 'CPP (Pria)'),
-  bride('BRIDE', 'CPW (Wanita)'),
+  groom('GROOM', 'Mempelai Pria'),
+  bride('BRIDE', 'Mempelai Wanita'),
   both('BOTH', 'Bersama'),
   family('FAMILY', 'Keluarga'),
   wo('WO', 'Wedding Organizer');
@@ -285,8 +287,8 @@ enum UniformStatus {
 }
 
 enum SeserahanDirection {
-  seserahanCpp('SESERAHAN_CPP', 'Seserahan (CPP → CPW)'),
-  balasanCpw('BALASAN_CPW', 'Balasan (CPW → CPP)'),
+  seserahanCpp('SESERAHAN_CPP', 'Seserahan dari Mempelai Pria'),
+  balasanCpw('BALASAN_CPW', 'Balasan dari Mempelai Wanita'),
   mahar('MAHAR', 'Mahar Pernikahan');
 
   final String value;
