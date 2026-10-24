@@ -9,6 +9,7 @@ const String kPrefUserId = 'user_id';
 const String kPrefAccessLevel = 'user_access_level';
 const String kPrefActiveProfileId = 'active_profile_id';
 const String kPrefIdToken = 'user_id_token';
+const String kPrefRefreshToken = 'user_refresh_token';
 
 class AppPreferences {
   static Future<String> getAccessLevel() async {
@@ -89,6 +90,20 @@ class AppPreferences {
       await prefs.setString(kPrefIdToken, token);
     } else {
       await prefs.remove(kPrefIdToken);
+    }
+  }
+
+  static Future<String?> getRefreshToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(kPrefRefreshToken);
+  }
+
+  static Future<void> setRefreshToken(String? token) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (token != null && token.isNotEmpty) {
+      await prefs.setString(kPrefRefreshToken, token);
+    } else {
+      await prefs.remove(kPrefRefreshToken);
     }
   }
 

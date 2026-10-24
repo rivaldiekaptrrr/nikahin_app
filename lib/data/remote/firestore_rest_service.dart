@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../app/config/firebase_config.dart';
 import '../../domain/models/access_level.dart';
+import '../local/preferences_manager.dart';
 
 class AuthResponse {
   final String idToken;
@@ -194,30 +195,89 @@ class FirestoreRestService {
     return email.contains('@') ? null : 'Format email tidak valid.';
   }
 
+  /// Exchange refreshToken for a new idToken via Google Secure Token API
+  Future<String?> refreshIdToken({String? refreshToken}) async {
+    if (!isRemoteConfigured) return null;
+    final token = refreshToken ?? await AppPreferences.getRefreshToken();
+    if (token == null || token.isEmpty) return null;
+
+    try {
+      final url = Uri.parse('https://securetoken.googleapis.com/v1/token?key=$apiKey');
+      final response = await _client.post(
+        url,
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'grant_type=refresh_token&refresh_token=$token',
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final newIdToken = data['id_token'] as String?;
+        final newRefreshToken = data['refresh_token'] as String?;
+        if (newIdToken != null && newIdToken.isNotEmpty) {
+          await AppPreferences.setIdToken(newIdToken);
+          if (newRefreshToken != null && newRefreshToken.isNotEmpty) {
+            await AppPreferences.setRefreshToken(newRefreshToken);
+          }
+          return newIdToken;
+        }
+      }
+    } catch (_) {}
+    return null;
+  }
+
   String get _baseUrl =>
       'https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents';
 
   /// Save or update a document via REST API
+  /// 
+  /// Jika [updateMask] disediakan, hanya field tersebut yang diperbarui (Partial Update)
+  /// sehingga field lain yang sudah ada pada dokumen tidak akan terhapus.
   Future<bool> putDocument({
     required String path,
     required Map<String, dynamic> data,
     String? idToken,
+    List<String>? updateMask,
   }) async {
     try {
-      final url = Uri.parse('$_baseUrl/$path${apiKey.isNotEmpty ? "?key=$apiKey" : ""}');
+      final token = idToken ?? await AppPreferences.getIdToken();
+      final queryParams = <String>[];
+      if (apiKey.isNotEmpty) queryParams.add('key=$apiKey');
+      if (updateMask != null && updateMask.isNotEmpty) {
+        for (final field in updateMask) {
+          queryParams.add('updateMask.fieldPaths=$field');
+        }
+      }
+      final queryString = queryParams.isNotEmpty ? '?${queryParams.join('&')}' : '';
+      final url = Uri.parse('$_baseUrl/$path$queryString');
       final firestoreFields = _toFirestoreFields(data);
       final body = jsonEncode({'fields': firestoreFields});
 
-      final response = await _client
+      var response = await _client
           .patch(
             url,
             headers: {
               'Content-Type': 'application/json',
-              if (idToken != null && idToken.isNotEmpty) 'Authorization': 'Bearer $idToken',
+              if (token != null && token.isNotEmpty) 'Authorization': 'Bearer $token',
             },
             body: body,
           )
           .timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 401) {
+        final refreshedToken = await refreshIdToken();
+        if (refreshedToken != null && refreshedToken != token) {
+          response = await _client
+              .patch(
+                url,
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': 'Bearer $refreshedToken',
+                },
+                body: body,
+              )
+              .timeout(const Duration(seconds: 10));
+        }
+      }
 
       return response.statusCode >= 200 && response.statusCode < 300;
     } catch (_) {
@@ -231,15 +291,31 @@ class FirestoreRestService {
     String? idToken,
   }) async {
     try {
+      final token = idToken ?? await AppPreferences.getIdToken();
       final url = Uri.parse('$_baseUrl/$path${apiKey.isNotEmpty ? "?key=$apiKey" : ""}');
-      final response = await _client
+      var response = await _client
           .delete(
             url,
             headers: {
-              if (idToken != null && idToken.isNotEmpty) 'Authorization': 'Bearer $idToken',
+              if (token != null && token.isNotEmpty) 'Authorization': 'Bearer $token',
             },
           )
           .timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 401) {
+        final refreshedToken = await refreshIdToken();
+        if (refreshedToken != null && refreshedToken != token) {
+          response = await _client
+              .delete(
+                url,
+                headers: {
+                  'Authorization': 'Bearer $refreshedToken',
+                },
+              )
+              .timeout(const Duration(seconds: 10));
+        }
+      }
+
       return response.statusCode >= 200 && response.statusCode < 300;
     } catch (_) {
       return false;
@@ -252,15 +328,30 @@ class FirestoreRestService {
     String? idToken,
   }) async {
     try {
+      final token = idToken ?? await AppPreferences.getIdToken();
       final url = Uri.parse('$_baseUrl/$path${apiKey.isNotEmpty ? "?key=$apiKey" : ""}');
-      final response = await _client
+      var response = await _client
           .get(
             url,
             headers: {
-              if (idToken != null && idToken.isNotEmpty) 'Authorization': 'Bearer $idToken',
+              if (token != null && token.isNotEmpty) 'Authorization': 'Bearer $token',
             },
           )
           .timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 401) {
+        final refreshedToken = await refreshIdToken();
+        if (refreshedToken != null && refreshedToken != token) {
+          response = await _client
+              .get(
+                url,
+                headers: {
+                  'Authorization': 'Bearer $refreshedToken',
+                },
+              )
+              .timeout(const Duration(seconds: 10));
+        }
+      }
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         final decoded = jsonDecode(response.body);
@@ -308,6 +399,7 @@ class FirestoreRestService {
         'updatedAt': DateTime.now().millisecondsSinceEpoch,
       },
       idToken: idToken,
+      updateMask: ['accessLevel', 'updatedAt'],
     );
   }
 
@@ -319,34 +411,72 @@ class FirestoreRestService {
     );
   }
 
-  /// Get all documents in a collection via REST API
+  /// Get all documents in a collection via REST API (with pagination & 401 auto-retry)
   Future<List<Map<String, dynamic>>> getCollection({
     required String collectionPath,
     String? idToken,
   }) async {
     try {
-      final url = Uri.parse('$_baseUrl/$collectionPath${apiKey.isNotEmpty ? "?key=$apiKey" : ""}');
-      final response = await _client
-          .get(
-            url,
-            headers: {
-              if (idToken != null && idToken.isNotEmpty) 'Authorization': 'Bearer $idToken',
-            },
-          )
-          .timeout(const Duration(seconds: 10));
+      final results = <Map<String, dynamic>>[];
+      String? pageToken;
+      String? currentToken = idToken ?? await AppPreferences.getIdToken();
+      bool hasRetriedAuth = false;
 
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        final decoded = jsonDecode(response.body);
-        final documents = decoded['documents'] as List<dynamic>? ?? [];
-        return documents.map((doc) {
-          final fields = doc['fields'] as Map<String, dynamic>? ?? {};
-          final name = doc['name'] as String? ?? '';
-          final docId = name.split('/').last;
-          final mapped = _fromFirestoreFields(fields);
-          mapped['id'] = docId;
-          return mapped;
-        }).toList();
-      }
+      do {
+        final queryParams = <String>[];
+        if (apiKey.isNotEmpty) queryParams.add('key=$apiKey');
+        queryParams.add('pageSize=300');
+        if (pageToken != null && pageToken.isNotEmpty) {
+          queryParams.add('pageToken=$pageToken');
+        }
+
+        final queryString = queryParams.isNotEmpty ? '?${queryParams.join('&')}' : '';
+        final url = Uri.parse('$_baseUrl/$collectionPath$queryString');
+
+        var response = await _client
+            .get(
+              url,
+              headers: {
+                if (currentToken != null && currentToken.isNotEmpty)
+                  'Authorization': 'Bearer $currentToken',
+              },
+            )
+            .timeout(const Duration(seconds: 10));
+
+        if (response.statusCode == 401 && !hasRetriedAuth) {
+          hasRetriedAuth = true;
+          final refreshedToken = await refreshIdToken();
+          if (refreshedToken != null && refreshedToken != currentToken) {
+            currentToken = refreshedToken;
+            response = await _client
+                .get(
+                  url,
+                  headers: {
+                    'Authorization': 'Bearer $currentToken',
+                  },
+                )
+                .timeout(const Duration(seconds: 10));
+          }
+        }
+
+        if (response.statusCode >= 200 && response.statusCode < 300) {
+          final decoded = jsonDecode(response.body);
+          final documents = decoded['documents'] as List<dynamic>? ?? [];
+          for (final doc in documents) {
+            final fields = doc['fields'] as Map<String, dynamic>? ?? {};
+            final name = doc['name'] as String? ?? '';
+            final docId = name.split('/').last;
+            final mapped = _fromFirestoreFields(fields);
+            mapped['id'] = docId;
+            results.add(mapped);
+          }
+          pageToken = decoded['nextPageToken'] as String?;
+        } else {
+          break;
+        }
+      } while (pageToken != null && pageToken.isNotEmpty);
+
+      return results;
     } catch (_) {}
     return [];
   }
@@ -354,41 +484,69 @@ class FirestoreRestService {
   Map<String, dynamic> _toFirestoreFields(Map<String, dynamic> map) {
     final fields = <String, dynamic>{};
     map.forEach((key, value) {
-      if (value == null) {
-        fields[key] = {'nullValue': null};
-      } else if (value is bool) {
-        fields[key] = {'booleanValue': value};
-      } else if (value is int) {
-        fields[key] = {'integerValue': value.toString()};
-      } else if (value is double) {
-        fields[key] = {'doubleValue': value};
-      } else if (value is String) {
-        fields[key] = {'stringValue': value};
-      } else if (value is Map<String, dynamic>) {
-        fields[key] = {'mapValue': {'fields': _toFirestoreFields(value)}};
-      }
+      fields[key] = _toFirestoreValue(value);
     });
     return fields;
+  }
+
+  Map<String, dynamic> _toFirestoreValue(dynamic value) {
+    if (value == null) {
+      return {'nullValue': null};
+    } else if (value is bool) {
+      return {'booleanValue': value};
+    } else if (value is int) {
+      return {'integerValue': value.toString()};
+    } else if (value is double) {
+      return {'doubleValue': value};
+    } else if (value is String) {
+      return {'stringValue': value};
+    } else if (value is List) {
+      return {
+        'arrayValue': {
+          'values': value.map((v) => _toFirestoreValue(v)).toList(),
+        }
+      };
+    } else if (value is Map<String, dynamic>) {
+      return {
+        'mapValue': {
+          'fields': _toFirestoreFields(value),
+        }
+      };
+    }
+    return {'stringValue': value.toString()};
   }
 
   Map<String, dynamic> _fromFirestoreFields(Map<String, dynamic> fields) {
     final result = <String, dynamic>{};
     fields.forEach((key, value) {
-      if (value is Map<String, dynamic>) {
-        if (value.containsKey('stringValue')) {
-          result[key] = value['stringValue'];
-        } else if (value.containsKey('integerValue')) {
-          result[key] = int.tryParse(value['integerValue'].toString()) ?? 0;
-        } else if (value.containsKey('doubleValue')) {
-          result[key] = (value['doubleValue'] as num).toDouble();
-        } else if (value.containsKey('booleanValue')) {
-          result[key] = value['booleanValue'];
-        } else if (value.containsKey('nullValue')) {
-          result[key] = null;
-        }
-      }
+      result[key] = _fromFirestoreValue(value);
     });
     return result;
+  }
+
+  dynamic _fromFirestoreValue(dynamic firestoreValue) {
+    if (firestoreValue is Map<String, dynamic>) {
+      if (firestoreValue.containsKey('stringValue')) {
+        return firestoreValue['stringValue'];
+      } else if (firestoreValue.containsKey('integerValue')) {
+        return int.tryParse(firestoreValue['integerValue'].toString()) ?? 0;
+      } else if (firestoreValue.containsKey('doubleValue')) {
+        return (firestoreValue['doubleValue'] as num).toDouble();
+      } else if (firestoreValue.containsKey('booleanValue')) {
+        return firestoreValue['booleanValue'];
+      } else if (firestoreValue.containsKey('nullValue')) {
+        return null;
+      } else if (firestoreValue.containsKey('timestampValue')) {
+        return firestoreValue['timestampValue'];
+      } else if (firestoreValue.containsKey('arrayValue')) {
+        final list = firestoreValue['arrayValue']?['values'] as List<dynamic>? ?? [];
+        return list.map((item) => _fromFirestoreValue(item)).toList();
+      } else if (firestoreValue.containsKey('mapValue')) {
+        final fields = firestoreValue['mapValue']?['fields'] as Map<String, dynamic>? ?? {};
+        return _fromFirestoreFields(fields);
+      }
+    }
+    return firestoreValue;
   }
 
   String _parseFirebaseAuthError(String responseBody) {

@@ -4,6 +4,7 @@ import '../../../app/config/business_config.dart';
 import '../../../app/config/firebase_config.dart';
 import '../../../data/local/mock_seeder.dart';
 import '../../../data/local/preferences_manager.dart';
+import '../../../data/remote/firestore_rest_service.dart';
 import '../../../data/remote/midtrans_payment_service.dart';
 import '../../../data/repositories/wedding_repository.dart';
 import '../../../domain/models/access_level.dart';
@@ -36,6 +37,22 @@ class AuthNotifier extends Notifier<AuthState> {
         if (remoteUser != null) {
           level = isAdmin ? AccessLevel.admin : remoteUser.accessLevel;
           await AppPreferences.setAccessLevel(level.code);
+
+          // Self-healing: jika dokumen Firestore kehilangan email akibat bug lama, pulihkan otomatis
+          if (remoteUser.email.isEmpty) {
+            final cachedToken = await AppPreferences.getIdToken();
+            await firestoreService.syncUserInfo(
+              AppUserInfo(
+                uid: uid,
+                email: email,
+                displayName: remoteUser.displayName ?? email.split('@').first,
+                accessLevel: level,
+                createdAt: remoteUser.createdAt,
+                updatedAt: DateTime.now().millisecondsSinceEpoch,
+              ),
+              idToken: cachedToken,
+            );
+          }
         }
       } catch (_) {}
 
@@ -140,6 +157,21 @@ class AuthNotifier extends Notifier<AuthState> {
         final remoteUser = await firestoreService.getUserInfo(uid, idToken: res?.idToken);
         if (remoteUser != null) {
           level = isAdmin ? AccessLevel.admin : remoteUser.accessLevel;
+
+          // Self-healing: jika dokumen di Firestore kehilangan email, pulihkan otomatis
+          if (remoteUser.email.isEmpty) {
+            await firestoreService.syncUserInfo(
+              AppUserInfo(
+                uid: uid,
+                email: email,
+                displayName: remoteUser.displayName ?? email.split('@').first,
+                accessLevel: level,
+                createdAt: remoteUser.createdAt,
+                updatedAt: DateTime.now().millisecondsSinceEpoch,
+              ),
+              idToken: res?.idToken,
+            );
+          }
         } else {
           // Register new user doc in Firestore
           await firestoreService.syncUserInfo(
@@ -160,6 +192,7 @@ class AuthNotifier extends Notifier<AuthState> {
       await AppPreferences.setUserId(uid);
       await AppPreferences.setAccessLevel(level.code);
       await AppPreferences.setIdToken(res?.idToken);
+      await AppPreferences.setRefreshToken(res?.refreshToken);
       await AppPreferences.setDemoMode(false);
       await AppPreferences.setHasSkippedLogin(false);
 
@@ -236,6 +269,21 @@ class AuthNotifier extends Notifier<AuthState> {
         final remoteUser = await firestoreService.getUserInfo(uid, idToken: res?.idToken);
         if (remoteUser != null) {
           level = isAdmin ? AccessLevel.admin : remoteUser.accessLevel;
+
+          // Self-healing: jika dokumen di Firestore kehilangan email, pulihkan otomatis
+          if (remoteUser.email.isEmpty) {
+            await firestoreService.syncUserInfo(
+              AppUserInfo(
+                uid: uid,
+                email: email,
+                displayName: remoteUser.displayName ?? email.split('@').first,
+                accessLevel: level,
+                createdAt: remoteUser.createdAt,
+                updatedAt: DateTime.now().millisecondsSinceEpoch,
+              ),
+              idToken: res?.idToken,
+            );
+          }
         } else {
           // Dokumen tidak ada (karena baru atau baru saja dihapus oleh admin) -> Buat profil baru
           await firestoreService.syncUserInfo(
@@ -256,6 +304,7 @@ class AuthNotifier extends Notifier<AuthState> {
       await AppPreferences.setUserId(uid);
       await AppPreferences.setAccessLevel(level.code);
       await AppPreferences.setIdToken(res?.idToken);
+      await AppPreferences.setRefreshToken(res?.refreshToken);
       await AppPreferences.setDemoMode(false);
       await AppPreferences.setHasSkippedLogin(false);
 
@@ -326,9 +375,10 @@ class AuthNotifier extends Notifier<AuthState> {
       String? firebaseIdToken;
       String uid = 'google_user_${account.id.isNotEmpty ? account.id : email.hashCode.abs()}';
 
+      AuthResponse? firebaseAuthRes;
       // Tukar Google ID Token dengan Firebase Auth ID Token jika tersedia
       if (googleIdToken.isNotEmpty) {
-        final firebaseAuthRes = await firestoreService.signInWithGoogleIdToken(
+        firebaseAuthRes = await firestoreService.signInWithGoogleIdToken(
           googleIdToken: googleIdToken,
         );
         if (firebaseAuthRes != null && firebaseAuthRes.isSuccess) {
@@ -347,6 +397,21 @@ class AuthNotifier extends Notifier<AuthState> {
         final remoteUser = await firestoreService.getUserInfo(uid, idToken: firebaseIdToken);
         if (remoteUser != null) {
           level = isAdmin ? AccessLevel.admin : remoteUser.accessLevel;
+
+          // Self-healing: jika dokumen di Firestore kehilangan email, pulihkan otomatis
+          if (remoteUser.email.isEmpty) {
+            await firestoreService.syncUserInfo(
+              AppUserInfo(
+                uid: uid,
+                email: email,
+                displayName: remoteUser.displayName ?? displayName,
+                accessLevel: level,
+                createdAt: remoteUser.createdAt,
+                updatedAt: DateTime.now().millisecondsSinceEpoch,
+              ),
+              idToken: firebaseIdToken,
+            );
+          }
         } else {
           await firestoreService.syncUserInfo(
             AppUserInfo(
@@ -365,6 +430,7 @@ class AuthNotifier extends Notifier<AuthState> {
       await AppPreferences.setUserEmail(email);
       await AppPreferences.setUserId(uid);
       await AppPreferences.setAccessLevel(level.code);
+      await AppPreferences.setRefreshToken(firebaseAuthRes?.refreshToken);
       await AppPreferences.setDemoMode(false);
       await AppPreferences.setHasSkippedLogin(false);
 
@@ -548,6 +614,7 @@ class AuthNotifier extends Notifier<AuthState> {
     await AppPreferences.setUserId(null);
     await AppPreferences.setAccessLevel('NONE');
     await AppPreferences.setIdToken(null);
+    await AppPreferences.setRefreshToken(null);
     await AppPreferences.setDemoMode(false);
     await AppPreferences.setActiveProfileId('');
     ref.read(activeProfileIdProvider.notifier).state = '';

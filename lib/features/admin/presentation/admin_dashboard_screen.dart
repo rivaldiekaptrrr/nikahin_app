@@ -103,7 +103,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'Akses "${user.email}" diubah ke ${newLevel.label}.',
+                    'Akses "${user.email.isNotEmpty ? user.email : user.uid}" diubah ke ${newLevel.label}.',
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                 ),
@@ -157,7 +157,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'Akun "${user.email}" berhasil dihapus dari cloud.',
+                    'Akun "${user.email.isNotEmpty ? user.email : user.uid}" berhasil dihapus dari cloud.',
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                 ),
@@ -1022,8 +1022,16 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
 
   Widget _buildPremiumUserCard(BuildContext context, AppUserInfo user, {bool isSelected = false}) {
     final theme = Theme.of(context);
-    final initial = user.email.isNotEmpty ? user.email[0].toUpperCase() : 'U';
-    final isSuperAdminAccount = user.email.toLowerCase() == BusinessConfig.adminEmail.toLowerCase();
+    final hasEmail = user.email.isNotEmpty;
+    final hasDisplayName = user.displayName != null && user.displayName!.trim().isNotEmpty;
+    final displayNameToShow = hasDisplayName
+        ? user.displayName!
+        : (hasEmail ? user.email.split('@').first : 'Pengguna Nikahin');
+    final initial = hasEmail
+        ? user.email[0].toUpperCase()
+        : (hasDisplayName ? user.displayName!.trim()[0].toUpperCase() : 'U');
+    final emailToShow = hasEmail ? user.email : 'UID: ${user.uid}';
+    final isSuperAdminAccount = hasEmail && user.email.toLowerCase() == BusinessConfig.adminEmail.toLowerCase();
 
     Color statusColor;
     String statusTitle;
@@ -1126,22 +1134,25 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      user.displayName ?? user.email.split('@').first,
+                                      displayNameToShow,
                                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13.5),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     InkWell(
-                                      onTap: () => _copyToClipboard(user.email, 'Email pengguna'),
+                                      onTap: () => _copyToClipboard(
+                                        hasEmail ? user.email : user.uid,
+                                        hasEmail ? 'Email pengguna' : 'UID pengguna',
+                                      ),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Flexible(
                                             child: Text(
-                                              user.email,
+                                              emailToShow,
                                               style: TextStyle(
                                                 fontSize: 11.5,
-                                                color: theme.colorScheme.onSurfaceVariant,
+                                                color: hasEmail ? theme.colorScheme.onSurfaceVariant : theme.colorScheme.outline,
                                               ),
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
