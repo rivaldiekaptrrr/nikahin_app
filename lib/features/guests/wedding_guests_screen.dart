@@ -205,7 +205,10 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
       children: [
         Text(
           label,
-          style: TextStyle(fontSize: 11, color: Colors.grey[700]),
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+            fontWeight: FontWeight.w500,
+          ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.center,
@@ -215,7 +218,7 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
           value,
           style: TextStyle(
             fontSize: 14,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w800,
             color: isHighlight ? theme.colorScheme.primary : theme.colorScheme.onSurface,
           ),
           maxLines: 1,

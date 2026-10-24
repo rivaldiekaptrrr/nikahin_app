@@ -337,20 +337,34 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
     final names = '${profile.groomName} & ${profile.brideName}'.trim().replaceAll(RegExp(r'^&|&$'), '').trim();
 
     return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      elevation: 0,
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(24),
+        side: BorderSide(
+          color: theme.colorScheme.primary.withValues(alpha: 0.16),
+          width: 1,
+        ),
+      ),
       clipBehavior: Clip.antiAlias,
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              theme.colorScheme.primaryContainer,
-              theme.colorScheme.secondaryContainer,
+              theme.colorScheme.primaryContainer.withValues(alpha: 0.7),
+              theme.colorScheme.secondaryContainer.withValues(alpha: 0.45),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Column(
           children: [
@@ -362,8 +376,9 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
                   child: Text(
                     formattedDate,
                     style: theme.textTheme.labelLarge?.copyWith(
-                      color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
+                      color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.85),
                       fontWeight: FontWeight.w600,
+                      letterSpacing: 0.2,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -371,11 +386,15 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
                 ),
                 const SizedBox(width: 8),
                 Container(
-                  constraints: const BoxConstraints(maxWidth: 160),
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  constraints: const BoxConstraints(maxWidth: 170),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(16),
+                    color: theme.colorScheme.surface.withValues(alpha: 0.88),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: theme.colorScheme.primary.withValues(alpha: 0.18),
+                      width: 1,
+                    ),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -384,26 +403,27 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
                         child: Text(
                           names.isNotEmpty ? names : 'Rivaldi & Alya',
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 11.5,
                             fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.onPrimaryContainer,
+                            color: theme.colorScheme.onSurface,
+                            letterSpacing: 0.1,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: 5),
                       Icon(
                         Icons.favorite_rounded,
-                        size: 14,
-                        color: theme.colorScheme.onPrimaryContainer,
+                        size: 13,
+                        color: theme.colorScheme.primary,
                       ),
                     ],
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 22),
 
             // Centered Countdown
             Row(
@@ -416,7 +436,7 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
                   style: theme.textTheme.displayLarge?.copyWith(
                     fontWeight: FontWeight.w900,
                     color: theme.colorScheme.onPrimaryContainer,
-                    letterSpacing: -1,
+                    letterSpacing: -1.5,
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -424,7 +444,8 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
                   subText,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
+                    color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.85),
+                    letterSpacing: 0.2,
                   ),
                 ),
               ],
@@ -433,7 +454,8 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
             Text(
               WeddingDateUtils.formatFull(profile.weddingDate),
               style: theme.textTheme.labelMedium?.copyWith(
-                color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.75),
+                color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
+                fontWeight: FontWeight.w500,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -444,10 +466,14 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
               const SizedBox(height: 18),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surface.withValues(alpha: 0.6),
+                  color: theme.colorScheme.surface.withValues(alpha: 0.85),
                   borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.12),
+                    width: 1,
+                  ),
                 ),
                 child: Text(
                   '"${profile.quote}"',
@@ -505,8 +531,15 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
     final remainingBudget = (totalBudgetCap - totalPaid).clamp(0.0, double.infinity);
 
     return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      elevation: 0,
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(24),
+        side: BorderSide(
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+          width: 1,
+        ),
+      ),
       color: theme.colorScheme.surface,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -526,6 +559,7 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: theme.colorScheme.onSurface,
+                        letterSpacing: 0.1,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -534,39 +568,40 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
                     Text(
                       CurrencyUtils.formatRupiah(totalPaid),
                       style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w800,
                         color: theme.colorScheme.onSurface,
+                        letterSpacing: -0.5,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      'dari ${CurrencyUtils.formatRupiah(totalBudgetCap)}',
+                      'dari total ${CurrencyUtils.formatRupiah(totalBudgetCap)}',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 12),
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(3),
+                      borderRadius: BorderRadius.circular(4),
                       child: LinearProgressIndicator(
                         value: budgetProgress,
-                        minHeight: 5,
-                        backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.15),
+                        minHeight: 6,
+                        backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.12),
                         valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 12),
                     Row(
                       children: [
                         Flexible(
                           child: Text(
                             CurrencyUtils.formatRupiah(remainingBudget),
                             style: theme.textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.onSurface,
+                              fontWeight: FontWeight.w800,
+                              color: remainingBudget > 0 ? const Color(0xFF059669) : theme.colorScheme.error,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -577,6 +612,7 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
                           'Sisa Anggaran',
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
@@ -584,29 +620,30 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
                   ],
                 ),
               ),
-              const SizedBox(width: 14),
+              const SizedBox(width: 16),
 
-              // Right Circular Radial Gauge (64x64)
+              // Right Circular Radial Gauge (68x68)
               SizedBox(
-                width: 64,
-                height: 64,
+                width: 68,
+                height: 68,
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
                     SizedBox(
-                      width: 60,
-                      height: 60,
+                      width: 62,
+                      height: 62,
                       child: CircularProgressIndicator(
                         value: budgetProgress,
                         strokeWidth: 6,
-                        backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.15),
+                        strokeCap: StrokeCap.round,
+                        backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.12),
                         valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
                       ),
                     ),
                     Text(
                       '$budgetPercentage%',
                       style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w800,
                         color: theme.colorScheme.onSurface,
                       ),
                     ),
@@ -670,10 +707,19 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
   }) {
     final bgColor = isPrimary ? theme.colorScheme.primary : theme.colorScheme.surface;
     final fgColor = isPrimary ? theme.colorScheme.onPrimary : theme.colorScheme.primary;
+    final textColor = isPrimary ? theme.colorScheme.onPrimary : theme.colorScheme.onSurface;
 
     return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+        side: BorderSide(
+          color: isPrimary
+              ? Colors.transparent
+              : theme.colorScheme.outlineVariant.withValues(alpha: 0.55),
+          width: 1,
+        ),
+      ),
       color: bgColor,
       clipBehavior: Clip.antiAlias,
       margin: EdgeInsets.zero,
@@ -681,20 +727,20 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
         onTap: onTap,
         borderRadius: BorderRadius.circular(18),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 14),
           alignment: Alignment.center,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(icon, color: fgColor, size: 24),
-              const SizedBox(height: 4),
+              const SizedBox(height: 6),
               Text(
                 label,
                 style: theme.textTheme.labelSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: fgColor,
-                  fontSize: 10.5,
-                  height: 1.15,
+                  fontWeight: FontWeight.w700,
+                  color: textColor,
+                  fontSize: 11,
+                  height: 1.2,
                 ),
                 textAlign: TextAlign.center,
                 maxLines: 2,
@@ -755,8 +801,14 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
           // Right Column (Tall Vendor Lunas Card)
           Expanded(
             child: Card(
-              elevation: 2,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(22),
+                side: BorderSide(
+                  color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+                  width: 1,
+                ),
+              ),
               color: theme.colorScheme.surface,
               clipBehavior: Clip.antiAlias,
               margin: EdgeInsets.zero,
@@ -775,38 +827,39 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
                         children: [
                           const Icon(
                             Icons.check_circle_rounded,
-                            color: Color(0xFF43A047),
-                            size: 28,
+                            color: Color(0xFF059669),
+                            size: 26,
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 6),
                           Text(
                             'Vendor Lunas',
                             style: theme.textTheme.labelMedium?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                           const SizedBox(height: 2),
                           Text(
                             '$vendorLunasCount / $totalExpenseCount',
                             style: theme.textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xFF43A047),
+                              fontWeight: FontWeight.w800,
+                              color: const Color(0xFF059669),
                             ),
                           ),
-                          const SizedBox(height: 6),
+                          const SizedBox(height: 8),
                           ClipRRect(
                             borderRadius: BorderRadius.circular(3),
                             child: LinearProgressIndicator(
                               value: vendorLunasProgress,
-                              minHeight: 5,
-                              backgroundColor: const Color(0xFF43A047).withValues(alpha: 0.15),
-                              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF43A047)),
+                              minHeight: 6,
+                              backgroundColor: const Color(0xFF059669).withValues(alpha: 0.15),
+                              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF059669)),
                             ),
                           ),
                         ],
                       ),
                       if (lastPaidExpense != null) ...[
-                        const Divider(height: 16),
+                        const Divider(height: 20),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -830,6 +883,7 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
                               CurrencyUtils.formatRupiah(lastPaidExpense.totalPaid),
                               style: theme.textTheme.labelSmall?.copyWith(
                                 color: theme.colorScheme.onSurfaceVariant,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ],
@@ -857,8 +911,14 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
     final percentage = (progress * 100).round();
 
     return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+          width: 1,
+        ),
+      ),
       color: theme.colorScheme.surface,
       clipBehavior: Clip.antiAlias,
       margin: EdgeInsets.zero,
@@ -866,7 +926,7 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
         onTap: onTap,
         borderRadius: BorderRadius.circular(20),
         child: Padding(
-          padding: const EdgeInsets.all(14),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -878,12 +938,13 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
                     title,
                     style: theme.textTheme.labelMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   Text(
                     '$percentage%',
                     style: theme.textTheme.labelMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w800,
                       color: color,
                     ),
                   ),
@@ -984,8 +1045,14 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
     required VoidCallback onTap,
   }) {
     return Card(
-      elevation: 1.5,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+          width: 1,
+        ),
+      ),
       color: theme.colorScheme.surface,
       clipBehavior: Clip.antiAlias,
       margin: EdgeInsets.zero,
@@ -997,21 +1064,34 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(icon, color: theme.colorScheme.primary, size: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      label,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Icon(
+                    icon,
+                    color: theme.colorScheme.primary.withValues(alpha: 0.8),
+                    size: 18,
+                  ),
+                ],
+              ),
               const SizedBox(height: 8),
               Text(
                 value,
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w800,
                   color: theme.colorScheme.onSurface,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              Text(
-                label,
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+                  letterSpacing: -0.2,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -1055,9 +1135,15 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
           final percentage = (progress * 100).round();
 
           return Card(
-            elevation: 1,
+            elevation: 0,
             margin: const EdgeInsets.only(bottom: 10),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18),
+              side: BorderSide(
+                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.45),
+                width: 1,
+              ),
+            ),
             color: theme.colorScheme.surface,
             child: InkWell(
               onTap: () => context.go('/wedding/${widget.profileId}/budget'),
@@ -1198,9 +1284,15 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
         ...upcomingTasks.map((task) {
           final picEnum = TaskPic.fromString(task.pic);
           return Card(
-            elevation: 1,
+            elevation: 0,
             margin: const EdgeInsets.only(bottom: 8),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+              side: BorderSide(
+                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.45),
+                width: 1,
+              ),
+            ),
             color: theme.colorScheme.surface,
             child: ListTile(
               leading: Checkbox(

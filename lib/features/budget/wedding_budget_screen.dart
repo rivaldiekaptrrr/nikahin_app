@@ -170,6 +170,7 @@ class _WeddingBudgetScreenState extends ConsumerState<WeddingBudgetScreen> {
             children: [
               Expanded(
                 child: _buildSummaryItem(
+                  theme: theme,
                   label: 'Estimasi Biaya',
                   amount: totalEstimated,
                   color: theme.colorScheme.onSurfaceVariant,
@@ -177,6 +178,7 @@ class _WeddingBudgetScreenState extends ConsumerState<WeddingBudgetScreen> {
               ),
               Expanded(
                 child: _buildSummaryItem(
+                  theme: theme,
                   label: 'Sudah Dibayar',
                   amount: totalPaid,
                   color: theme.colorScheme.primary,
@@ -185,9 +187,10 @@ class _WeddingBudgetScreenState extends ConsumerState<WeddingBudgetScreen> {
               ),
               Expanded(
                 child: _buildSummaryItem(
+                  theme: theme,
                   label: 'Sisa Dana',
                   amount: remaining > 0 ? remaining : 0,
-                  color: remaining >= 0 ? const Color(0xFF2E7D32) : theme.colorScheme.error,
+                  color: remaining >= 0 ? const Color(0xFF059669) : theme.colorScheme.error,
                 ),
               ),
             ],
@@ -220,6 +223,7 @@ class _WeddingBudgetScreenState extends ConsumerState<WeddingBudgetScreen> {
   }
 
   Widget _buildSummaryItem({
+    required ThemeData theme,
     required String label,
     required double amount,
     required Color color,
@@ -230,7 +234,10 @@ class _WeddingBudgetScreenState extends ConsumerState<WeddingBudgetScreen> {
       children: [
         Text(
           label,
-          style: TextStyle(fontSize: 11, color: Colors.grey[700]),
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+            fontWeight: FontWeight.w500,
+          ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -239,7 +246,7 @@ class _WeddingBudgetScreenState extends ConsumerState<WeddingBudgetScreen> {
           CurrencyUtils.formatRupiahCompact(amount),
           style: TextStyle(
             fontSize: 13,
-            fontWeight: isBold ? FontWeight.bold : FontWeight.w600,
+            fontWeight: isBold ? FontWeight.bold : FontWeight.w700,
             color: color,
           ),
           maxLines: 1,
