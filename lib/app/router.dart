@@ -19,7 +19,7 @@ import '../features/tasks/wedding_tasks_screen.dart';
 import '../features/vendors/wedding_vendor_screen.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/setup',
+  initialLocation: '/',
   routes: [
     GoRoute(
       path: '/',
