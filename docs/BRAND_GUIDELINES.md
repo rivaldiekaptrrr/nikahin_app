@@ -8,7 +8,7 @@
 
 ## 1. Filosofi & Esensi Brand
 
-**Nikahin** adalah aplikasi perencana pernikahan (*wedding planner & budget management*) yang mengusung prinsip *offline-first*, privat, dan elegan.
+**Nikahin** adalah aplikasi perencana pernikahan (*wedding planner & budget management*) yang mengusung prinsip akun cloud-synced, privat, dan elegan dengan keandalan cache lokal.
 
 Identitas visual Nikahin didasarkan pada **Janji Suci Akad, Genggaman Tangan Harmonis, dan Pita Cinta Abadi (*Infinity Love Ribbon & Sacred Handshake*)**:
 - **Dua Tangan yang Saling Bertaut (*Sacred Handshake*)**: Melambangkan ikrar ijab kabul, janji suci akad nikah, serta kemitraan setara antara kedua mempelai dalam merencanakan masa depan dan mengelola rumah tangga bersama.
@@ -21,7 +21,7 @@ Identitas visual Nikahin didasarkan pada **Janji Suci Akad, Genggaman Tangan Har
 
 | Peran Warna | Nama Warna | HEX | Kegunaan |
 | :--- | :--- | :--- | :--- |
-| **App Icon Plate / Background** | Deep Wine Maroon | `#8B204A` | Latar belakang utama ikon aplikasi, kartu identitas, dan lockup gelap |
+| **App Icon Plate / Background** | Warm Champagne & Sacred Melati | `#FDF0DE` → `#E6C59E` | Latar belakang utama ikon aplikasi (Rich Champagne Silk & Melati Gold Glow), kartu identitas, dan piringan logo |
 | **Romantic Coral** | Warm Coral Ribbon | `#F86D64` → `#EB5B56` | Pita atas dan tangan kanan, melambangkan kehangatan, antusiasme, dan ketegasan |
 | **Soft Blush** | Sacred Blush Pink | `#FBA4A8` → `#F8969C` | Tangan kiri dan pita bawah, melambangkan kelembutan, ketulusan, dan ketenangan |
 | **Dark Burgundy** | Royal Plum / Velvet Burgundy | `#91274C` → `#7D1F3F` | Simpul pita belakang dan bayangan kedalaman dimensi |
@@ -82,5 +82,5 @@ Aset SVG lockup telah dipersiapkan secara presisi di direktori [`assets/logo/svg
 | **SVG Master** | `assets/logo/svg/` | File vektor scalable tak terbatas untuk web & cetak |
 | **PNG High-Res** | `assets/logo/png/` | Raster 1024×1024, 512×512, dan 1200×400 |
 | **Android Launcher** | `android/app/src/main/res/mipmap-*/` | `ic_launcher.png`, `ic_launcher_foreground.png`, `ic_launcher_background.png` |
-| **iOS App Icon** | `ios/Runner/Assets.xcassets/AppIcon.appiconset/` | Seluruh resolusi ikon iPhone & iPad + Store 1024×1024 (Latar Solid Deep Wine `#8B204A` tanpa alpha) |
+| **iOS App Icon** | `ios/Runner/Assets.xcassets/AppIcon.appiconset/` | Seluruh resolusi ikon iPhone & iPad + Store 1024×1024 (Latar Solid Rich Warm Champagne `#E6C59E` / `#FDF0DE` tanpa alpha) |
 | **Favicon & Web** | `assets/logo/app_icon/web/` | `favicon.ico`, `apple-touch-icon.png`, PWA webmanifest icons |

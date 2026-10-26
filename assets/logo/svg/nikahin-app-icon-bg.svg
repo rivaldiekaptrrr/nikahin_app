@@ -1,3 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <rect width="100%" height="100%" fill="#8B204A" />
+  <defs>
+    <linearGradient id="champagneGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FDF0DE" />
+      <stop offset="100%" stop-color="#E6C59E" />
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#champagneGrad)" />
 </svg>
