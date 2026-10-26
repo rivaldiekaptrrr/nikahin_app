@@ -18,7 +18,7 @@
 
 **Nikahin** adalah aplikasi *wedding planner* komprehensif berbasis *mobile* yang dirancang khusus untuk memenuhi kebutuhan persiapan pernikahan di Indonesia (baik adat tradisi maupun nasional/modern). Aplikasi ini menggabungkan manajemen anggaran, rekanan vendor, susunan acara (*rundown*), daftar tamu & RSVP, berkas nikah KUA/Catatan Sipil, seserahan mahar, serta pembagian seragam panitia ke dalam satu wadah yang terintegrasi.
 
-Dibangun dengan arsitektur **Offline-First** menggunakan database lokal Drift (SQLite) berkemampuan sinkronisasi cloud, Nikahin menjamin data penting Anda tetap aman, responsif, dan dapat diakses tanpa koneksi internet.
+Dibangun dengan arsitektur **Online-First Cloud-Synced** dengan penyimpanan cache lokal Drift (SQLite) cerdas, Nikahin menjamin data penting Anda tetap aman, responsif, dan dapat diakses bahkan saat jaringan terputus sementara, lalu otomatis tersinkronisasi kembali ke akun cloud Anda.
 
 ---
 

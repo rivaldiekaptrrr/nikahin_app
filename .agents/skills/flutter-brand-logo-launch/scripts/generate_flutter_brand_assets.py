@@ -108,6 +108,26 @@ def extract_clean_emblem_from_raster():
     else:
         raise FileNotFoundError("Sumber master logo tidak ditemukan (JPG sumber atau nikahin-symbol-master.png).")
 
+def build_warm_champagne_background(size):
+    """Membangun kanvas latar Rich Warm Champagne & Sacred Melati Light Luxury (Bukan Putih Polos)."""
+    y = np.linspace(0, 1, size).reshape(size, 1)
+    x = np.linspace(0, 1, size).reshape(1, size)
+    # Radial glow terpusat dari area atas (x=0.5, y=0.38)
+    cx, cy = 0.5, 0.38
+    r_dist = np.sqrt((x - cx)**2 + (y - cy)**2) / 0.72
+    r_dist = np.clip(r_dist, 0.0, 1.0)
+    # Kombinasi radial highlight dengan vignette vertikal mewah
+    t = np.clip(r_dist * 0.7 + y * 0.3, 0.0, 1.0)
+
+    # Warna:
+    # Inti Kilau: Sacred Melati Champagne #FDF0DE (253, 240, 222)
+    # Pinggir / Dasar Vignette: Rich Golden Champagne Silk #E6C59E (230, 197, 158)
+    c_center = np.array([253.0, 240.0, 222.0])
+    c_outer = np.array([230.0, 197.0, 158.0])
+
+    rgb = (c_center * (1.0 - t[:, :, np.newaxis]) + c_outer * t[:, :, np.newaxis]).astype(np.uint8)
+    return Image.fromarray(rgb, mode="RGB")
+
 def create_monochrome_variant(emblem_rgba, color_rgb):
     """Membuat varian monokrom siluet dengan mempertahankan alpha channel asli."""
     r, g, b = color_rgb
@@ -218,24 +238,45 @@ def main():
     build_stacked_lockup(m512, dark=True).save(os.path.join(PNG_DIR, "nikahin-lockup-stacked-dark.png"))
     print("  -> Berkas lockup selesai dibangun.")
 
-    print("[3/7] Membangun Ikon Aplikasi Master & Lapisan Adaptive (Deep Wine #8B204A)...")
-    app_icon_1024 = Image.new("RGB", (1024, 1024), DEEP_WINE)
-    # Skala visual zoom-in ~800px visible (78% canvas) standar aplikasi modern (iOS & Android)
+    print("[3/7] Membangun Ikon Aplikasi Master & Lapisan Adaptive (Warm Champagne & Sacred Melati)...")
+    app_bg = build_warm_champagne_background(1024)
+    app_icon_rgba = app_bg.convert("RGBA")
+
+    # Skala visual zoom-in ~840px visible (82% canvas) standar aplikasi modern (iOS & Android)
     emblem_app = emblem.resize((840, 840), Image.Resampling.LANCZOS)
-    # Penempatan presisi di tengah kanvas (50-50 simetris vertikal & horizontal)
-    app_icon_1024.paste(emblem_app, ((1024 - 840) // 2, (1024 - 840) // 2), emblem_app)
+
+    # Ambient luxury shadow di belakang lambang agar kontras dan elevasi terjaga anggun di atas latar krem
+    shadow_1024 = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+    shadow_mask = Image.fromarray(np.array(emblem_app)[:, :, 3], mode='L')
+    shadow_layer = Image.new("RGBA", (840, 840), (139, 32, 74, 55)) # Warm Wine ambient shadow
+    shadow_1024.paste(shadow_layer, ((1024 - 840) // 2, (1024 - 840) // 2 + 14), shadow_mask)
+    shadow_1024 = shadow_1024.filter(ImageFilter.GaussianBlur(radius=16))
+
+    app_icon_rgba = Image.alpha_composite(app_icon_rgba, shadow_1024)
+    app_icon_rgba.paste(emblem_app, ((1024 - 840) // 2, (1024 - 840) // 2), emblem_app)
+
+    # Solid RGB tanpa alpha untuk mematuhi Apple App Store
+    app_icon_1024 = app_icon_rgba.convert("RGB")
     app_icon_1024.save(os.path.join(PNG_DIR, "nikahin-app-icon.png"), quality=95)
     app_icon_1024.save(os.path.join(APP_ICON_DIR, "ios", "icon-1024.png"), quality=95)
 
     # Android Adaptive foreground (512x512):
-    # Ukuran 300x300 memberikan tampilan lambang yang besar, tegas, dan zoomed-in,
-    # tetap 100% berada di dalam safe-zone lingkaran 338px tanpa terpotong di launcher circular maupun squircle.
+    # Ukuran 310x310 berada 100% di dalam safe-zone lingkaran 338px
     fg_canvas = Image.new("RGBA", (512, 512), (0, 0, 0, 0))
-    fg_emblem = emblem.resize((300, 300), Image.Resampling.LANCZOS)
-    fg_canvas.paste(fg_emblem, ((512 - 300) // 2, (512 - 300) // 2), fg_emblem)
+    fg_emblem = emblem.resize((310, 310), Image.Resampling.LANCZOS)
+
+    fg_shadow = Image.new("RGBA", (512, 512), (0, 0, 0, 0))
+    fg_shadow_mask = Image.fromarray(np.array(fg_emblem)[:, :, 3], mode='L')
+    fg_shadow_layer = Image.new("RGBA", (310, 310), (139, 32, 74, 50))
+    fg_shadow.paste(fg_shadow_layer, ((512 - 310) // 2, (512 - 310) // 2 + 6), fg_shadow_mask)
+    fg_shadow = fg_shadow.filter(ImageFilter.GaussianBlur(radius=6))
+
+    fg_canvas = Image.alpha_composite(fg_canvas, fg_shadow)
+    fg_canvas.paste(fg_emblem, ((512 - 310) // 2, (512 - 310) // 2), fg_emblem)
     fg_canvas.save(os.path.join(PNG_DIR, "nikahin-app-icon-fg.png"))
 
-    bg_canvas = Image.new("RGBA", (512, 512), (*DEEP_WINE, 255))
+    bg_img = build_warm_champagne_background(512)
+    bg_canvas = bg_img.convert("RGBA")
     bg_canvas.save(os.path.join(PNG_DIR, "nikahin-app-icon-bg.png"))
     print("  -> Master app-icon, foreground adaptive, dan background adaptive siap.")
 
@@ -348,7 +389,13 @@ def main():
 
     with open(os.path.join(SVG_DIR, "nikahin-app-icon-bg.svg"), "w", encoding="utf-8") as f:
         f.write('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">\n'
-                '  <rect width="100%" height="100%" fill="#8B204A" />\n'
+                '  <defs>\n'
+                '    <linearGradient id="champagneGrad" x1="0" y1="0" x2="0" y2="1">\n'
+                '      <stop offset="0%" stop-color="#FDF0DE" />\n'
+                '      <stop offset="100%" stop-color="#E6C59E" />\n'
+                '    </linearGradient>\n'
+                '  </defs>\n'
+                '  <rect width="100%" height="100%" fill="url(#champagneGrad)" />\n'
                 '</svg>\n')
 
     w1_png = os.path.join(IMAGES_DIR, "welcome_slide_1.png")

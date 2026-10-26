@@ -67,17 +67,45 @@ Gunakan saat versi baru siap didistribusikan ke pengguna (memicu pop-up In-App U
    flutter test
    flutter build apk --release
    ```
-4. **Commit perubahan versi**:
+4. **Commit Bertahap (Granular & Atomic Commits Tanpa Rilis)** ⚡:
+   > ⚠️ **ATURAN INTEGRITAS COMMIT**:
+   > 1. **Dilarang Blanket Commit**: Jangan menggabungkan semua perubahan ke dalam satu commit rilis.
+   > 2. **Tanpa Rilis di Tahap Awal**: Tahap-tahap awal ini **HANYA** berupa commit biasa (local commits) tanpa membuat atau mem-push tag rilis sama sekali!
+   > 
+   > Pisahkan perubahan secara rapi sesuai ranah kerjanya:
    ```bash
-   git add pubspec.yaml RELEASE_NOTES.md
-   git commit -m "chore: bump version to v1.0.1 and update release notes"
-   git push origin master
+   # Tahap 1: Guidelines / Docs
+   git add AGENTS.md .agents/ docs/ README.md
+   git commit -m "docs(guidelines): reinforce online-first architecture and ban pill badges"
+
+   # Tahap 2: Aset Brand & Desain
+   git add assets/logo/ macos/ windows/ web/ ios/ android/app/src/main/res/mipmap-*
+   git commit -m "style(branding): update app icons across all platforms with warm champagne palette"
+
+   # Tahap 3: Fitur UI Baru
+   git add lib/features/splash/ android/app/src/main/res/
+   git commit -m "feat(splash): add warm champagne animated luxury splash screen"
+
+   # Tahap 4: Refactor & Perbaikan
+   git add lib/features/onboarding/ lib/app/router.dart
+   git commit -m "refactor(app): clean router routes and resolve deprecated properties"
    ```
-5. **Buat dan Push Tag Versi** ⚡ *(Memicu Rilis GitHub)*:
+
+5. **Commit Versi Rilis & Push Tag (HANYA di Tahap Terakhir)** ⚡:
+   Commit terakhir ini khusus menaikkan versi dan catatan rilis, kemudian mengeksekusi push ke master serta mem-push tag rilis untuk memicu GitHub Actions:
    ```bash
+   # Commit versi & catatan rilis murni
+   git add pubspec.yaml RELEASE_NOTES.md
+   git commit -m "chore(release): bump version to v1.0.1 and update release notes"
+
+   # Push seluruh riwayat commit ke master
+   git push origin master
+
+   # Buat tag rilis dan push tag untuk memicu alur kerja rilis otomatis
    git tag v1.0.1
    git push origin v1.0.1
    ```
+
 6. **Hasil**: GitHub Actions otomatis membuat **GitHub Release publik**, melampirkan file APK `app-nikahin-v1.0.1.apk`, dan memunculkan pop-up update di aplikasi pengguna.
 
 ---

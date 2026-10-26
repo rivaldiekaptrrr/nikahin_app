@@ -951,8 +951,8 @@ Map<String, dynamic> toFirestoreMap() => {
 | 12 | Rundown multi-event dengan teks MC | Rundown | P0 |
 | 13 | Seserahan 3-arah (CPP ke CPW, CPW ke CPP, Mahar) | Seserahan | P0 |
 | 14 | Checklist dokumen pre-seeded (KUA/Catatan Sipil) | Documents | P0 |
-| 15 | Sinkronisasi Firestore (cloud sync) | Settings | P1 |
-| 16 | Mode offline-first (semua data tersimpan lokal) | Global | P0 |
+| 15 | Sinkronisasi Firestore (cloud sync) | Settings | P0 |
+| 16 | Mode online-first berbasis akun dengan smart local cache SQLite | Global | P0 |
 | 17 | Kustomisasi quote di Dashboard | Settings | P2 |
 | 18 | Export PDF/CSV summary | Settings | P2 |
 | 19 | Panduan fitur per screen (guide dialog) | Global | P2 |
@@ -1105,7 +1105,7 @@ Step 8: Polish
 
 3. **Indonesia-first**: Semua label dalam Bahasa Indonesia. Format tanggal `id_ID`. Mata uang Rupiah.
 
-4. **Offline-first**: 100% bisa jalan tanpa internet. Sync Firestore adalah bonus.
+4. **Online-First Cloud-Synced**: Aplikasi berbasis akun dengan sinkronisasi Cloud Firestore dan payment gateway. Database lokal Drift SQLite bertindak sebagai smart cache offline saat jaringan terputus sementara.
 
 5. **Multi-profile**: Satu user bisa punya beberapa WeddingProfile.
 

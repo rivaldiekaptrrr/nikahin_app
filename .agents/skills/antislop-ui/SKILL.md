@@ -9,8 +9,9 @@ Panduan spesifik untuk elemen UI visual: warna, layout, tipografi, komponen, dan
 
 ## 1. Warna & Visual
 - **Gradien Generik**: Jangan gunakan gradien biru-ke-ungu atau radial neon glow di background tanpa keterkaitan brand. Ambil palet dari `DESIGN.md`.
+- **Dilarang Refleks "Pill Badge" / Capsule Badge**: Agen AI memiliki kebiasaan buruk membungkus subjudul, tagline, intro kalimat, atau status kecil dengan kontainer kapsul lonjong ber-border (glass pill badge / rounded-full border). Ini adalah ciri khas klise AI slop! Biarkan teks bernapas dengan tipografi bersih, elegan, dan berbobot tanpa harus dipenjara dalam kapsul lonjong.
 - **Glassmorphism Berlebih**: Maksimal 1-2 elemen dengan backdrop blur jika benar-benar ada hubungan foreground/background riil. Permukaan lainnya gunakan warna solid.
-- **Radius Berlebih**: Jangan jadikan semua elemen berbentuk pill (pil lonjong). Gunakan skala radius yang proporsional.
+- **Radius Berlebih**: Jangan jadikan elemen teks atau dekorasi berbentuk pill (pil lonjong). Gunakan skala radius yang terukur dan proporsional.
 - **Bayangan Halus Ekstrem**: Bayangan hanya sebagai penanda elevasi riil, bukan agar seluruh halaman terasa mengambang tak bertanah.
 - **Glow Dimana-mana**: Dilarang meletakkan glow pada tombol, badge, kartu, dan teks secara serempak.
 

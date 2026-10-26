@@ -10,6 +10,7 @@ Filter untuk menghentikan agen AI memproduksi antarmuka generic, шаблон te
 ## Prinsip Utama
 1. **The Purpose Test**: Setiap teknik visual (gradien, bayangan, border, kartu, badge) harus memiliki tujuan fungsional, hierarki, atau makna merek yang jelas.
 2. **Tanpa Refleks Template AI**:
+   - Dilarang membungkus teks subjudul, intro, atau tagline dengan kontainer kapsul lonjong ("Pill Badge" / "Glass Pill Capsule") ber-border halus. Tampilkan tipografi dengan elegan dan bersih tanpa kontainer kapsul buatan AI.
    - Dilarang menggunakan gradien ungu-biru/neon generik secara otomatis.
    - Dilarang memasukkan semua teks ke dalam bento grid atau nested cards bertumpuk.
    - Dilarang membuat glow neon di setiap sudut elemen.

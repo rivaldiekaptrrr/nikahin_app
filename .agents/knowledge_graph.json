@@ -8,7 +8,10 @@
         "Nikahin is an all-in-one Flutter standalone mobile application for wedding planning (Android & iOS).",
         "Spun off and evolved from the Wedding Planner module of TrackIt (Kotlin/Compose) into an independent cross-platform Flutter app.",
         "Repository: rivaldiekaptrrr/nikahin_app, workspace located at c:/Rivaldi/nikahin_app.",
-        "Follows an Offline-First architectural pattern with Drift SQLite as the local single source of truth.",
+        "Follows an Online-First Cloud-Synced architectural pattern with Firebase Authentication, Cloud Firestore sync, Midtrans payment gateway, and Drift SQLite as local offline cache.",
+        "Strict prohibition on hardcoding app version strings (e.g. 'Versi X.X.X') in UI; version must always be resolved dynamically via PackageInfo.fromPlatform().",
+        "Anti-Slop Visual Rule: Strict prohibition on wrapping subheaders, taglines, intro texts, or quotes in generic 'Pill Badges' / capsule containers. Typography must breathe freely with clean editorial hierarchy without gratuitous AI-slop capsule wrappers.",
+        "Release & Git Workflow Rule: DILARANG KERAS melakukan blanket release commit tunggal (seperti menyatukan seluruh fitur/aset/bugfix/docs ke dalam 'chore(release): bump version...'). Setiap perubahan WAJIB di-commit secara bertahap dan atomik sesuai modul/konteks (feat, style, refactor, docs) sebagai commit lokal biasa tanpa rilis. Hanya pada tahap terakhir, commit versi (chore(release): bump version to vX.X.X and update release notes pada pubspec.yaml dan RELEASE_NOTES.md) dieksekusi bersama push ke master dan pembuatan/push git tag rilis.",
         "UI language and user-facing strings are strictly in Indonesian with Bento Grid and Material 3 design system.",
         "Brand design guidelines and logo craft powered by logo-design skill (.agents/skills/logo-design/SKILL.md) and DESIGN.md."
       ]
@@ -19,7 +22,7 @@
       "observations": [
         "Framework: Flutter (SDK ^3.8.0) & Dart 3.",
         "State Management: Flutter Riverpod.",
-        "Database: Drift (SQLite) + sqlite3_flutter_libs for offline-first data persistence.",
+        "Database: Drift (SQLite) + sqlite3_flutter_libs for smart local caching and offline persistence when network drops.",
         "Routing & Navigation: GoRouter.",
         "Documents & Export: pdf, printing, and share_plus for A4 Wedding Guidebook PDF and CSV guest list exports.",
         "Security: local_auth for Biometric (Fingerprint/Face) and PIN lock protection.",

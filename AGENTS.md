@@ -4,7 +4,7 @@
 - **Name**: Nikahin App
 - **Type**: Standalone Mobile Application (Android & iOS) for Wedding Planning & Budget Management.
 - **Repository**: `rivaldiekaptrrr/nikahin_app`
-- **Architecture**: Offline-First with Drift (SQLite) as the single source of truth.
+- **Architecture**: Online-First Cloud-Synced with Drift (SQLite) as local offline cache and Cloud Firestore synchronization.
 - **Design System**: Material 3 + Bento Grid Layout.
 - **Language & Strings**: Strictly in Indonesian for user-facing UI.
 
@@ -79,3 +79,11 @@ Knowledge graph data and MCP configurations are versioned inside `.agents/`:
   - `firebase-firestore`: Data model, REST API calls, updateMask patterns, query & pagination.
   - `firebase-auth-basics`: ID Token exchange, user management, dan session lifecycle.
   - `firestore-rules-creation` & `firebase-security-rules-auditor`: Audit dan penyusunan security rules yang ketat.
+
+---
+
+## 7. Strict Architectural & Versioning Rules
+- **Online-First Cloud-Synced Architecture**: Nikahin App adalah aplikasi berbasis akun online dengan autentikasi (Firebase Auth), sinkronisasi cloud (Cloud Firestore), dan integrasi payment gateway (Midtrans). Drift (SQLite) berfungsi murni sebagai **local cache / offline persistence** ketika jaringan terputus bagi pengguna yang sudah login, dan otomatis sinkron kembali saat online. **DILARANG** menyebut atau memperlakukan arsitektur aplikasi sebagai "Offline-First".
+- **Strict Prohibition on Hardcoded Version**: **DILARANG KERAS** melakukan hardcode nomor/string versi aplikasi (misalnya `'Versi 1.0.19'` atau `'v1.0.x'`) di kode UI manapun. Seluruh tampilan versi aplikasi **WAJIB** diambil secara dinamis melalui `package_info_plus` (`PackageInfo.fromPlatform()`). Hardcode versi adalah kesalahan fatal.
+- **Anti-Slop Visual Design & No Pill Badge Refleks**: **DILARANG KERAS** membungkus teks subjudul, intro, tagline, atau kutipan dengan kontainer kapsul lonjong / *glass pill badge* (`borderRadius: 20`, border tipis semi-transparan). Desain wajib mengedepankan tipografi editorial yang bernapas bebas, bersih, proporsional, dan elegan tanpa kontainer kapsul buatan AI yang berulang dan klise.
+- **Granular & Atomic Commits (Dilarang Blanket Release Commit)**: **DILARANG KERAS** menyatukan/merangkum seluruh pekerjaan (fitur baru, perbaikan bug, pembaruan aset brand, refactoring, dan dokumentasi) ke dalam satu commit tunggal berlabel rilis (seperti `chore(release): bump version...`). Seluruh berkas perubahan **WAJIB** di-commit secara bertahap dan atomik sesuai modul/konteks (`feat(...)`, `style(...)`, `refactor(...)`, `docs(...)`) sebagai **commit lokal biasa tanpa rilis**. Hanya pada tahap paling akhir, commit versi (`chore(release): bump version to vX.X.X and update release notes` pada `pubspec.yaml` dan `RELEASE_NOTES.md`) dieksekusi bersama push ke master dan pembuatan/push git tag rilis.
