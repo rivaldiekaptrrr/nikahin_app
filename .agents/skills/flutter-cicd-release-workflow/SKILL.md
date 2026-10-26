@@ -89,6 +89,9 @@ Gunakan saat versi baru siap didistribusikan ke pengguna (memicu pop-up In-App U
    # Tahap 4: Refactor & Perbaikan
    git add lib/features/onboarding/ lib/app/router.dart
    git commit -m "refactor(app): clean router routes and resolve deprecated properties"
+
+   # Setelah commit modular selesai, langsung jalankan push ke master:
+   git push origin master
    ```
 
 5. **Commit Versi Rilis & Push Tag (HANYA di Tahap Terakhir)** ⚡:
