@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../shared/widgets/offline_banner.dart';
+
 class WeddingShellScaffold extends StatelessWidget {
   final String profileId;
   final String location;
@@ -93,7 +95,12 @@ class WeddingShellScaffold extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: child,
+      body: Column(
+        children: [
+          const OfflineBanner(),
+          Expanded(child: child),
+        ],
+      ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: selectedIndex >= 0 ? selectedIndex : 0,
         indicatorColor: selectedIndex >= 0 ? theme.colorScheme.primaryContainer : Colors.transparent,
