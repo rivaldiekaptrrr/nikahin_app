@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../app/config/business_config.dart';
+import '../../../../data/services/device_info_service.dart';
 import '../../../../shared/widgets/bento_card.dart';
 
 class SettingsSupportCard extends StatelessWidget {
@@ -232,7 +233,8 @@ class SettingsSupportCard extends StatelessWidget {
                         }
                         Navigator.pop(ctx);
 
-                        final message = 'Halo Admin Nikahin,\nKategori: $selectedCategory\n\nPesan:\n$text';
+                        final diagnostics = await DeviceInfoService().getDiagnosticsPayload();
+                        final message = 'Halo Admin Nikahin,\nKategori: $selectedCategory\n\nPesan:\n$text$diagnostics';
 
                         if (selectedImage != null) {
                           try {
