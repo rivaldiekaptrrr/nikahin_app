@@ -140,18 +140,48 @@ def create_monochrome_variant(emblem_rgba, color_rgb):
     out_arr[:, :, 3] = alpha
     return Image.fromarray(out_arr, mode="RGBA")
 
+def create_champagne_plate(w, h, radius, pad=20):
+    plate = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    box_w = w - 2 * pad
+    box_h = h - 2 * pad
+    y = np.linspace(0, 1, box_h).reshape(box_h, 1, 1)
+    c_top = np.array([253.0, 240.0, 222.0]).reshape(1, 1, 3)  # #FDF0DE
+    c_bot = np.array([230.0, 197.0, 158.0]).reshape(1, 1, 3)  # #E6C59E
+    rgb = (c_top * (1.0 - y) + c_bot * y).astype(np.uint8)
+    rgb_full = np.repeat(rgb, box_w, axis=1)
+    grad_im = Image.fromarray(rgb_full, mode="RGB").convert("RGBA")
+
+    mask = Image.new("L", (box_w, box_h), 0)
+    m_draw = ImageDraw.Draw(mask)
+    m_draw.rounded_rectangle([0, 0, box_w, box_h], radius=radius, fill=255)
+
+    plate.paste(grad_im, (pad, pad), mask)
+    p_draw = ImageDraw.Draw(plate)
+    p_draw.rounded_rectangle([pad, pad, w - pad, h - pad], radius=radius, outline=(212, 175, 55, 230), width=3)
+    return plate
+
 def build_horizontal_lockup(emblem_rgba, dark=False):
     canvas = Image.new("RGBA", (1200, 400), (0, 0, 0, 0))
-    draw = ImageDraw.Draw(canvas)
     if dark:
-        draw.rounded_rectangle([20, 20, 1180, 380], radius=36, fill=DEEP_WINE_DARK, outline=(139, 32, 74), width=3)
+        plate = create_champagne_plate(1200, 400, radius=36, pad=20)
+        canvas = Image.alpha_composite(canvas, plate)
+
     emblem_thumb = emblem_rgba.resize((260, 260), Image.Resampling.LANCZOS)
+    if dark:
+        emb_shadow = Image.new("RGBA", (1200, 400), (0, 0, 0, 0))
+        emb_mask = Image.fromarray(np.array(emblem_thumb)[:, :, 3], mode='L')
+        emb_sh_layer = Image.new("RGBA", (260, 260), (139, 32, 74, 50))
+        emb_shadow.paste(emb_sh_layer, (70, 74), emb_mask)
+        emb_shadow = emb_shadow.filter(ImageFilter.GaussianBlur(radius=8))
+        canvas = Image.alpha_composite(canvas, emb_shadow)
+
     canvas.paste(emblem_thumb, (70, 70), emblem_thumb)
 
+    draw = ImageDraw.Draw(canvas)
     title_text = "Nikahin"
     tagline_text = "W E D D I N G   P L A N N E R"
-    title_color = CREAM_TEXT if dark else DEEP_WINE_DARK
-    tagline_color = (255, 215, 158) if dark else GOLD_ACCENT
+    title_color = DEEP_WINE_DARK
+    tagline_color = GOLD_ACCENT
 
     draw.text((370, 105), title_text, font=FONT_TITLE_LARGE, fill=title_color)
     draw.text((375, 235), tagline_text, font=FONT_TAGLINE_LARGE, fill=tagline_color)
@@ -159,16 +189,26 @@ def build_horizontal_lockup(emblem_rgba, dark=False):
 
 def build_stacked_lockup(emblem_rgba, dark=False):
     canvas = Image.new("RGBA", (600, 680), (0, 0, 0, 0))
-    draw = ImageDraw.Draw(canvas)
     if dark:
-        draw.rounded_rectangle([15, 15, 585, 665], radius=32, fill=DEEP_WINE_DARK, outline=(139, 32, 74), width=3)
+        plate = create_champagne_plate(600, 680, radius=32, pad=15)
+        canvas = Image.alpha_composite(canvas, plate)
+
     emblem_thumb = emblem_rgba.resize((300, 300), Image.Resampling.LANCZOS)
+    if dark:
+        emb_shadow = Image.new("RGBA", (600, 680), (0, 0, 0, 0))
+        emb_mask = Image.fromarray(np.array(emblem_thumb)[:, :, 3], mode='L')
+        emb_sh_layer = Image.new("RGBA", (300, 300), (139, 32, 74, 50))
+        emb_shadow.paste(emb_sh_layer, (150, 64), emb_mask)
+        emb_shadow = emb_shadow.filter(ImageFilter.GaussianBlur(radius=8))
+        canvas = Image.alpha_composite(canvas, emb_shadow)
+
     canvas.paste(emblem_thumb, (150, 60), emblem_thumb)
 
+    draw = ImageDraw.Draw(canvas)
     title_text = "Nikahin"
     tagline_text = "W E D D I N G   P L A N N E R"
-    title_color = CREAM_TEXT if dark else DEEP_WINE_DARK
-    tagline_color = (255, 215, 158) if dark else GOLD_ACCENT
+    title_color = DEEP_WINE_DARK
+    tagline_color = GOLD_ACCENT
 
     bbox_t = draw.textbbox((0, 0), title_text, font=FONT_TITLE_MED)
     tw = bbox_t[2] - bbox_t[0]
