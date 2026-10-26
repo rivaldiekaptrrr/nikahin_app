@@ -1,6 +1,4 @@
 import 'package:go_router/go_router.dart';
-import '../data/local/database.dart';
-import '../data/local/preferences_manager.dart';
 import 'shell/wedding_shell_scaffold.dart';
 import '../features/admin/presentation/admin_dashboard_screen.dart';
 import '../features/auth/login_screen.dart';
@@ -17,54 +15,14 @@ import '../features/seserahan/wedding_seserahan_screen.dart';
 import '../features/settings/wedding_settings_screen.dart';
 import '../features/tasks/wedding_tasks_screen.dart';
 import '../features/vendors/wedding_vendor_screen.dart';
+import '../features/splash/presentation/splash_screen.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
   routes: [
     GoRoute(
       path: '/',
-      redirect: (context, state) async {
-        final hasSeenWelcome = await AppPreferences.hasSeenWelcome();
-        if (!hasSeenWelcome) {
-          return '/welcome';
-        }
-
-        final isDemo = await AppPreferences.isDemoMode();
-        if (isDemo) {
-          final activeId = await AppPreferences.getActiveProfileId();
-          return '/wedding/$activeId';
-        }
-
-        final email = await AppPreferences.getUserEmail();
-        if (email == null || email.isEmpty) {
-          return '/login';
-        }
-
-        final accessLevel = await AppPreferences.getAccessLevel();
-        if (accessLevel == 'NONE') {
-          return '/pending-verification';
-        }
-
-        // User sudah premium/admin — cek apakah user ini sudah membuat profil pernikahannya sendiri
-        final userId = await AppPreferences.getUserId();
-        final userProfileId = await AppPreferences.getUserProfileId(userId);
-
-        if (userProfileId == null || userProfileId.isEmpty) {
-          return '/setup';
-        }
-
-        final db = AppDatabase();
-        try {
-          final profile = await db.getProfileById(userProfileId);
-          if (profile == null) {
-            return '/setup';
-          }
-          await AppPreferences.setActiveProfileId(userProfileId);
-          return '/wedding/$userProfileId';
-        } finally {
-          await db.close();
-        }
-      },
+      builder: (context, state) => const SplashScreen(),
     ),
     GoRoute(
       path: '/welcome',

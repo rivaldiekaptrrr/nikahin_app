@@ -136,7 +136,7 @@ class _SettingsAppInfoCardState extends ConsumerState<SettingsAppInfoCard> {
               ),
               const SizedBox(height: 6),
               Text(
-                'Nikahin dirancang khusus untuk mempermudah perencanaan pernikahan Anda secara offline-first dan terstruktur.',
+                'Nikahin dirancang khusus untuk mempermudah perencanaan pernikahan Anda secara aman, terstruktur, dan tersinkronisasi cloud.',
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),

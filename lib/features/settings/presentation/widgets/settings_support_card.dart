@@ -138,8 +138,8 @@ class SettingsSupportCard extends StatelessWidget {
         'a': 'Ya! Jika akun Anda terhubung dengan Google atau Email, seluruh data rencana pernikahan otomatis tersimpan di Cloud Firestore dan langsung sinkron di HP baru.',
       },
       {
-        'q': 'Apakah aplikasi bisa dipakai tanpa internet?',
-        'a': 'Sangat bisa! Nikahin menganut prinsip Offline-First dengan database SQLite Drift. Anda tetap bisa mencatat tamu, pengeluaran, dan susunan acara di gedung tanpa sinyal.',
+        'q': 'Apakah aplikasi bisa dipakai saat jaringan terputus sementara?',
+        'a': 'Sangat bisa! Nikahin dilengkapi penyimpanan cache lokal cerdas (SQLite Drift). Bagi akun yang sudah login, Anda tetap bisa mencatat tamu, pengeluaran, dan susunan acara di lokasi resepsi tanpa sinyal, lalu data otomatis tersinkronisasi kembali saat terhubung internet.',
       },
       {
         'q': 'Bagaimana cara membagikan Buku Panduan Acara (Rundown)?',

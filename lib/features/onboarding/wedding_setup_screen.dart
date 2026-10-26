@@ -528,7 +528,7 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
               ),
               child: SwitchListTile(
                 value: _generateStarterPack,
-                activeColor: theme.colorScheme.primary,
+                activeThumbColor: theme.colorScheme.primary,
                 contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 onChanged: (val) {
