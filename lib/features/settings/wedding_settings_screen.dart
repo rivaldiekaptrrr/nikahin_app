@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/local/preferences_manager.dart';
 import '../../data/repositories/wedding_repository.dart';
+import '../../data/services/notification_service.dart';
 import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/demo_guard.dart';
 import '../../shared/utils/export_utils.dart';
@@ -67,6 +68,12 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
         _dailyReminderMinute = minute;
         _biometricEnabled = bio;
       });
+      if (daily) {
+        ref.read(notificationServiceProvider).scheduleDailyReminder(
+              hour: hour,
+              minute: minute,
+            );
+      }
     }
   }
 
@@ -189,6 +196,16 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                   onDailyReminderChanged: (val) async {
                     setState(() => _dailyReminderEnabled = val);
                     await AppPreferences.setDailyReminderEnabled(val);
+                    final notif = ref.read(notificationServiceProvider);
+                    if (val) {
+                      await notif.requestPermissions();
+                      await notif.scheduleDailyReminder(
+                        hour: _dailyReminderHour,
+                        minute: _dailyReminderMinute,
+                      );
+                    } else {
+                      await notif.cancelDailyReminder();
+                    }
                   },
                   onDailyReminderTimeChanged: (hour, minute) async {
                     setState(() {
@@ -196,6 +213,12 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                       _dailyReminderMinute = minute;
                     });
                     await AppPreferences.setDailyReminderTime(hour, minute);
+                    if (_dailyReminderEnabled) {
+                      await ref.read(notificationServiceProvider).scheduleDailyReminder(
+                            hour: hour,
+                            minute: minute,
+                          );
+                    }
                   },
                   onBiometricChanged: (val) async {
                     setState(() => _biometricEnabled = val);

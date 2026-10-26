@@ -174,6 +174,50 @@ class NotificationService {
     );
   }
 
+  static const int kDailyReminderNotificationId = 999999;
+
+  /// Helper to schedule a recurring daily reminder at a specific hour and minute.
+  Future<void> scheduleDailyReminder({
+    required int hour,
+    required int minute,
+    String title = 'Pengingat Persiapan Nikahin 💍',
+    String body = 'Yuk cek checklist tugas, berkas KUA, dan progres vendor pernikahanmu hari ini!',
+  }) async {
+    await init();
+    try {
+      final now = tz.TZDateTime.now(tz.local);
+      var scheduledDate = tz.TZDateTime(
+        tz.local,
+        now.year,
+        now.month,
+        now.day,
+        hour,
+        minute,
+      );
+      if (scheduledDate.isBefore(now)) {
+        scheduledDate = scheduledDate.add(const Duration(days: 1));
+      }
+
+      await _notificationsPlugin.zonedSchedule(
+        id: kDailyReminderNotificationId,
+        title: title,
+        body: body,
+        scheduledDate: scheduledDate,
+        notificationDetails: _buildNotificationDetails(),
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        matchDateTimeComponents: DateTimeComponents.time,
+        payload: 'daily_reminder',
+      );
+    } catch (e) {
+      debugPrint('Error scheduling daily reminder: $e');
+    }
+  }
+
+  /// Cancel the recurring daily reminder.
+  Future<void> cancelDailyReminder() async {
+    await cancelNotification(kDailyReminderNotificationId);
+  }
+
   /// Cancel a specific scheduled notification.
   Future<void> cancelNotification(int id) async {
     await init();
