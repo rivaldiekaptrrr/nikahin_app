@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../domain/models/wedding_models.dart';
 import '../remote/firestore_rest_service.dart';
 import '../repositories/wedding_repository.dart';
 
@@ -143,6 +144,7 @@ class CouplePairingService {
     required String creatorName,
     required String weddingId,
     required String creatorRole,
+    WeddingProfile? profile,
   }) async {
     const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
     final rnd = Random.secure();
@@ -174,16 +176,34 @@ class CouplePairingService {
 
     // 2. Pastikan dokumen workspace pernikahan di /weddings/{weddingId} sudah ada
     final existingWedding = await firestore.getDocument(path: 'weddings/$weddingId');
-    if (existingWedding == null) {
-      await firestore.putDocument(
-        path: 'weddings/$weddingId',
-        data: {
-          'weddingId': weddingId,
-          'creatorUid': creatorUid,
-          'members': [creatorUid],
-          'createdAt': now,
-          'updatedAt': now,
+    final members = (existingWedding?['members'] as List<dynamic>?)
+            ?.map((e) => e.toString())
+            .toList() ??
+        [creatorUid];
+    if (!members.contains(creatorUid)) members.add(creatorUid);
+
+    await firestore.putDocument(
+      path: 'weddings/$weddingId',
+      data: {
+        'weddingId': weddingId,
+        'creatorUid': creatorUid,
+        'creatorName': creatorName,
+        if (profile != null) ...{
+          'groomName': profile.groomName,
+          'brideName': profile.brideName,
+          'weddingDate': profile.weddingDate,
+          'totalBudgetCap': profile.totalBudgetCap,
         },
+        'members': members,
+        'createdAt': existingWedding?['createdAt'] ?? now,
+        'updatedAt': now,
+      },
+    );
+
+    if (profile != null) {
+      await firestore.putDocument(
+        path: 'weddings/$weddingId/wedding_profiles/${profile.id}',
+        data: profile.toFirestoreMap(),
       );
     }
 

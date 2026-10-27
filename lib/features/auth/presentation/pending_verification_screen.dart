@@ -8,7 +8,9 @@ import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../app/config/business_config.dart';
+import '../../../data/local/preferences_manager.dart';
 import '../../../data/remote/midtrans_payment_service.dart';
+import '../../../data/repositories/wedding_repository.dart';
 import '../../../data/services/couple_pairing_service.dart';
 import '../../../shared/utils/currency_utils.dart';
 import '../../../shared/widgets/bento_card.dart';
@@ -1323,7 +1325,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                       fontWeight: FontWeight.w900,
                       letterSpacing: 4.0,
                     ),
-                    maxLength: 9,
+                    maxLength: 12,
                     decoration: InputDecoration(
                       hintText: 'NK-XXXXXX',
                       hintStyle: TextStyle(
@@ -1420,6 +1422,28 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
 
                             if (result.isSuccess) {
                               await ref.read(authNotifierProvider.notifier).refreshPartnerState();
+
+                              final targetWeddingId = result.weddingId ?? ref.read(authNotifierProvider).activeWeddingId;
+                              final db = ref.read(databaseProvider);
+                              String? profileIdToOpen;
+
+                              if (targetWeddingId != null && targetWeddingId.isNotEmpty) {
+                                await AppPreferences.setActiveWeddingId(targetWeddingId);
+                                await AppPreferences.setActiveProfileId(targetWeddingId);
+                                await AppPreferences.setUserProfileId(partnerUid, targetWeddingId);
+                                final p = await db.getProfileById(targetWeddingId);
+                                if (p != null) profileIdToOpen = p.id;
+                              }
+
+                              if (profileIdToOpen == null) {
+                                final allProfiles = await db.getAllProfiles();
+                                if (allProfiles.isNotEmpty) {
+                                  profileIdToOpen = allProfiles.first.id;
+                                  await AppPreferences.setActiveProfileId(profileIdToOpen);
+                                  await AppPreferences.setUserProfileId(partnerUid, profileIdToOpen);
+                                }
+                              }
+
                               if (modalContext.mounted) Navigator.of(modalContext).pop();
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -1429,7 +1453,13 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                                     behavior: SnackBarBehavior.floating,
                                   ),
                                 );
-                                context.go('/setup');
+                                if (profileIdToOpen != null) {
+                                  context.go('/wedding/$profileIdToOpen');
+                                } else if (targetWeddingId != null && targetWeddingId.isNotEmpty) {
+                                  context.go('/wedding/$targetWeddingId');
+                                } else {
+                                  context.go('/setup');
+                                }
                               }
                             } else {
                               setModalState(() {

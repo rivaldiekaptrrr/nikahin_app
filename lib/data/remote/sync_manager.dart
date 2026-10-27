@@ -76,9 +76,17 @@ class SyncManager {
       // Phase 2: Atomic SQLite Transaction via Drift
       // Wrapping all database writes inside a transaction guarantees database integrity
       await db.transaction(() async {
-        for (final raw in remoteProfiles) {
-          final profile = WeddingProfile.fromFirestoreMap(raw, raw['id'] ?? '');
-          await db.insertProfile(profile);
+        if (remoteProfiles.isNotEmpty) {
+          for (final raw in remoteProfiles) {
+            final profile = WeddingProfile.fromFirestoreMap(raw, raw['id'] ?? '');
+            await db.insertProfile(profile);
+          }
+        } else if (activeWeddingId != null && activeWeddingId!.isNotEmpty) {
+          final parentDoc = await firestore.getDocument(path: 'weddings/$activeWeddingId', idToken: idToken);
+          if (parentDoc != null && (parentDoc['groomName'] != null || parentDoc['brideName'] != null)) {
+            final fallbackProfile = WeddingProfile.fromFirestoreMap(parentDoc, activeWeddingId!);
+            await db.insertProfile(fallbackProfile);
+          }
         }
 
         for (final raw in remoteExpenses) {

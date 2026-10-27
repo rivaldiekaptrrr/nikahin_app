@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../../data/local/preferences_manager.dart';
+import '../../../../data/repositories/wedding_repository.dart';
 import '../../../../data/services/couple_pairing_service.dart';
 import '../../../../domain/models/wedding_models.dart';
 import '../../../../shared/widgets/bento_card.dart';
@@ -43,7 +46,13 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
         creatorName: auth.displayName ?? 'Pasangan Anda',
         weddingId: weddingId,
         creatorRole: role,
+        profile: widget.profile,
       );
+
+      if (codeData != null) {
+        // Otomatis uplift seluruh data lokal (profil, pengeluaran, rundown, tamu, vendor, dll) ke shared workspace
+        await ref.read(syncManagerProvider).upliftLocalAndLegacyDataToSharedWorkspace(weddingId);
+      }
 
       if (mounted) {
         setState(() {
@@ -175,7 +184,7 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
                       fontWeight: FontWeight.w900,
                       letterSpacing: 4.0,
                     ),
-                    maxLength: 9,
+                    maxLength: 12,
                     decoration: InputDecoration(
                       hintText: 'NK-XXXXXX',
                       hintStyle: TextStyle(
@@ -276,6 +285,28 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
 
                             if (result.isSuccess) {
                               await ref.read(authNotifierProvider.notifier).refreshPartnerState();
+
+                              final targetWeddingId = result.weddingId ?? ref.read(authNotifierProvider).activeWeddingId;
+                              final db = ref.read(databaseProvider);
+                              String? profileIdToOpen;
+
+                              if (targetWeddingId != null && targetWeddingId.isNotEmpty) {
+                                await AppPreferences.setActiveWeddingId(targetWeddingId);
+                                await AppPreferences.setActiveProfileId(targetWeddingId);
+                                await AppPreferences.setUserProfileId(partnerUid, targetWeddingId);
+                                final p = await db.getProfileById(targetWeddingId);
+                                if (p != null) profileIdToOpen = p.id;
+                              }
+
+                              if (profileIdToOpen == null) {
+                                final allProfiles = await db.getAllProfiles();
+                                if (allProfiles.isNotEmpty) {
+                                  profileIdToOpen = allProfiles.first.id;
+                                  await AppPreferences.setActiveProfileId(profileIdToOpen);
+                                  await AppPreferences.setUserProfileId(partnerUid, profileIdToOpen);
+                                }
+                              }
+
                               if (modalContext.mounted) Navigator.of(modalContext).pop();
                               if (mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -285,6 +316,11 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
                                     behavior: SnackBarBehavior.floating,
                                   ),
                                 );
+                                if (profileIdToOpen != null) {
+                                  context.go('/wedding/$profileIdToOpen');
+                                } else if (targetWeddingId != null && targetWeddingId.isNotEmpty) {
+                                  context.go('/wedding/$targetWeddingId');
+                                }
                               }
                             } else {
                               setModalState(() => localError = result.message);
@@ -535,12 +571,13 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
                         icon: const Icon(Icons.copy_rounded, size: 18),
                         tooltip: 'Salin Kode',
                         onPressed: () {
-                          Clipboard.setData(ClipboardData(text: _activePairingCode!.code));
+                          final formatted = CouplePairingService.formatCodeForDisplay(_activePairingCode!.code);
+                          Clipboard.setData(ClipboardData(text: formatted));
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Kode pairing disalin ke papan klip.'),
+                            SnackBar(
+                              content: Text('Kode pairing $formatted disalin ke papan klip.'),
                               behavior: SnackBarBehavior.floating,
-                              duration: Duration(seconds: 2),
+                              duration: const Duration(seconds: 2),
                             ),
                           );
                         },

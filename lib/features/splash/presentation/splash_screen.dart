@@ -195,20 +195,36 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     }
 
     final userId = await AppPreferences.getUserId();
-    final userProfileId = await AppPreferences.getUserProfileId(userId);
+    var userProfileId = await AppPreferences.getUserProfileId(userId);
 
     if (userProfileId == null || userProfileId.isEmpty) {
-      return '/setup';
+      final activeWeddingId = await AppPreferences.getActiveWeddingId();
+      if (activeWeddingId != null && activeWeddingId.isNotEmpty) {
+        userProfileId = activeWeddingId;
+        await AppPreferences.setUserProfileId(userId, userProfileId);
+      }
     }
 
     final db = AppDatabase();
     try {
-      final profile = await db.getProfileById(userProfileId);
-      if (profile == null) {
-        return '/setup';
+      if (userProfileId != null && userProfileId.isNotEmpty) {
+        final profile = await db.getProfileById(userProfileId);
+        if (profile != null) {
+          await AppPreferences.setActiveProfileId(userProfileId);
+          return '/wedding/$userProfileId';
+        }
       }
-      await AppPreferences.setActiveProfileId(userProfileId);
-      return '/wedding/$userProfileId';
+
+      // Fallback: periksa apakah sudah ada profil pernikahan lokal
+      final allProfiles = await db.getAllProfiles();
+      if (allProfiles.isNotEmpty) {
+        final firstId = allProfiles.first.id;
+        await AppPreferences.setActiveProfileId(firstId);
+        await AppPreferences.setUserProfileId(userId, firstId);
+        return '/wedding/$firstId';
+      }
+
+      return '/setup';
     } finally {
       await db.close();
     }

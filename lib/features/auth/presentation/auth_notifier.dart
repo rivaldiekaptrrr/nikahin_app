@@ -50,6 +50,11 @@ class AuthNotifier extends Notifier<AuthState> {
           await AppPreferences.setActiveWeddingId(activeWeddingId);
           await AppPreferences.setCoupleRole(coupleRole);
 
+          if (activeWeddingId != null && activeWeddingId.isNotEmpty) {
+            await AppPreferences.setActiveProfileId(activeWeddingId);
+            await AppPreferences.setUserProfileId(uid, activeWeddingId);
+          }
+
           // Self-healing: jika dokumen Firestore kehilangan email akibat bug lama, pulihkan otomatis
           if (remoteUser.email.isEmpty) {
             final cachedToken = await AppPreferences.getIdToken();
@@ -599,6 +604,11 @@ class AuthNotifier extends Notifier<AuthState> {
         await AppPreferences.setPartnerOfUid(userDoc.partnerOfUid);
         await AppPreferences.setActiveWeddingId(userDoc.activeWeddingId);
         await AppPreferences.setCoupleRole(userDoc.coupleRole);
+
+        if (userDoc.activeWeddingId != null && userDoc.activeWeddingId!.isNotEmpty) {
+          await AppPreferences.setActiveProfileId(userDoc.activeWeddingId!);
+          await AppPreferences.setUserProfileId(uid, userDoc.activeWeddingId!);
+        }
 
         final effectivePremium = level.isPremium || userDoc.isPartnerLinked;
 
