@@ -17,7 +17,7 @@ service cloud.firestore {
     // Collection User & Lisensi
     match /users/{userId} {
       allow read: if isOwner(userId) || isAdmin() || (
-        request.auth != null && resource.data.partnerOfUid == request.auth.uid
+        request.auth != null && resource != null && 'partnerOfUid' in resource.data && resource.data.partnerOfUid == request.auth.uid
       );
       
       // User baru hanya boleh mendaftarkan akun dengan status NONE. Hanya Admin yang boleh mengatur status lain.
@@ -29,6 +29,7 @@ service cloud.firestore {
       // Izinkan pasangan yang mengklaim kode untuk menautkan dirinya ke user lain tanpa mengubah accessLevel user lain.
       allow update: if (isOwner(userId) && (!('accessLevel' in request.resource.data) || request.resource.data.accessLevel == resource.data.accessLevel)) 
                     || (request.auth != null && 
+                        resource != null &&
                         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['partnerOfUid', 'updatedAt']) &&
                         request.resource.data.partnerOfUid == request.auth.uid)
                     || isAdmin();
@@ -46,17 +47,14 @@ service cloud.firestore {
     // Shared Wedding Workspace (Multi-Tenant Couple Workspace)
     match /weddings/{weddingId} {
       allow read: if request.auth != null && (
-        resource.data.members.hasAny([request.auth.uid]) || isAdmin()
+        resource == null || resource.data.members.hasAny([request.auth.uid]) || isAdmin()
       );
       
       // Maksimum 2 member (Pengantin Pria + Pengantin Wanita)
-      allow create: if request.auth != null && 
-                    request.resource.data.members.size() <= 2 && 
-                    request.resource.data.members.hasAny([request.auth.uid]);
-                    
-      allow update: if request.auth != null && (
-        resource.data.members.hasAny([request.auth.uid]) || isAdmin()
-      ) && request.resource.data.members.size() <= 2;
+      allow create, update: if request.auth != null && (
+        (request.resource.data.members.size() <= 2 && request.resource.data.members.hasAny([request.auth.uid])) || 
+        isAdmin()
+      );
       
       allow delete: if isAdmin();
     }
@@ -76,15 +74,15 @@ service cloud.firestore {
       // allow list: Enumerasi/scanning seluruh kode dilarang keras untuk mencegah brute force
       allow list: if false;
       
-      allow create: if request.auth != null && request.resource.data.creatorUid == request.auth.uid;
-      
-      allow update: if request.auth != null && (
-        resource.data.creatorUid == request.auth.uid || 
-        (resource.data.status == 'active' && request.resource.data.claimedByUid == request.auth.uid) ||
+      allow create, update: if request.auth != null && (
+        request.resource.data.creatorUid == request.auth.uid ||
+        (resource != null && resource.data.status == 'active' && request.resource.data.claimedByUid == request.auth.uid) ||
         isAdmin()
       );
       
-      allow delete: if request.auth != null && (resource.data.creatorUid == request.auth.uid || isAdmin());
+      allow delete: if request.auth != null && (
+        (resource != null && resource.data.creatorUid == request.auth.uid) || isAdmin()
+      );
     }
   }
 }
