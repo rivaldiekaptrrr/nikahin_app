@@ -28,6 +28,23 @@ flutter build apk --release
 
 ---
 
+## ☁️ ATURAN WAJIB: Otomatis Deploy Firestore Security Rules
+
+Setiap kali ada penambahan atau modifikasi aturan keamanan pada berkas [`firestore.rules`](file:///c:/Project/nikahin_app/firestore.rules) (seperti penambahan koleksi baru, subcollections, atau pembaruan hak akses):
+
+1. **WAJIB Langsung Deploy ke Cloud Firestore**: Dilarang keras membiarkan berkas `firestore.rules` hanya diperbarui secara lokal di Git. Agen atau developer **WAJIB** segera mendeploy aturan tersebut ke server Firebase Cloud agar aplikasi klien tidak mengalami error `403 Forbidden / Permission Denied`.
+2. **Langkah Deploy**:
+   ```bash
+   # Validasi sintaks aturan lokal
+   firebase_validate_security_rules (source_file: "firestore.rules", type: "firestore")
+
+   # Deploy langsung ke project Firebase aktif
+   firebase_deploy (only: "firestore")
+   ```
+3. **Verifikasi**: Pastikan deployment berstatus `100% Success` melalui `firebase_deploy_status` sebelum rilis APK atau pengujian dijalankan.
+
+---
+
 ## 🔄 Dua Alur Kerja CI/CD (GitHub Actions)
 
 Workflow didefinisikan di [`.github/workflows/multiplatform-build.yml`](file:///c:/Rivaldi/nikahin_app/.github/workflows/multiplatform-build.yml).

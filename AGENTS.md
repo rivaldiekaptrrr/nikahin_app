@@ -79,6 +79,7 @@ Knowledge graph data and MCP configurations are versioned inside `.agents/`:
   - `firebase-firestore`: Data model, REST API calls, updateMask patterns, query & pagination.
   - `firebase-auth-basics`: ID Token exchange, user management, dan session lifecycle.
   - `firestore-rules-creation` & `firebase-security-rules-auditor`: Audit dan penyusunan security rules yang ketat.
+- **Otomatis Deploy Security Rules Saat Modifikasi `firestore.rules`**: Setiap kali ada penambahan atau modifikasi aturan pada `firestore.rules`, agen **WAJIB** segera memvalidasi (`firebase_validate_security_rules`) dan mendeploy aturan tersebut ke Cloud Firestore (`firebase_deploy` dengan target `firestore`) agar server cloud Firebase selalu tersinkronisasi sebelum rilis atau pengujian aplikasi. Dilarang keras membiarkan berkas `firestore.rules` berubah hanya di lokal tanpa dideploy ke Firebase Cloud.
 
 ---
 

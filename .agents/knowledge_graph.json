@@ -12,6 +12,7 @@
         "Strict prohibition on hardcoding app version strings (e.g. 'Versi X.X.X') in UI; version must always be resolved dynamically via PackageInfo.fromPlatform().",
         "Anti-Slop Visual Rule: Strict prohibition on wrapping subheaders, taglines, intro texts, or quotes in generic 'Pill Badges' / capsule containers. Typography must breathe freely with clean editorial hierarchy without gratuitous AI-slop capsule wrappers.",
         "Release & Git Workflow Rule: DILARANG KERAS melakukan blanket release commit tunggal (seperti menyatukan seluruh fitur/aset/bugfix/docs ke dalam 'chore(release): bump version...'). Setiap perubahan WAJIB di-commit secara bertahap dan atomik sesuai modul/konteks (feat, style, refactor, docs) sebagai commit lokal biasa tanpa rilis. Hanya pada tahap terakhir, commit versi (chore(release): bump version to vX.X.X and update release notes pada pubspec.yaml dan RELEASE_NOTES.md) dieksekusi bersama push ke master dan pembuatan/push git tag rilis.",
+        "Firestore Security Rules Deployment Rule: Setiap kali ada modifikasi atau penambahan pada firestore.rules, agen WAJIB segera memvalidasi dan mendeploy aturan tersebut ke Cloud Firestore (firebase_deploy target firestore) agar server selalu tersinkronisasi dan tidak menimbulkan error 403 Forbidden pada aplikasi.",
         "UI language and user-facing strings are strictly in Indonesian with Bento Grid and Material 3 design system.",
         "Brand design guidelines and logo craft powered by logo-design skill (.agents/skills/logo-design/SKILL.md) and DESIGN.md."
       ]
