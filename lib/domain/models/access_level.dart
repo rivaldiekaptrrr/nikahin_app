@@ -34,6 +34,10 @@ class AppUserInfo {
   final String email;
   final String? displayName;
   final AccessLevel accessLevel;
+  final bool isPrimaryPayer;
+  final String? partnerOfUid;
+  final String? activeWeddingId;
+  final String? coupleRole; // 'GROOM' | 'BRIDE' | null
   final int createdAt;
   final int updatedAt;
 
@@ -42,15 +46,29 @@ class AppUserInfo {
     required this.email,
     this.displayName,
     this.accessLevel = AccessLevel.none,
+    this.isPrimaryPayer = true,
+    this.partnerOfUid,
+    this.activeWeddingId,
+    this.coupleRole,
     required this.createdAt,
     required this.updatedAt,
   });
+
+  /// Status apakah akun ini terhubung dengan pasangan utama
+  bool get isPartnerLinked => partnerOfUid != null && partnerOfUid!.isNotEmpty;
+
+  /// Hak akses efektif (otomatis Premium jika terhubung ke pasangan berbayar)
+  bool get effectiveIsPremium => accessLevel.isPremium || isPartnerLinked;
 
   Map<String, dynamic> toFirestoreMap() => {
         'uid': uid,
         'email': email,
         'displayName': displayName,
         'accessLevel': accessLevel.code,
+        'isPrimaryPayer': isPrimaryPayer,
+        'partnerOfUid': partnerOfUid,
+        'activeWeddingId': activeWeddingId,
+        'coupleRole': coupleRole,
         'createdAt': createdAt,
         'updatedAt': updatedAt,
       };
@@ -61,6 +79,10 @@ class AppUserInfo {
       email: map['email'] ?? '',
       displayName: map['displayName'],
       accessLevel: AccessLevel.fromCode(map['accessLevel']),
+      isPrimaryPayer: map['isPrimaryPayer'] as bool? ?? true,
+      partnerOfUid: map['partnerOfUid'] as String?,
+      activeWeddingId: map['activeWeddingId'] as String?,
+      coupleRole: map['coupleRole'] as String?,
       createdAt: (map['createdAt'] as num?)?.toInt() ?? DateTime.now().millisecondsSinceEpoch,
       updatedAt: (map['updatedAt'] as num?)?.toInt() ?? DateTime.now().millisecondsSinceEpoch,
     );
@@ -71,6 +93,10 @@ class AppUserInfo {
     String? email,
     String? displayName,
     AccessLevel? accessLevel,
+    bool? isPrimaryPayer,
+    String? partnerOfUid,
+    String? activeWeddingId,
+    String? coupleRole,
     int? createdAt,
     int? updatedAt,
   }) {
@@ -79,6 +105,10 @@ class AppUserInfo {
       email: email ?? this.email,
       displayName: displayName ?? this.displayName,
       accessLevel: accessLevel ?? this.accessLevel,
+      isPrimaryPayer: isPrimaryPayer ?? this.isPrimaryPayer,
+      partnerOfUid: partnerOfUid ?? this.partnerOfUid,
+      activeWeddingId: activeWeddingId ?? this.activeWeddingId,
+      coupleRole: coupleRole ?? this.coupleRole,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

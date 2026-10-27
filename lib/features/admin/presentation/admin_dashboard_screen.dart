@@ -309,9 +309,11 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
 
       switch (_selectedFilter) {
         case 'NONE':
-          return u.accessLevel == AccessLevel.none;
+          return u.accessLevel == AccessLevel.none && !u.isPartnerLinked;
         case 'PREMIUM':
-          return u.accessLevel == AccessLevel.premium;
+          return u.accessLevel == AccessLevel.premium && u.isPrimaryPayer;
+        case 'PARTNER':
+          return u.isPartnerLinked || (u.accessLevel == AccessLevel.premium && !u.isPrimaryPayer);
         case 'ADMIN':
           return u.accessLevel == AccessLevel.admin;
         default:
@@ -320,10 +322,11 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
     }).toList();
 
     final totalCount = _users.length;
-    final pendingCount = _users.where((u) => u.accessLevel == AccessLevel.none).length;
-    final premiumCount = _users.where((u) => u.accessLevel == AccessLevel.premium).length;
+    final payingUsersCount = _users.where((u) => u.accessLevel == AccessLevel.premium && u.isPrimaryPayer).length;
+    final linkedPartnerCount = _users.where((u) => u.isPartnerLinked || (u.accessLevel == AccessLevel.premium && !u.isPrimaryPayer)).length;
+    final pendingCount = _users.where((u) => u.accessLevel == AccessLevel.none && !u.isPartnerLinked).length;
     final adminCount = _users.where((u) => u.accessLevel == AccessLevel.admin).length;
-    final totalOmset = premiumCount * 49000.0;
+    final totalOmset = payingUsersCount * 49000.0;
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
@@ -622,9 +625,9 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                           Expanded(
                             child: _buildBentoKpiCard(
                               theme,
-                              title: 'Lisensi Aktif',
-                              value: '$premiumCount',
-                              subtitle: 'Lifetime Member',
+                              title: 'Lisensi Berbayar',
+                              value: '$payingUsersCount',
+                              subtitle: linkedPartnerCount > 0 ? '+ $linkedPartnerCount Pasangan' : 'Lifetime Member',
                               icon: Icons.workspace_premium_rounded,
                               accentColor: const Color(0xFF059669),
                               gradientColors: [
@@ -701,7 +704,9 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                                   const SizedBox(width: 6),
                                   _buildFilterPill('NONE', 'Menunggu', pendingCount, Icons.hourglass_top_rounded, color: const Color(0xFFEA580C)),
                                   const SizedBox(width: 6),
-                                  _buildFilterPill('PREMIUM', 'Premium', premiumCount, Icons.verified_rounded, color: const Color(0xFF059669)),
+                                  _buildFilterPill('PREMIUM', 'Berbayar', payingUsersCount, Icons.verified_rounded, color: const Color(0xFF059669)),
+                                  const SizedBox(width: 6),
+                                  _buildFilterPill('PARTNER', 'Pasangan', linkedPartnerCount, Icons.favorite_rounded, color: const Color(0xFF8B5CF6)),
                                   const SizedBox(width: 6),
                                   _buildFilterPill('ADMIN', 'Admin', adminCount, Icons.shield_rounded, color: const Color(0xFFD97706)),
                                 ],
@@ -1033,29 +1038,37 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
     final emailToShow = hasEmail ? user.email : 'UID: ${user.uid}';
     final isSuperAdminAccount = hasEmail && user.email.toLowerCase() == BusinessConfig.adminEmail.toLowerCase();
 
+    final isLinkedPartner = user.isPartnerLinked || (!user.isPrimaryPayer && user.accessLevel == AccessLevel.premium);
+
     Color statusColor;
     String statusTitle;
     IconData statusIcon;
 
-    switch (user.accessLevel) {
-      case AccessLevel.admin:
-        statusColor = const Color(0xFFD97706);
-        statusTitle = 'ADMIN';
-        statusIcon = Icons.shield_rounded;
-        break;
-      case AccessLevel.premium:
-        statusColor = const Color(0xFF059669);
-        statusTitle = 'PREMIUM';
-        statusIcon = Icons.verified_rounded;
-        break;
-      case AccessLevel.none:
-        statusColor = const Color(0xFFEA580C);
-        statusTitle = 'MENUNGGU';
-        statusIcon = Icons.hourglass_top_rounded;
-        break;
+    if (isLinkedPartner) {
+      statusColor = const Color(0xFF8B5CF6);
+      statusTitle = 'PASANGAN';
+      statusIcon = Icons.favorite_rounded;
+    } else {
+      switch (user.accessLevel) {
+        case AccessLevel.admin:
+          statusColor = const Color(0xFFD97706);
+          statusTitle = 'ADMIN';
+          statusIcon = Icons.shield_rounded;
+          break;
+        case AccessLevel.premium:
+          statusColor = const Color(0xFF059669);
+          statusTitle = 'PREMIUM';
+          statusIcon = Icons.verified_rounded;
+          break;
+        case AccessLevel.none:
+          statusColor = const Color(0xFFEA580C);
+          statusTitle = 'MENUNGGU';
+          statusIcon = Icons.hourglass_top_rounded;
+          break;
+      }
     }
 
-    final isPending = user.accessLevel == AccessLevel.none;
+    final isPending = user.accessLevel == AccessLevel.none && !isLinkedPartner;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
@@ -1208,7 +1221,9 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                                     const SizedBox(width: 4),
                                     Flexible(
                                       child: Text(
-                                        WeddingDateUtils.formatShort(user.createdAt),
+                                        user.isPartnerLinked
+                                            ? '${WeddingDateUtils.formatShort(user.createdAt)} • Pasangan'
+                                            : WeddingDateUtils.formatShort(user.createdAt),
                                         style: TextStyle(fontSize: 11, color: theme.colorScheme.outline),
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -1220,7 +1235,26 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  if (user.accessLevel == AccessLevel.none)
+                                  if (isLinkedPartner)
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(Icons.link_rounded, size: 13, color: statusColor),
+                                          const SizedBox(width: 3),
+                                          Text(
+                                            'Co-Planner',
+                                            style: TextStyle(
+                                              fontSize: 10.5,
+                                              fontWeight: FontWeight.bold,
+                                              color: statusColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  else if (user.accessLevel == AccessLevel.none)
                                     FilledButton.icon(
                                       onPressed: () => _updateUserAccess(user, AccessLevel.premium),
                                       style: FilledButton.styleFrom(

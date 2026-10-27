@@ -66,11 +66,70 @@ void main() {
       final updated = user.copyWith(
         accessLevel: AccessLevel.premium,
         displayName: 'Alya & Rivaldi',
+        partnerOfUid: 'u2',
+        activeWeddingId: 'wedding_123',
+        coupleRole: 'GROOM',
       );
 
       expect(updated.accessLevel, equals(AccessLevel.premium));
       expect(updated.displayName, equals('Alya & Rivaldi'));
       expect(updated.email, equals('test@example.com'));
+      expect(updated.partnerOfUid, equals('u2'));
+      expect(updated.activeWeddingId, equals('wedding_123'));
+      expect(updated.coupleRole, equals('GROOM'));
+      expect(updated.isPartnerLinked, isTrue);
+    });
+
+    test('Couple licensing & effectiveIsPremium inherits correctly without inflating revenue', () {
+      final primaryUser = AppUserInfo(
+        uid: 'primary_1',
+        email: 'primary@wedding.com',
+        accessLevel: AccessLevel.premium,
+        isPrimaryPayer: true,
+        activeWeddingId: 'wedding_abc',
+        createdAt: 1000,
+        updatedAt: 1000,
+      );
+
+      final partnerUser = AppUserInfo(
+        uid: 'partner_2',
+        email: 'partner@wedding.com',
+        accessLevel: AccessLevel.none,
+        isPrimaryPayer: false,
+        partnerOfUid: 'primary_1',
+        activeWeddingId: 'wedding_abc',
+        createdAt: 1000,
+        updatedAt: 1000,
+      );
+
+      final normalPendingUser = AppUserInfo(
+        uid: 'pending_3',
+        email: 'pending@wedding.com',
+        accessLevel: AccessLevel.none,
+        isPrimaryPayer: true,
+        createdAt: 1000,
+        updatedAt: 1000,
+      );
+
+      // 1. Verify partner status
+      expect(primaryUser.isPartnerLinked, isFalse);
+      expect(partnerUser.isPartnerLinked, isTrue);
+      expect(normalPendingUser.isPartnerLinked, isFalse);
+
+      // 2. Verify effectiveIsPremium (Partner inherits premium without modifying Firestore accessLevel)
+      expect(primaryUser.effectiveIsPremium, isTrue);
+      expect(partnerUser.effectiveIsPremium, isTrue);
+      expect(normalPendingUser.effectiveIsPremium, isFalse);
+
+      // 3. Verify revenue calculation: 1 primary + 1 partner + 1 pending
+      final users = [primaryUser, partnerUser, normalPendingUser];
+      final payingUsersCount = users.where((u) => u.accessLevel == AccessLevel.premium && u.isPrimaryPayer).length;
+      final linkedPartnerCount = users.where((u) => u.isPartnerLinked || (u.accessLevel == AccessLevel.premium && !u.isPrimaryPayer)).length;
+      final totalOmset = payingUsersCount * 49000.0;
+
+      expect(payingUsersCount, equals(1));
+      expect(linkedPartnerCount, equals(1));
+      expect(totalOmset, equals(49000.0)); // Zero revenue inflation!
     });
 
     test('BusinessConfig WhatsApp URL generation', () {
