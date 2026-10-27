@@ -16,7 +16,9 @@ service cloud.firestore {
 
     // Collection User & Lisensi
     match /users/{userId} {
-      allow read: if isOwner(userId) || isAdmin();
+      allow read: if isOwner(userId) || isAdmin() || (
+        request.auth != null && resource.data.partnerOfUid == request.auth.uid
+      );
       
       // User baru hanya boleh mendaftarkan akun dengan status NONE. Hanya Admin yang boleh mengatur status lain.
       allow create: if (isOwner(userId) && (!('accessLevel' in request.resource.data) || request.resource.data.accessLevel == 'NONE')) 
@@ -24,15 +26,65 @@ service cloud.firestore {
                     
       // User biasa TIDAK BOLEH mengubah accessLevel miliknya sendiri (mencegah privilege escalation).
       // Hanya Admin yang berhak memodifikasi accessLevel.
+      // Izinkan pasangan yang mengklaim kode untuk menautkan dirinya ke user lain tanpa mengubah accessLevel user lain.
       allow update: if (isOwner(userId) && (!('accessLevel' in request.resource.data) || request.resource.data.accessLevel == resource.data.accessLevel)) 
+                    || (request.auth != null && 
+                        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['partnerOfUid', 'updatedAt']) &&
+                        request.resource.data.partnerOfUid == request.auth.uid)
                     || isAdmin();
                     
       allow delete: if isAdmin();
     }
 
-    // Dokumen Pernikahan & Modul Planner (Multi-Tenant per User)
+    // Dokumen Pernikahan & Modul Planner (Multi-Tenant per User Legacy)
     match /users/{userId}/{document=**} {
-      allow read, write: if isOwner(userId) || isAdmin();
+      allow read, write: if isOwner(userId) || isAdmin() || (
+        request.auth != null && get(/databases/$(database)/documents/users/$(userId)).data.partnerOfUid == request.auth.uid
+      );
+    }
+
+    // Shared Wedding Workspace (Multi-Tenant Couple Workspace)
+    match /weddings/{weddingId} {
+      allow read: if request.auth != null && (
+        resource.data.members.hasAny([request.auth.uid]) || isAdmin()
+      );
+      
+      // Maksimum 2 member (Pengantin Pria + Pengantin Wanita)
+      allow create: if request.auth != null && 
+                    request.resource.data.members.size() <= 2 && 
+                    request.resource.data.members.hasAny([request.auth.uid]);
+                    
+      allow update: if request.auth != null && (
+        resource.data.members.hasAny([request.auth.uid]) || isAdmin()
+      ) && request.resource.data.members.size() <= 2;
+      
+      allow delete: if isAdmin();
+    }
+
+    // Shared Wedding Workspace Subcollections (budget, rundown, guests, committee, etc.)
+    match /weddings/{weddingId}/{collection}/{docId} {
+      allow read, write: if request.auth != null && (
+        get(/databases/$(database)/documents/weddings/$(weddingId)).data.members.hasAny([request.auth.uid]) || isAdmin()
+      );
+    }
+
+    // Pairing Codes (Anti-Enumeration / Strict Lookup)
+    match /pairing_codes/{code} {
+      // allow get: Verifikasi dan klaim kode satuan diizinkan bagi user login
+      allow get: if request.auth != null;
+      
+      // allow list: Enumerasi/scanning seluruh kode dilarang keras untuk mencegah brute force
+      allow list: if false;
+      
+      allow create: if request.auth != null && request.resource.data.creatorUid == request.auth.uid;
+      
+      allow update: if request.auth != null && (
+        resource.data.creatorUid == request.auth.uid || 
+        (resource.data.status == 'active' && request.resource.data.claimedByUid == request.auth.uid) ||
+        isAdmin()
+      );
+      
+      allow delete: if request.auth != null && (resource.data.creatorUid == request.auth.uid || isAdmin());
     }
   }
 }
