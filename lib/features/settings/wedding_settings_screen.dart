@@ -15,6 +15,7 @@ import '../../domain/enums/wedding_enums.dart';
 import '../../shared/utils/validation_utils.dart';
 import '../../shared/widgets/currency_text_field.dart';
 import '../../shared/widgets/date_selector_button.dart';
+import 'presentation/widgets/couple_connect_card.dart';
 import 'presentation/widgets/settings_app_info_card.dart';
 import 'presentation/widgets/settings_backup_card.dart';
 import 'presentation/widgets/settings_danger_zone_card.dart';
@@ -153,7 +154,17 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // 2. Quote Customization Section
+                // 2. Sinkronisasi Pasangan (Couple Co-Planner Workspace)
+                _buildSectionHeader(
+                  context,
+                  title: 'Sinkronisasi Pasangan',
+                  icon: Icons.favorite_rounded,
+                ),
+                const SizedBox(height: 10),
+                CoupleConnectCard(profile: profile),
+                const SizedBox(height: 20),
+
+                // 3. Quote Customization Section
                 _buildSectionHeader(
                   context,
                   title: 'Kutipan Cinta di Dashboard',
@@ -771,6 +782,11 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
           title: 'Data Pengantin & Anggaran',
           description: 'Ubah nama kedua mempelai, tanggal pernikahan, target total anggaran, dan pilihan adat tradisi.',
           icon: Icons.favorite_border_rounded,
+        ),
+        WeddingGuideFeature(
+          title: 'Sinkronisasi Pasangan',
+          description: 'Hubungkan akun dengan pasangan menggunakan kode undangan untuk perencanaan bersama secara real-time.',
+          icon: Icons.favorite_rounded,
         ),
         WeddingGuideFeature(
           title: 'Kutipan Cinta & Doa',

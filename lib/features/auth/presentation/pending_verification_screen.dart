@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../app/config/business_config.dart';
 import '../../../data/remote/midtrans_payment_service.dart';
+import '../../../data/services/couple_pairing_service.dart';
 import '../../../shared/utils/currency_utils.dart';
 import '../../../shared/widgets/bento_card.dart';
 import '../../../shared/widgets/whatsapp_logo.dart';
@@ -443,6 +444,10 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
             height: 1.4,
           ),
         ),
+        const SizedBox(height: 18),
+
+        // 1.5. Akses Co-Planner Pasangan (Bypass Pembayaran)
+        _buildCouplePairingBanner(context, theme),
         const SizedBox(height: 18),
 
         // 2. VIP Lifetime Badge & Nominal Tagihan
@@ -889,6 +894,10 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
         ),
         const SizedBox(height: 18),
 
+        // Akses Co-Planner Pasangan (Bypass Pembayaran)
+        _buildCouplePairingBanner(context, theme),
+        const SizedBox(height: 18),
+
         // VIP Lifetime Pass Card
         BentoCard(
           padding: const EdgeInsets.all(20),
@@ -1161,6 +1170,296 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildCouplePairingBanner(BuildContext context, ThemeData theme) {
+    return BentoCard(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE11D48).withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.favorite_rounded,
+                  color: Color(0xFFE11D48),
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 12),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Punya Undangan dari Pasangan?',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                    Text(
+                      '1 lisensi aktif berlaku untuk 2 akun pengantin',
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        color: Color(0xFFE11D48),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'Jika pasangan Anda sudah memiliki lisensi Nikahin, hubungkan akun dengan kode pairing untuk bergabung tanpa biaya tambahan.',
+            style: TextStyle(
+              fontSize: 12,
+              color: theme.colorScheme.onSurfaceVariant,
+              height: 1.35,
+            ),
+          ),
+          const SizedBox(height: 14),
+          OutlinedButton.icon(
+            onPressed: () => _showPairingCodeModal(context),
+            style: OutlinedButton.styleFrom(
+              minimumSize: const Size.fromHeight(42),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              side: BorderSide(
+                color: theme.colorScheme.primary.withValues(alpha: 0.4),
+              ),
+            ),
+            icon: const Icon(Icons.link_rounded, size: 18),
+            label: const Text(
+              'Masukkan Kode Pairing Pasangan',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showPairingCodeModal(BuildContext context) async {
+    final theme = Theme.of(context);
+    final codeController = TextEditingController();
+    String selectedRole = 'BRIDE';
+    String? localError;
+    bool isClaiming = false;
+
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: theme.colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (modalContext, setModalState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 20,
+                bottom: MediaQuery.of(modalContext).viewInsets.bottom + 20,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE11D48).withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(Icons.favorite_rounded, color: Color(0xFFE11D48), size: 20),
+                      ),
+                      const SizedBox(width: 12),
+                      const Expanded(
+                        child: Text(
+                          'Hubungkan dengan Pasangan',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Masukkan 6 karakter kode undangan yang dibagikan oleh pasangan Anda.',
+                    style: TextStyle(fontSize: 12.5, color: theme.colorScheme.onSurfaceVariant),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: codeController,
+                    textCapitalization: TextCapitalization.characters,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 4.0,
+                    ),
+                    maxLength: 9,
+                    decoration: InputDecoration(
+                      hintText: 'NK-XXXXXX',
+                      hintStyle: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 3.0,
+                        color: theme.colorScheme.outlineVariant,
+                      ),
+                      counterText: '',
+                      filled: true,
+                      fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: BorderSide(color: theme.colorScheme.outlineVariant),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: BorderSide(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
+                      ),
+                    ),
+                    onChanged: (val) {
+                      if (localError != null) {
+                        setModalState(() => localError = null);
+                      }
+                    },
+                  ),
+                  if (localError != null) ...[
+                    const SizedBox(height: 6),
+                    Text(
+                      localError!,
+                      style: TextStyle(fontSize: 12, color: theme.colorScheme.error, fontWeight: FontWeight.w500),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                  const SizedBox(height: 14),
+                  const Text(
+                    'Peran Anda:',
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ChoiceChip(
+                          label: const Center(child: Text('Pengantin Wanita 👰')),
+                          selected: selectedRole == 'BRIDE',
+                          onSelected: (val) {
+                            if (val) setModalState(() => selectedRole = 'BRIDE');
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ChoiceChip(
+                          label: const Center(child: Text('Pengantin Pria 🤵')),
+                          selected: selectedRole == 'GROOM',
+                          onSelected: (val) {
+                            if (val) setModalState(() => selectedRole = 'GROOM');
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  FilledButton.icon(
+                    onPressed: isClaiming
+                        ? null
+                        : () async {
+                            final raw = codeController.text.trim();
+                            if (raw.isEmpty) {
+                              setModalState(() => localError = 'Silakan masukkan kode pairing.');
+                              return;
+                            }
+
+                            setModalState(() {
+                              localError = null;
+                              isClaiming = true;
+                            });
+
+                            final auth = ref.read(authNotifierProvider);
+                            final partnerUid = auth.userId ?? '';
+                            final pairingService = ref.read(couplePairingServiceProvider);
+
+                            final result = await pairingService.verifyAndClaimPairingCode(
+                              rawCode: raw,
+                              partnerUid: partnerUid,
+                              partnerRole: selectedRole,
+                            );
+
+                            if (result.isSuccess) {
+                              await ref.read(authNotifierProvider.notifier).refreshPartnerState();
+                              if (modalContext.mounted) Navigator.of(modalContext).pop();
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(result.message),
+                                    backgroundColor: const Color(0xFF059669),
+                                    behavior: SnackBarBehavior.floating,
+                                  ),
+                                );
+                                context.go('/setup');
+                              }
+                            } else {
+                              setModalState(() {
+                                isClaiming = false;
+                                localError = result.message;
+                              });
+                            }
+                          },
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    ),
+                    icon: isClaiming
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                          )
+                        : const Icon(Icons.link_rounded, size: 20),
+                    label: Text(
+                      isClaiming ? 'Menghubungkan...' : 'Verifikasi & Hubungkan',
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

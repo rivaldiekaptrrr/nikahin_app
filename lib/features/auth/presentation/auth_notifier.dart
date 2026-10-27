@@ -678,13 +678,26 @@ class AuthNotifier extends Notifier<AuthState> {
       if (remoteUser != null) {
         final level = state.isAdmin ? AccessLevel.admin : remoteUser.accessLevel;
         await AppPreferences.setAccessLevel(level.code);
-        state = state.copyWith(accessLevel: level);
+        await AppPreferences.setPartnerOfUid(remoteUser.partnerOfUid);
+        await AppPreferences.setActiveWeddingId(remoteUser.activeWeddingId);
+        await AppPreferences.setCoupleRole(remoteUser.coupleRole);
+
+        final effectivePremium = level.isPremium || remoteUser.isPartnerLinked;
+
+        state = state.copyWith(
+          accessLevel: level,
+          isPrimaryPayer: remoteUser.isPrimaryPayer,
+          partnerOfUid: remoteUser.partnerOfUid,
+          activeWeddingId: remoteUser.activeWeddingId,
+          coupleRole: remoteUser.coupleRole,
+        );
 
         ref.read(syncManagerProvider).configure(
               newUserId: uid,
-              enabled: level.isPremium,
+              newActiveWeddingId: remoteUser.activeWeddingId,
+              enabled: effectivePremium,
             );
-        if (level.isPremium) {
+        if (effectivePremium) {
           ref.read(syncManagerProvider).pullAll();
         }
         return level;
