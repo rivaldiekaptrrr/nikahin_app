@@ -11,6 +11,9 @@ const String kPrefActiveProfileId = 'active_profile_id';
 const String kPrefIdToken = 'user_id_token';
 const String kPrefRefreshToken = 'user_refresh_token';
 const String kPrefUserPhotoUrl = 'user_photo_url';
+const String kPrefPartnerOfUid = 'user_partner_of_uid';
+const String kPrefActiveWeddingId = 'user_active_wedding_id';
+const String kPrefCoupleRole = 'user_couple_role';
 const String kPrefDailyReminderHour = 'wedding_daily_reminder_hour';
 const String kPrefDailyReminderMinute = 'wedding_daily_reminder_minute';
 
@@ -93,6 +96,48 @@ class AppPreferences {
       await prefs.setString(kPrefUserPhotoUrl, url);
     } else {
       await prefs.remove(kPrefUserPhotoUrl);
+    }
+  }
+
+  static Future<String?> getPartnerOfUid() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(kPrefPartnerOfUid);
+  }
+
+  static Future<void> setPartnerOfUid(String? partnerUid) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (partnerUid != null && partnerUid.isNotEmpty) {
+      await prefs.setString(kPrefPartnerOfUid, partnerUid);
+    } else {
+      await prefs.remove(kPrefPartnerOfUid);
+    }
+  }
+
+  static Future<String?> getActiveWeddingId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(kPrefActiveWeddingId);
+  }
+
+  static Future<void> setActiveWeddingId(String? weddingId) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (weddingId != null && weddingId.isNotEmpty) {
+      await prefs.setString(kPrefActiveWeddingId, weddingId);
+    } else {
+      await prefs.remove(kPrefActiveWeddingId);
+    }
+  }
+
+  static Future<String?> getCoupleRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(kPrefCoupleRole);
+  }
+
+  static Future<void> setCoupleRole(String? role) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (role != null && role.isNotEmpty) {
+      await prefs.setString(kPrefCoupleRole, role);
+    } else {
+      await prefs.remove(kPrefCoupleRole);
     }
   }
 

@@ -189,7 +189,8 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     }
 
     final accessLevel = await AppPreferences.getAccessLevel();
-    if (accessLevel == 'NONE') {
+    final partnerOfUid = await AppPreferences.getPartnerOfUid();
+    if (accessLevel == 'NONE' && (partnerOfUid == null || partnerOfUid.isEmpty)) {
       return '/pending-verification';
     }
 

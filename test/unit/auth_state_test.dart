@@ -69,6 +69,24 @@ void main() {
       expect(state.isPendingVerification, isFalse);
     });
 
+    test('linked partner inherits premium and bypasses pending verification', () {
+      const state = AuthState(
+        status: AuthStatus.authenticated,
+        userId: 'partner_uid',
+        email: 'partner@nikahin.app',
+        accessLevel: AccessLevel.none,
+        partnerOfUid: 'primary_uid',
+        activeWeddingId: 'wedding_123',
+        coupleRole: 'BRIDE',
+        isPrimaryPayer: false,
+      );
+
+      expect(state.isPartnerLinked, isTrue);
+      expect(state.effectiveIsPremium, isTrue);
+      expect(state.isPremium, isTrue);
+      expect(state.isPendingVerification, isFalse); // Bypasses pending verification screen!
+    });
+
     test('copyWith updates fields correctly', () {
       const state = AuthState(status: AuthStatus.initial);
       final updated = state.copyWith(

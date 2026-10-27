@@ -14,6 +14,10 @@ class AuthState {
   final String? displayName;
   final String? photoUrl;
   final AccessLevel accessLevel;
+  final bool isPrimaryPayer;
+  final String? partnerOfUid;
+  final String? activeWeddingId;
+  final String? coupleRole;
   final String? errorMessage;
   final bool isLoading;
 
@@ -24,6 +28,10 @@ class AuthState {
     this.displayName,
     this.photoUrl,
     this.accessLevel = AccessLevel.none,
+    this.isPrimaryPayer = true,
+    this.partnerOfUid,
+    this.activeWeddingId,
+    this.coupleRole,
     this.errorMessage,
     this.isLoading = false,
   });
@@ -32,8 +40,10 @@ class AuthState {
   bool get isAuthenticated => status == AuthStatus.authenticated;
   bool get isUnauthenticated => status == AuthStatus.unauthenticated;
   bool get isAdmin => accessLevel.isAdmin;
-  bool get isPremium => accessLevel.isPremium;
-  bool get isPendingVerification => isAuthenticated && accessLevel == AccessLevel.none;
+  bool get isPartnerLinked => partnerOfUid != null && partnerOfUid!.isNotEmpty;
+  bool get effectiveIsPremium => accessLevel.isPremium || isPartnerLinked;
+  bool get isPremium => effectiveIsPremium;
+  bool get isPendingVerification => isAuthenticated && accessLevel == AccessLevel.none && !isPartnerLinked;
 
   AuthState copyWith({
     AuthStatus? status,
@@ -42,6 +52,10 @@ class AuthState {
     String? displayName,
     String? photoUrl,
     AccessLevel? accessLevel,
+    bool? isPrimaryPayer,
+    String? partnerOfUid,
+    String? activeWeddingId,
+    String? coupleRole,
     String? errorMessage,
     bool? isLoading,
   }) {
@@ -52,6 +66,10 @@ class AuthState {
       displayName: displayName ?? this.displayName,
       photoUrl: photoUrl ?? this.photoUrl,
       accessLevel: accessLevel ?? this.accessLevel,
+      isPrimaryPayer: isPrimaryPayer ?? this.isPrimaryPayer,
+      partnerOfUid: partnerOfUid ?? this.partnerOfUid,
+      activeWeddingId: activeWeddingId ?? this.activeWeddingId,
+      coupleRole: coupleRole ?? this.coupleRole,
       errorMessage: errorMessage,
       isLoading: isLoading ?? this.isLoading,
     );
@@ -59,5 +77,5 @@ class AuthState {
 
   @override
   String toString() =>
-      'AuthState(status: $status, email: $email, accessLevel: $accessLevel, isDemo: $isDemoMode, loading: $isLoading)';
+      'AuthState(status: $status, email: $email, accessLevel: $accessLevel, isPartnerLinked: $isPartnerLinked, isDemo: $isDemoMode, loading: $isLoading)';
 }

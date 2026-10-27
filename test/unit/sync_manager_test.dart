@@ -31,10 +31,21 @@ void main() {
       expect(res, isFalse);
     });
 
-    test('configure updates userId and enabled flag', () {
-      syncManager.configure(newUserId: 'user_xyz', enabled: true);
+    test('configure updates userId, activeWeddingId, and enabled flag', () {
+      syncManager.configure(
+        newUserId: 'user_xyz',
+        newActiveWeddingId: 'wedding_shared_123',
+        enabled: true,
+      );
       expect(syncManager.userId, equals('user_xyz'));
+      expect(syncManager.activeWeddingId, equals('wedding_shared_123'));
       expect(syncManager.isSyncEnabled, isTrue);
+      expect(syncManager.syncBasePath, equals('weddings/wedding_shared_123'));
+    });
+
+    test('syncBasePath falls back to users/userId when activeWeddingId is not set', () {
+      syncManager.configure(newUserId: 'user_solo', newActiveWeddingId: null);
+      expect(syncManager.syncBasePath, equals('users/user_solo'));
     });
 
     test('pushExpense skips execution safely when disabled', () async {

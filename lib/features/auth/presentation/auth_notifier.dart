@@ -29,14 +29,26 @@ class AuthNotifier extends Notifier<AuthState> {
       final uid = userId ?? 'user_${email.hashCode.abs()}';
       final isAdmin = email.toLowerCase() == BusinessConfig.adminEmail.toLowerCase();
       var level = isAdmin ? AccessLevel.admin : AccessLevel.fromCode(cachedAccess);
+      String? partnerOfUid = await AppPreferences.getPartnerOfUid();
+      String? activeWeddingId = await AppPreferences.getActiveWeddingId();
+      String? coupleRole = await AppPreferences.getCoupleRole();
+      bool isPrimary = true;
 
-      // Verify and refresh latest accessLevel from Firestore
+      // Verify and refresh latest accessLevel and partner sync from Firestore
       try {
         final firestoreService = ref.read(firestoreServiceProvider);
         final remoteUser = await firestoreService.getUserInfo(uid);
         if (remoteUser != null) {
           level = isAdmin ? AccessLevel.admin : remoteUser.accessLevel;
+          partnerOfUid = remoteUser.partnerOfUid;
+          activeWeddingId = remoteUser.activeWeddingId;
+          coupleRole = remoteUser.coupleRole;
+          isPrimary = remoteUser.isPrimaryPayer;
+
           await AppPreferences.setAccessLevel(level.code);
+          await AppPreferences.setPartnerOfUid(partnerOfUid);
+          await AppPreferences.setActiveWeddingId(activeWeddingId);
+          await AppPreferences.setCoupleRole(coupleRole);
 
           // Self-healing: jika dokumen Firestore kehilangan email akibat bug lama, pulihkan otomatis
           if (remoteUser.email.isEmpty) {
@@ -47,6 +59,10 @@ class AuthNotifier extends Notifier<AuthState> {
                 email: email,
                 displayName: remoteUser.displayName ?? email.split('@').first,
                 accessLevel: level,
+                isPrimaryPayer: isPrimary,
+                partnerOfUid: partnerOfUid,
+                activeWeddingId: activeWeddingId,
+                coupleRole: coupleRole,
                 createdAt: remoteUser.createdAt,
                 updatedAt: DateTime.now().millisecondsSinceEpoch,
               ),
@@ -56,9 +72,12 @@ class AuthNotifier extends Notifier<AuthState> {
         }
       } catch (_) {}
 
+      final effectivePremium = level.isPremium || (partnerOfUid != null && partnerOfUid.isNotEmpty);
+
       ref.read(syncManagerProvider).configure(
             newUserId: uid,
-            enabled: level.isPremium,
+            newActiveWeddingId: activeWeddingId,
+            enabled: effectivePremium,
           );
 
       final photoUrl = await AppPreferences.getUserPhotoUrl();
@@ -70,10 +89,14 @@ class AuthNotifier extends Notifier<AuthState> {
         displayName: email.split('@').first,
         photoUrl: photoUrl,
         accessLevel: level,
+        isPrimaryPayer: isPrimary,
+        partnerOfUid: partnerOfUid,
+        activeWeddingId: activeWeddingId,
+        coupleRole: coupleRole,
       );
 
-      // Background pull if premium
-      if (level.isPremium) {
+      // Background pull if effective premium
+      if (effectivePremium) {
         ref.read(syncManagerProvider).pullAll();
       }
     } else if (isDemo) {
@@ -154,12 +177,20 @@ class AuthNotifier extends Notifier<AuthState> {
       final uid = res?.localId ?? 'user_${email.hashCode.abs()}';
       final isAdmin = email.toLowerCase() == BusinessConfig.adminEmail.toLowerCase();
       var level = isAdmin ? AccessLevel.admin : AccessLevel.none;
+      String? partnerOfUid;
+      String? activeWeddingId;
+      String? coupleRole;
+      bool isPrimary = true;
 
       // Check remote Firestore user document
       try {
         final remoteUser = await firestoreService.getUserInfo(uid, idToken: res?.idToken);
         if (remoteUser != null) {
           level = isAdmin ? AccessLevel.admin : remoteUser.accessLevel;
+          partnerOfUid = remoteUser.partnerOfUid;
+          activeWeddingId = remoteUser.activeWeddingId;
+          coupleRole = remoteUser.coupleRole;
+          isPrimary = remoteUser.isPrimaryPayer;
 
           // Self-healing: jika dokumen di Firestore kehilangan email, pulihkan otomatis
           if (remoteUser.email.isEmpty) {
@@ -169,6 +200,10 @@ class AuthNotifier extends Notifier<AuthState> {
                 email: email,
                 displayName: remoteUser.displayName ?? email.split('@').first,
                 accessLevel: level,
+                isPrimaryPayer: isPrimary,
+                partnerOfUid: partnerOfUid,
+                activeWeddingId: activeWeddingId,
+                coupleRole: coupleRole,
                 createdAt: remoteUser.createdAt,
                 updatedAt: DateTime.now().millisecondsSinceEpoch,
               ),
@@ -194,16 +229,22 @@ class AuthNotifier extends Notifier<AuthState> {
       await AppPreferences.setUserEmail(email);
       await AppPreferences.setUserId(uid);
       await AppPreferences.setAccessLevel(level.code);
+      await AppPreferences.setPartnerOfUid(partnerOfUid);
+      await AppPreferences.setActiveWeddingId(activeWeddingId);
+      await AppPreferences.setCoupleRole(coupleRole);
       await AppPreferences.setIdToken(res?.idToken);
       await AppPreferences.setRefreshToken(res?.refreshToken);
       await AppPreferences.setDemoMode(false);
       await AppPreferences.setHasSkippedLogin(false);
 
+      final effectivePremium = level.isPremium || (partnerOfUid != null && partnerOfUid.isNotEmpty);
+
       ref.read(userEmailProvider.notifier).state = email;
       ref.read(syncManagerProvider).configure(
             newUserId: uid,
+            newActiveWeddingId: activeWeddingId,
             newIdToken: res?.idToken,
-            enabled: level.isPremium,
+            enabled: effectivePremium,
           );
 
       state = AuthState(
@@ -212,9 +253,13 @@ class AuthNotifier extends Notifier<AuthState> {
         email: email,
         displayName: email.split('@').first,
         accessLevel: level,
+        isPrimaryPayer: isPrimary,
+        partnerOfUid: partnerOfUid,
+        activeWeddingId: activeWeddingId,
+        coupleRole: coupleRole,
       );
 
-      if (level.isPremium) {
+      if (effectivePremium) {
         ref.read(syncManagerProvider).pullAll();
       }
       return true;
@@ -396,11 +441,20 @@ class AuthNotifier extends Notifier<AuthState> {
       firebaseIdToken ??= (googleIdToken.isNotEmpty ? googleIdToken : null);
       await AppPreferences.setIdToken(firebaseIdToken);
 
+      String? partnerOfUid;
+      String? activeWeddingId;
+      String? coupleRole;
+      bool isPrimary = true;
+
       // Cek apakah akun ini sudah ada di Firestore atau daftarkan doc user baru
       try {
         final remoteUser = await firestoreService.getUserInfo(uid, idToken: firebaseIdToken);
         if (remoteUser != null) {
           level = isAdmin ? AccessLevel.admin : remoteUser.accessLevel;
+          partnerOfUid = remoteUser.partnerOfUid;
+          activeWeddingId = remoteUser.activeWeddingId;
+          coupleRole = remoteUser.coupleRole;
+          isPrimary = remoteUser.isPrimaryPayer;
 
           // Self-healing: jika dokumen di Firestore kehilangan email, pulihkan otomatis
           if (remoteUser.email.isEmpty) {
@@ -410,6 +464,10 @@ class AuthNotifier extends Notifier<AuthState> {
                 email: email,
                 displayName: remoteUser.displayName ?? displayName,
                 accessLevel: level,
+                isPrimaryPayer: isPrimary,
+                partnerOfUid: partnerOfUid,
+                activeWeddingId: activeWeddingId,
+                coupleRole: coupleRole,
                 createdAt: remoteUser.createdAt,
                 updatedAt: DateTime.now().millisecondsSinceEpoch,
               ),
@@ -435,15 +493,21 @@ class AuthNotifier extends Notifier<AuthState> {
       await AppPreferences.setUserId(uid);
       await AppPreferences.setUserPhotoUrl(photoUrl);
       await AppPreferences.setAccessLevel(level.code);
+      await AppPreferences.setPartnerOfUid(partnerOfUid);
+      await AppPreferences.setActiveWeddingId(activeWeddingId);
+      await AppPreferences.setCoupleRole(coupleRole);
       await AppPreferences.setRefreshToken(firebaseAuthRes?.refreshToken);
       await AppPreferences.setDemoMode(false);
       await AppPreferences.setHasSkippedLogin(false);
 
+      final effectivePremium = level.isPremium || (partnerOfUid != null && partnerOfUid.isNotEmpty);
+
       ref.read(userEmailProvider.notifier).state = email;
       ref.read(syncManagerProvider).configure(
             newUserId: uid,
+            newActiveWeddingId: activeWeddingId,
             newIdToken: firebaseIdToken,
-            enabled: level.isPremium,
+            enabled: effectivePremium,
           );
 
       state = AuthState(
@@ -453,9 +517,13 @@ class AuthNotifier extends Notifier<AuthState> {
         displayName: displayName,
         photoUrl: photoUrl,
         accessLevel: level,
+        isPrimaryPayer: isPrimary,
+        partnerOfUid: partnerOfUid,
+        activeWeddingId: activeWeddingId,
+        coupleRole: coupleRole,
       );
 
-      if (level.isPremium) {
+      if (effectivePremium) {
         ref.read(syncManagerProvider).pullAll();
       }
       return true;
@@ -486,14 +554,27 @@ class AuthNotifier extends Notifier<AuthState> {
       if (userDoc != null) {
         final level = userDoc.accessLevel;
         await AppPreferences.setAccessLevel(level.code);
-        state = state.copyWith(accessLevel: level);
+        await AppPreferences.setPartnerOfUid(userDoc.partnerOfUid);
+        await AppPreferences.setActiveWeddingId(userDoc.activeWeddingId);
+        await AppPreferences.setCoupleRole(userDoc.coupleRole);
+
+        final effectivePremium = level.isPremium || userDoc.isPartnerLinked;
+
+        state = state.copyWith(
+          accessLevel: level,
+          isPrimaryPayer: userDoc.isPrimaryPayer,
+          partnerOfUid: userDoc.partnerOfUid,
+          activeWeddingId: userDoc.activeWeddingId,
+          coupleRole: userDoc.coupleRole,
+        );
 
         ref.read(syncManagerProvider).configure(
               newUserId: uid,
-              enabled: level.isPremium,
+              newActiveWeddingId: userDoc.activeWeddingId,
+              enabled: effectivePremium,
             );
 
-        if (level.isPremium) {
+        if (effectivePremium) {
           ref.read(syncManagerProvider).pullAll();
         }
         return level;
@@ -501,6 +582,45 @@ class AuthNotifier extends Notifier<AuthState> {
     } catch (_) {}
 
     return state.accessLevel;
+  }
+
+  /// Memperbarui status pasangan dan menyinkronkan workspace bersama
+  Future<void> refreshPartnerState() async {
+    final uid = state.userId;
+    if (uid == null) return;
+
+    try {
+      final firestoreService = ref.read(firestoreServiceProvider);
+      final idToken = await AppPreferences.getIdToken();
+      final userDoc = await firestoreService.getUserInfo(uid, idToken: idToken);
+      if (userDoc != null) {
+        final level = state.isAdmin ? AccessLevel.admin : userDoc.accessLevel;
+        await AppPreferences.setAccessLevel(level.code);
+        await AppPreferences.setPartnerOfUid(userDoc.partnerOfUid);
+        await AppPreferences.setActiveWeddingId(userDoc.activeWeddingId);
+        await AppPreferences.setCoupleRole(userDoc.coupleRole);
+
+        final effectivePremium = level.isPremium || userDoc.isPartnerLinked;
+
+        ref.read(syncManagerProvider).configure(
+              newUserId: uid,
+              newActiveWeddingId: userDoc.activeWeddingId,
+              enabled: effectivePremium,
+            );
+
+        state = state.copyWith(
+          accessLevel: level,
+          isPrimaryPayer: userDoc.isPrimaryPayer,
+          partnerOfUid: userDoc.partnerOfUid,
+          activeWeddingId: userDoc.activeWeddingId,
+          coupleRole: userDoc.coupleRole,
+        );
+
+        if (effectivePremium) {
+          await ref.read(syncManagerProvider).pullAll();
+        }
+      }
+    } catch (_) {}
   }
 
   /// Meminta Midtrans Snap Token & Checkout URL ke Backend Vercel
@@ -620,6 +740,9 @@ class AuthNotifier extends Notifier<AuthState> {
     await AppPreferences.setUserPhotoUrl(null);
     await AppPreferences.setUserId(null);
     await AppPreferences.setAccessLevel('NONE');
+    await AppPreferences.setPartnerOfUid(null);
+    await AppPreferences.setActiveWeddingId(null);
+    await AppPreferences.setCoupleRole(null);
     await AppPreferences.setIdToken(null);
     await AppPreferences.setRefreshToken(null);
     await AppPreferences.setDemoMode(false);
@@ -628,6 +751,7 @@ class AuthNotifier extends Notifier<AuthState> {
     ref.read(userEmailProvider.notifier).state = null;
     ref.read(syncManagerProvider).configure(
           newUserId: null,
+          newActiveWeddingId: null,
           newIdToken: null,
           enabled: false,
         );
