@@ -157,7 +157,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'Akun "${user.email.isNotEmpty ? user.email : user.uid}" berhasil dihapus dari cloud.',
+                    'Akun "${user.email.isNotEmpty ? user.email : user.uid}" berhasil dihapus.',
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                 ),
@@ -175,7 +175,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
               children: [
                 Icon(Icons.error_outline_rounded, color: Colors.white, size: 20),
                 SizedBox(width: 8),
-                Expanded(child: Text('Gagal menghapus pengguna dari server.')),
+                Expanded(child: Text('Tidak dapat menghapus data pengguna. Silakan periksa koneksi internet.')),
               ],
             ),
             backgroundColor: theme.colorScheme.error,
@@ -235,7 +235,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
           ],
         ),
         content: Text(
-          'Apakah Anda yakin ingin menghapus $count pengguna terpilih secara permanen dari server Firestore?',
+          'Yakin ingin menghapus $count pengguna terpilih secara permanen? Data yang dihapus tidak dapat dipulihkan.',
         ),
         actions: [
           TextButton(
@@ -271,7 +271,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('$successCount dari $count akun berhasil dihapus dari cloud.'),
+          content: Text('$successCount dari $count akun berhasil dihapus.'),
           behavior: SnackBarBehavior.floating,
           backgroundColor: Theme.of(context).colorScheme.error,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -406,7 +406,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Icon(Icons.refresh_rounded),
-                  tooltip: 'Segarkan Data',
+                  tooltip: 'Muat Ulang Data',
                   onPressed: _isLoading ? null : _loadUsers,
                 ),
                 IconButton(
@@ -786,7 +786,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                         CircularProgressIndicator(),
                         SizedBox(height: 12),
                         Text(
-                          'Memuat data pengguna dari cloud...',
+                          'Memuat data pengguna...',
                           style: TextStyle(fontSize: 13, color: Colors.grey),
                         ),
                       ],
@@ -1404,7 +1404,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
           ],
         ),
         content: Text(
-          'Akun "${user.email}" akan dihapus permanen dari Firestore cloud database. Pengguna tidak akan dapat mengakses aplikasi lagi.',
+          'Akun "${user.email}" akan dihapus secara permanen. Pengguna tidak akan dapat mengakses aplikasi lagi.',
         ),
         actions: [
           TextButton(

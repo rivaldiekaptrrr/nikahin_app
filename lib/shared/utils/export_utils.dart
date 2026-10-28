@@ -527,7 +527,7 @@ class ExportUtils {
   /// Exports guests to a real CSV file on disk and triggers file share
   static Future<void> exportGuestsCsv(WeddingProfile profile, List<WeddingGuest> guests) async {
     final buffer = StringBuffer();
-    buffer.writeln('No,Nama Tamu,Nomor WhatsApp,Kelompok Tamu,Sesi Undangan,Estimasi Pax,Status Kehadiran');
+    buffer.writeln('No,Nama Tamu,Nomor WhatsApp,Kelompok Tamu,Sesi Undangan,Perkiraan Tamu (Pax),Status Kehadiran');
 
     for (var i = 0; i < guests.length; i++) {
       final g = guests[i];
@@ -553,7 +553,7 @@ class ExportUtils {
         ShareParams(
           files: [XFile(file.path, mimeType: 'text/csv', name: fileName)],
           subject: 'Daftar Tamu Pernikahan ${profile.groomName} & ${profile.brideName}',
-          text: 'File CSV Daftar Tamu Pernikahan ${profile.groomName} & ${profile.brideName}',
+          text: 'Dokumen CSV Daftar Tamu Pernikahan ${profile.groomName} & ${profile.brideName}',
         ),
       );
     } catch (_) {

@@ -35,7 +35,7 @@ Future<void> showDeleteConfirmDialog({
           ],
         ),
         content: Text(
-          message ?? 'Apakah Anda yakin ingin menghapus "$itemName"? Tindakan ini tidak dapat dibatalkan.',
+          message ?? 'Yakin ingin menghapus "$itemName"? Data yang sudah dihapus tidak bisa dikembalikan.',
           style: theme.textTheme.bodyMedium?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),

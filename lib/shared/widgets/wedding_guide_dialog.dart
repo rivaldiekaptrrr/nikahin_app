@@ -176,7 +176,7 @@ Future<void> showWeddingGuideDialog({
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                'Pro Tip:',
+                                'Tips Praktis:',
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
