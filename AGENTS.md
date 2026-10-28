@@ -48,8 +48,8 @@
   1. `flutter analyze`
   2. `flutter test`
   3. `flutter build apk --release`
-- **Push to `main`/`master`**: Builds internal APK artifact (`app-nikahin-main.apk`) without publishing a GitHub Release.
-- **Pushing tag `v*` (e.g. `v1.0.0`)**: Automatically creates a GitHub Release, attaches the release APK, and uses `RELEASE_NOTES.md` as the changelog.
+- **Push to `main`/`master`**: Standard commits for development; does NOT trigger GitHub Actions build to conserve runner minutes.
+- **Pushing tag `v*` (e.g. `v1.0.0`)**: The dedicated trigger that executes GitHub Actions, builds release APK, creates a GitHub Release, and uses `RELEASE_NOTES.md` as the changelog.
 
 ---
 

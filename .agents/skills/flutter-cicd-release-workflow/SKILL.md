@@ -45,22 +45,22 @@ Setiap kali ada penambahan atau modifikasi aturan keamanan pada berkas [`firesto
 
 ---
 
-## 🔄 Dua Alur Kerja CI/CD (GitHub Actions)
+## 🔄 Alur Kerja CI/CD (GitHub Actions)
 
-Workflow didefinisikan di [`.github/workflows/multiplatform-build.yml`](file:///c:/Rivaldi/nikahin_app/.github/workflows/multiplatform-build.yml).
+Workflow didefinisikan di [`.github/workflows/multiplatform-build.yml`](file:///c:/Project/nikahin_app/.github/workflows/multiplatform-build.yml).
+Untuk menghemat kuota menit GitHub Actions, alur kerja otomatis **hanya dipicu oleh Tag Rilis (`v*`)** atau dijalankan manual melalui **`workflow_dispatch`**.
 
-### Alur 1: Build Internal Developer (Push ke `master` / `main`)
-Gunakan saat mengembangkan fitur harian atau pengujian internal tanpa memicu notifikasi update ke pengguna:
-
+### Alur 1: Pengembangan Harian (Push ke `master` / `main`)
+Gunakan saat mengembangkan fitur, perbaikan bug, atau pembaruan berkas:
 1. Modifikasi kode seperti biasa.
 2. Jalankan validasi lokal (`flutter analyze` & `flutter test`).
-3. Commit dan push:
+3. Commit bertahap (*granular atomic commits*) dan push:
    ```bash
-   git add .
+   git add <files>
    git commit -m "feat(module): deskripsi perubahan"
    git push origin master
    ```
-4. **Hasil**: GitHub Actions merakit APK internal dan mengunggahnya ke bagian **Artifacts** (`app-nikahin-main.apk`). *Tidak membuat GitHub Release*.
+4. **Hasil**: Push ke master **tidak memicu GitHub Actions** (bebas antrean build dan hemat kuota menit). Jika sewaktu-waktu membutuhkan build APK dari branch `master`, gunakan tombol **"Run workflow"** (`workflow_dispatch`) di web GitHub Actions.
 
 ---
 

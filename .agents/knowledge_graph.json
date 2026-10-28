@@ -29,7 +29,7 @@
         "Security: local_auth for Biometric (Fingerprint/Face) and PIN lock protection.",
         "Key-Value Storage: shared_preferences for user settings, theme modes (Light/Dark/System), and reminders.",
         "In-App Updater powered by package_info_plus, open_filex, and GitHub Releases REST API.",
-        "CI/CD Dual-Platform workflow on GitHub Actions (.github/workflows/multiplatform-build.yml) supporting automated APK releases from git tags (v*) and internal main builds."
+        "CI/CD Dual-Platform workflow on GitHub Actions (.github/workflows/multiplatform-build.yml) supporting automated APK releases from git tags (v*) and manual workflow dispatch."
       ]
     },
     {
@@ -66,7 +66,7 @@
       "observations": [
         "Project Nikahin uses an automated Dual-Platform CI/CD workflow on GitHub Actions (.github/workflows/multiplatform-build.yml).",
         "GOLDEN RULE: Always run local validation (flutter analyze, flutter test, flutter build apk --release) BEFORE pushing to GitHub or tagging releases.",
-        "Push to master/main triggers internal artifact build (app-nikahin-main.apk) without creating public release.",
+        "Push to master/main is action-free for development to conserve runner minutes. Builds are triggered exclusively on release tags (v*) or via manual workflow_dispatch.",
         "Pushing version tag (v*, e.g., v1.0.0) automatically generates a GitHub Release with APK asset and uses RELEASE_NOTES.md as changelog.",
         "Platform toggles are managed centrally via lib/app/config/platform_config.dart and the platform-flags job in multiplatform-build.yml.",
         "Skill file stored locally in .agents/skills/flutter-cicd-release-workflow/SKILL.md."

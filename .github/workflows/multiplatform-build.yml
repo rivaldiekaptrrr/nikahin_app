@@ -2,7 +2,6 @@ name: Multiplatform Build & Release (Nikahin)
 
 on:
   push:
-    branches: [ main, master ]
     tags: [ 'v*' ]
   workflow_dispatch:
 
@@ -57,6 +56,13 @@ jobs:
           channel: 'stable'
           cache: true
           cache-key: 'flutter-:os:-:channel:-:version:-:arch:-:hash:'
+
+      - name: Setup Android NDK
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r28c
+          link-to-sdk: true
+          local-cache: true
 
       - name: Get Dependencies
         run: flutter pub get
