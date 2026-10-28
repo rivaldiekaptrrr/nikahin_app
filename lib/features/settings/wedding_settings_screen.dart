@@ -460,7 +460,7 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                                 Icon(Icons.favorite_rounded, color: theme.colorScheme.primary, size: 22),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'Edit Data Mempelai',
+                                  'Ubah Data Pengantin',
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -474,7 +474,7 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                           ],
                         ),
                         Text(
-                          'Ubah identitas pasangan pengantin, tanggal hari-H, dan target alokasi anggaran.',
+                          'Atur nama pengantin, tanggal pernikahan, dan batas rencana anggaran.',
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
@@ -690,7 +690,7 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Tempelkan (paste) teks JSON cadangan data pernikahan di bawah ini:',
+                'Tempel teks kode cadangan data pernikahan Anda di sini:',
                 style: TextStyle(fontSize: 13),
               ),
               const SizedBox(height: 12),
@@ -755,7 +755,7 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
       context: context,
       itemName: profile.coupleTitle,
       message:
-          'PERINGATAN: Mereset data pernikahan ini akan mengosongkan seluruh pos anggaran, vendor, tamu, rundown, dan tugas secara permanen.',
+          'Perhatian: Tindakan ini akan menghapus seluruh data anggaran, vendor, tamu, dan susunan acara Anda secara permanen.',
       onConfirm: () async {
         await ref.read(weddingRepositoryProvider).deleteProfile(profile.id);
         if (context.mounted) {
@@ -776,35 +776,35 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
       context: context,
       title: 'Panduan Pengaturan',
       screenPurpose:
-          'Pusat kendali konfigurasi profil pernikahan, kustomisasi kutipan dashboard, preferensi tema, hingga ekspor laporan PDF.',
+          'Atur data kedua pengantin, kutipan di beranda, tampilan aplikasi, serta ekspor dokumen persiapan pernikahan.',
       features: const [
         WeddingGuideFeature(
           title: 'Data Pengantin & Anggaran',
-          description: 'Ubah nama kedua mempelai, tanggal pernikahan, target total anggaran, dan pilihan adat tradisi.',
+          description: 'Ubah nama pengantin, tanggal pernikahan, target anggaran, dan pilihan adat tradisi.',
           icon: Icons.favorite_border_rounded,
         ),
         WeddingGuideFeature(
           title: 'Sinkronisasi Pasangan',
-          description: 'Hubungkan akun dengan pasangan menggunakan kode undangan untuk perencanaan bersama secara real-time.',
+          description: 'Hubungkan akun dengan pasangan menggunakan kode undangan agar bisa menyusun rencana bersama.',
           icon: Icons.favorite_rounded,
         ),
         WeddingGuideFeature(
           title: 'Kutipan Cinta & Doa',
-          description: 'Sesuaikan teks kutipan romantis serta ukuran dan gaya font untuk kartu utama dashboard.',
+          description: 'Pilih kutipan romantis serta ukuran dan gaya huruf untuk kartu utama di beranda.',
           icon: Icons.format_quote_rounded,
         ),
         WeddingGuideFeature(
           title: 'Ekspor Dokumen PDF & CSV',
-          description: 'Cetak seluruh susunan rencana dalam format PDF siap pakai atau ekspor daftar tamu ke tabel CSV.',
+          description: 'Cetak susunan rencana pernikahan ke berkas PDF atau ekspor daftar tamu ke tabel CSV.',
           icon: Icons.ios_share_rounded,
         ),
         WeddingGuideFeature(
           title: 'Tema & Keamanan',
-          description: 'Pilih mode tampilan terang atau gelap, aktifkan pengingat harian, serta kunci aplikasi dengan sidik jari.',
+          description: 'Pilih tampilan terang atau gelap, nyalakan pengingat harian, serta amankan aplikasi dengan sidik jari.',
           icon: Icons.tune_rounded,
         ),
       ],
-      proTip: 'Gunakan tombol Ekspor PDF untuk membagikan susunan persiapan pernikahan ke pihak keluarga dan wedding organizer!',
+      proTip: 'Gunakan tombol Ekspor PDF untuk membagikan susunan persiapan pernikahan ke pihak keluarga maupun wedding organizer!',
     );
   }
 }

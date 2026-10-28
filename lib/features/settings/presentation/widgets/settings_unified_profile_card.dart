@@ -62,7 +62,7 @@ class SettingsUnifiedProfileCard extends ConsumerWidget {
     } else if (isPending) {
       statusColor = const Color(0xFFEA580C);
       statusTitle = authState.email ?? 'Menunggu Aktivasi';
-      statusSubtitle = 'Menunggu Pembayaran • Ketuk untuk Aktivasi';
+      statusSubtitle = 'Menunggu Pembayaran • Ketuk untuk Mengaktifkan';
       onStatusTap = () => context.go('/pending-verification');
     } else {
       statusColor = theme.colorScheme.outline;
@@ -180,7 +180,7 @@ class SettingsUnifiedProfileCard extends ConsumerWidget {
                 ),
                 icon: const Icon(Icons.edit_rounded, size: 14),
                 label: const Text(
-                  'Edit',
+                  'Ubah',
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
               ),

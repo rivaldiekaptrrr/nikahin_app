@@ -29,9 +29,9 @@ class SettingsPreferencesCard extends ConsumerWidget {
     final picked = await showTimePicker(
       context: context,
       initialTime: TimeOfDay(hour: dailyReminderHour, minute: dailyReminderMinute),
-      helpText: 'PILIH WAKTU PENGINGAT HARIAN',
-      cancelText: 'BATAL',
-      confirmText: 'SIMPAN',
+      helpText: 'Pilih Jam Pengingat',
+      cancelText: 'Batal',
+      confirmText: 'Simpan',
       builder: (context, child) {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
@@ -212,7 +212,7 @@ class SettingsPreferencesCard extends ConsumerWidget {
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
             ),
             subtitle: Text(
-              'Pemberitahuan berkala progres tugas & berkas',
+              'Kabar berkala untuk memantau persiapan dan berkas nikah',
               style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurfaceVariant),
             ),
             value: dailyReminderEnabled,

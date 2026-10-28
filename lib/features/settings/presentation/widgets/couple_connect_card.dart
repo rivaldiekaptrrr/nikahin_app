@@ -364,7 +364,7 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
           ],
         ),
         content: const Text(
-          'Apakah Anda yakin ingin memutuskan sinkronisasi dengan pasangan? Anda dapat menghubungkan kembali akun kapan saja.',
+          'Yakin ingin memutuskan tautan akun dengan pasangan? Anda berdua tetap bisa terhubung kembali nanti.',
         ),
         actions: [
           TextButton(
@@ -538,7 +538,7 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
           ),
           const SizedBox(height: 10),
           Text(
-            'Bagikan kode unik agar pasangan Anda dapat mengelola anggaran, vendor, rundown, dan tamu bersama tanpa biaya tambahan.',
+            'Bagikan kode ini agar pasangan bisa ikut mencatat anggaran, vendor, susunan acara, dan tamu bersama-sama tanpa biaya tambahan.',
             style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurfaceVariant, height: 1.4),
           ),
           const SizedBox(height: 14),
@@ -637,7 +637,7 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
             ),
             icon: const Icon(Icons.input_rounded, size: 16),
             label: const Text(
-              'Punya Kode dari Pasangan? Masukkan di Sini',
+              'Punya Kode Undangan Pasangan? Masukkan di sini',
               style: TextStyle(fontSize: 12.5),
             ),
           ),

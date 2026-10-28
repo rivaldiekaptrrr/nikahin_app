@@ -39,7 +39,7 @@ class SettingsBackupCard extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
             ),
             subtitle: const Text(
-              'Format lengkap berisi anggaran, vendor, rundown, dan panitia',
+              'Rangkuman lengkap berisi anggaran, vendor, susunan acara, dan panitia',
               style: TextStyle(fontSize: 12),
             ),
             trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
@@ -61,7 +61,7 @@ class SettingsBackupCard extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
             ),
             subtitle: const Text(
-              'Format tabel spreadsheet untuk tim penerima tamu',
+              'Format tabel Excel/Spreadsheet untuk meja penerima tamu',
               style: TextStyle(fontSize: 12),
             ),
             trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
@@ -83,7 +83,7 @@ class SettingsBackupCard extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
             ),
             subtitle: const Text(
-              'Simpan seluruh data profil, anggaran, tamu, vendor ke file .json',
+              'Simpan salinan seluruh rencana pernikahan ke berkas cadangan (.json)',
               style: TextStyle(fontSize: 12),
             ),
             trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
@@ -105,7 +105,7 @@ class SettingsBackupCard extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
             ),
             subtitle: const Text(
-              'Pulihkan rencana pernikahan dari teks atau file JSON cadangan',
+              'Pulihkan data pernikahan dari teks atau berkas cadangan sebelumnya',
               style: TextStyle(fontSize: 12),
             ),
             trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
