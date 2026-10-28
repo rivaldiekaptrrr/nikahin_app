@@ -362,39 +362,73 @@ class CouplePairingService {
   }
 
   /// Memutuskan tautan pasangan (Unlink)
+  /// Menyinkronkan pemutusan ke kedua dokumen user dan mencabut pasangan dari workspace bersama.
   Future<bool> unlinkPartner({
     required String currentUid,
     required String partnerUid,
     required String weddingId,
+    bool isCurrentPrimary = true,
   }) async {
     final now = DateTime.now().millisecondsSinceEpoch;
 
-    // 1. Reset profil user saat ini
-    await firestore.putDocument(
-      path: 'users/$currentUid',
-      data: {
-        'partnerOfUid': '',
-        'updatedAt': now,
-      },
-      updateMask: ['partnerOfUid', 'updatedAt'],
-    );
+    // Tentukan siapa akun utama (Buyer) dan siapa akun pasangan (Secondary)
+    final buyerUid = isCurrentPrimary ? currentUid : partnerUid;
+    final secondaryUid = isCurrentPrimary ? partnerUid : currentUid;
 
-    // 2. Hapus partner dari workspace pernikahan jika ada
-    final weddingDoc = await firestore.getDocument(path: 'weddings/$weddingId');
-    if (weddingDoc != null) {
-      final members = (weddingDoc['members'] as List<dynamic>?)
-              ?.map((e) => e.toString())
-              .toList() ??
-          [];
-      members.remove(partnerUid);
-      await firestore.putDocument(
-        path: 'weddings/$weddingId',
-        data: {
-          'members': members,
-          'updatedAt': now,
-        },
-        updateMask: ['members', 'updatedAt'],
-      );
+    // 1. Reset profil akun utama (Buyer) di Firestore
+    if (buyerUid.isNotEmpty) {
+      try {
+        await firestore.putDocument(
+          path: 'users/$buyerUid',
+          data: {
+            'partnerOfUid': '',
+            'updatedAt': now,
+          },
+          updateMask: ['partnerOfUid', 'updatedAt'],
+        );
+      } catch (_) {}
+    }
+
+    // 2. Reset profil akun pasangan (Secondary) di Firestore
+    if (secondaryUid.isNotEmpty) {
+      try {
+        await firestore.putDocument(
+          path: 'users/$secondaryUid',
+          data: {
+            'partnerOfUid': '',
+            'activeWeddingId': '',
+            'coupleRole': '',
+            'updatedAt': now,
+          },
+          updateMask: ['partnerOfUid', 'activeWeddingId', 'coupleRole', 'updatedAt'],
+        );
+      } catch (_) {}
+    }
+
+    // 3. Cabut pasangan dari daftar anggota workspace pernikahan (weddings/$weddingId)
+    if (weddingId.isNotEmpty) {
+      try {
+        final weddingDoc = await firestore.getDocument(path: 'weddings/$weddingId');
+        if (weddingDoc != null) {
+          final members = (weddingDoc['members'] as List<dynamic>?)
+                  ?.map((e) => e.toString())
+                  .toList() ??
+              [];
+          // Selalu cabut secondaryUid, pastikan buyerUid tetap aman
+          members.remove(secondaryUid);
+          if (buyerUid.isNotEmpty && !members.contains(buyerUid)) {
+            members.add(buyerUid);
+          }
+          await firestore.putDocument(
+            path: 'weddings/$weddingId',
+            data: {
+              'members': members,
+              'updatedAt': now,
+            },
+            updateMask: ['members', 'updatedAt'],
+          );
+        }
+      } catch (_) {}
     }
 
     return true;

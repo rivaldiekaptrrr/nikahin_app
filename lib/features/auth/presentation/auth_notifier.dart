@@ -45,6 +45,82 @@ class AuthNotifier extends Notifier<AuthState> {
           coupleRole = remoteUser.coupleRole;
           isPrimary = remoteUser.isPrimaryPayer;
 
+          // Validasi dua arah (Bi-directional verification):
+          // Jika akun adalah Pasangan (Secondary), verifikasi apakah masih terdaftar di workspace pernikahan
+          if (!isPrimary && partnerOfUid != null && partnerOfUid.isNotEmpty) {
+            bool isStillMember = false;
+            if (activeWeddingId != null && activeWeddingId.isNotEmpty) {
+              try {
+                final weddingDoc = await firestoreService.getDocument(path: 'weddings/$activeWeddingId');
+                if (weddingDoc != null) {
+                  final members = (weddingDoc['members'] as List<dynamic>?)
+                          ?.map((e) => e.toString())
+                          .toList() ??
+                      [];
+                  isStillMember = members.contains(uid);
+                }
+              } catch (_) {}
+            }
+
+            // Jika tautan telah diputus oleh Buyer (tidak ada lagi di members):
+            if (!isStillMember) {
+              final oldWeddingId = activeWeddingId;
+              partnerOfUid = null;
+              activeWeddingId = null;
+              coupleRole = null;
+
+              await AppPreferences.setPartnerOfUid(null);
+              await AppPreferences.setActiveWeddingId(null);
+              await AppPreferences.setCoupleRole(null);
+
+              // Bersihkan cache lokal profil pernikahan Buyer dari Drift SQLite di HP pasangan
+              if (oldWeddingId != null && oldWeddingId.isNotEmpty) {
+                try {
+                  await ref.read(weddingRepositoryProvider).deleteProfile(oldWeddingId);
+                } catch (_) {}
+              }
+
+              // Self-healing: bersihkan dokumen Firestore milik pasangan sendiri
+              try {
+                await firestoreService.putDocument(
+                  path: 'users/$uid',
+                  data: {
+                    'partnerOfUid': '',
+                    'activeWeddingId': '',
+                    'coupleRole': '',
+                    'updatedAt': DateTime.now().millisecondsSinceEpoch,
+                  },
+                  updateMask: ['partnerOfUid', 'activeWeddingId', 'coupleRole', 'updatedAt'],
+                );
+              } catch (_) {}
+            }
+          } else if (isPrimary && partnerOfUid != null && partnerOfUid.isNotEmpty && activeWeddingId != null && activeWeddingId.isNotEmpty) {
+            // Jika akun adalah Buyer, verifikasi apakah pasangan masih terdaftar di members
+            try {
+              final weddingDoc = await firestoreService.getDocument(path: 'weddings/$activeWeddingId');
+              if (weddingDoc != null) {
+                final members = (weddingDoc['members'] as List<dynamic>?)
+                        ?.map((e) => e.toString())
+                        .toList() ??
+                    [];
+                if (!members.contains(partnerOfUid)) {
+                  partnerOfUid = null;
+                  await AppPreferences.setPartnerOfUid(null);
+                  try {
+                    await firestoreService.putDocument(
+                      path: 'users/$uid',
+                      data: {
+                        'partnerOfUid': '',
+                        'updatedAt': DateTime.now().millisecondsSinceEpoch,
+                      },
+                      updateMask: ['partnerOfUid', 'updatedAt'],
+                    );
+                  } catch (_) {}
+                }
+              }
+            } catch (_) {}
+          }
+
           await AppPreferences.setAccessLevel(level.code);
           await AppPreferences.setPartnerOfUid(partnerOfUid);
           await AppPreferences.setActiveWeddingId(activeWeddingId);
@@ -599,31 +675,108 @@ class AuthNotifier extends Notifier<AuthState> {
       final idToken = await AppPreferences.getIdToken();
       final userDoc = await firestoreService.getUserInfo(uid, idToken: idToken);
       if (userDoc != null) {
-        final level = state.isAdmin ? AccessLevel.admin : userDoc.accessLevel;
-        await AppPreferences.setAccessLevel(level.code);
-        await AppPreferences.setPartnerOfUid(userDoc.partnerOfUid);
-        await AppPreferences.setActiveWeddingId(userDoc.activeWeddingId);
-        await AppPreferences.setCoupleRole(userDoc.coupleRole);
+        var partnerOfUid = userDoc.partnerOfUid;
+        var activeWeddingId = userDoc.activeWeddingId;
+        var coupleRole = userDoc.coupleRole;
+        final isPrimary = userDoc.isPrimaryPayer;
 
-        if (userDoc.activeWeddingId != null && userDoc.activeWeddingId!.isNotEmpty) {
-          await AppPreferences.setActiveProfileId(userDoc.activeWeddingId!);
-          await AppPreferences.setUserProfileId(uid, userDoc.activeWeddingId!);
+        // Validasi dua arah (Bi-directional verification):
+        if (!isPrimary && partnerOfUid != null && partnerOfUid.isNotEmpty) {
+          bool isStillMember = false;
+          if (activeWeddingId != null && activeWeddingId.isNotEmpty) {
+            try {
+              final weddingDoc = await firestoreService.getDocument(path: 'weddings/$activeWeddingId', idToken: idToken);
+              if (weddingDoc != null) {
+                final members = (weddingDoc['members'] as List<dynamic>?)
+                        ?.map((e) => e.toString())
+                        .toList() ??
+                    [];
+                isStillMember = members.contains(uid);
+              }
+            } catch (_) {}
+          }
+
+          if (!isStillMember) {
+            final oldWeddingId = activeWeddingId;
+            partnerOfUid = null;
+            activeWeddingId = null;
+            coupleRole = null;
+
+            await AppPreferences.setPartnerOfUid(null);
+            await AppPreferences.setActiveWeddingId(null);
+            await AppPreferences.setCoupleRole(null);
+
+            if (oldWeddingId != null && oldWeddingId.isNotEmpty) {
+              try {
+                await ref.read(weddingRepositoryProvider).deleteProfile(oldWeddingId);
+              } catch (_) {}
+            }
+
+            try {
+              await firestoreService.putDocument(
+                path: 'users/$uid',
+                data: {
+                  'partnerOfUid': '',
+                  'activeWeddingId': '',
+                  'coupleRole': '',
+                  'updatedAt': DateTime.now().millisecondsSinceEpoch,
+                },
+                updateMask: ['partnerOfUid', 'activeWeddingId', 'coupleRole', 'updatedAt'],
+              );
+            } catch (_) {}
+          }
+        } else if (isPrimary && partnerOfUid != null && partnerOfUid.isNotEmpty && activeWeddingId != null && activeWeddingId.isNotEmpty) {
+          try {
+            final weddingDoc = await firestoreService.getDocument(path: 'weddings/$activeWeddingId', idToken: idToken);
+            if (weddingDoc != null) {
+              final members = (weddingDoc['members'] as List<dynamic>?)
+                      ?.map((e) => e.toString())
+                      .toList() ??
+                  [];
+              if (!members.contains(partnerOfUid)) {
+                partnerOfUid = null;
+                await AppPreferences.setPartnerOfUid(null);
+                try {
+                  await firestoreService.putDocument(
+                    path: 'users/$uid',
+                    data: {
+                      'partnerOfUid': '',
+                      'updatedAt': DateTime.now().millisecondsSinceEpoch,
+                    },
+                    updateMask: ['partnerOfUid', 'updatedAt'],
+                  );
+                } catch (_) {}
+              }
+            }
+          } catch (_) {}
         }
 
-        final effectivePremium = level.isPremium || userDoc.isPartnerLinked;
+        final level = state.isAdmin ? AccessLevel.admin : userDoc.accessLevel;
+        await AppPreferences.setAccessLevel(level.code);
+        await AppPreferences.setPartnerOfUid(partnerOfUid);
+        await AppPreferences.setActiveWeddingId(activeWeddingId);
+        await AppPreferences.setCoupleRole(coupleRole);
+
+        if (activeWeddingId != null && activeWeddingId.isNotEmpty) {
+          await AppPreferences.setActiveProfileId(activeWeddingId);
+          await AppPreferences.setUserProfileId(uid, activeWeddingId);
+        }
+
+        final isLinked = partnerOfUid != null && partnerOfUid.isNotEmpty;
+        final effectivePremium = level.isPremium || isLinked;
 
         ref.read(syncManagerProvider).configure(
               newUserId: uid,
-              newActiveWeddingId: userDoc.activeWeddingId,
+              newActiveWeddingId: activeWeddingId,
               enabled: effectivePremium,
             );
 
         state = state.copyWith(
           accessLevel: level,
-          isPrimaryPayer: userDoc.isPrimaryPayer,
-          partnerOfUid: userDoc.partnerOfUid,
-          activeWeddingId: userDoc.activeWeddingId,
-          coupleRole: userDoc.coupleRole,
+          isPrimaryPayer: isPrimary,
+          partnerOfUid: partnerOfUid,
+          activeWeddingId: activeWeddingId,
+          coupleRole: coupleRole,
         );
 
         if (effectivePremium) {

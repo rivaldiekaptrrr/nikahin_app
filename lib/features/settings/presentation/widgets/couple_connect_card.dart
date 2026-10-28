@@ -353,6 +353,14 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
 
   Future<void> _confirmUnlink() async {
     final theme = Theme.of(context);
+    final auth = ref.read(authNotifierProvider);
+    final isPrimary = auth.isPrimaryPayer;
+
+    final dialogTitle = isPrimary ? 'Putuskan Tautan Pasangan?' : 'Keluar dari Rencana Bersama?';
+    final dialogContent = isPrimary
+        ? 'Yakin ingin memutuskan tautan akun dengan pasangan? Akun pasangan tidak akan lagi memiliki akses ke rencana pernikahan ini.'
+        : 'Yakin ingin keluar dari rencana pernikahan bersama pasangan? Akses akunmu ke rencana pernikahan ini akan dihentikan.';
+
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -360,12 +368,10 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
           children: [
             Icon(Icons.link_off_rounded, color: theme.colorScheme.error),
             const SizedBox(width: 8),
-            const Text('Putuskan Tautan?'),
+            Expanded(child: Text(dialogTitle)),
           ],
         ),
-        content: const Text(
-          'Yakin ingin memutuskan tautan akun dengan pasangan? Anda berdua tetap bisa terhubung kembali nanti.',
-        ),
+        content: Text(dialogContent),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -374,7 +380,7 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: FilledButton.styleFrom(backgroundColor: theme.colorScheme.error),
-            child: const Text('Putuskan'),
+            child: Text(isPrimary ? 'Putuskan' : 'Keluar'),
           ),
         ],
       ),
@@ -384,14 +390,38 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
 
     setState(() => _isUnlinking = true);
     try {
-      final auth = ref.read(authNotifierProvider);
       final pairingService = ref.read(couplePairingServiceProvider);
+      final weddingId = auth.activeWeddingId ?? widget.profile.id;
+
       await pairingService.unlinkPartner(
         currentUid: auth.userId ?? '',
         partnerUid: auth.partnerOfUid ?? '',
-        weddingId: auth.activeWeddingId ?? widget.profile.id,
+        weddingId: weddingId,
+        isCurrentPrimary: isPrimary,
       );
 
+      // Jika user yang memutuskan adalah Pasangan (Secondary):
+      if (!isPrimary) {
+        // Hapus cache lokal SQLite profil pernikahan Buyer dari HP pasangan
+        try {
+          await ref.read(weddingRepositoryProvider).deleteProfile(weddingId);
+        } catch (_) {}
+
+        await ref.read(authNotifierProvider.notifier).refreshPartnerState();
+
+        if (mounted) {
+          context.go('/pending-verification');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Anda telah keluar dari rencana pernikahan bersama pasangan.'),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+        return;
+      }
+
+      // Jika user yang memutuskan adalah Buyer:
       await ref.read(authNotifierProvider.notifier).refreshPartnerState();
 
       if (mounted) {
