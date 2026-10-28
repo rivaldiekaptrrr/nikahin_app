@@ -117,7 +117,7 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
           children: [
             const Icon(Icons.check_circle_rounded, color: Colors.white, size: 18),
             const SizedBox(width: 8),
-            Expanded(child: Text('$label berhasil disalin ke clipboard!')),
+            Expanded(child: Text('$label berhasil disalin!')),
           ],
         ),
         backgroundColor: Colors.green.shade800,
@@ -139,7 +139,7 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Tidak dapat membuka aplikasi pembayaran.')),
+            const SnackBar(content: Text('Aplikasi pembayaran belum terpasang atau tidak dapat dibuka.')),
           );
         }
       }
@@ -343,7 +343,7 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'TOTAL TAGIHAN RESMI',
+                    'Total Pembayaran',
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
@@ -491,11 +491,11 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Pindai Kode QRIS Resmi',
+                      'Pindai Kode QRIS',
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     ),
                     Text(
-                      'Mendukung semua mobile banking & e-wallet Indonesia',
+                      'Bisa dibayar lewat semua mobile banking dan dompet digital',
                       style: TextStyle(fontSize: 11.5, color: Colors.grey),
                     ),
                   ],
@@ -575,7 +575,7 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
           const SizedBox(height: 14),
 
           Text(
-            'Buka BCA Mobile, Livin, BRImo, BNI Mobile, GoPay, OVO, Dana, atau ShopeePay lalu scan QR di atas.',
+            'Buka aplikasi perbankan atau dompet digital pilihanmu, lalu pindai kode QR di atas.',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurfaceVariant, height: 1.4),
           ),

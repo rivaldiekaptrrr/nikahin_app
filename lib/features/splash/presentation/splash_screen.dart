@@ -389,7 +389,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                             child: Transform.translate(
                               offset: Offset(0, 6 * (1 - _subFadeAnimation.value)),
                               child: const Text(
-                                '"Rencanakan Momen Bahagiamu"',
+                                '"Rencanakan Hari Bahagiamu"',
                                 style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w400,

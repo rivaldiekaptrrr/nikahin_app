@@ -59,7 +59,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
     if (level.isPremium && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Akses lisensi Anda telah aktif! Selamat datang 🎉'),
+          content: Text('Akunmu sudah aktif! Selamat merencanakan pernikahan 🎉'),
           backgroundColor: Colors.green,
           behavior: SnackBarBehavior.floating,
         ),
@@ -76,7 +76,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
       if (level.isPremium) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Selamat! Akun Anda telah berhasil diaktifkan 🎉'),
+            content: Text('Selamat! Akunmu sudah aktif selamanya 🎉'),
             backgroundColor: Colors.green,
             behavior: SnackBarBehavior.floating,
           ),
@@ -86,7 +86,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text(
-              'Status: Menunggu Verifikasi. Mohon pastikan bukti transfer sudah terkirim ke WhatsApp Tim Nikahin.',
+              'Pembayaran sedang diverifikasi. Pastikan bukti transfer sudah terkirim ke WhatsApp Tim Nikahin.',
             ),
             backgroundColor: Theme.of(context).colorScheme.primary,
             behavior: SnackBarBehavior.floating,
@@ -281,7 +281,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
               ),
               const SizedBox(height: 12),
               const Text(
-                'Cubit layar untuk zoom atau ambil screenshot untuk scan dari galeri.',
+                'Perbesar gambar atau simpan ke galeri untuk memindai lewat aplikasi pembayaranmu.',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 12, color: Colors.black54),
               ),
@@ -438,7 +438,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
         ),
         const SizedBox(height: 6),
         Text(
-          'Akun ($userEmail) siap diaktifkan. Silakan selesaikan pembayaran sebesar ${CurrencyUtils.formatRupiah(BusinessConfig.lifetimePrice)} untuk membuka akses seumur hidup.',
+          'Akun ($userEmail) siap digunakan. Selesaikan pembayaran sebesar ${CurrencyUtils.formatRupiah(BusinessConfig.lifetimePrice)} untuk membuka semua fitur selamanya.',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 12.5,
@@ -667,7 +667,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
               const Divider(height: 16),
 
               Text(
-                'Mendukung seluruh M-Banking (BCA, Mandiri, BRI, BNI) & E-Wallet (GoPay, OVO, Dana, ShopeePay).',
+                'Bisa dibayar lewat semua mobile banking dan dompet digital (BCA, Mandiri, BRI, BNI, GoPay, OVO, Dana, ShopeePay).',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 11.5,
@@ -699,12 +699,12 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
               const SizedBox(height: 12),
               _buildStepItem(
                 number: '1',
-                text: 'Buka aplikasi M-Banking atau E-Wallet favorit Anda.',
+                text: 'Buka aplikasi mobile banking atau dompet digital pilihanmu.',
               ),
               const SizedBox(height: 8),
               _buildStepItem(
                 number: '2',
-                text: 'Pilih menu Scan QR / QRIS, lalu scan kode QRIS di atas.',
+                text: 'Pilih menu Pindai QR / QRIS, lalu arahkan kamera ke kode QR di atas.',
               ),
               const SizedBox(height: 8),
               _buildStepItem(
@@ -714,12 +714,12 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
               const SizedBox(height: 8),
               _buildStepItem(
                 number: '4',
-                text: 'Klik tombol WhatsApp di bawah untuk menyetor bukti pembayaran.',
+                text: 'Ketuk tombol WhatsApp di bawah untuk mengirimkan bukti transfer.',
               ),
               const SizedBox(height: 8),
               _buildStepItem(
                 number: '5',
-                text: 'Tim Nikahin akan segera memverifikasi bukti pembayaran Anda.',
+                text: 'Tim Nikahin akan segera memverifikasi bukti pembayaranmu.',
               ),
             ],
           ),
@@ -764,7 +764,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
 
         // Auto-check note
         Text(
-          'Layar ini akan otomatis mengalihkan Anda ke persiapan pernikahan begitu pembayaran terverifikasi.',
+          'Halaman ini akan langsung beralih ke persiapan pernikahan begitu pembayaranmu terkonfirmasi.',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 11,
@@ -999,7 +999,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
               ),
               const SizedBox(height: 2),
               Text(
-                'Bayar sekali saja, nikmati seluruh fitur dan update selamanya.',
+                'Cukup bayar sekali untuk menikmati semua fitur dan pembaruan selamanya.',
                 style: TextStyle(fontSize: 11.5, color: theme.colorScheme.onSurfaceVariant),
               ),
             ],

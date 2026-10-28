@@ -19,19 +19,19 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
     const _OnboardingPage(
       title: 'Nikahin',
       description:
-          'Aplikasi komprehensif untuk merencanakan pernikahan impian Anda bersama pasangan secara terorganisir, transparan, dan terintegrasi.',
+          'Wujudkan pernikahan impian bersama pasangan dengan tenang, rapi, dan saling terhubung setiap saat.',
       imageAsset: 'assets/images/welcome_slide_1.png',
     ),
     const _OnboardingPage(
       title: 'Atur Anggaran & Pos Biaya',
       description:
-          'Catat setiap estimasi pos pengeluaran, termin pembayaran DP & pelunasan vendor, serta pantau sisa anggaran real-time.',
+          'Catat rincian biaya, pantau pembayaran uang muka dan pelunasan vendor, serta cek sisa dana kapan saja.',
       imageAsset: 'assets/images/welcome_slide_2.png',
     ),
     const _OnboardingPage(
-      title: 'Kelola Tamu, Vendor & Rundown',
+      title: 'Kelola Tamu, Vendor & Susunan Acara',
       description:
-          'Impor kontak tamu dari HP, susun rundown acara dengan skrip MC, hingga kelola seragam panitia dan ceklist seserahan.',
+          'Masukkan daftar tamu langsung dari kontak, susun susunan acara lengkap dengan teks pembawa acara, hingga atur seragam panitia dan seserahan.',
       imageAsset: 'assets/images/welcome_slide_3.png',
     ),
   ];
@@ -186,7 +186,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                       minimumSize: const Size.fromHeight(50),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     ),
-                    child: const Text('Langsung Masuk Mode Tamu / Lokal'),
+                    child: const Text('Coba Mode Tamu (Tanpa Akun)'),
                   ),
                 ],
               ),

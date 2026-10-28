@@ -129,7 +129,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                 children: [
                   Icon(Icons.lock_reset_rounded, color: Color(0xFFE11D48)),
                   SizedBox(width: 8),
-                  Text('Lupa Password?', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                  Text('Lupa Kata Sandi?', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                 ],
               ),
               content: Column(
@@ -137,7 +137,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Masukkan email akun Anda. Kami akan mengirimkan tautan resmi dari Firebase untuk mengatur ulang kata sandi Anda.',
+                    'Masukkan alamat email akunmu. Kami akan mengirimkan tautan untuk mengatur ulang kata sandi.',
                     style: TextStyle(fontSize: 13),
                   ),
                   const SizedBox(height: 16),
@@ -191,7 +191,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                       const SizedBox(width: 8),
                                       Expanded(
                                         child: Text(
-                                          'Tautan reset kata sandi telah dikirim ke $email. Periksa kotak masuk atau spam.',
+                                          'Tautan pengaturan ulang kata sandi sudah dikirim ke $email. Silakan periksa kotak masuk atau folder spam.',
                                           style: const TextStyle(fontWeight: FontWeight.w600),
                                         ),
                                       ),
@@ -217,7 +217,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                           height: 16,
                           child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                         )
-                      : const Text('Kirim Link Reset'),
+                      : const Text('Kirim Tautan Reset'),
                 ),
               ],
             );
@@ -283,7 +283,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          _isRegisterMode ? 'Buat Akun Baru' : 'Welcome Back! 👋',
+                          _isRegisterMode ? 'Buat Akun Baru' : 'Selamat Datang Kembali! 👋',
                           style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.w900,
@@ -294,8 +294,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                         const SizedBox(height: 6),
                         Text(
                           _isRegisterMode
-                              ? 'Yuk, mulai rencanakan pernikahan impian bersama'
-                              : 'Yuk, masuk ke akun pernikahanmu',
+                              ? 'Mulai rencanakan hari bahagiamu bersama pasangan'
+                              : 'Masuk ke akun pernikahanmu untuk melanjutkan persiapan',
                           style: TextStyle(
                             fontSize: 14,
                             color: textDark.withValues(alpha: 0.7),
@@ -366,7 +366,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Password',
+                        'Kata Sandi',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -382,7 +382,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                         maxLength: 32,
                         buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                         decoration: InputDecoration(
-                          hintText: 'Masukkan password',
+                          hintText: 'Masukkan kata sandi',
                           prefixIcon: Icon(Icons.lock_outline_rounded, color: primaryColor),
                           suffixIcon: IconButton(
                             icon: Icon(
@@ -412,7 +412,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                           ),
                           Text(
-                            'Remember Me',
+                            'Ingat Saya',
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
@@ -424,7 +424,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                       TextButton(
                         onPressed: _showForgotPasswordDialog,
                         child: Text(
-                          'Forgot Password?',
+                          'Lupa Kata Sandi?',
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
@@ -452,7 +452,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                               child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
                             )
                           : Text(
-                              _isRegisterMode ? 'Sign Up' : 'Login',
+                              _isRegisterMode ? 'Daftar' : 'Masuk',
                               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                             ),
                     ),
@@ -464,7 +464,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        _isRegisterMode ? 'Already have an Account? ' : "Don't have an Account? ",
+                        _isRegisterMode ? 'Sudah punya akun? ' : 'Belum punya akun? ',
                         style: TextStyle(
                           fontSize: 14,
                           color: textDark.withValues(alpha: 0.8),
@@ -478,7 +478,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                           });
                         },
                         child: Text(
-                          _isRegisterMode ? 'Sign in' : 'Sign up',
+                          _isRegisterMode ? 'Masuk' : 'Daftar',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
@@ -544,7 +544,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                     onPressed: _isLoading ? null : _handleDemoMode,
                     icon: Icon(Icons.visibility_outlined, size: 18, color: textDark.withValues(alpha: 0.7)),
                     label: Text(
-                      'Coba Mode Demo (Hanya Lihat)',
+                      'Jelajahi Demo (Tanpa Akun)',
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,

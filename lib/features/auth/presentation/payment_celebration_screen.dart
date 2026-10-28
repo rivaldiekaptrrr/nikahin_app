@@ -213,7 +213,7 @@ class _PaymentCelebrationScreenState extends State<PaymentCelebrationScreen> wit
                                 ),
                                 const SizedBox(height: 6),
                                 Text(
-                                  'Selamat! Lisensi Seumur Hidup Anda telah aktif. Akses penuh ke seluruh fitur Nikahin kini terbuka tanpa batas.',
+                                  'Selamat! Akunmu sudah aktif selamanya. Sekarang kamu dan pasangan bisa merencanakan pernikahan dengan seluruh fitur Nikahin tanpa batas.',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: isSmallScreen ? 12 : 13,
@@ -290,7 +290,7 @@ class _PaymentCelebrationScreenState extends State<PaymentCelebrationScreen> wit
                                   const SizedBox(height: 6),
                                   _buildInfoRow('Masa Berlaku', 'Seumur Hidup (Selamanya)'),
                                   const SizedBox(height: 6),
-                                  _buildInfoRow('Sinkronisasi', 'Cloud & Multi-Perangkat'),
+                                  _buildInfoRow('Sinkronisasi', 'Antar-perangkat otomatis'),
                                 ],
                               ),
                             ),
