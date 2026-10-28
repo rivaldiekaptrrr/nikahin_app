@@ -170,8 +170,8 @@ class _WeddingSeserahanScreenState extends ConsumerState<WeddingSeserahanScreen>
           labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
           unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
           tabs: const [
-            Tab(text: 'Seserahan CPP'),
-            Tab(text: 'Balasan CPW'),
+            Tab(text: 'Seserahan Pria'),
+            Tab(text: 'Balasan Wanita'),
             Tab(text: 'Mahar'),
           ],
         ),
@@ -663,32 +663,32 @@ class _WeddingSeserahanScreenState extends ConsumerState<WeddingSeserahanScreen>
   void _showSeserahanGuide(BuildContext context) {
     showWeddingGuideDialog(
       context: context,
-      title: 'Panduan Seserahan & Mahar',
+      title: 'Panduan Hantaran & Mahar',
       screenPurpose:
-          'Pantau dan kelola seluruh daftar barang hantaran seserahan, balasan, serta mahar mas kawin agar rapi, terdokumentasi, dan siap tepat waktu.',
+          'Catat dan pantau seluruh daftar barang hantaran seserahan, balasan, serta mahar mas kawin agar rapi, terdokumentasi, dan siap tepat waktu.',
       features: const [
         WeddingGuideFeature(
-          title: '3 Kategori Terarah',
-          description: 'Pemisahan jelas antara barang seserahan pria (CPP), balasan wanita (CPW), dan mahar mas kawin.',
+          title: 'Tiga Kategori Terpisah',
+          description: 'Pemisahan jelas antara barang seserahan pria, balasan wanita, dan mahar perkawinan.',
           icon: Icons.tab_rounded,
         ),
         WeddingGuideFeature(
-          title: 'Tautan Produk Online',
-          description: 'Simpan link produk e-commerce (Tokopedia, Shopee, dll) untuk mempermudah pembelian dan pengecekan spesifikasi barang.',
+          title: 'Tautan Belanja Online',
+          description: 'Simpan tautan produk toko daring untuk mempermudah pembelian dan pengecekan rincian barang.',
           icon: Icons.link_rounded,
         ),
         WeddingGuideFeature(
           title: 'Status Kesiapan',
-          description: 'Pantau status barang: Belum Beli, Sudah Dibeli, Sedang Dihias, hingga Siap untuk hari pernikahan.',
+          description: 'Pantau barang dari status Belum Beli, Sudah Dibeli, Sedang Dihias, hingga Siap untuk hari pernikahan.',
           icon: Icons.check_circle_outline_rounded,
         ),
         WeddingGuideFeature(
-          title: 'Kalkulasi Estimasi',
-          description: 'Total anggaran dan persentase kesiapan barang otomatis terakumulasi secara real-time di setiap kategori.',
+          title: 'Perhitungan Total Biaya',
+          description: 'Perkiraan biaya dan persentase kesiapan barang terhitung langsung di setiap kategori.',
           icon: Icons.auto_graph_rounded,
         ),
       ],
-      proTip: 'Ketuk pada kartu barang untuk memperbarui status kesiapan secara instan!',
+      proTip: 'Ketuk kartu barang untuk memperbarui status kesiapannya secara cepat.',
     );
   }
 }

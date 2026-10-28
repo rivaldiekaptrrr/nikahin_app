@@ -75,7 +75,7 @@ class _WeddingCommitteeScreenState extends ConsumerState<WeddingCommitteeScreen>
             padding: const EdgeInsets.only(right: 12),
             child: Center(
               child: Tooltip(
-                message: _isModuleEnabled ? 'Nonaktifkan Modul' : 'Aktifkan Modul',
+                message: _isModuleEnabled ? 'Nonaktifkan Fitur' : 'Aktifkan Fitur',
                 child: Transform.scale(
                   scale: 0.8,
                   child: Switch.adaptive(
@@ -562,30 +562,30 @@ class _WeddingCommitteeScreenState extends ConsumerState<WeddingCommitteeScreen>
       context: context,
       title: 'Panduan Panitia & Seragam',
       screenPurpose:
-          'Modul ini bersifat opsional untuk mencatat susunan panitia keluarga serta pembagian jatah kain seragam. Jika seluruh seragam memakai sistem sewa, Anda dapat menonaktifkan modul ini melalui switch di pojok kanan atas.',
+          'Halaman ini bisa kamu gunakan untuk mencatat panitia keluarga dan pembagian kain seragam. Jika seluruh seragam menyewa atau tidak membentuk panitia, kamu bisa menonaktifkannya lewat tombol di pojok kanan atas.',
       features: const [
         WeddingGuideFeature(
-          title: 'Fitur Opsional (Sewa Seragam)',
-          description: 'Gunakan switch di atas untuk menonaktifkan modul jika Anda menyewa seragam atau tidak membentuk panitia mandiri.',
+          title: 'Bisa Dinonaktifkan',
+          description: 'Gunakan sakelar di sudut kanan atas jika kamu menyewa seragam atau tidak membentuk panitia mandiri.',
           icon: Icons.toggle_on_outlined,
         ),
         WeddingGuideFeature(
           title: 'Pembagian Pihak & Peran',
-          description: 'Kelompokkan panitia berdasarkan pihak keluarga pria (CPP), keluarga wanita (CPW), atau teman dengan peran spesifik.',
+          description: 'Kelompokkan panitia berdasarkan pihak keluarga mempelai pria, keluarga mempelai wanita, atau rekan dengan tugas yang jelas.',
           icon: Icons.assignment_ind_outlined,
         ),
         WeddingGuideFeature(
-          title: 'Status Jahit Seragam',
-          description: 'Pantau seragam dari status Belum Dibagi, Sedang Jahit, hingga Siap Pakai di hari pernikahan.',
+          title: 'Status Pembuatan Seragam',
+          description: 'Pantau seragam dari status Belum Dibagi, Sedang Dijahit, hingga Siap Digunakan saat hari pernikahan.',
           icon: Icons.checkroom_outlined,
         ),
         WeddingGuideFeature(
-          title: 'Kalkulasi Total Kain',
-          description: 'Total kebutuhan meteran kain dihitung otomatis untuk memudahkan estimasi saat berbelanja di toko kain.',
+          title: 'Perhitungan Bahan Kain',
+          description: 'Total kebutuhan meteran bahan dihitung otomatis untuk memudahkan perkiraan saat berbelanja di toko kain.',
           icon: Icons.straighten_outlined,
         ),
       ],
-      proTip: 'Ketuk pada kartu panitia untuk langsung mengubah status seragam secara cepat!',
+      proTip: 'Ketuk kartu panitia untuk memperbarui status seragam dengan cepat.',
     );
   }
 }

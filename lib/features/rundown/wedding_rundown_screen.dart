@@ -60,7 +60,7 @@ class _WeddingRundownScreenState extends ConsumerState<WeddingRundownScreen>
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Rundown & Acara')),
+            appBar: AppBar(title: const Text('Susunan Acara')),
             body: ErrorStateView(
               errorMessage: snapshot.error.toString(),
               onRetry: () => setState(() {}),
@@ -70,7 +70,7 @@ class _WeddingRundownScreenState extends ConsumerState<WeddingRundownScreen>
 
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Rundown & Acara')),
+            appBar: AppBar(title: const Text('Susunan Acara')),
             body: const SkeletonListView(showHeader: true),
           );
         }
@@ -80,7 +80,7 @@ class _WeddingRundownScreenState extends ConsumerState<WeddingRundownScreen>
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Rundown & Acara'),
+            title: const Text('Susunan Acara'),
             actions: [
               IconButton(
                 icon: const Icon(Icons.info_outline_rounded),
@@ -609,32 +609,32 @@ class _WeddingRundownScreenState extends ConsumerState<WeddingRundownScreen>
   void _showRundownGuide(BuildContext context) {
     showWeddingGuideDialog(
       context: context,
-      title: 'Panduan Rundown & Susunan Acara',
+      title: 'Panduan Susunan Acara',
       screenPurpose:
-          'Kelola susunan acara pernikahan bertingkat (Akad Nikah, Resepsi, Pengajian) lengkap dengan jadwal menit demi menit dan penanggung jawab (PIC) lapangan.',
+          'Atur susunan acara pernikahan mulai dari Akad Nikah, Resepsi, hingga Pengajian lengkap dengan jadwal menit demi menit dan narahubung (PIC) lapangan.',
       features: const [
         WeddingGuideFeature(
-          title: 'Multi-Acara (Tab)',
-          description: 'Kelola jadwal terpisah antara Akad Nikah, Resepsi, Siraman, atau acara adat lainnya dalam tab berbeda.',
+          title: 'Rangkaian Acara Terpisah',
+          description: 'Kelola jadwal terpisah antara Akad Nikah, Resepsi, Siraman, atau acara adat lainnya dalam bilah berbeda.',
           icon: Icons.tab_rounded,
         ),
         WeddingGuideFeature(
-          title: 'Alur Waktu Terhubung (Timeline)',
+          title: 'Urutan Waktu Terhubung',
           description: 'Pantau urutan waktu yang saling terhubung dari awal kedatangan hingga acara selesai.',
           icon: Icons.timeline_rounded,
         ),
         WeddingGuideFeature(
-          title: 'Penanggung Jawab (PIC)',
-          description: 'Tetapkan petugas atau keluarga yang bertanggung jawab pada tiap sesi agar koordinasi lapangan berjalan rapi.',
+          title: 'Narahubung & Penanggung Jawab',
+          description: 'Tetapkan panitia atau anggota keluarga yang bertugas pada setiap mata acara agar koordinasi lapangan berjalan lancar.',
           icon: Icons.person_pin_circle_outlined,
         ),
         WeddingGuideFeature(
-          title: 'Akumulasi Durasi Otomatis',
-          description: 'Total jam pelaksanaan dan jumlah sesi acara terhitung otomatis pada ringkasan di atas.',
+          title: 'Perhitungan Durasi Otomatis',
+          description: 'Lama pelaksanaan dan jumlah rangkaian mata acara terhitung otomatis pada ringkasan di atas.',
           icon: Icons.timer_outlined,
         ),
       ],
-      proTip: 'Susunan rundown ini dapat langsung diekspor rapi ke file PDF pada menu Pengaturan!',
+      proTip: 'Susunan acara ini bisa langsung kamu ekspor menjadi dokumen panduan PDF di menu Pengaturan.',
     );
   }
 }

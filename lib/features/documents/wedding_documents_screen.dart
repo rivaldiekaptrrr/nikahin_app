@@ -176,8 +176,8 @@ class _WeddingDocumentsScreenState extends ConsumerState<WeddingDocumentsScreen>
   Widget _buildOwnerFilterChips(List<WeddingDocument> docs) {
     final owners = [
       {'val': 'SEMUA', 'label': 'Semua Berkas'},
-      {'val': 'GROOM', 'label': 'Berkas CPP'},
-      {'val': 'BRIDE', 'label': 'Berkas CPW'},
+      {'val': 'GROOM', 'label': 'Berkas Pria'},
+      {'val': 'BRIDE', 'label': 'Berkas Wanita'},
       {'val': 'BOTH', 'label': 'Berkas Bersama'},
     ];
 
@@ -439,21 +439,21 @@ class _WeddingDocumentsScreenState extends ConsumerState<WeddingDocumentsScreen>
       context: context,
       title: 'Dokumen Persyaratan Nikah',
       screenPurpose:
-          'Daftar kelengkapan berkas administrasi pernikahan (KUA atau Catatan Sipil) agar proses pendaftaran nikah rapi dan selesai tepat waktu.',
+          'Daftar kelengkapan berkas administrasi pernikahan (KUA atau Catatan Sipil) agar proses pendaftaran nikah berjalan lancar dan selesai tepat waktu.',
       features: const [
         WeddingGuideFeature(
-          title: 'Target Selesai & Deadline',
-          description: 'Atur batas waktu pengurusan berkas agar tidak mepet dengan hari akad nikah.',
+          title: 'Batas Waktu Pengurusan',
+          description: 'Atur batas waktu pengurusan berkas agar proses pendaftaran tetap tenang dan tidak terburu-buru sebelum hari akad.',
           icon: Icons.event_available_rounded,
         ),
         WeddingGuideFeature(
           title: 'Prioritas Otomatis',
-          description: 'Berkas mendesak muncul paling atas, sedangkan berkas yang sudah dicentang otomatis turun ke bawah.',
+          description: 'Berkas mendesak tampil di bagian atas, sedangkan berkas yang telah selesai otomatis berpindah ke bawah.',
           icon: Icons.sort_rounded,
         ),
         WeddingGuideFeature(
           title: 'Pemilik Berkas',
-          description: 'Kelompokkan berkas milik CPP, CPW, atau berkas bersama agar pembagian tugas jelas.',
+          description: 'Bagi berkas antara pihak mempelai pria, mempelai wanita, atau berkas bersama agar pembagian tugas jelas.',
           icon: Icons.badge_outlined,
         ),
         WeddingGuideFeature(
@@ -462,7 +462,7 @@ class _WeddingDocumentsScreenState extends ConsumerState<WeddingDocumentsScreen>
           icon: Icons.payments_outlined,
         ),
       ],
-      proTip: 'Urus surat pengantar kelurahan (N1 hingga N4) sekitar 1 sampai 3 bulan sebelum tanggal pernikahan.',
+      proTip: 'Urus surat pengantar kelurahan (N1 hingga N4) sekitar 1 sampai 3 bulan sebelum tanggal akad pernikahan.',
     );
   }
 }
