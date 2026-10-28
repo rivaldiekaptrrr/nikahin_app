@@ -69,6 +69,7 @@ Knowledge graph data and MCP configurations are versioned inside `.agents/`:
 - `.agents/skills/firebase-auth-basics/SKILL.md`: Panduan autentikasi Firebase, token lifecycle, dan manajemen pengguna.
 - `.agents/skills/firestore-rules-creation/SKILL.md`: Panduan pembuatan dan optimasi Firestore Security Rules.
 - `.agents/skills/firebase-security-rules-auditor/SKILL.md`: Panduan audit keamanan aturan Firestore & Storage.
+- `.agents/skills/humanizer-indonesia/SKILL.md`: Standar penyuntingan teks bahasa Indonesia agar luwes, tidak kaku, bebas dari tell AI dan kalke terjemahan.
 - `docs/MAESTRO_AND_EMULATOR_SETUP_GUIDE.md`: Complete guide for Android Emulator (CLI without Android Studio) and Maestro MCP testing.
 - `docs/BRAND_GUIDELINES.md`: Panduan identitas visual resmi Nikahin App, palet warna, tipografi, dan aturan penggunaan logo.
 
