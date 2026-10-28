@@ -483,8 +483,8 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
                       ),
                       Text(
                         authState.coupleRole == 'GROOM'
-                            ? 'Peran: Pengantin Pria 🤵'
-                            : 'Peran: Pengantin Wanita 👰',
+                            ? 'Peran: Calon Suami'
+                            : 'Peran: Calon Istri',
                         style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurfaceVariant),
                       ),
                     ],
@@ -506,7 +506,7 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'Perencanaan pernikahan (anggaran, rundown, buku tamu) disinkronkan secara real-time antar perangkat.',
+                      'Perencanaan pernikahan disinkronkan secara real-time dengan perangkat pasangan.',
                       style: TextStyle(fontSize: 11.5, color: theme.colorScheme.onSurfaceVariant, height: 1.35),
                     ),
                   ),
