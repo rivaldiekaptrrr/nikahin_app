@@ -314,7 +314,7 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Perjalanan cinta indah Anda dimulai dari sini',
+                    'Perjalanan indah kalian berdua dimulai dari sini',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 12,
@@ -327,12 +327,12 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
             const SizedBox(height: 24),
 
             Text(
-              'Siapakah nama calon pengantin bahagia?',
+              'Siapa nama panggilan kalian berdua?',
               style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 6),
             Text(
-              'Nama panggilan yang akan tampil di halaman dasbor dan undangan.',
+              'Nama ini akan tampil di beranda dan buku panduan pernikahan.',
               style: TextStyle(fontSize: 13, color: theme.colorScheme.onSurfaceVariant),
             ),
             const SizedBox(height: 18),
@@ -429,7 +429,7 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
           ),
           const SizedBox(height: 6),
           Text(
-            'Hitung mundur dan checklist persiapan akan otomatis dikalibrasi sesuai tanggal ini.',
+            'Hitung mundur dan daftar persiapan akan otomatis disesuaikan dengan tanggal ini.',
             style: TextStyle(fontSize: 13, color: theme.colorScheme.onSurfaceVariant),
           ),
           const SizedBox(height: 18),
@@ -489,7 +489,7 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
           ),
           const SizedBox(height: 6),
           Text(
-            'Aplikasi akan membuatkan simulasi starter alokasi pos anggaran secara otomatis.',
+            'Nikahin bisa menyiapkan contoh pembagian pos anggaran awal untuk membantumu.',
             style: TextStyle(fontSize: 13, color: theme.colorScheme.onSurfaceVariant),
           ),
           const SizedBox(height: 14),
@@ -541,8 +541,8 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
                 ),
                 subtitle: Text(
                   _generateStarterPack
-                      ? 'Sistem otomatis menyiapkan starter pack 7 pos biaya standar seperti katering dan venue sebagai draf awal.'
-                      : 'Mulai dari daftar kosong. Anda bisa menginput pos dan persentase anggaran Anda sendiri nanti di menu Anggaran.',
+                      ? 'Menyiapkan 7 pos biaya umum (seperti katering dan gedung) sebagai rancangan awal.'
+                      : 'Mulai dari daftar kosong. Kamu bisa menambahkan pos pengeluaran sendiri nanti di menu Anggaran.',
                   style: TextStyle(fontSize: 11, color: theme.colorScheme.onSurfaceVariant),
                 ),
               ),
@@ -564,7 +564,7 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
                         Icon(Icons.pie_chart_outline_rounded, size: 18, color: theme.colorScheme.primary),
                         const SizedBox(width: 8),
                         Text(
-                          'Simulasi Starter Pack Pos Biaya:',
+                          'Contoh Pembagian Pos Biaya:',
                           style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
                         ),
                       ],
@@ -582,7 +582,7 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
-                            'Semua nominal dan persentase bebas diubah, ditambah, atau dihapus kapan saja di menu Anggaran.',
+                            'Semua nominal bebas kamu ubah atau sesuaikan kapan saja.',
                             style: TextStyle(fontSize: 10.5, fontStyle: FontStyle.italic, color: theme.colorScheme.onSurfaceVariant),
                           ),
                         ),

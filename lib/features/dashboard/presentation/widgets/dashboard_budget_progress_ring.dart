@@ -183,7 +183,7 @@ class DashboardBudgetProgressRing extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Target Plafon',
+                                      'Batas Anggaran',
                                       style: TextStyle(
                                         fontSize: 10.5,
                                         color: theme.colorScheme.onSurfaceVariant,
@@ -240,7 +240,7 @@ class DashboardBudgetProgressRing extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          isOverBudget ? 'Melebihi Plafon Bujet' : 'Sisa Dana Belum Terpakai',
+                          isOverBudget ? 'Melebihi Batas Anggaran' : 'Sisa Anggaran Tersedia',
                           style: TextStyle(
                             fontSize: 11.5,
                             fontWeight: FontWeight.w600,
@@ -294,7 +294,7 @@ class DashboardBudgetProgressRing extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: const Text(
-          'Over Budget',
+          'Melebihi Batas',
           style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFFDC2626)),
         ),
       );

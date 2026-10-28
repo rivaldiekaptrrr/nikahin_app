@@ -222,7 +222,7 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
           child: _buildActionButton(
             context,
             theme,
-            label: 'Cek\nRundown',
+            label: 'Lihat\nSusunan Acara',
             icon: Icons.event_note_rounded,
             isPrimary: false,
             onTap: () => context.go('/wedding/${widget.profileId}/rundown'),
@@ -301,7 +301,7 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Budget per Kategori',
+              'Anggaran per Kategori',
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -445,27 +445,27 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
     showWeddingGuideDialog(
       context: context,
       title: 'Beranda Pernikahan',
-      screenPurpose: 'Halaman utama untuk melihat rangkuman dan progres persiapan pernikahan Anda secara praktis.',
+      screenPurpose: 'Pusat informasi utama untuk memantau ringkasan dan perkembangan persiapan pernikahanmu secara praktis.',
       features: const [
         WeddingGuideFeature(
           icon: Icons.timer_rounded,
-          title: 'Countdown',
-          description: 'Menghitung sisa hari menuju hari pernikahan bahagia Anda bersama pasangan.',
+          title: 'Hitung Mundur',
+          description: 'Melihat sisa hari menuju hari pernikahan bahagiamu bersama pasangan.',
         ),
         WeddingGuideFeature(
           icon: Icons.format_quote_rounded,
-          title: 'Quotes',
-          description: 'Berikan kata-kata motivasimu atau pesan cinta romantis yang dapat disesuaikan di menu pengaturan.',
+          title: 'Pesan Cinta & Doa',
+          description: 'Tampilkan kata mutiara romantis atau doa bersama yang bisa kamu ubah di menu pengaturan.',
         ),
         WeddingGuideFeature(
           icon: Icons.account_balance_wallet_rounded,
           title: 'Ringkasan Anggaran',
-          description: 'Dapat memantau pengeluaran dan sisa anggaran langsung di beranda untuk memudahkanmu tanpa perlu ke menu anggaran.',
+          description: 'Pantau total pengeluaran dan sisa anggaran langsung dari beranda tanpa harus berpindah menu.',
         ),
         WeddingGuideFeature(
           icon: Icons.bolt_rounded,
           title: 'Aksi Cepat & Kategori',
-          description: 'Pintasan langsung untuk mencatat biaya, kelola tamu, cek susunan acara, serta melihat rincian anggaran per kategori.',
+          description: 'Pintasan langsung untuk mencatat biaya, kelola tamu, dan mengecek susunan acara.',
         ),
       ],
     );

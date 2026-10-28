@@ -75,7 +75,7 @@ class WeddingListScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 6),
               Text(
-                'Kelola rencana dan persiapan momen bahagiamu',
+                'Kelola rencana dan persiapan momen bahagiamu bersama pasangan',
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -225,7 +225,7 @@ class WeddingListScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Mulai buat rencana pernikahan impianmu sekarang. Template tugas, dokumen, dan susunan acara akan dibuatkan secara otomatis.',
+              'Mulai rancang pernikahan impianmu sekarang. Panduan tugas, dokumen, dan susunan acara akan langsung disiapkan untukmu.',
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
@@ -245,12 +245,12 @@ class WeddingListScreen extends ConsumerWidget {
                   await MockSeeder.seedAllMockData(db);
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Data simulasi (mock) pernikahan berhasil dimuat!')),
+                      const SnackBar(content: Text('Contoh data rencana pernikahan berhasil dimuat!')),
                     );
                   }
                 },
                 icon: const Icon(Icons.dataset_rounded),
-                label: const Text('Muat Data Simulasi (Mock Data)'),
+                label: const Text('Muat Contoh Data Pernikahan'),
               ),
             ],
           ],
