@@ -524,7 +524,7 @@ class _WeddingBudgetScreenState extends ConsumerState<WeddingBudgetScreen> {
             ),
             const SizedBox(height: 6),
             Text(
-              'Catat estimasi biaya venue, katering, MUA, dekorasi, dll.',
+              'Catat perkiraan biaya gedung, katering, tata rias, dekorasi, dan kebutuhan lainnya.',
               textAlign: TextAlign.center,
               style: TextStyle(color: theme.colorScheme.onSurfaceVariant, fontSize: 13),
             ),
@@ -637,11 +637,11 @@ class _WeddingBudgetScreenState extends ConsumerState<WeddingBudgetScreen> {
         WeddingGuideFeature(
           icon: Icons.account_balance_wallet_rounded,
           title: 'Sumber Dana Transparan',
-          description: 'Atur siapa yang menanggung biaya (Dana Bersama, Tabungan CPP/CPW, atau Orang Tua) dan filter sesuai kebutuhan.',
+          description: 'Atur siapa yang membiayai pos ini (Dana Bersama, Tabungan CPP/CPW, atau Orang Tua) dan saring sesuai kebutuhan.',
         ),
         WeddingGuideFeature(
           icon: Icons.receipt_long_rounded,
-          title: 'Histori & Catat Pembayaran',
+          title: 'Riwayat & Catat Pembayaran',
           description: 'Ketuk salah satu pos pengeluaran untuk melihat rincian cicilan (DP atau Pelunasan) serta mencatat pembayaran baru.',
         ),
       ],

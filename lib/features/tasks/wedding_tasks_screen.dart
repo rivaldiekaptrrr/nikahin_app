@@ -108,7 +108,7 @@ class _WeddingTasksScreenState extends ConsumerState<WeddingTasksScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Progres Persiapan',
+                          'Perkembangan Persiapan',
                           style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         Text(
@@ -355,27 +355,27 @@ class _WeddingTasksScreenState extends ConsumerState<WeddingTasksScreen> {
   void _showTasksGuide(BuildContext context) {
     showWeddingGuideDialog(
       context: context,
-      title: 'Daftar Tugas Pernikahan',
+      title: 'Agenda & Tugas Persiapan',
       screenPurpose:
-          'Membantumu mencatat dan memantau seluruh hal yang perlu disiapkan secara bertahap agar tidak ada persiapan penting yang terlewat.',
+          'Catat dan pantau seluruh kebutuhan persiapan pernikahan secara bertahap agar tidak ada hal penting yang terlewat.',
       features: const [
         WeddingGuideFeature(
           icon: Icons.calendar_month_rounded,
-          title: 'Fase Waktu',
-          description: 'Pilah tugas berdasarkan rentang waktu persiapan, mulai dari 12 bulan sebelum hingga Hari-H pernikahan.',
+          title: 'Tahapan Waktu',
+          description: 'Pilah tugas berdasarkan rentang waktu persiapan, mulai dari 12 bulan sebelum hingga hari H.',
         ),
         WeddingGuideFeature(
           icon: Icons.assignment_ind_rounded,
-          title: 'Penanggung Jawab (PIC)',
-          description: 'Bagi tugas dengan jelas antara CPP, CPW, Bersama, Keluarga, atau Wedding Organizer (WO).',
+          title: 'Penanggung Jawab',
+          description: 'Bagi tugas dengan jelas antara mempelai pria, mempelai wanita, keluarga, atau Wedding Organizer (WO).',
         ),
         WeddingGuideFeature(
           icon: Icons.check_circle_outline_rounded,
-          title: 'Urutan Deadline & Selesai',
-          description: 'Tugas yang paling mendekati tenggat waktu tampil paling atas, dan tugas yang sudah selesai otomatis berpindah ke paling bawah.',
+          title: 'Tenggat Waktu & Status Selesai',
+          description: 'Tugas yang paling mendekati tenggat waktu tampil di urutan atas, dan tugas yang sudah selesai otomatis berpindah ke bawah.',
         ),
       ],
-      proTip: 'Centang tugas yang sudah selesai untuk melihat persentase kesiapan pernikahanmu terus bertambah!',
+      proTip: 'Beri tanda centang pada tugas yang telah beres untuk memantau perkembangan kesiapan pernikahanmu.',
     );
   }
 }

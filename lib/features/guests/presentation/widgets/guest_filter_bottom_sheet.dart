@@ -132,7 +132,7 @@ class _GuestFilterBottomSheetState extends State<GuestFilterBottomSheet> {
                   ),
                   TextButton(
                     onPressed: _resetFilter,
-                    child: const Text('Reset', style: TextStyle(fontWeight: FontWeight.bold)),
+                    child: const Text('Atur Ulang', style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
                 ],
               ),

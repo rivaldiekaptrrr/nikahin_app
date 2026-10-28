@@ -36,7 +36,7 @@ class _WeddingVendorScreenState extends ConsumerState<WeddingVendorScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Manajemen Vendor'),
+        title: const Text('Vendor Pernikahan'),
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline_rounded),
@@ -617,32 +617,32 @@ class _WeddingVendorScreenState extends ConsumerState<WeddingVendorScreen> {
   void _showVendorGuide(BuildContext context) {
     showWeddingGuideDialog(
       context: context,
-      title: 'Manajemen Kontrak',
+      title: 'Vendor & Kontrak Kerja Sama',
       screenPurpose:
-          'Pusat kendali seluruh vendor pernikahan Anda. Catat kontak PIC, nilai kontrak, uang muka (DP), dan pantau tahapan kerja sama hingga hari H.',
+          'Catat seluruh vendor pernikahanmu di satu tempat. Mulai dari narahubung (PIC), nilai kesepakatan, uang muka, hingga tahap kerja sama sampai hari H.',
       features: const [
         WeddingGuideFeature(
-          title: 'Pantau Status & Kontrak',
-          description: 'Lacak tahapan kerja sama: Mulai dari Prospek/Riset, Tanda Jadi, Kontrak Aktif, hingga Selesai.',
+          title: 'Pantau Tahapan & Kontrak',
+          description: 'Lacak tahap kerja sama: mulai dari survei atau riset, tanda jadi, kontrak aktif, hingga selesai.',
           icon: Icons.assignment_turned_in_outlined,
         ),
         WeddingGuideFeature(
-          title: 'Kontak PIC Cepat (WA & Telp)',
-          description: 'Hubungi PIC vendor langsung melalui WhatsApp atau panggilan telepon dalam 1 ketukan.',
+          title: 'Narahubung Cepat (WhatsApp & Telepon)',
+          description: 'Hubungi narahubung vendor langsung via WhatsApp atau panggilan telepon sekali ketuk.',
           icon: Icons.chat_bubble_outline_rounded,
         ),
         WeddingGuideFeature(
-          title: 'Kategori Vendor Rapi',
-          description: 'Filter vendor berdasarkan kategori: Venue, Katering, Fotografi, Dekorasi, MUA, Busana, dll.',
+          title: 'Kategori Vendor Lengkap',
+          description: 'Saring vendor berdasarkan kebutuhan: Gedung, Katering, Foto & Video, Dekorasi, Tata Rias & Busana, dan lainnya.',
           icon: Icons.category_outlined,
         ),
         WeddingGuideFeature(
-          title: 'Rekap Nilai Kontrak Total',
-          description: 'Hitung total komitmen anggaran seluruh vendor yang telah deal secara real-time.',
+          title: 'Total Komitmen Biaya',
+          description: 'Pantau jumlah keseluruhan biaya dari semua vendor yang telah disepakati secara langsung.',
           icon: Icons.account_balance_wallet_outlined,
         ),
       ],
-      proTip: 'Simpan nomor kontak PIC cadangan dan rincian paket di catatan vendor agar mudah diakses saat hari H.',
+      proTip: 'Catat nomor kontak cadangan dan rincian paket di catatan vendor agar mudah dihubungi saat hari H.',
     );
   }
 }

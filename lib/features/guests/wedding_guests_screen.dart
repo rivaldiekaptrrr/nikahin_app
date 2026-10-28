@@ -91,12 +91,12 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
         actions: [
           IconButton(
             icon: const Icon(Icons.share_outlined),
-            tooltip: 'Export CSV',
+            tooltip: 'Ekspor Dokumen CSV',
             onPressed: () => _exportCsv(context, ref),
           ),
           IconButton(
             icon: const Icon(Icons.contacts_outlined),
-            tooltip: 'Import dari Kontak',
+            tooltip: 'Impor dari Kontak',
             onPressed: () => _importContacts(context, ref),
           ),
           IconButton(
@@ -885,18 +885,18 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
   void _showGuestsGuide(BuildContext context) {
     showWeddingGuideDialog(
       context: context,
-      title: 'Manajemen Tamu',
+      title: 'Daftar Tamu & Katering',
       screenPurpose:
-          'Membantumu mencatat daftar undangan, memantau konfirmasi kehadiran (RSVP), dan menghitung porsi katering agar tidak kurang.',
+          'Catat daftar undangan, pantau konfirmasi kehadiran (RSVP), dan perkirakan kebutuhan porsi katering agar jamuan hari bahagiamu pas serta nyaman bagi para tamu.',
       features: const [
         WeddingGuideFeature(
           icon: Icons.groups_rounded,
-          title: 'Kelompok & Jumlah Pax',
-          description: 'Kelompokkan tamu ke Keluarga CPP/CPW, Teman, atau VIP beserta perkiraan jumlah orang per undangan.',
+          title: 'Kelompok & Jumlah Hadir (Pax)',
+          description: 'Bagi tamu berdasarkan Keluarga Mempelai Pria/Wanita, Rekan, atau Tamu Khusus (VIP) beserta jumlah hadir per undangan.',
         ),
         WeddingGuideFeature(
           icon: Icons.how_to_reg_rounded,
-          title: 'Status Kehadiran (RSVP)',
+          title: 'Konfirmasi Kehadiran (RSVP)',
           description: 'Ketuk nama tamu untuk memperbarui status konfirmasi (Hadir, Menunggu, atau Tidak Hadir).',
         ),
         WeddingGuideFeature(
@@ -905,7 +905,7 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
           description: 'Hitung otomatis kebutuhan porsi prasmanan dan gubukan berdasarkan jumlah tamu dengan cadangan aman.',
         ),
       ],
-      proTip: 'Gunakan ikon kontak di atas untuk import cepat dari buku telepon, atau ikon ekspor untuk mengunduh file CSV!',
+      proTip: 'Gunakan ikon kontak di atas untuk memasukkan tamu langsung dari buku telepon, atau ketuk ikon ekspor untuk mengunduh format CSV.',
     );
   }
 }
