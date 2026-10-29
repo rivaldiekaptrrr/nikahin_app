@@ -1,70 +1,96 @@
 import 'package:flutter/material.dart';
 
-/// Pilihan Channel Pembayaran Midtrans Core API
+/// Pilihan Channel Pembayaran Midtrans Core API & Snap
 enum PaymentChannel {
   qris(
     id: 'qris',
     name: 'QRIS (Semua Bank & E-Wallet)',
-    subtitle: 'BCA, Mandiri, BRI, BNI, GoPay, OVO, Dana, ShopeePay',
+    subtitle: 'Aktivasi verifikasi Midtrans (SLA 3 hari kerja)',
     icon: Icons.qr_code_scanner_rounded,
-    badge: 'INSTAN & REKOMENDASI',
-    badgeColor: Color(0xFF2E7D32),
-  ),
-  bcaVa(
-    id: 'bca_va',
-    name: 'BCA Virtual Account',
-    subtitle: 'Transfer via BCA Mobile, myBCA, KlikBCA, atau ATM BCA',
-    icon: Icons.account_balance_rounded,
-    badge: 'OTOMATIS',
-    badgeColor: Color(0xFF1565C0),
+    badge: 'SEGERA HADIR',
+    badgeColor: Color(0xFFE65100),
+    isAvailable: false,
   ),
   mandiriBill(
     id: 'mandiri_bill',
     name: 'Mandiri Bill Payment',
     subtitle: 'Transfer via Livin\' by Mandiri, ATM, atau Internet Banking',
     icon: Icons.account_balance_rounded,
-    badge: 'OTOMATIS',
+    badge: 'OTOMATIS 24 JAM',
     badgeColor: Color(0xFF00695C),
+    isAvailable: true,
   ),
   briVa(
     id: 'bri_va',
     name: 'BRI Virtual Account (BRIVA)',
     subtitle: 'Transfer via BRImo, ATM BRI, atau Internet Banking',
     icon: Icons.account_balance_rounded,
-    badge: 'OTOMATIS',
+    badge: 'OTOMATIS 24 JAM',
     badgeColor: Color(0xFF0277BD),
+    isAvailable: true,
   ),
   bniVa(
     id: 'bni_va',
     name: 'BNI Virtual Account',
     subtitle: 'Transfer via BNI Mobile Banking, ATM, atau SMS Banking',
     icon: Icons.account_balance_rounded,
-    badge: 'OTOMATIS',
+    badge: 'OTOMATIS 24 JAM',
     badgeColor: Color(0xFFD84315),
+    isAvailable: true,
   ),
   permataVa(
     id: 'permata_va',
     name: 'Permata Virtual Account',
     subtitle: 'Transfer via PermataMobile X, ATM, atau Bank Lain',
     icon: Icons.account_balance_rounded,
-    badge: 'OTOMATIS',
+    badge: 'OTOMATIS 24 JAM',
     badgeColor: Color(0xFF4527A0),
+    isAvailable: true,
+  ),
+  cimbVa(
+    id: 'cimb_va',
+    name: 'CIMB Niaga Virtual Account',
+    subtitle: 'Transfer via OCTO Mobile, ATM CIMB, atau Bank Lain',
+    icon: Icons.account_balance_rounded,
+    badge: 'OTOMATIS 24 JAM',
+    badgeColor: Color(0xFF880E4F),
+    isAvailable: true,
+  ),
+  bsiVa(
+    id: 'bsi_va',
+    name: 'BSI Virtual Account',
+    subtitle: 'Aktivasi perbankan syariah (SLA 4 hari kerja)',
+    icon: Icons.account_balance_rounded,
+    badge: 'SEGERA HADIR',
+    badgeColor: Color(0xFF00796B),
+    isAvailable: false,
   ),
   gopay(
     id: 'gopay',
     name: 'GoPay / Gojek',
-    subtitle: 'Buka dan bayar langsung di aplikasi Gojek',
+    subtitle: 'Buka dan bayar langsung di aplikasi Gojek / GoPay',
     icon: Icons.account_balance_wallet_rounded,
     badge: 'DEEPLINK',
     badgeColor: Color(0xFF00838F),
+    isAvailable: true,
+  ),
+  bcaVa(
+    id: 'bca_va',
+    name: 'BCA Virtual Account',
+    subtitle: 'Transfer via BCA (Bisa lewat Bank Lain)',
+    icon: Icons.account_balance_rounded,
+    badge: 'SEGERA HADIR',
+    badgeColor: Color(0xFF757575),
+    isAvailable: false,
   ),
   shopeepay(
     id: 'shopeepay',
     name: 'ShopeePay',
-    subtitle: 'Buka dan bayar langsung di aplikasi Shopee',
+    subtitle: 'Aktivasi e-money (SLA 20 hari kerja)',
     icon: Icons.shopping_bag_rounded,
-    badge: 'DEEPLINK',
+    badge: 'SEGERA HADIR',
     badgeColor: Color(0xFFE65100),
+    isAvailable: false,
   );
 
   final String id;
@@ -73,6 +99,7 @@ enum PaymentChannel {
   final IconData icon;
   final String badge;
   final Color badgeColor;
+  final bool isAvailable;
 
   const PaymentChannel({
     required this.id,
@@ -81,6 +108,7 @@ enum PaymentChannel {
     required this.icon,
     required this.badge,
     required this.badgeColor,
+    this.isAvailable = true,
   });
 
   static PaymentChannel fromId(String id) {

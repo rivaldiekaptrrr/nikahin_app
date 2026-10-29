@@ -173,11 +173,13 @@ class _PaymentChannelSelectionModalState extends State<PaymentChannelSelectionMo
         return [PaymentChannel.qris];
       case 2:
         return [
-          PaymentChannel.bcaVa,
           PaymentChannel.mandiriBill,
           PaymentChannel.briVa,
           PaymentChannel.bniVa,
           PaymentChannel.permataVa,
+          PaymentChannel.cimbVa,
+          PaymentChannel.bsiVa,
+          PaymentChannel.bcaVa,
         ];
       case 3:
         return [
@@ -186,13 +188,15 @@ class _PaymentChannelSelectionModalState extends State<PaymentChannelSelectionMo
         ];
       default:
         return [
-          PaymentChannel.qris,
-          PaymentChannel.bcaVa,
           PaymentChannel.mandiriBill,
           PaymentChannel.briVa,
           PaymentChannel.bniVa,
           PaymentChannel.permataVa,
+          PaymentChannel.cimbVa,
           PaymentChannel.gopay,
+          PaymentChannel.qris,
+          PaymentChannel.bsiVa,
+          PaymentChannel.bcaVa,
           PaymentChannel.shopeepay,
         ];
     }
@@ -205,10 +209,11 @@ class _PaymentChannelSelectionModalState extends State<PaymentChannelSelectionMo
   }) {
     final theme = Theme.of(context);
     final brandColor = _getBrandColor(channel);
+    final isAvailable = channel.isAvailable;
 
-    return BentoCard(
+    final card = BentoCard(
       padding: EdgeInsets.zero,
-      gradient: isHighlight
+      gradient: (isHighlight && isAvailable)
           ? LinearGradient(
               colors: [
                 theme.colorScheme.primaryContainer.withValues(alpha: 0.4),
@@ -219,10 +224,24 @@ class _PaymentChannelSelectionModalState extends State<PaymentChannelSelectionMo
             )
           : null,
       child: InkWell(
-        onTap: () {
-          HapticFeedback.lightImpact();
-          widget.onChannelSelected(channel);
-        },
+        onTap: isAvailable
+            ? () {
+                HapticFeedback.lightImpact();
+                widget.onChannelSelected(channel);
+              }
+            : () {
+                HapticFeedback.selectionClick();
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Metode pembayaran ${channel.name} sedang dalam proses verifikasi aktivasi oleh Midtrans.',
+                    ),
+                    behavior: SnackBarBehavior.floating,
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
+              },
         borderRadius: BorderRadius.circular(16),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
@@ -233,16 +252,20 @@ class _PaymentChannelSelectionModalState extends State<PaymentChannelSelectionMo
                 width: 46,
                 height: 46,
                 decoration: BoxDecoration(
-                  color: brandColor.withValues(alpha: 0.12),
+                  color: isAvailable
+                      ? brandColor.withValues(alpha: 0.12)
+                      : theme.colorScheme.onSurface.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
-                    color: brandColor.withValues(alpha: 0.25),
+                    color: isAvailable
+                        ? brandColor.withValues(alpha: 0.25)
+                        : theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
                     width: 1,
                   ),
                 ),
                 child: Icon(
                   channel.icon,
-                  color: brandColor,
+                  color: isAvailable ? brandColor : theme.colorScheme.onSurfaceVariant,
                   size: 24,
                 ),
               ),
@@ -258,9 +281,12 @@ class _PaymentChannelSelectionModalState extends State<PaymentChannelSelectionMo
                         Flexible(
                           child: Text(
                             channel.name,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
+                              color: isAvailable
+                                  ? theme.colorScheme.onSurface
+                                  : theme.colorScheme.onSurface.withValues(alpha: 0.6),
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -292,27 +318,32 @@ class _PaymentChannelSelectionModalState extends State<PaymentChannelSelectionMo
                             channel.subtitle,
                             style: TextStyle(
                               fontSize: 11.5,
-                              color: theme.colorScheme.onSurfaceVariant,
+                              color: theme.colorScheme.onSurfaceVariant.withValues(
+                                alpha: isAvailable ? 1.0 : 0.6,
+                              ),
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
-                          decoration: BoxDecoration(
-                            color: Colors.green.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: const Text(
-                            'Bebas Biaya',
-                            style: TextStyle(
-                              fontSize: 9,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.green,
+                        if (isAvailable) ...[
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                            decoration: BoxDecoration(
+                              color: Colors.green.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: const Text(
+                              'Bebas Biaya',
+                              style: TextStyle(
+                                fontSize: 9,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.green,
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ],
                     ),
                   ],
@@ -321,15 +352,25 @@ class _PaymentChannelSelectionModalState extends State<PaymentChannelSelectionMo
 
               const SizedBox(width: 8),
               Icon(
-                Icons.chevron_right_rounded,
+                isAvailable ? Icons.chevron_right_rounded : Icons.lock_outline_rounded,
                 size: 20,
-                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: isAvailable ? 0.6 : 0.35,
+                ),
               ),
             ],
           ),
         ),
       ),
     );
+
+    if (!isAvailable) {
+      return Opacity(
+        opacity: 0.65,
+        child: card,
+      );
+    }
+    return card;
   }
 
   Color _getBrandColor(PaymentChannel channel) {
@@ -346,6 +387,10 @@ class _PaymentChannelSelectionModalState extends State<PaymentChannelSelectionMo
         return const Color(0xFFF15A24); // BNI Orange
       case PaymentChannel.permataVa:
         return const Color(0xFF008080); // Permata Teal
+      case PaymentChannel.cimbVa:
+        return const Color(0xFF880E4F); // CIMB Maroon
+      case PaymentChannel.bsiVa:
+        return const Color(0xFF00796B); // BSI Teal
       case PaymentChannel.gopay:
         return const Color(0xFF00AA13); // GoPay Green
       case PaymentChannel.shopeepay:

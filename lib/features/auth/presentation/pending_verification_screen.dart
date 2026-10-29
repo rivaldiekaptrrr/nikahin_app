@@ -296,31 +296,70 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
     final selectedChannel = await PaymentChannelSelectionModal.show(context);
     if (selectedChannel == null || !mounted) return;
 
+    if (!selectedChannel.isAvailable) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Metode pembayaran ${selectedChannel.name} segera hadir.'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
     setState(() => _isPaymentLoading = true);
     try {
-      final result = await ref.read(authNotifierProvider.notifier).chargeMidtransCoreApi(
-        channel: selectedChannel,
+      // 1. Prioritaskan checkout resmi Midtrans Snap
+      final snapResult = await ref.read(authNotifierProvider.notifier).createMidtransPayment(
+        accessLevel: 'WEDDING',
       );
       if (!mounted) return;
 
-      switch (result) {
-        case MidtransCoreChargeSuccess(:final data):
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (ctx) => MidtransCustomPaymentScreen(chargeData: data),
-            ),
-          );
+      switch (snapResult) {
+        case MidtransPaymentSuccess(:final redirectUrl):
+          final uri = Uri.parse(redirectUrl);
+          final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+          if (!launched) {
+            await launchUrl(uri);
+          }
           break;
 
-        case MidtransCoreChargeError(:final message):
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(message),
-              backgroundColor: Theme.of(context).colorScheme.error,
-              behavior: SnackBarBehavior.floating,
-            ),
+        case MidtransPaymentError():
+          // Fallback ke Core API jika Snap backend sedang tidak terjangkau
+          final result = await ref.read(authNotifierProvider.notifier).chargeMidtransCoreApi(
+            channel: selectedChannel,
           );
+          if (!mounted) return;
+
+          switch (result) {
+            case MidtransCoreChargeSuccess(:final data):
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (ctx) => MidtransCustomPaymentScreen(chargeData: data),
+                ),
+              );
+              break;
+
+            case MidtransCoreChargeError(:final message):
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(message),
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+              break;
+          }
           break;
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Terjadi kesalahan saat memproses pembayaran: $e'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
       }
     } finally {
       if (mounted) setState(() => _isPaymentLoading = false);

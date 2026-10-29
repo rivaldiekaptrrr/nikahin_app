@@ -462,6 +462,8 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
       case PaymentChannel.bniVa:
       case PaymentChannel.briVa:
       case PaymentChannel.permataVa:
+      case PaymentChannel.cimbVa:
+      case PaymentChannel.bsiVa:
         return _buildVirtualAccountCard(theme);
 
       case PaymentChannel.gopay:
@@ -1010,6 +1012,20 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
           'Pilih menu "Pembayaran" → "Virtual Account".',
           'Masukkan nomor Virtual Account Permata.',
           'Konfirmasi tagihan dan masukkan PIN otentikasi.',
+        ];
+      case PaymentChannel.cimbVa:
+        return [
+          'Buka OCTO Mobile atau ATM CIMB Niaga.',
+          'Pilih menu "Transfer" → "Rekening Ponsel / Rekening Lain" → "Virtual Account".',
+          'Masukkan nomor Virtual Account CIMB Niaga di atas.',
+          'Konfirmasi tagihan dan masukkan PIN OCTO Mobile.',
+        ];
+      case PaymentChannel.bsiVa:
+        return [
+          'Buka BSI Mobile atau ATM BSI.',
+          'Pilih menu "Bayar" → "Institusi / Virtual Account".',
+          'Masukkan nomor Virtual Account BSI di atas.',
+          'Periksa detail nama & nominal, lalu masukkan PIN BSI Mobile.',
         ];
       case PaymentChannel.gopay:
         return [

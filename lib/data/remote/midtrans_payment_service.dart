@@ -293,6 +293,16 @@ class MidtransPaymentService {
         base['bank_transfer'] = {'bank': 'permata'};
         break;
 
+      case PaymentChannel.cimbVa:
+        base['payment_type'] = 'bank_transfer';
+        base['bank_transfer'] = {'bank': 'cimb'};
+        break;
+
+      case PaymentChannel.bsiVa:
+        base['payment_type'] = 'bank_transfer';
+        base['bank_transfer'] = {'bank': 'bsi'};
+        break;
+
       case PaymentChannel.gopay:
         base['payment_type'] = 'gopay';
         base['gopay'] = {
@@ -348,6 +358,12 @@ class MidtransPaymentService {
         break;
       case PaymentChannel.permataVa:
         va = '8778$randomSuffix';
+        break;
+      case PaymentChannel.cimbVa:
+        va = '8578$randomSuffix';
+        break;
+      case PaymentChannel.bsiVa:
+        va = '9878$randomSuffix';
         break;
       case PaymentChannel.gopay:
         deepUrl = 'https://simulator.sandbox.midtrans.com/gopay/partner/app/payment-pin?id=gopay-$randomSuffix';
