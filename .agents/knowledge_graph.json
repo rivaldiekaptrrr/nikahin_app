@@ -131,6 +131,41 @@
         "Mandatory Rule: Setiap tugas yang menyangkut Firebase Authentication, Cloud Firestore, REST API fields, updateMask, dan Security Rules WAJIB merujuk dan menerapkan panduan resmi dari skill ini.",
         "Kunci Arsitektur Firestore REST: Operasi PATCH ke Firestore wajib menggunakan updateMask.fieldPaths agar tidak menghapus field lain pada dokumen."
       ]
+    },
+    {
+      "name": "Nikahin_Couple_Sync_Architecture",
+      "entityType": "CollaborationSyncSystem",
+      "observations": [
+        "Architecture & Concept: Memungkinkan calon pengantin (CPP & CPW) mengelola rencana pernikahan bersama secara real-time dari dua perangkat berbeda.",
+        "Pairing Code Flow: Menghasilkan kode unik 6 karakter alfanumerik (huruf kapital & angka) yang tersimpan di koleksi Firestore pairingCodes dan terhubung ke dokumen weddings.",
+        "Partner Pairing: Pasangan memasukkan kode melalui PairingCodeDialog; sistem memvalidasi keaktifan kode, kedaluwarsa, dan menghubungkan kedua user ke weddingId yang sama.",
+        "Real-Time Cloud Sync: Seluruh sub-koleksi (anggaran, checklist, tamu, panitia, seserahan) tersinkronisasi mulus di bawah dokumen wedding bersama.",
+        "Unlink Partner Flow: Mekanisme pemutusan pasangan yang aman via unlinkPartner di couple_sync_service.dart. Mereset activeWeddingId pasangan kembali ke akun mandiri tanpa merusak cache lokal dan mematuhi audit keamanan firestore.rules.",
+        "UI & Controls: Terintegrasi pada lib/features/settings/presentation/widgets/settings_partner_card.dart lengkap dengan tombol salin kode cepat, status tautan, QR sharing, dan dialog konfirmasi pemutusan."
+      ]
+    },
+    {
+      "name": "Nikahin_Notification_System",
+      "entityType": "NotificationService",
+      "observations": [
+        "Service Engine: Dikelola oleh NotificationService di lib/data/services/notification_service.dart berbasis flutter_local_notifications.",
+        "Android Status Bar Icon: Menggunakan ikon siluet putih bersih berlatar transparan (@drawable/ic_notification) sesuai standar desain Android status bar (menghindari ikon kotak hitam/kosong).",
+        "Notification Channel: Saluran dengan prioritas tinggi 'nikahin_reminders' untuk pengingat tenggat pembayaran vendor dan hitung mundur pernikahan (H-100, H-30, H-7, H-1).",
+        "Web Safe Guard: Diberi proteksi if (kIsWeb) return; pada inisialisasi dan penjadwalan agar tidak menimbulkan MissingPluginException pada peramban web."
+      ]
+    },
+    {
+      "name": "Nikahin_Web_PWA_Architecture",
+      "entityType": "WebPlatformArchitecture",
+      "observations": [
+        "Hosting Platform: Diterbitkan di Cloudflare Pages (domain produksi: https://nikahin-app.pages.dev) dengan bandwidth egress tanpa batas dan CDN edge caching global.",
+        "Drift SQLite WebAssembly Persistence: Menggunakan sqlite3.wasm (v3.8.0, 758 KB) dan drift_worker.js (v2.35.3, 361 KB) di folder web/ untuk persistence database offline berbasis IndexedDB.",
+        "Single Page Application (SPA) Routing: Dikonfigurasi melalui web/_redirects (/* /index.html 200) sehingga refresh browser dan deep link (seperti /settings) tidak pernah memicu galat 404.",
+        "Caching & HTTP Headers: Dikonfigurasi melalui web/_headers dengan cache immutable 1 tahun untuk aset .wasm dan .js, mempercepat muat ulang halaman kedua ke sub-detik.",
+        "iOS Safari PWA Optimization: Meta tag viewport-fit=cover untuk notch & Dynamic Island iPhone, apple-touch-icon.png (180x180 px warna Warm Champagne #FDF0DE), dan kartu panduan 'Tambah ke Layar Utama' (SettingsPwaInstallCard) di menu Pengaturan.",
+        "In-App Updater Web Isolation: Pengecekan APK dinonaktifkan pada Web melalui AppPlatformConfig.isApkUpdaterAvailable; menu Pengaturan menampilkan lencana info 'Web PWA Aktif'.",
+        "Deployment Pipeline: Perintah deployment langsung via terminal: npx wrangler pages deploy build/web --project-name=nikahin-app."
+      ]
     }
   ],
   "relations": [
@@ -178,6 +213,21 @@
       "from": "Nikahin_App_Core",
       "to": "Firebase_Official_Skills",
       "relationType": "guidedBy"
+    },
+    {
+      "from": "Nikahin_App_Core",
+      "to": "Nikahin_Couple_Sync_Architecture",
+      "relationType": "synchronizesCouplesWith"
+    },
+    {
+      "from": "Nikahin_App_Core",
+      "to": "Nikahin_Notification_System",
+      "relationType": "schedulesNotificationsWith"
+    },
+    {
+      "from": "Nikahin_App_Core",
+      "to": "Nikahin_Web_PWA_Architecture",
+      "relationType": "deploysWebPwaWith"
     }
   ]
 }
