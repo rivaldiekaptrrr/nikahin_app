@@ -299,7 +299,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
     if (!selectedChannel.isAvailable) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Metode pembayaran ${selectedChannel.name} segera hadir.'),
+          content: Text('Metode ${selectedChannel.name} belum tersedia saat ini.'),
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -355,7 +355,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Terjadi kesalahan saat memproses pembayaran: $e'),
+            content: Text('Pembayaran belum dapat diproses: $e'),
             backgroundColor: Theme.of(context).colorScheme.error,
             behavior: SnackBarBehavior.floating,
           ),

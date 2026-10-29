@@ -235,7 +235,7 @@ class _PaymentChannelSelectionModalState extends State<PaymentChannelSelectionMo
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                      'Metode pembayaran ${channel.name} sedang dalam proses verifikasi aktivasi oleh Midtrans.',
+                      'Metode ${channel.name} masih menunggu aktivasi dari Midtrans dan akan segera hadir.',
                     ),
                     behavior: SnackBarBehavior.floating,
                     duration: const Duration(seconds: 2),

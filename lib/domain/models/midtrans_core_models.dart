@@ -5,7 +5,7 @@ enum PaymentChannel {
   qris(
     id: 'qris',
     name: 'QRIS (Semua Bank & E-Wallet)',
-    subtitle: 'Aktivasi verifikasi Midtrans (SLA 3 hari kerja)',
+    subtitle: 'Sedang proses aktivasi di Midtrans (sekitar 3 hari kerja)',
     icon: Icons.qr_code_scanner_rounded,
     badge: 'SEGERA HADIR',
     badgeColor: Color(0xFFE65100),
@@ -59,7 +59,7 @@ enum PaymentChannel {
   bsiVa(
     id: 'bsi_va',
     name: 'BSI Virtual Account',
-    subtitle: 'Aktivasi perbankan syariah (SLA 4 hari kerja)',
+    subtitle: 'Sedang proses aktivasi perbankan syariah (sekitar 4 hari kerja)',
     icon: Icons.account_balance_rounded,
     badge: 'SEGERA HADIR',
     badgeColor: Color(0xFF00796B),
@@ -86,7 +86,7 @@ enum PaymentChannel {
   shopeepay(
     id: 'shopeepay',
     name: 'ShopeePay',
-    subtitle: 'Aktivasi e-money (SLA 20 hari kerja)',
+    subtitle: 'Sedang proses aktivasi e-wallet (sekitar 20 hari kerja)',
     icon: Icons.shopping_bag_rounded,
     badge: 'SEGERA HADIR',
     badgeColor: Color(0xFFE65100),
