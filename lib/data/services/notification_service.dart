@@ -46,6 +46,22 @@ class NotificationService {
 
     try {
       await _notificationsPlugin.initialize(settings: initSettings);
+
+      if (Platform.isAndroid) {
+        final androidImpl = _notificationsPlugin.resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
+        await androidImpl?.createNotificationChannel(
+          const AndroidNotificationChannel(
+            _channelId,
+            _channelName,
+            description: _channelDescription,
+            importance: Importance.high,
+            playSound: true,
+            enableVibration: true,
+          ),
+        );
+      }
+
       _isInitialized = true;
     } catch (e) {
       debugPrint('Error initializing notifications: $e');
@@ -156,22 +172,34 @@ class NotificationService {
 
   /// Helper to schedule a vendor payment due-date reminder (e.g. H-3 before due date).
   Future<void> scheduleVendorPaymentReminder({
-    required int expenseId,
+    required String expenseId,
     required String vendorName,
     required String termLabel,
     required DateTime dueDate,
     int daysBefore = 3,
   }) async {
-    final alertDate = dueDate.subtract(Duration(days: daysBefore));
-    final notificationId = 100000 + expenseId;
+    final alertDate = DateTime(
+      dueDate.year,
+      dueDate.month,
+      dueDate.day,
+      9,
+      0,
+    ).subtract(Duration(days: daysBefore));
+    final notificationId = 100000 + (expenseId.hashCode.abs() % 800000);
 
     await scheduleNotification(
       id: notificationId,
-      title: 'Pengingat Pembayaran Vendor',
+      title: 'Pengingat Pembayaran Vendor 🧾',
       body: 'Jatuh tempo pembayaran $termLabel untuk $vendorName dalam $daysBefore hari.',
       scheduledDate: alertDate,
       payload: 'expense_$expenseId',
     );
+  }
+
+  /// Membatalkan pengingat pembayaran vendor.
+  Future<void> cancelVendorPaymentReminder(String expenseId) async {
+    final notificationId = 100000 + (expenseId.hashCode.abs() % 800000);
+    await cancelNotification(notificationId);
   }
 
   static const int kDailyReminderNotificationId = 999999;
@@ -213,6 +241,81 @@ class NotificationService {
     }
   }
 
+  /// Mengirim notifikasi uji coba instan untuk memastikan sistem bekerja di ponsel.
+  Future<void> testInstantNotification() async {
+    await requestPermissions();
+    await showInstantNotification(
+      id: 101,
+      title: 'Nikahin Siap Menemani 💍',
+      body: 'Notifikasi pengingat persiapan pernikahanmu aktif dan siap menemani hari bahagiamu.',
+      payload: 'test_notification',
+    );
+  }
+
+  /// Menjadwalkan pengingat hitung mundur pernikahan (H-30, H-7, H-3, H-1, dan Hari H).
+  Future<void> scheduleWeddingCountdownReminders({
+    required DateTime weddingDate,
+    required String groomName,
+    required String brideName,
+  }) async {
+    await init();
+    final couple = groomName.isNotEmpty && brideName.isNotEmpty
+        ? '$groomName & $brideName'
+        : 'kamu dan pasangan';
+    final milestones = [
+      (
+        daysBefore: 30,
+        id: 900030,
+        title: 'H-30 Menuju Pernikahan 🌸',
+        body: 'Sebulan lagi momen istimewa $couple! Cek kembali berkas KUA dan konfirmasi vendor.'
+      ),
+      (
+        daysBefore: 7,
+        id: 900007,
+        title: 'H-7 Menuju Hari Bahagia ✨',
+        body: 'Tinggal 1 minggu lagi! Pastikan busana, susunan acara, dan gladi panitia sudah siap.'
+      ),
+      (
+        daysBefore: 3,
+        id: 900003,
+        title: 'H-3 Menuju Pernikahan 💐',
+        body: 'Tiga hari lagi! Waktunya istirahat cukup dan serahkan teknis lapangan kepada tim panitia.'
+      ),
+      (
+        daysBefore: 1,
+        id: 900001,
+        title: 'Besok Hari Bahagiamu! 💍',
+        body: 'Bismillah, esok adalah hari yang dinanti. Semoga seluruh rangkaian acara berjalan lancar dan penuh berkah.'
+      ),
+      (
+        daysBefore: 0,
+        id: 900000,
+        title: 'Selamat Menempuh Hidup Baru! 🤍',
+        body: 'Hari bahagia $couple telah tiba. Selamat merayakan cinta bersama keluarga tercinta.'
+      ),
+    ];
+
+    for (final m in milestones) {
+      final alertDate = DateTime(
+        weddingDate.year,
+        weddingDate.month,
+        weddingDate.day,
+        9, // Jam 9 pagi
+        0,
+      ).subtract(Duration(days: m.daysBefore));
+
+      if (alertDate.isAfter(DateTime.now())) {
+        await scheduleNotification(
+          id: m.id,
+          title: m.title,
+          body: m.body,
+          scheduledDate: alertDate,
+          payload: 'wedding_countdown_${m.daysBefore}',
+        );
+      }
+    }
+  }
+
   /// Cancel the recurring daily reminder.
   Future<void> cancelDailyReminder() async {
     await cancelNotification(kDailyReminderNotificationId);
@@ -221,13 +324,21 @@ class NotificationService {
   /// Cancel a specific scheduled notification.
   Future<void> cancelNotification(int id) async {
     await init();
-    await _notificationsPlugin.cancel(id: id);
+    try {
+      await _notificationsPlugin.cancel(id: id);
+    } catch (e) {
+      debugPrint('Error canceling notification: $e');
+    }
   }
 
   /// Cancel all scheduled notifications.
   Future<void> cancelAll() async {
     await init();
-    await _notificationsPlugin.cancelAll();
+    try {
+      await _notificationsPlugin.cancelAll();
+    } catch (e) {
+      debugPrint('Error canceling all notifications: $e');
+    }
   }
 }
 

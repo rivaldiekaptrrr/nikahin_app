@@ -235,6 +235,19 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                     setState(() => _biometricEnabled = val);
                     await AppPreferences.setBiometricEnabled(val);
                   },
+                  onTestNotification: () async {
+                    HapticFeedback.lightImpact();
+                    final notif = ref.read(notificationServiceProvider);
+                    await notif.testInstantNotification();
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Notifikasi uji coba terkirim. Silakan periksa bilah notifikasi ponselmu.'),
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    }
+                  },
                 ),
                 const SizedBox(height: 20),
 
@@ -585,6 +598,14 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                             );
 
                             await ref.read(weddingRepositoryProvider).updateProfile(updated);
+
+                            if (modalWeddingDate > 0) {
+                              await ref.read(notificationServiceProvider).scheduleWeddingCountdownReminders(
+                                    weddingDate: DateTime.fromMillisecondsSinceEpoch(modalWeddingDate),
+                                    groomName: updated.groomName,
+                                    brideName: updated.brideName,
+                                  );
+                            }
 
                             if (ctx.mounted) {
                               Navigator.pop(ctx);

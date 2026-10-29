@@ -12,6 +12,7 @@ class SettingsPreferencesCard extends ConsumerWidget {
   final ValueChanged<bool> onDailyReminderChanged;
   final void Function(int hour, int minute) onDailyReminderTimeChanged;
   final ValueChanged<bool> onBiometricChanged;
+  final VoidCallback? onTestNotification;
 
   const SettingsPreferencesCard({
     super.key,
@@ -22,6 +23,7 @@ class SettingsPreferencesCard extends ConsumerWidget {
     required this.onDailyReminderChanged,
     required this.onDailyReminderTimeChanged,
     required this.onBiometricChanged,
+    this.onTestNotification,
   });
 
   Future<void> _pickReminderTime(BuildContext context) async {
@@ -272,6 +274,22 @@ class SettingsPreferencesCard extends ConsumerWidget {
                         ),
                       ],
                     ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 6),
+            Padding(
+              padding: const EdgeInsets.only(left: 48),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton.icon(
+                  onPressed: onTestNotification,
+                  icon: const Icon(Icons.notifications_active_outlined, size: 15),
+                  label: const Text('Kirim Notifikasi Uji Coba', style: TextStyle(fontSize: 12)),
+                  style: TextButton.styleFrom(
+                    visualDensity: VisualDensity.compact,
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   ),
                 ),
               ),

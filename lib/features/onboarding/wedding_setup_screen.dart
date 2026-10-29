@@ -13,6 +13,7 @@ import '../../shared/utils/validation_utils.dart';
 import '../../shared/widgets/currency_text_field.dart';
 import '../../shared/widgets/date_selector_button.dart';
 import '../auth/presentation/auth_notifier.dart';
+import '../../data/services/notification_service.dart';
 
 /// Interactive 3-Step Setup Wizard berstandar Appllama High-Fidelity.
 /// Memandu calon pengantin baru menyiapkan fondasi pernikahan dengan cepat (< 60 detik).
@@ -126,6 +127,14 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
       await AppPreferences.setUserProfileId(currentUserId, id);
       await AppPreferences.setActiveProfileId(id);
       ref.read(activeProfileIdProvider.notifier).state = id;
+
+      if (_weddingDate > 0) {
+        await ref.read(notificationServiceProvider).scheduleWeddingCountdownReminders(
+              weddingDate: DateTime.fromMillisecondsSinceEpoch(_weddingDate),
+              groomName: _groomController.text.trim(),
+              brideName: _brideController.text.trim(),
+            );
+      }
 
       if (mounted) {
         context.go('/wedding/$id');
