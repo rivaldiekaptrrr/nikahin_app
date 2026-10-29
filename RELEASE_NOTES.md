@@ -1,5 +1,4 @@
-• Sistem Notifikasi Lokal & Pengingat Pernikahan: Integrasi resmi izin Android 13+, alarm presisi, serta pemulihan jadwal pengingat otomatis setelah ponsel dinyalakan ulang.
-• Pengingat Hitung Mundur D-Day: Jadwal pengingat otomatis menjelang hari bahagia (H-30, H-7, H-3, H-1, dan Hari H) lengkap dengan tombol uji coba langsung di menu Pengaturan.
-• Gerbang Pembayaran Resmi Midtrans Production: Aktivasi pembayaran otomatis langsung via Midtrans Snap untuk Virtual Account (Mandiri, BRI, BNI, Permata, CIMB Niaga) dan GoPay.
-• Status Kanal Pembayaran Segera Hadir: Penataan visual yang jelas untuk metode pembayaran QRIS dan BSI yang sedang dalam antrean verifikasi perbankan.
-• Bahasa Pengguna Lebih Alami: Penyelarasan seluruh teks antarmuka dan pesan sistem agar mengalir luwes, santun, dan nyaman dibaca.
+• Ikon Notifikasi Status Bar Presisi: Integrasi siluet monokrom resmi logo Nikahin dengan transparansi penuh untuk seluruh kerapatan layar Android, memastikan ikon tampil jernih dan tidak lagi kosong/putih polos.
+• Pewarnaan Dinamis & Aksen Champagne Gold: Ikon status bar otomatis menyesuaikan mode terang/gelap sistem, disertai aksen warna emas mewah dan logo penuh saat bilah notifikasi ditarik ke bawah.
+• Pengingat Hitung Mundur & Pembayaran Vendor: Penjadwalan otomatis pengingat hari bahagia (H-30 hingga Hari H) dan tenggat pembayaran vendor yang terjaga stabil setelah ponsel dinyalakan ulang.
+• Peningkatan Stabilitas Aplikasi: Optimalisasi tata kelola pustaka lokal dan kebersihan konfigurasi sistem.
