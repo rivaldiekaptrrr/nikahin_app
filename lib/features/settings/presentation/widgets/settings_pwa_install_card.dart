@@ -5,8 +5,15 @@ import '../../../../shared/widgets/bento_card.dart';
 
 /// Kartu panduan edukasi instalasi PWA ("Tambahkan ke Layar Utama")
 /// Muncul otomatis jika aplikasi diakses melalui platform Web / peramban seluler.
-class SettingsPwaInstallCard extends StatelessWidget {
+class SettingsPwaInstallCard extends StatefulWidget {
   const SettingsPwaInstallCard({super.key});
+
+  @override
+  State<SettingsPwaInstallCard> createState() => _SettingsPwaInstallCardState();
+}
+
+class _SettingsPwaInstallCardState extends State<SettingsPwaInstallCard> {
+  int _selectedPlatformIndex = 0; // 0: iPhone (Safari), 1: Android / Laptop (Chrome)
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +36,7 @@ class SettingsPwaInstallCard extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
-                  Icons.phone_iphone_rounded,
+                  Icons.install_mobile_rounded,
                   color: Color(0xFFAA771C),
                   size: 22,
                 ),
@@ -40,12 +47,12 @@ class SettingsPwaInstallCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Pasang di Layar Utama iPhone',
+                      'Pasang di Layar Utama (PWA)',
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Buka Nikahin layaknya aplikasi App Store asli',
+                      'Buka Nikahin layaknya aplikasi asli tanpa bilah peramban',
                       style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurfaceVariant),
                     ),
                   ],
@@ -53,7 +60,123 @@ class SettingsPwaInstallCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 14),
+
+          // Platform Switcher (iOS vs Android/Chrome)
+          Container(
+            padding: const EdgeInsets.all(3),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () => setState(() => _selectedPlatformIndex = 0),
+                    borderRadius: BorderRadius.circular(8),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 7),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: _selectedPlatformIndex == 0
+                            ? theme.colorScheme.surface
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: _selectedPlatformIndex == 0
+                            ? [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.06),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 1),
+                                )
+                              ]
+                            : null,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.apple_rounded,
+                            size: 16,
+                            color: _selectedPlatformIndex == 0
+                                ? theme.colorScheme.onSurface
+                                : theme.colorScheme.onSurfaceVariant,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            'iPhone (Safari)',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: _selectedPlatformIndex == 0
+                                  ? FontWeight.w600
+                                  : FontWeight.normal,
+                              color: _selectedPlatformIndex == 0
+                                  ? theme.colorScheme.onSurface
+                                  : theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: InkWell(
+                    onTap: () => setState(() => _selectedPlatformIndex = 1),
+                    borderRadius: BorderRadius.circular(8),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 7),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: _selectedPlatformIndex == 1
+                            ? theme.colorScheme.surface
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: _selectedPlatformIndex == 1
+                            ? [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.06),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 1),
+                                )
+                              ]
+                            : null,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.android_rounded,
+                            size: 16,
+                            color: _selectedPlatformIndex == 1
+                                ? theme.colorScheme.onSurface
+                                : theme.colorScheme.onSurfaceVariant,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            'Android / Chrome',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: _selectedPlatformIndex == 1
+                                  ? FontWeight.w600
+                                  : FontWeight.normal,
+                              color: _selectedPlatformIndex == 1
+                                  ? theme.colorScheme.onSurface
+                                  : theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Step Instructions
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -64,25 +187,45 @@ class SettingsPwaInstallCard extends StatelessWidget {
               ),
             ),
             child: Column(
-              children: [
-                _buildStepRow(
-                  step: '1',
-                  text: 'Ketuk tombol Bagikan (Share / ikon kotak berpanah atas) di bilah bawah Safari.',
-                  theme: theme,
-                ),
-                const SizedBox(height: 10),
-                _buildStepRow(
-                  step: '2',
-                  text: 'Gulir ke bawah dan pilih menu "Tambahkan ke Layar Utama" (Add to Home Screen).',
-                  theme: theme,
-                ),
-                const SizedBox(height: 10),
-                _buildStepRow(
-                  step: '3',
-                  text: 'Ikon Nikahin akan langsung muncul di layar utama iPhone Anda dalam mode layar penuh.',
-                  theme: theme,
-                ),
-              ],
+              children: _selectedPlatformIndex == 0
+                  ? [
+                      _buildStepRow(
+                        step: '1',
+                        text: 'Ketuk tombol Bagikan (Share / ikon kotak berpanah atas) di bilah Safari.',
+                        theme: theme,
+                      ),
+                      const SizedBox(height: 10),
+                      _buildStepRow(
+                        step: '2',
+                        text: 'Gulir ke bawah lalu pilih menu "Tambahkan ke Layar Utama" (Add to Home Screen).',
+                        theme: theme,
+                      ),
+                      const SizedBox(height: 10),
+                      _buildStepRow(
+                        step: '3',
+                        text: 'Aplikasi Nikahin akan langsung tersimpan di layar utama iPhone Anda.',
+                        theme: theme,
+                      ),
+                    ]
+                  : [
+                      _buildStepRow(
+                        step: '1',
+                        text: 'Ketuk menu opsi titik tiga (⋮) di pojok kanan atas peramban Chrome.',
+                        theme: theme,
+                      ),
+                      const SizedBox(height: 10),
+                      _buildStepRow(
+                        step: '2',
+                        text: 'Pilih menu "Instal Aplikasi" atau "Tambahkan ke Layar Utama".',
+                        theme: theme,
+                      ),
+                      const SizedBox(height: 10),
+                      _buildStepRow(
+                        step: '3',
+                        text: 'Konfirmasi pemasangan, ikon Nikahin akan muncul di daftar aplikasi Anda.',
+                        theme: theme,
+                      ),
+                    ],
             ),
           ),
           const SizedBox(height: 14),

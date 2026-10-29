@@ -9,8 +9,8 @@ class AppUpdateInstaller {
   /// Membuka file APK untuk diinstal oleh package installer sistem Android
   static Future<bool> installApk(String filePath) async {
     try {
-      if (!Platform.isAndroid) {
-        // Jika di iOS atau platform lain, buka halaman rilis di browser
+      if (kIsWeb || !Platform.isAndroid) {
+        // Jika di Web, iOS atau platform non-Android lain, buka halaman rilis di browser
         return await openReleasesWeb();
       }
 

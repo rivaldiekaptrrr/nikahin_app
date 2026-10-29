@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../app/config/platform_config.dart';
 import '../../../../shared/widgets/bento_card.dart';
 import '../../../../ui/theme/theme_controller.dart';
 
@@ -295,37 +296,39 @@ class SettingsPreferencesCard extends ConsumerWidget {
               ),
             ),
           ],
-          const Divider(height: 24),
+          if (AppPlatformConfig.isBiometricsAvailable) ...[
+            const Divider(height: 24),
 
-          // Biometric Lock Toggle
-          SwitchListTile.adaptive(
-            contentPadding: EdgeInsets.zero,
-            secondary: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(10),
+            // Biometric Lock Toggle
+            SwitchListTile.adaptive(
+              contentPadding: EdgeInsets.zero,
+              secondary: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  Icons.fingerprint_rounded,
+                  color: theme.colorScheme.primary,
+                  size: 20,
+                ),
               ),
-              child: Icon(
-                Icons.fingerprint_rounded,
-                color: theme.colorScheme.primary,
-                size: 20,
+              title: const Text(
+                'Kunci Keamanan Biometrik',
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
               ),
+              subtitle: Text(
+                'Gunakan sidik jari atau PIN saat membuka aplikasi',
+                style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurfaceVariant),
+              ),
+              value: biometricEnabled,
+              onChanged: (val) {
+                HapticFeedback.selectionClick();
+                onBiometricChanged(val);
+              },
             ),
-            title: const Text(
-              'Kunci Keamanan Biometrik',
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-            ),
-            subtitle: Text(
-              'Gunakan sidik jari atau PIN saat membuka aplikasi',
-              style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurfaceVariant),
-            ),
-            value: biometricEnabled,
-            onChanged: (val) {
-              HapticFeedback.selectionClick();
-              onBiometricChanged(val);
-            },
-          ),
+          ],
         ],
       ),
     );
