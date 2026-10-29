@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../app/config/business_config.dart';
 import '../../../data/local/preferences_manager.dart';
@@ -136,10 +138,26 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
       final byteData = await rootBundle.load(BusinessConfig.manualQrisAssetPath);
       final bytes = byteData.buffer.asUint8List();
 
+      if (kIsWeb) {
+        await SharePlus.instance.share(
+          ShareParams(
+            files: [XFile.fromData(bytes, mimeType: 'image/jpeg', name: 'qris_nikahin.jpg')],
+            subject: 'QRIS Pembayaran Nikahin',
+          ),
+        );
+        if (mounted) {
+          _showSmoothToast(
+            message: 'Gambar QRIS siap disimpan.',
+            onOpen: () {},
+          );
+        }
+        return;
+      }
+
       String targetDir = '';
       String targetLocationName = 'folder Download';
 
-      if (Platform.isAndroid) {
+      if (!kIsWeb && Platform.isAndroid) {
         final publicDownloadDir = Directory('/storage/emulated/0/Download');
         final publicPicturesDir = Directory('/storage/emulated/0/Pictures');
         if (await publicDownloadDir.exists()) {

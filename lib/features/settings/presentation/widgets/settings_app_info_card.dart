@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../app/config/platform_config.dart';
 import '../../../../shared/widgets/bento_card.dart';
 import '../../../updater/presentation/update_notifier.dart';
 import '../../../updater/presentation/widgets/update_dialog.dart';
@@ -236,16 +237,44 @@ class _SettingsAppInfoCardState extends ConsumerState<SettingsAppInfoCard> {
                   ],
                 ),
               ),
-              FilledButton.tonal(
-                onPressed: _isCheckingUpdate ? null : _handleCheckUpdate,
-                child: _isCheckingUpdate
-                    ? const SizedBox(
-                        width: 14,
-                        height: 14,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Text('Cek Update'),
-              ),
+              if (AppPlatformConfig.isApkUpdaterAvailable)
+                FilledButton.tonal(
+                  onPressed: _isCheckingUpdate ? null : _handleCheckUpdate,
+                  child: _isCheckingUpdate
+                      ? const SizedBox(
+                          width: 14,
+                          height: 14,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Text('Cek Update'),
+                )
+              else
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD4AF37).withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: const Color(0xFFD4AF37).withValues(alpha: 0.35),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.cloud_done_rounded, size: 14, color: Color(0xFFAA771C)),
+                      const SizedBox(width: 5),
+                      Text(
+                        'Web PWA Aktif',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.onSurface,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
             ],
           ),
           const Divider(height: 20),

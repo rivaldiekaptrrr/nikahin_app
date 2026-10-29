@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../app/config/platform_config.dart';
 import '../../data/repositories/wedding_repository.dart';
 import '../../domain/enums/wedding_enums.dart';
 import '../../domain/models/wedding_models.dart';
@@ -33,6 +34,7 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
   }
 
   Future<void> _checkUpdateSilently() async {
+    if (!AppPlatformConfig.isApkUpdaterAvailable) return;
     try {
       final release = await ref
           .read(updateNotifierProvider.notifier)

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../app/config/platform_config.dart';
 import '../data/app_update_checker.dart';
 import '../data/app_update_downloader.dart';
 import '../data/app_update_installer.dart';
@@ -122,6 +123,9 @@ class UpdateNotifier extends Notifier<UpdateState> {
   /// Memeriksa pembaruan rilis.
   /// [silent] jika true: bila tidak ada rilis baru, tidak mengubah status jadi upToDate (agar tidak memunculkan notif/dialog)
   Future<AppReleaseInfo?> checkForUpdate({bool silent = false}) async {
+    if (!AppPlatformConfig.isApkUpdaterAvailable) {
+      return null;
+    }
     final version = await _checker.getCurrentVersion();
     state = state.copyWith(
       status: UpdateStatus.checking,

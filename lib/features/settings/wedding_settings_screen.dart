@@ -20,6 +20,7 @@ import 'presentation/widgets/settings_app_info_card.dart';
 import 'presentation/widgets/settings_backup_card.dart';
 import 'presentation/widgets/settings_danger_zone_card.dart';
 import 'presentation/widgets/settings_preferences_card.dart';
+import 'presentation/widgets/settings_pwa_install_card.dart';
 import 'presentation/widgets/settings_quote_card.dart';
 import 'presentation/widgets/settings_support_card.dart';
 import 'presentation/widgets/settings_unified_profile_card.dart';
@@ -265,6 +266,9 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                   onExportJson: () => _exportFullBackupJson(context, profile),
                   onRestoreJson: () => _showRestoreBackupDialog(context),
                 ),
+                const SizedBox(height: 20),
+
+                const SettingsPwaInstallCard(),
                 const SizedBox(height: 20),
 
                 // 5. App Info & Feature Showcase
