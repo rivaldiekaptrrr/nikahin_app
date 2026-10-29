@@ -137,37 +137,53 @@ class FirestoreRestService {
     return null;
   }
 
+  /// Sign in / exchange Google OAuth Token (ID Token or Access Token) with Firebase Auth via accounts:signInWithIdp
+  Future<AuthResponse?> signInWithGoogleOAuth({
+    String? googleIdToken,
+    String? googleAccessToken,
+  }) async {
+    if (!isRemoteConfigured) return null;
+
+    final String postBody;
+    if (googleIdToken != null && googleIdToken.isNotEmpty) {
+      postBody = 'id_token=$googleIdToken&providerId=google.com';
+    } else if (googleAccessToken != null && googleAccessToken.isNotEmpty) {
+      postBody = 'access_token=$googleAccessToken&providerId=google.com';
+    } else {
+      return null;
+    }
+
+    try {
+      final url = Uri.parse('https://identitytoolkit.googleapis.com/v1/accounts:signInWithIdp?key=$apiKey');
+      final response = await _client.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'postBody': postBody,
+          'requestUri': 'http://localhost',
+          'returnIdpCredential': true,
+          'returnSecureToken': true,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return AuthResponse(
+          idToken: data['idToken'] ?? googleIdToken ?? googleAccessToken ?? '',
+          email: data['email'] ?? '',
+          localId: data['localId'] ?? '',
+          refreshToken: data['refreshToken'],
+        );
+      }
+    } catch (_) {}
+    return null;
+  }
+
   /// Sign in / exchange Google ID Token with Firebase Auth via accounts:signInWithIdp
   Future<AuthResponse?> signInWithGoogleIdToken({
     required String googleIdToken,
-  }) async {
-    if (isRemoteConfigured && googleIdToken.isNotEmpty) {
-      try {
-        final url = Uri.parse('https://identitytoolkit.googleapis.com/v1/accounts:signInWithIdp?key=$apiKey');
-        final response = await _client.post(
-          url,
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({
-            'postBody': 'id_token=$googleIdToken&providerId=google.com',
-            'requestUri': 'http://localhost',
-            'returnIdpCredential': true,
-            'returnSecureToken': true,
-          }),
-        );
-
-        if (response.statusCode == 200) {
-          final data = jsonDecode(response.body);
-          return AuthResponse(
-            idToken: data['idToken'] ?? googleIdToken,
-            email: data['email'] ?? '',
-            localId: data['localId'] ?? '',
-            refreshToken: data['refreshToken'],
-          );
-        }
-      } catch (_) {}
-    }
-    return null;
-  }
+  }) =>
+      signInWithGoogleOAuth(googleIdToken: googleIdToken);
 
   /// Send password reset email via Firebase Auth REST API
   /// Returns null on success, or an error message on failure.

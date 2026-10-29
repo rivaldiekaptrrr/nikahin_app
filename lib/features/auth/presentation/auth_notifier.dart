@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../../app/config/business_config.dart';
@@ -24,6 +25,12 @@ class AuthNotifier extends Notifier<AuthState> {
     final isDemo = await AppPreferences.isDemoMode();
     final userId = await AppPreferences.getUserId();
     final cachedAccess = await AppPreferences.getAccessLevel();
+
+    // Auto-migrate/clean transient dummy Google Web IDs from earlier sessions
+    if (userId != null && userId.startsWith('google_user_')) {
+      await signOut();
+      return;
+    }
 
     if (email != null && email.isNotEmpty) {
       final uid = userId ?? 'user_${email.hashCode.abs()}';
@@ -477,6 +484,7 @@ class AuthNotifier extends Notifier<AuthState> {
     state = state.copyWith(isLoading: true, errorMessage: null);
     try {
       final googleSignIn = GoogleSignIn(
+        clientId: kIsWeb ? FirebaseConfig.webClientId : null,
         serverClientId: FirebaseConfig.webClientId,
         scopes: ['email', 'profile'],
       );
@@ -500,16 +508,18 @@ class AuthNotifier extends Notifier<AuthState> {
 
       final googleAuth = await account.authentication;
       final googleIdToken = googleAuth.idToken ?? '';
+      final googleAccessToken = googleAuth.accessToken ?? '';
       final firestoreService = ref.read(firestoreServiceProvider);
 
       String? firebaseIdToken;
       String uid = 'google_user_${account.id.isNotEmpty ? account.id : email.hashCode.abs()}';
 
       AuthResponse? firebaseAuthRes;
-      // Tukar Google ID Token dengan Firebase Auth ID Token jika tersedia
-      if (googleIdToken.isNotEmpty) {
-        firebaseAuthRes = await firestoreService.signInWithGoogleIdToken(
+      // Tukar Google Token (ID Token atau Access Token di Web) dengan Firebase Auth ID Token
+      if (googleIdToken.isNotEmpty || googleAccessToken.isNotEmpty) {
+        firebaseAuthRes = await firestoreService.signInWithGoogleOAuth(
           googleIdToken: googleIdToken,
+          googleAccessToken: googleAccessToken,
         );
         if (firebaseAuthRes != null && firebaseAuthRes.isSuccess) {
           firebaseIdToken = firebaseAuthRes.idToken;
