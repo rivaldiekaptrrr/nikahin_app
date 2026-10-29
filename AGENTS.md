@@ -95,3 +95,34 @@ Knowledge graph data and MCP configurations are versioned inside `.agents/`:
   2. **Seluruh teks jawaban percakapan kepada pengguna**. Bahasa wajib mengalir wajar, bernada santun dan profesional, serta terbebas dari *tell AI*.
   3. **Self-Check Wajib Sebelum Commit**: Sebelum mengajukan atau membuat commit yang memuat teks bahasa Indonesia, agen wajib melakukan audit kilat: *"Apakah kalimat ini sudah luwes dan terdengar seperti tulisan manusia asli?"*.
 
+---
+
+## 8. Web PWA & Cloudflare Pages Guidelines
+- **Production URL**: `https://nikahin-app.pages.dev` (Hosted on Cloudflare Pages, zero egress fees, global edge network).
+- **Drift SQLite WebAssembly Persistence**: Menggunakan `sqlite3.wasm` (v3.8.0) dan `drift_worker.js` (v2.35.3) di `web/` yang tersimpan pada IndexedDB browser.
+- **Client-Side SPA Routing**: Wajib menjaga `web/_redirects` (`/* /index.html 200`) agar deep link dan page refresh tidak menghasilkan galat HTTP 404.
+- **Caching Headers**: `web/_headers` mengatur cache immutable 1 tahun (`max-age=31536000, immutable`) untuk berkas `.wasm` dan `.js`.
+- **iOS Safari PWA Optimization**:
+  - `viewport-fit=cover` pada meta viewport untuk tampilan fullscreen notch & Dynamic Island iPhone.
+  - `apple-touch-icon.png` (180x180 px warna Warm Champagne `#FDF0DE`) untuk ikon layar utama iOS yang tajam.
+  - Panduan interaktif Add to Home Screen tersedia di menu Pengaturan (`SettingsPwaInstallCard`).
+- **Updater & Platform Guards**: Seluruh pengecekan APK dinonaktifkan di Web melalui `AppPlatformConfig.isApkUpdaterAvailable`, dan panggilan berkas lokal/sensor dilindungi oleh `kIsWeb`.
+- **Deploy Command**: `npx wrangler pages deploy build/web --project-name=nikahin-app`.
+
+---
+
+## 9. Couple Sync & Pairing Code Architecture
+- **Koleksi Firestore**: `weddings/{weddingId}` dan indeks pencarian `pairingCodes/{code}`.
+- **Format Kode**: 6 karakter alfanumerik kapital unik (misal: `NK8X2P`).
+- **Role & Relasi**: Menghubungkan dua akun terpisah (CPP dan CPW) ke dokumen pernikahan yang sama sehingga semua sub-koleksi (anggaran, checklist, tamu, panitia, seserahan) tersinkronisasi dua arah secara real-time.
+- **Unlink Partner**: Pemutusan pasangan via `CoupleSyncService.unlinkPartner()` mereset `activeWeddingId` akun kembali mandiri tanpa merusak cache lokal dan mematuhi audit keamanan `firestore.rules`.
+- **UI Integrasi**: Kartu Pasangan di Pengaturan (`settings_partner_card.dart`) dengan fitur salin kode cepat, status tautan aktif, QR code, dan dialog konfirmasi pemutusan akun.
+
+---
+
+## 10. Local Notification & Android Status Bar Standard
+- **Notification Service**: `NotificationService` di `lib/data/services/notification_service.dart`.
+- **Android Status Bar Icon Standard**: Wajib menggunakan ikon siluet putih murni dengan latar belakang transparan (`@drawable/ic_notification`). Dilarang menggunakan ikon berwarna penuh atau RGB tanpa transparansi karena Android status bar akan merendernya sebagai kotak abu-abu/hitam pekat kosong.
+- **Web Safe Guard**: Seluruh inisialisasi dan penjadwalan notifikasi lokal wajib diproteksi `if (kIsWeb) return;` agar tidak memicu crash di peramban.
+
+
