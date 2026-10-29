@@ -90,7 +90,7 @@ class AppErrorHandler {
   static AppException parse(dynamic error) {
     if (error is AppException) return error;
 
-    if (error is SocketException) {
+    if (error is SocketException || error.toString().contains('ClientException') || error.toString().contains('SocketException')) {
       return AppException(
         message: 'Tidak ada koneksi internet. Mode offline aktif dan data tersimpan lokal.',
         type: AppErrorType.networkError,

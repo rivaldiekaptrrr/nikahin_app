@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -22,7 +23,11 @@ class DeviceInfoService {
     } catch (_) {}
 
     try {
-      if (Platform.isAndroid) {
+      if (kIsWeb) {
+        final web = await _deviceInfoPlugin.webBrowserInfo;
+        deviceModel = 'Browser (${web.browserName.name.toUpperCase()})';
+        osVersion = 'Web ${web.platform ?? "Safari/WebKit"}';
+      } else if (Platform.isAndroid) {
         final android = await _deviceInfoPlugin.androidInfo;
         deviceModel = '${android.brand.toUpperCase()} ${android.model}';
         osVersion = 'Android ${android.version.release} (API ${android.version.sdkInt})';

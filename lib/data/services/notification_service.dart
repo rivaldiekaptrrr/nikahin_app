@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,6 +23,10 @@ class NotificationService {
   /// Initialize notification plugin with platform settings.
   Future<void> init() async {
     if (_isInitialized) return;
+    if (kIsWeb) {
+      _isInitialized = true;
+      return;
+    }
 
     try {
       tz.initializeTimeZones();
@@ -70,6 +75,7 @@ class NotificationService {
 
   /// Request permissions on Android 13+ and iOS.
   Future<bool> requestPermissions() async {
+    if (kIsWeb) return false;
     await init();
     try {
       if (Platform.isAndroid) {

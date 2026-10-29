@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -541,11 +542,23 @@ class ExportUtils {
       buffer.writeln('$no,$name,$phone,$group,$session,$pax,$rsvp');
     }
 
+    final cleanGroom = profile.groomName.replaceAll(RegExp(r'[^\w\.-]'), '_');
+    final cleanBride = profile.brideName.replaceAll(RegExp(r'[^\w\.-]'), '_');
+    final fileName = 'Daftar_Tamu_${cleanGroom}_$cleanBride.csv';
+
+    if (kIsWeb) {
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile.fromData(utf8.encode(buffer.toString()), mimeType: 'text/csv', name: fileName)],
+          subject: 'Daftar Tamu Pernikahan ${profile.groomName} & ${profile.brideName}',
+          text: 'Dokumen CSV Daftar Tamu Pernikahan ${profile.groomName} & ${profile.brideName}',
+        ),
+      );
+      return;
+    }
+
     try {
       final tempDir = await getTemporaryDirectory();
-      final cleanGroom = profile.groomName.replaceAll(RegExp(r'[^\w\.-]'), '_');
-      final cleanBride = profile.brideName.replaceAll(RegExp(r'[^\w\.-]'), '_');
-      final fileName = 'Daftar_Tamu_${cleanGroom}_$cleanBride.csv';
       final file = File('${tempDir.path}/$fileName');
       await file.writeAsString(buffer.toString(), encoding: utf8);
 
@@ -573,6 +586,17 @@ class ExportUtils {
     final cleanGroom = profile.groomName.replaceAll(RegExp(r'[^\w\.-]'), '_');
     final cleanBride = profile.brideName.replaceAll(RegExp(r'[^\w\.-]'), '_');
     final fileName = 'Nikahin_Backup_${cleanGroom}_$cleanBride.json';
+
+    if (kIsWeb) {
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile.fromData(utf8.encode(jsonStr), mimeType: 'application/json', name: fileName)],
+          subject: 'Cadangan Data Pernikahan ${profile.groomName} & ${profile.brideName}',
+          text: 'File Cadangan (Backup JSON) Nikahin App',
+        ),
+      );
+      return;
+    }
 
     try {
       final tempDir = await getTemporaryDirectory();

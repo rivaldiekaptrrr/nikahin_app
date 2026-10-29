@@ -16,7 +16,7 @@ class AppPlatformConfig {
   static const bool enableIosSupport = false;
 
   /// Aktifkan dukungan & mode Web browser
-  static const bool enableWebSupport = false;
+  static const bool enableWebSupport = true;
 
   /// Aktifkan dukungan & mode Desktop Windows
   static const bool enableWindowsSupport = false;
