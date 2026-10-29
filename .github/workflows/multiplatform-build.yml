@@ -107,6 +107,7 @@ jobs:
           if [ -n "$MIDTRANS_SANDBOX_KEY" ]; then
             DART_DEFINES="$DART_DEFINES --dart-define=MIDTRANS_SANDBOX_SERVER_KEY=$MIDTRANS_SANDBOX_KEY"
           fi
+          DART_DEFINES="$DART_DEFINES --dart-define=MIDTRANS_IS_PRODUCTION=true"
 
           # 1. Build Universal APK (armeabi-v7a + arm64-v8a)
           flutter build apk --release $DART_DEFINES

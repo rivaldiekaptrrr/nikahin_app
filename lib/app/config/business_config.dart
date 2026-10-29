@@ -9,7 +9,7 @@ class BusinessConfig {
   /// Toggle Mode Pembayaran Manual (QRIS Statis & Konfirmasi WhatsApp)
   /// Nilai `true` mengaktifkan mode manual (QRIS statis + kirim bukti via WhatsApp + aktivasi Admin Panel).
   /// Nilai `false` mengaktifkan mode direct payment otomatis Midtrans Core API.
-  static const bool useManualPaymentMode = true;
+  static const bool useManualPaymentMode = false;
 
   /// Nomor WhatsApp Admin Utama (Format Internasional tanpa +)
   static const String adminWhatsAppNumber = '6287834284141';
@@ -33,7 +33,7 @@ class BusinessConfig {
   );
 
   /// Status Lingkungan Midtrans (false = Sandbox, true = Production)
-  static const bool isProduction = bool.fromEnvironment('MIDTRANS_IS_PRODUCTION', defaultValue: false);
+  static const bool isProduction = bool.fromEnvironment('MIDTRANS_IS_PRODUCTION', defaultValue: true);
 
   /// Server Key Midtrans Sandbox (Testing)
   static const String midtransSandboxServerKey = String.fromEnvironment(
