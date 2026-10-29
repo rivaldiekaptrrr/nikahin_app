@@ -233,8 +233,8 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           if [ -n "$CLOUDFLARE_API_TOKEN" ] && [ -n "$CLOUDFLARE_ACCOUNT_ID" ]; then
-            npx wrangler pages deploy build/web --project-name=nikahin-app --commit-dirty=true
-            echo "Cloudflare Pages deployed successfully."
+            npx wrangler pages deploy build/web --project-name=nikahin-app --branch=master --commit-dirty=true
+            echo "Cloudflare Pages deployed to production successfully."
           else
             echo "::warning ::CLOUDFLARE_API_TOKEN or CLOUDFLARE_ACCOUNT_ID not found in GitHub Secrets. Skipping Cloudflare deploy."
           fi
