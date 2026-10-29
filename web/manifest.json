@@ -1,11 +1,11 @@
 {
-    "name": "nikahin_app",
-    "short_name": "nikahin_app",
-    "start_url": ".",
+    "name": "Nikahin - Wedding Planner & Budget Management",
+    "short_name": "Nikahin",
+    "start_url": "/",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#FFFDF9",
+    "theme_color": "#D4AF37",
+    "description": "Aplikasi Perencana Pernikahan, Anggaran, Tamu, dan Rundown Acara",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
