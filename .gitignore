@@ -53,3 +53,6 @@ keystore_base64.txt
 
 # Widget Preview related
 .widget_preview/
+
+# Temporary reference repos
+midtrans-python-client/
