@@ -1,4 +1,4 @@
-• Pembaruan Bahasa & Antarmuka Alami: Seluruh teks aplikasi disunting agar luwes, hangat, dan nyaman dibaca calon pengantin tanpa bahasa kaku.
-• Penyelarasan Istilah Pernikahan: Menggunakan istilah khas pernikahan Indonesia seperti Susunan Acara, Batas Anggaran, dan Narahubung.
-• Peningkatan Kejelasan Panduan: Seluruh dialog panduan fitur dan tips praktis kini lebih informatif dan mudah dipahami.
-• Optimasi Pesan & Notifikasi: Teks konfirmasi, tombol aksi, dan pesan status disederhanakan agar lebih ramah pengguna.
+• Perbaikan Pemutusan Tautan Pasangan: Pemutusan tautan akun kini berjalan tuntas dua arah secara aman bagi kedua pengguna.
+• Pembersihan Data Otomatis: Data pernikahan lokal pada perangkat pasangan otomatis dihapus saat tautan dihentikan untuk menjaga privasi.
+• Penyelarasan Aturan Keamanan Cloud: Pembaruan hak akses Cloud Firestore untuk pemutusan dan pemulihan status akun pasangan.
+• Optimalisasi Alur Rilis & Stabilitas: Pembaruan workflow otomatisasi dan integrasi NDK untuk keandalan rilis APK aplikasi.
