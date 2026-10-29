@@ -68,23 +68,26 @@ Untuk mencegah aplikasi mengalami galat (*crash*) di web:
 
 ## 4. Prosedur Deployment ke Cloudflare Pages
 
-### A. Kompilasi Web Lokal
-Jalankan perintah build Flutter Web di direktori proyek:
-```bash
-flutter build web --release
-```
-Hasil kompilasi akan berada di folder `build/web/`.
+### A. Otomatisasi Penuh via GitHub Actions CI/CD (Rekomendasi Utama)
+Workflow di `.github/workflows/multiplatform-build.yml` telah dikonfigurasi untuk merilis **APK Android dan Web PWA secara serentak**:
+1. Setiap kali tag versi baru di-push ke GitHub (misalnya `git tag v1.0.20 && git push origin v1.0.20`):
+   - Runner 1 (Ubuntu): Mengompilasi APK Android release dan mempublikasikannya ke GitHub Releases.
+   - Runner 2 (Ubuntu): Mengompilasi Flutter Web dan langsung mengunggahnya ke Cloudflare Pages secara otomatis menggunakan Cloudflare Pages API.
+2. Prasyarat:
+   - `CLOUDFLARE_API_TOKEN`: Disimpan di GitHub Secrets (izin: *Edit Cloudflare Workers/Pages*).
+   - `CLOUDFLARE_ACCOUNT_ID`: Disimpan di GitHub Secrets.
 
-### B. Deployment Langsung via Wrangler CLI
-1. Pastikan sudah login ke Cloudflare:
+### B. Deployment Manual Cepat via Wrangler CLI (Opsional)
+Jika Anda ingin memperbarui situs secara instan dari komputer lokal tanpa membuat tag rilis:
+1. Kompilasi Web:
    ```bash
-   npx wrangler login
+   flutter build web --release
    ```
-2. Unggah folder hasil build ke Cloudflare Pages:
+2. Jalankan perintah deploy:
    ```bash
    npx wrangler pages deploy build/web --project-name=nikahin-app
    ```
-3. Situs Anda akan langsung terbit di alamat produksi:
+3. Situs Anda langsung terbit di alamat produksi:
    👉 **`https://nikahin-app.pages.dev`**
 
 ---
