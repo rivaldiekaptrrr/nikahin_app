@@ -1,12 +1,39 @@
-/*.wasm
+# Mesin database statis WebAssembly & Worker (tidak berubah antar rilis)
+/sqlite3.wasm
   Content-Type: application/wasm
   Cache-Control: public, max-age=31536000, immutable
 
-/*.js
+/drift_worker.js
+  Content-Type: application/javascript
   Cache-Control: public, max-age=31536000, immutable
 
+/canvaskit/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Bootstrap & Service Worker (wajib selalu periksa versi terbaru)
+/flutter_bootstrap.js
+  Content-Type: application/javascript
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/flutter_service_worker.js
+  Content-Type: application/javascript
+  Cache-Control: no-cache, no-store, must-revalidate
+
+# Bundle aplikasi Flutter (revalidasi instan berbasis ETag Cloudflare)
+/main.dart.js
+  Content-Type: application/javascript
+  Cache-Control: public, max-age=0, must-revalidate
+
+/version.json
+  Content-Type: application/json
+  Cache-Control: no-cache, no-store, must-revalidate
+
+# Aset ikon & grafis PWA
 /icons/*
   Cache-Control: public, max-age=604800, stale-while-revalidate=86400
 
 /apple-touch-icon.png
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/favicon.png
   Cache-Control: public, max-age=604800, stale-while-revalidate=86400
