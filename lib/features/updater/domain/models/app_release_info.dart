@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 /// Model data representasi rilis dari GitHub Releases API
 class AppReleaseInfo {
@@ -49,8 +50,9 @@ class AppReleaseInfo {
       if (apkAssets.isNotEmpty) {
         Map<String, dynamic>? selectedAsset;
 
-        final isArm64 = Platform.version.toLowerCase().contains('arm64') ||
-            Platform.version.toLowerCase().contains('aarch64');
+        final isArm64 = !kIsWeb &&
+            (Platform.version.toLowerCase().contains('arm64') ||
+                Platform.version.toLowerCase().contains('aarch64'));
 
         if (isArm64) {
           // Cari aset yang dioptimasi khusus arm64 jika perangkat mendukung 64-bit

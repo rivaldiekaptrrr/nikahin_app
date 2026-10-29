@@ -39,7 +39,7 @@ class AuthNotifier extends Notifier<AuthState> {
       String? partnerOfUid = await AppPreferences.getPartnerOfUid();
       String? activeWeddingId = await AppPreferences.getActiveWeddingId();
       String? coupleRole = await AppPreferences.getCoupleRole();
-      bool isPrimary = true;
+      bool isPrimary = await AppPreferences.isPrimaryPayer();
 
       // Verify and refresh latest accessLevel and partner sync from Firestore
       try {
@@ -132,6 +132,7 @@ class AuthNotifier extends Notifier<AuthState> {
           await AppPreferences.setPartnerOfUid(partnerOfUid);
           await AppPreferences.setActiveWeddingId(activeWeddingId);
           await AppPreferences.setCoupleRole(coupleRole);
+          await AppPreferences.setIsPrimaryPayer(isPrimary);
 
           if (activeWeddingId != null && activeWeddingId.isNotEmpty) {
             await AppPreferences.setActiveProfileId(activeWeddingId);
@@ -320,6 +321,7 @@ class AuthNotifier extends Notifier<AuthState> {
       await AppPreferences.setPartnerOfUid(partnerOfUid);
       await AppPreferences.setActiveWeddingId(activeWeddingId);
       await AppPreferences.setCoupleRole(coupleRole);
+      await AppPreferences.setIsPrimaryPayer(isPrimary);
       await AppPreferences.setIdToken(res?.idToken);
       await AppPreferences.setRefreshToken(res?.refreshToken);
       await AppPreferences.setDemoMode(false);
@@ -587,6 +589,7 @@ class AuthNotifier extends Notifier<AuthState> {
       await AppPreferences.setPartnerOfUid(partnerOfUid);
       await AppPreferences.setActiveWeddingId(activeWeddingId);
       await AppPreferences.setCoupleRole(coupleRole);
+      await AppPreferences.setIsPrimaryPayer(isPrimary);
       await AppPreferences.setRefreshToken(firebaseAuthRes?.refreshToken);
       await AppPreferences.setDemoMode(false);
       await AppPreferences.setHasSkippedLogin(false);
@@ -929,6 +932,7 @@ class AuthNotifier extends Notifier<AuthState> {
     await AppPreferences.setPartnerOfUid(null);
     await AppPreferences.setActiveWeddingId(null);
     await AppPreferences.setCoupleRole(null);
+    await AppPreferences.setIsPrimaryPayer(true);
     await AppPreferences.setIdToken(null);
     await AppPreferences.setRefreshToken(null);
     await AppPreferences.setDemoMode(false);

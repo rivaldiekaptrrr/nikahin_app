@@ -14,6 +14,7 @@ const String kPrefUserPhotoUrl = 'user_photo_url';
 const String kPrefPartnerOfUid = 'user_partner_of_uid';
 const String kPrefActiveWeddingId = 'user_active_wedding_id';
 const String kPrefCoupleRole = 'user_couple_role';
+const String kPrefIsPrimaryPayer = 'user_is_primary_payer';
 const String kPrefDailyReminderHour = 'wedding_daily_reminder_hour';
 const String kPrefDailyReminderMinute = 'wedding_daily_reminder_minute';
 
@@ -139,6 +140,16 @@ class AppPreferences {
     } else {
       await prefs.remove(kPrefCoupleRole);
     }
+  }
+
+  static Future<bool> isPrimaryPayer() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(kPrefIsPrimaryPayer) ?? true;
+  }
+
+  static Future<void> setIsPrimaryPayer(bool isPrimary) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(kPrefIsPrimaryPayer, isPrimary);
   }
 
   static Future<String?> getIdToken() async {
