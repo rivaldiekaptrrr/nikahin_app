@@ -54,8 +54,10 @@ keystore_base64.txt
 # Widget Preview related
 .widget_preview/
 
-# Temporary reference repos
+# Temporary reference repos & test scripts
 midtrans-python-client/
+test_midtrans_core_api.py
 
 # Cloudflare Wrangler CLI state
 .wrangler/
+
