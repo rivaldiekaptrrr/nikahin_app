@@ -63,7 +63,12 @@ enum WeddingPalette {
   sageGreen,
   roseGold,
   royalNavy,
-  lavender;
+  lavender,
+  warmCream,
+  emeraldVelvet,
+  terracottaRust,
+  dustyBlue,
+  plumBerry;
 
   String get displayName {
     switch (this) {
@@ -77,6 +82,16 @@ enum WeddingPalette {
         return 'Midnight Sapphire';
       case WeddingPalette.lavender:
         return 'Royal Lavender';
+      case WeddingPalette.warmCream:
+        return 'Warm Cream';
+      case WeddingPalette.emeraldVelvet:
+        return 'Emerald Velvet';
+      case WeddingPalette.terracottaRust:
+        return 'Rustic Terracotta';
+      case WeddingPalette.dustyBlue:
+        return 'Dusty Blue';
+      case WeddingPalette.plumBerry:
+        return 'Plum Berry';
     }
   }
 
@@ -94,6 +109,16 @@ enum WeddingPalette {
         return 'Mewah, elegan & modern';
       case WeddingPalette.lavender:
         return 'Lembut, damai & artistik';
+      case WeddingPalette.warmCream:
+        return 'Teduh, netral & estetik';
+      case WeddingPalette.emeraldVelvet:
+        return 'Megah, agung & berwibawa';
+      case WeddingPalette.terracottaRust:
+        return 'Hangat, membumi & bohemian';
+      case WeddingPalette.dustyBlue:
+        return 'Kalem, sejuk & puitis';
+      case WeddingPalette.plumBerry:
+        return 'Eksotis, romantis & dramatis';
     }
   }
 
@@ -109,6 +134,16 @@ enum WeddingPalette {
         return const Color(0xFF1D4ED8);
       case WeddingPalette.lavender:
         return const Color(0xFF7C3AED);
+      case WeddingPalette.warmCream:
+        return const Color(0xFFB48448);
+      case WeddingPalette.emeraldVelvet:
+        return const Color(0xFF0F766E);
+      case WeddingPalette.terracottaRust:
+        return const Color(0xFFC2593F);
+      case WeddingPalette.dustyBlue:
+        return const Color(0xFF486581);
+      case WeddingPalette.plumBerry:
+        return const Color(0xFF862E5C);
     }
   }
 
@@ -124,6 +159,16 @@ enum WeddingPalette {
         return const Color(0xFFF2F5F9);
       case WeddingPalette.lavender:
         return const Color(0xFFF6F4FA);
+      case WeddingPalette.warmCream:
+        return const Color(0xFFFDFBF7);
+      case WeddingPalette.emeraldVelvet:
+        return const Color(0xFFF0F8F5);
+      case WeddingPalette.terracottaRust:
+        return const Color(0xFFFCF6F2);
+      case WeddingPalette.dustyBlue:
+        return const Color(0xFFF1F5F8);
+      case WeddingPalette.plumBerry:
+        return const Color(0xFFF9F3F7);
     }
   }
 
@@ -140,6 +185,16 @@ enum WeddingPalette {
         return const Color(0xFFF2F5F9);
       case WeddingPalette.lavender:
         return const Color(0xFFF6F4FA);
+      case WeddingPalette.warmCream:
+        return const Color(0xFFFDFBF7);
+      case WeddingPalette.emeraldVelvet:
+        return const Color(0xFFF0F8F5);
+      case WeddingPalette.terracottaRust:
+        return const Color(0xFFFCF6F2);
+      case WeddingPalette.dustyBlue:
+        return const Color(0xFFF1F5F8);
+      case WeddingPalette.plumBerry:
+        return const Color(0xFFF9F3F7);
     }
   }
 
@@ -156,6 +211,16 @@ enum WeddingPalette {
         return const Color(0xFF0F1420);
       case WeddingPalette.lavender:
         return const Color(0xFF16131F);
+      case WeddingPalette.warmCream:
+        return const Color(0xFF1B1917);
+      case WeddingPalette.emeraldVelvet:
+        return const Color(0xFF101916);
+      case WeddingPalette.terracottaRust:
+        return const Color(0xFF1E1613);
+      case WeddingPalette.dustyBlue:
+        return const Color(0xFF131820);
+      case WeddingPalette.plumBerry:
+        return const Color(0xFF1C1319);
     }
   }
 
@@ -172,6 +237,16 @@ enum WeddingPalette {
         return const Color(0xFFE2E9F4);
       case WeddingPalette.lavender:
         return const Color(0xFFECE6F6);
+      case WeddingPalette.warmCream:
+        return const Color(0xFFF5EFEB);
+      case WeddingPalette.emeraldVelvet:
+        return const Color(0xFFE2EFE9);
+      case WeddingPalette.terracottaRust:
+        return const Color(0xFFF6EAE3);
+      case WeddingPalette.dustyBlue:
+        return const Color(0xFFE2E9F0);
+      case WeddingPalette.plumBerry:
+        return const Color(0xFFF1E3ED);
     }
   }
 
@@ -188,6 +263,16 @@ enum WeddingPalette {
         return const Color(0xFF1B2438);
       case WeddingPalette.lavender:
         return const Color(0xFF231E30);
+      case WeddingPalette.warmCream:
+        return const Color(0xFF282522);
+      case WeddingPalette.emeraldVelvet:
+        return const Color(0xFF1A2622);
+      case WeddingPalette.terracottaRust:
+        return const Color(0xFF2C201C);
+      case WeddingPalette.dustyBlue:
+        return const Color(0xFF1E2632);
+      case WeddingPalette.plumBerry:
+        return const Color(0xFF2B1C25);
     }
   }
 }

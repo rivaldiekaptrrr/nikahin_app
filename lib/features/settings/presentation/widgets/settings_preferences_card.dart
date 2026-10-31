@@ -148,12 +148,17 @@ class SettingsPreferencesCard extends ConsumerWidget {
           ),
           const SizedBox(height: 12),
 
-          // Dual-Swatch Palette Bubbles (Outer Canvas Swatch + Inner Accent Dot)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: WeddingPalette.values.map((p) {
+          // Dual-Swatch Palette Bubbles (Horizontally Scrollable 10 Palettes)
+          SizedBox(
+            height: 64,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+              itemCount: WeddingPalette.values.length,
+              separatorBuilder: (context, index) => const SizedBox(width: 12),
+              itemBuilder: (context, index) {
+                final p = WeddingPalette.values[index];
                 final isSelected = p == activePalette;
                 final canvasColor = isDark ? p.canvasDark : p.canvasLight;
 
@@ -165,7 +170,7 @@ class SettingsPreferencesCard extends ConsumerWidget {
                     },
                     customBorder: const CircleBorder(),
                     child: AnimatedScale(
-                      scale: isSelected ? 1.10 : 0.94,
+                      scale: isSelected ? 1.08 : 0.94,
                       duration: const Duration(milliseconds: 180),
                       curve: Curves.easeOutBack,
                       child: Container(
@@ -223,7 +228,7 @@ class SettingsPreferencesCard extends ConsumerWidget {
                     ),
                   ),
                 );
-              }).toList(),
+              },
             ),
           ),
           const SizedBox(height: 6),
