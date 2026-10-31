@@ -138,8 +138,8 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
                         theme.colorScheme.surfaceContainerHigh,
                       ]
                     : [
-                        const Color(0xFFFBF8F4),
-                        const Color(0xFFF4EDE4),
+                        Colors.white.withValues(alpha: 0.94),
+                        theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
                       ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,

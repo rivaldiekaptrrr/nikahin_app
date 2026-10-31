@@ -75,7 +75,11 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
 
             if (profilesSnap.hasError || expensesSnap.hasError) {
               return Scaffold(
-                appBar: AppBar(title: const Text('Dashboard Pernikahan')),
+                backgroundColor: Colors.transparent,
+                appBar: AppBar(
+                  backgroundColor: Colors.transparent,
+                  title: const Text('Dashboard Pernikahan'),
+                ),
                 body: ErrorStateView(
                   errorMessage: 'Terjadi kendala saat memuat data dashboard',
                   onRetry: () => setState(() {}),
@@ -86,7 +90,11 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
             if (profilesSnap.connectionState == ConnectionState.waiting ||
                 expensesSnap.connectionState == ConnectionState.waiting) {
               return Scaffold(
-                appBar: AppBar(title: const Text('Dashboard Pernikahan')),
+                backgroundColor: Colors.transparent,
+                appBar: AppBar(
+                  backgroundColor: Colors.transparent,
+                  title: const Text('Dashboard Pernikahan'),
+                ),
                 body: const SkeletonListView(showHeader: true),
               );
             }
@@ -136,8 +144,9 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
       ..sort((a, b) => b.totalEstimated.compareTo(a.totalEstimated));
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.surfaceContainerLowest,
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         title: const Text(
           'Beranda',
           style: TextStyle(fontWeight: FontWeight.bold),

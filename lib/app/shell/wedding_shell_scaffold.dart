@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../shared/widgets/offline_banner.dart';
+import '../../shared/widgets/wedding_doodle_background.dart';
 import '../../features/auth/presentation/auth_notifier.dart';
 import '../../features/auth/presentation/auth_state.dart';
 
@@ -104,11 +105,25 @@ class WeddingShellScaffold extends ConsumerWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: Column(
-        children: [
-          const OfflineBanner(),
-          Expanded(child: child),
-        ],
+      body: WeddingDoodleBackground(
+        child: Column(
+          children: [
+            const OfflineBanner(),
+            Expanded(
+              child: Theme(
+                data: theme.copyWith(
+                  scaffoldBackgroundColor: Colors.transparent,
+                  appBarTheme: theme.appBarTheme.copyWith(
+                    backgroundColor: Colors.transparent,
+                    surfaceTintColor: Colors.transparent,
+                    elevation: 0,
+                  ),
+                ),
+                child: child,
+              ),
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: selectedIndex >= 0 ? selectedIndex : 0,

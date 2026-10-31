@@ -57,52 +57,54 @@ final themeModeProvider = NotifierProvider<ThemeModeNotifier, ThemeMode>(
   ThemeModeNotifier.new,
 );
 
-/// Pilihan palet warna aksen pernikahan
+/// Pilihan palet warna aksen & kanvas pernikahan
 enum WeddingPalette {
-  roseGold,
-  sageGreen,
   champagneGold,
+  sageGreen,
+  roseGold,
   royalNavy,
   lavender;
 
   String get displayName {
     switch (this) {
-      case WeddingPalette.roseGold:
-        return 'Rose Gold';
-      case WeddingPalette.sageGreen:
-        return 'Sage Green';
       case WeddingPalette.champagneGold:
-        return 'Champagne';
+        return 'Warm Champagne';
+      case WeddingPalette.sageGreen:
+        return 'Botanical Sage';
+      case WeddingPalette.roseGold:
+        return 'Blush Romance';
       case WeddingPalette.royalNavy:
-        return 'Royal Navy';
+        return 'Midnight Sapphire';
       case WeddingPalette.lavender:
-        return 'Lavender';
+        return 'Royal Lavender';
     }
   }
 
+  String get label => displayName;
+
   String get description {
     switch (this) {
-      case WeddingPalette.roseGold:
-        return 'Romantis & Hangat';
-      case WeddingPalette.sageGreen:
-        return 'Botanikal & Alami';
       case WeddingPalette.champagneGold:
-        return 'Mewah & Elegan';
+        return 'Hangat, intim & klasik';
+      case WeddingPalette.sageGreen:
+        return 'Asri, sejuk & alami';
+      case WeddingPalette.roseGold:
+        return 'Anggun, manis & romantis';
       case WeddingPalette.royalNavy:
-        return 'Klasik & Modern';
+        return 'Mewah, elegan & modern';
       case WeddingPalette.lavender:
-        return 'Anggun & Manis';
+        return 'Lembut, damai & artistik';
     }
   }
 
   Color get primaryPreview {
     switch (this) {
-      case WeddingPalette.roseGold:
-        return const Color(0xFFD81B60);
+      case WeddingPalette.champagneGold:
+        return const Color(0xFFD97757); // Warm Terracotta / Coral
       case WeddingPalette.sageGreen:
         return const Color(0xFF2E6F52);
-      case WeddingPalette.champagneGold:
-        return const Color(0xFFB45309);
+      case WeddingPalette.roseGold:
+        return const Color(0xFFD81B60);
       case WeddingPalette.royalNavy:
         return const Color(0xFF1D4ED8);
       case WeddingPalette.lavender:
@@ -112,16 +114,80 @@ enum WeddingPalette {
 
   Color get secondaryPreview {
     switch (this) {
-      case WeddingPalette.roseGold:
-        return const Color(0xFFFFD9E2);
-      case WeddingPalette.sageGreen:
-        return const Color(0xFFD1FAE5);
       case WeddingPalette.champagneGold:
-        return const Color(0xFFFEF3C7);
+        return const Color(0xFFFAF6F0);
+      case WeddingPalette.sageGreen:
+        return const Color(0xFFF2F6F3);
+      case WeddingPalette.roseGold:
+        return const Color(0xFFFAF3F5);
       case WeddingPalette.royalNavy:
-        return const Color(0xFFDBEAFE);
+        return const Color(0xFFF2F5F9);
       case WeddingPalette.lavender:
-        return const Color(0xFFEDE9FE);
+        return const Color(0xFFF6F4FA);
+    }
+  }
+
+  /// Warna kanvas latar belakang (Light Mode)
+  Color get canvasLight {
+    switch (this) {
+      case WeddingPalette.champagneGold:
+        return const Color(0xFFFAF6F0);
+      case WeddingPalette.sageGreen:
+        return const Color(0xFFF2F6F3);
+      case WeddingPalette.roseGold:
+        return const Color(0xFFFAF3F5);
+      case WeddingPalette.royalNavy:
+        return const Color(0xFFF2F5F9);
+      case WeddingPalette.lavender:
+        return const Color(0xFFF6F4FA);
+    }
+  }
+
+  /// Warna kanvas latar belakang (Dark Mode)
+  Color get canvasDark {
+    switch (this) {
+      case WeddingPalette.champagneGold:
+        return const Color(0xFF1A1715);
+      case WeddingPalette.sageGreen:
+        return const Color(0xFF121815);
+      case WeddingPalette.roseGold:
+        return const Color(0xFF1A1316);
+      case WeddingPalette.royalNavy:
+        return const Color(0xFF0F1420);
+      case WeddingPalette.lavender:
+        return const Color(0xFF16131F);
+    }
+  }
+
+  /// Warna kontainer kartu Bento (Light Mode)
+  Color get surfaceContainerLight {
+    switch (this) {
+      case WeddingPalette.champagneGold:
+        return const Color(0xFFF3EDE4);
+      case WeddingPalette.sageGreen:
+        return const Color(0xFFE5EDE7);
+      case WeddingPalette.roseGold:
+        return const Color(0xFFF3E5E9);
+      case WeddingPalette.royalNavy:
+        return const Color(0xFFE2E9F4);
+      case WeddingPalette.lavender:
+        return const Color(0xFFECE6F6);
+    }
+  }
+
+  /// Warna kontainer kartu Bento (Dark Mode)
+  Color get surfaceContainerDark {
+    switch (this) {
+      case WeddingPalette.champagneGold:
+        return const Color(0xFF28231F);
+      case WeddingPalette.sageGreen:
+        return const Color(0xFF1C2621);
+      case WeddingPalette.roseGold:
+        return const Color(0xFF2A1F24);
+      case WeddingPalette.royalNavy:
+        return const Color(0xFF1B2438);
+      case WeddingPalette.lavender:
+        return const Color(0xFF231E30);
     }
   }
 }
@@ -132,7 +198,7 @@ class WeddingPaletteNotifier extends Notifier<WeddingPalette> {
   @override
   WeddingPalette build() {
     _loadPersistedPalette();
-    return WeddingPalette.roseGold;
+    return WeddingPalette.champagneGold;
   }
 
   Future<void> _loadPersistedPalette() async {
@@ -142,7 +208,7 @@ class WeddingPaletteNotifier extends Notifier<WeddingPalette> {
       if (name != null) {
         state = WeddingPalette.values.firstWhere(
           (p) => p.name == name,
-          orElse: () => WeddingPalette.roseGold,
+          orElse: () => WeddingPalette.champagneGold,
         );
       }
     } catch (_) {}
@@ -160,4 +226,38 @@ class WeddingPaletteNotifier extends Notifier<WeddingPalette> {
 final weddingPaletteProvider =
     NotifierProvider<WeddingPaletteNotifier, WeddingPalette>(
   WeddingPaletteNotifier.new,
+);
+
+/// State Controller untuk sakelar on/off wallpaper motif doodle
+const String kPrefDoodlePatternEnabled = 'wedding_doodle_pattern_enabled';
+
+class DoodlePatternNotifier extends Notifier<bool> {
+  @override
+  bool build() {
+    _loadPersisted();
+    return true;
+  }
+
+  Future<void> _loadPersisted() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final val = prefs.getBool(kPrefDoodlePatternEnabled);
+      if (val != null) {
+        state = val;
+      }
+    } catch (_) {}
+  }
+
+  Future<void> setEnabled(bool enabled) async {
+    state = enabled;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(kPrefDoodlePatternEnabled, enabled);
+    } catch (_) {}
+  }
+}
+
+final doodlePatternEnabledProvider =
+    NotifierProvider<DoodlePatternNotifier, bool>(
+  DoodlePatternNotifier.new,
 );

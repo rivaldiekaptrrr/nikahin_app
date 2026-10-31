@@ -53,6 +53,9 @@ class SettingsPreferencesCard extends ConsumerWidget {
     final theme = Theme.of(context);
     final themeMode = ref.watch(themeModeProvider);
 
+    final isDark = theme.brightness == Brightness.dark;
+    final activePalette = ref.watch(weddingPaletteProvider);
+
     return BentoCard(
       padding: const EdgeInsets.all(18),
       child: Column(
@@ -122,23 +125,38 @@ class SettingsPreferencesCard extends ConsumerWidget {
           ),
           const SizedBox(height: 18),
 
-          // Palette Section Title (Minimalist)
-          Text(
-            'Warna Aksen',
-            style: theme.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w600,
-              fontSize: 13.5,
-            ),
+          // Palette Section Header with Active Palette Name
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Palet Tema & Latar Belakang',
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13.5,
+                ),
+              ),
+              Text(
+                activePalette.displayName,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: theme.colorScheme.primary,
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 12),
 
-          // Pure Telegram-Style Color Bubbles (GPU-Accelerated Tactile Pop)
+          // Dual-Swatch Palette Bubbles (Outer Canvas Swatch + Inner Accent Dot)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 6),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: WeddingPalette.values.map((p) {
-                final isSelected = p == ref.watch(weddingPaletteProvider);
+                final isSelected = p == activePalette;
+                final canvasColor = isDark ? p.canvasDark : p.canvasLight;
+
                 return RepaintBoundary(
                   child: InkWell(
                     onTap: () {
@@ -147,41 +165,56 @@ class SettingsPreferencesCard extends ConsumerWidget {
                     },
                     customBorder: const CircleBorder(),
                     child: AnimatedScale(
-                      scale: isSelected ? 1.12 : 0.94,
+                      scale: isSelected ? 1.10 : 0.94,
                       duration: const Duration(milliseconds: 180),
                       curve: Curves.easeOutBack,
                       child: Container(
-                        width: 44,
-                        height: 44,
+                        width: 48,
+                        height: 48,
                         decoration: BoxDecoration(
+                          color: canvasColor,
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: isSelected ? p.primaryPreview : Colors.transparent,
-                            width: 2.5,
+                            color: isSelected
+                                ? p.primaryPreview
+                                : theme.colorScheme.outlineVariant.withValues(alpha: 0.8),
+                            width: isSelected ? 2.5 : 1.2,
                           ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: isSelected
+                                  ? p.primaryPreview.withValues(alpha: 0.3)
+                                  : Colors.black.withValues(alpha: 0.04),
+                              blurRadius: isSelected ? 8 : 3,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
-                        padding: const EdgeInsets.all(2.5),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: p.primaryPreview,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: p.primaryPreview.withValues(alpha: 0.35),
-                                blurRadius: 4,
-                                offset: const Offset(0, 1.5),
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                            child: AnimatedScale(
-                              scale: isSelected ? 1.0 : 0.0,
-                              duration: const Duration(milliseconds: 180),
-                              curve: Curves.easeOutBack,
-                              child: const Icon(
-                                Icons.check_rounded,
-                                size: 18,
-                                color: Colors.white,
+                        child: Center(
+                          child: Container(
+                            width: 24,
+                            height: 24,
+                            decoration: BoxDecoration(
+                              color: p.primaryPreview,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: p.primaryPreview.withValues(alpha: 0.35),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 1.5),
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: AnimatedScale(
+                                scale: isSelected ? 1.0 : 0.0,
+                                duration: const Duration(milliseconds: 180),
+                                curve: Curves.easeOutBack,
+                                child: const Icon(
+                                  Icons.check_rounded,
+                                  size: 15,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
@@ -192,6 +225,48 @@ class SettingsPreferencesCard extends ConsumerWidget {
                 );
               }).toList(),
             ),
+          ),
+          const SizedBox(height: 6),
+          Center(
+            child: Text(
+              activePalette.description,
+              style: TextStyle(
+                fontSize: 12,
+                fontStyle: FontStyle.italic,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Doodle Wallpaper Pattern Toggle
+          SwitchListTile.adaptive(
+            contentPadding: EdgeInsets.zero,
+            secondary: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                Icons.texture_rounded,
+                color: theme.colorScheme.primary,
+                size: 20,
+              ),
+            ),
+            title: const Text(
+              'Motif Latar Belakang (Doodle)',
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+            ),
+            subtitle: Text(
+              'Pola ilustrasi pernikahan halus pada kanvas latar belakang',
+              style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurfaceVariant),
+            ),
+            value: ref.watch(doodlePatternEnabledProvider),
+            onChanged: (enabled) {
+              HapticFeedback.selectionClick();
+              ref.read(doodlePatternEnabledProvider.notifier).setEnabled(enabled);
+            },
           ),
           const Divider(height: 28),
 
