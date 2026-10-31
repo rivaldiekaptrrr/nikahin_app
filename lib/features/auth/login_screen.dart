@@ -23,19 +23,30 @@ Path _getConcaveCardPath(
   final cr = cornerRadius;
   final br = bottomRadius;
 
+  final halfW = w / 2;
+  final span = halfW - cr;
+
   // 1. Mulai dari sisi kiri tepat di bawah sudut kiri atas
   path.moveTo(0, cr);
-  // Sudut cembung kiri atas
+  // Sudut cembung kiri atas (berakhir mendatar horizontal di cr, 0)
   path.quadraticBezierTo(0, 0, cr, 0);
 
-  // 2. Lengkungan cekung di bagian atas (dips downward towards center)
+  // 2. Lengkungan cekung di bagian atas (C1 continuous, transisi mulus alami tanpa sudut lancip)
+  // Paruh kiri: mulai meluncur lembut dari (cr, 0) langsung ke lembah tengah (halfW, dipDepth)
   path.cubicTo(
-    w * 0.28, dipDepth,
-    w * 0.72, dipDepth,
+    cr + span * 0.12, 0,
+    halfW - span * 0.55, dipDepth,
+    halfW, dipDepth,
+  );
+
+  // Paruh kanan: dari lembah tengah (halfW, dipDepth) meluncur kembali ke bahu kanan (w - cr, 0)
+  path.cubicTo(
+    halfW + span * 0.55, dipDepth,
+    w - cr - span * 0.12, 0,
     w - cr, 0,
   );
 
-  // 3. Sudut cembung kanan atas
+  // 3. Sudut cembung kanan atas (dimulai mendatar horizontal dari w - cr, 0)
   path.quadraticBezierTo(w, 0, w, cr);
 
   // 4. Sisi kanan turun ke sudut kanan bawah
@@ -58,9 +69,9 @@ class ConcaveTopCardClipper extends CustomClipper<Path> {
   final double bottomRadius;
 
   const ConcaveTopCardClipper({
-    this.dipDepth = 18.0,
-    this.cornerRadius = 28.0,
-    this.bottomRadius = 28.0,
+    this.dipDepth = 26.0,
+    this.cornerRadius = 32.0,
+    this.bottomRadius = 30.0,
   });
 
   @override
@@ -85,9 +96,9 @@ class ConcaveCardShadowPainter extends CustomPainter {
   final Offset offset;
 
   const ConcaveCardShadowPainter({
-    this.dipDepth = 18.0,
-    this.cornerRadius = 28.0,
-    this.bottomRadius = 28.0,
+    this.dipDepth = 26.0,
+    this.cornerRadius = 32.0,
+    this.bottomRadius = 30.0,
     required this.shadowColor,
     this.blurRadius = 18.0,
     this.offset = const Offset(0, 8),
@@ -121,9 +132,9 @@ class ConcaveCardBorderPainter extends CustomPainter {
   final double strokeWidth;
 
   const ConcaveCardBorderPainter({
-    this.dipDepth = 18.0,
-    this.cornerRadius = 28.0,
-    this.bottomRadius = 28.0,
+    this.dipDepth = 26.0,
+    this.cornerRadius = 32.0,
+    this.bottomRadius = 30.0,
     required this.borderColor,
     this.strokeWidth = 1.0,
   });
@@ -380,23 +391,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: WeddingDoodleBackground(
+        forceDisableDoodle: true,
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 420),
+                constraints: const BoxConstraints(maxWidth: 450),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     // 1. Official Header Brand Lockup (Logo + Wordmark centered)
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      padding: const EdgeInsets.only(top: 28, bottom: 2),
                       child: Image.asset(
                         isDark
                             ? 'assets/logo/png/nikahin-lockup-header-dark.png'
                             : 'assets/logo/png/nikahin-lockup-header-light.png',
-                        height: 38,
+                        height: 48,
                         fit: BoxFit.contain,
                       ),
                     ),
@@ -405,19 +417,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                     // 2. Concave Curved Card (ClipPath + custom shadow & border)
                     CustomPaint(
                       painter: ConcaveCardShadowPainter(
-                        dipDepth: 18.0,
-                        cornerRadius: 28.0,
-                        bottomRadius: 28.0,
+                        dipDepth: 26.0,
+                        cornerRadius: 32.0,
+                        bottomRadius: 30.0,
                         shadowColor: isDark
                             ? Colors.black.withValues(alpha: 0.45)
                             : const Color(0xFF2C1810).withValues(alpha: 0.08),
-                        blurRadius: 20.0,
+                        blurRadius: 22.0,
                         offset: const Offset(0, 8),
                       ),
                       foregroundPainter: ConcaveCardBorderPainter(
-                        dipDepth: 18.0,
-                        cornerRadius: 28.0,
-                        bottomRadius: 28.0,
+                        dipDepth: 26.0,
+                        cornerRadius: 32.0,
+                        bottomRadius: 30.0,
                         borderColor: isDark
                             ? Colors.white.withValues(alpha: 0.08)
                             : const Color(0xFF2C1810).withValues(alpha: 0.06),
@@ -425,47 +437,51 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                       ),
                       child: ClipPath(
                         clipper: const ConcaveTopCardClipper(
-                          dipDepth: 18.0,
-                          cornerRadius: 28.0,
-                          bottomRadius: 28.0,
+                          dipDepth: 26.0,
+                          cornerRadius: 32.0,
+                          bottomRadius: 30.0,
                         ),
                         child: Container(
                           color: cardBgColor,
-                          padding: const EdgeInsets.fromLTRB(26, 36, 26, 28),
+                          padding: const EdgeInsets.fromLTRB(24, 48, 24, 34),
                           child: Form(
                             key: _formKey,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                // Title (Editorial Serif)
-                                Text(
-                                  _isRegisterMode ? 'Mulai Rencana Bahagiamu' : 'Selamat Datang Kembali!',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.playfairDisplay(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w700,
-                                    color: textDark,
-                                    height: 1.25,
+                                // Title (Editorial Serif, 1 baris presisi)
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    _isRegisterMode ? 'Mulai Rencana Bahagiamu' : 'Selamat Datang Kembali!',
+                                    textAlign: TextAlign.center,
+                                    maxLines: 1,
+                                    style: GoogleFonts.playfairDisplay(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w700,
+                                      color: textDark,
+                                      height: 1.25,
+                                    ),
                                   ),
                                 ),
-                                const SizedBox(height: 6),
+                                const SizedBox(height: 8),
                                 Text(
                                   _isRegisterMode
                                       ? 'Daftarkan akunmu dan kelola setiap momen spesial'
                                       : 'Masuk untuk melanjutkan persiapan hari bahagiamu',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontSize: 13,
+                                    fontSize: 14,
                                     color: textDark.withValues(alpha: 0.65),
-                                    height: 1.4,
+                                    height: 1.45,
                                   ),
                                 ),
 
                                 // Error Banner
                                 if (_errorMessage != null) ...[
-                                  const SizedBox(height: 16),
+                                  const SizedBox(height: 18),
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.errorContainer.withValues(alpha: 0.65),
                                       borderRadius: BorderRadius.circular(14),
@@ -475,15 +491,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                     ),
                                     child: Row(
                                       children: [
-                                        Icon(Icons.error_outline_rounded, color: theme.colorScheme.error, size: 18),
+                                        Icon(Icons.error_outline_rounded, color: theme.colorScheme.error, size: 20),
                                         const SizedBox(width: 10),
                                         Expanded(
                                           child: Text(
                                             _errorMessage!,
                                             style: TextStyle(
-                                              fontSize: 12,
+                                              fontSize: 12.5,
                                               color: theme.colorScheme.onErrorContainer,
-                                              height: 1.3,
+                                              height: 1.35,
                                             ),
                                           ),
                                         ),
@@ -491,18 +507,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                     ),
                                   ),
                                 ],
-                                const SizedBox(height: 22),
+                                const SizedBox(height: 26),
 
                                 // Email Field
                                 Text(
                                   'Email',
                                   style: TextStyle(
-                                    fontSize: 13,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                     color: textDark.withValues(alpha: 0.85),
                                   ),
                                 ),
-                                const SizedBox(height: 6),
+                                const SizedBox(height: 7),
                                 TextFormField(
                                   controller: _emailController,
                                   keyboardType: TextInputType.emailAddress,
@@ -510,44 +526,44 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                   inputFormatters: [LengthLimitingTextInputFormatter(60)],
                                   maxLength: 60,
                                   buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
-                                  style: TextStyle(fontSize: 14, color: textDark),
+                                  style: TextStyle(fontSize: 15, color: textDark),
                                   decoration: InputDecoration(
                                     hintText: 'nama@example.com',
                                     hintStyle: TextStyle(
                                       color: textDark.withValues(alpha: 0.35),
-                                      fontSize: 13.5,
+                                      fontSize: 14.5,
                                     ),
                                     filled: true,
                                     fillColor: fieldBgColor,
-                                    prefixIcon: Icon(Icons.mail_outline_rounded, size: 20, color: textDark.withValues(alpha: 0.45)),
-                                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                    prefixIcon: Icon(Icons.mail_outline_rounded, size: 22, color: textDark.withValues(alpha: 0.45)),
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
                                     border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16),
+                                      borderRadius: BorderRadius.circular(18),
                                       borderSide: BorderSide(color: fieldBorderColor),
                                     ),
                                     enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16),
+                                      borderRadius: BorderRadius.circular(18),
                                       borderSide: BorderSide(color: fieldBorderColor),
                                     ),
                                     focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16),
+                                      borderRadius: BorderRadius.circular(18),
                                       borderSide: BorderSide(color: primaryColor, width: 1.5),
                                     ),
                                   ),
                                   validator: (val) => ValidationUtils.validateEmail(val, isRequired: true),
                                 ),
-                                const SizedBox(height: 14),
+                                const SizedBox(height: 18),
 
                                 // Password Field
                                 Text(
                                   'Kata Sandi',
                                   style: TextStyle(
-                                    fontSize: 13,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                     color: textDark.withValues(alpha: 0.85),
                                   ),
                                 ),
-                                const SizedBox(height: 6),
+                                const SizedBox(height: 7),
                                 TextFormField(
                                   controller: _passwordController,
                                   obscureText: !_passwordVisible,
@@ -555,41 +571,41 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                   inputFormatters: [LengthLimitingTextInputFormatter(32)],
                                   maxLength: 32,
                                   buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
-                                  style: TextStyle(fontSize: 14, color: textDark),
+                                  style: TextStyle(fontSize: 15, color: textDark),
                                   decoration: InputDecoration(
                                     hintText: '••••••••',
                                     hintStyle: TextStyle(
                                       color: textDark.withValues(alpha: 0.35),
-                                      fontSize: 13.5,
+                                      fontSize: 14.5,
                                     ),
                                     filled: true,
                                     fillColor: fieldBgColor,
-                                    prefixIcon: Icon(Icons.lock_outline_rounded, size: 20, color: textDark.withValues(alpha: 0.45)),
+                                    prefixIcon: Icon(Icons.lock_outline_rounded, size: 22, color: textDark.withValues(alpha: 0.45)),
                                     suffixIcon: IconButton(
                                       icon: Icon(
                                         _passwordVisible ? Icons.visibility_off_rounded : Icons.visibility_rounded,
-                                        size: 20,
+                                        size: 22,
                                         color: textDark.withValues(alpha: 0.45),
                                       ),
                                       onPressed: () => setState(() => _passwordVisible = !_passwordVisible),
                                     ),
-                                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
                                     border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16),
+                                      borderRadius: BorderRadius.circular(18),
                                       borderSide: BorderSide(color: fieldBorderColor),
                                     ),
                                     enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16),
+                                      borderRadius: BorderRadius.circular(18),
                                       borderSide: BorderSide(color: fieldBorderColor),
                                     ),
                                     focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16),
+                                      borderRadius: BorderRadius.circular(18),
                                       borderSide: BorderSide(color: primaryColor, width: 1.5),
                                     ),
                                   ),
                                   validator: (val) => ValidationUtils.validatePassword(val, minLength: 6),
                                 ),
-                                const SizedBox(height: 10),
+                                const SizedBox(height: 12),
 
                                 // Remember Me & Forgot Password Row
                                 Row(
@@ -604,13 +620,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             SizedBox(
-                                              width: 22,
-                                              height: 22,
+                                              width: 24,
+                                              height: 24,
                                               child: Checkbox(
                                                 value: _rememberMe,
                                                 activeColor: primaryColor,
                                                 onChanged: (val) => setState(() => _rememberMe = val ?? true),
-                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                                                 side: BorderSide(
                                                   color: textDark.withValues(alpha: 0.3),
                                                   width: 1.5,
@@ -621,7 +637,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                             Text(
                                               'Ingat Saya',
                                               style: TextStyle(
-                                                fontSize: 12.5,
+                                                fontSize: 13.5,
                                                 fontWeight: FontWeight.w500,
                                                 color: textDark.withValues(alpha: 0.75),
                                               ),
@@ -641,7 +657,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                         child: Text(
                                           'Lupa Kata Sandi?',
                                           style: TextStyle(
-                                            fontSize: 12.5,
+                                            fontSize: 13.5,
                                             fontWeight: FontWeight.w600,
                                             color: primaryColor,
                                           ),
@@ -649,40 +665,40 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                       ),
                                   ],
                                 ),
-                                const SizedBox(height: 20),
+                                const SizedBox(height: 24),
 
                                 // Primary Button (Pill shape)
                                 SizedBox(
-                                  height: 48,
+                                  height: 54,
                                   child: FilledButton(
                                     onPressed: _isLoading ? null : _handleEmailAuth,
                                     style: FilledButton.styleFrom(
                                       backgroundColor: primaryColor,
                                       elevation: 0,
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(24),
+                                        borderRadius: BorderRadius.circular(27),
                                       ),
                                     ),
                                     child: _isLoading
                                         ? const SizedBox(
-                                            width: 20,
-                                            height: 20,
+                                            width: 22,
+                                            height: 22,
                                             child: CircularProgressIndicator(
                                               color: Colors.white,
-                                              strokeWidth: 2.2,
+                                              strokeWidth: 2.4,
                                             ),
                                           )
                                         : Text(
                                             _isRegisterMode ? 'Daftar Sekarang' : 'Masuk Sekarang',
                                             style: const TextStyle(
                                               fontWeight: FontWeight.w700,
-                                              fontSize: 14.5,
+                                              fontSize: 16,
                                               color: Colors.white,
                                             ),
                                           ),
                                   ),
                                 ),
-                                const SizedBox(height: 20),
+                                const SizedBox(height: 24),
 
                                 // Divider "atau lanjutkan dengan"
                                 Row(
@@ -694,11 +710,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                       ),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                                      padding: const EdgeInsets.symmetric(horizontal: 14),
                                       child: Text(
                                         'atau lanjutkan dengan',
                                         style: TextStyle(
-                                          fontSize: 12,
+                                          fontSize: 13,
                                           color: textDark.withValues(alpha: 0.5),
                                         ),
                                       ),
@@ -711,7 +727,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 18),
+                                const SizedBox(height: 22),
 
                                 // Social Buttons Row (Google & Demo Mode side-by-side)
                                 Row(
@@ -720,23 +736,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                       child: OutlinedButton(
                                         onPressed: _isLoading ? null : _handleGoogleSignIn,
                                         style: OutlinedButton.styleFrom(
-                                          padding: const EdgeInsets.symmetric(vertical: 12),
+                                          padding: const EdgeInsets.symmetric(vertical: 14),
                                           backgroundColor: fieldBgColor,
                                           side: BorderSide(color: fieldBorderColor),
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(16),
+                                            borderRadius: BorderRadius.circular(18),
                                           ),
                                         ),
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            const GoogleLogo(size: 18),
+                                            const GoogleLogo(size: 20),
                                             const SizedBox(width: 8),
                                             Text(
                                               'Google',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w600,
-                                                fontSize: 13,
+                                                fontSize: 14,
                                                 color: textDark,
                                               ),
                                             ),
@@ -749,11 +765,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                       child: OutlinedButton(
                                         onPressed: _isLoading ? null : _handleDemoMode,
                                         style: OutlinedButton.styleFrom(
-                                          padding: const EdgeInsets.symmetric(vertical: 12),
+                                          padding: const EdgeInsets.symmetric(vertical: 14),
                                           backgroundColor: fieldBgColor,
                                           side: BorderSide(color: fieldBorderColor),
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(16),
+                                            borderRadius: BorderRadius.circular(18),
                                           ),
                                         ),
                                         child: Row(
@@ -761,7 +777,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                           children: [
                                             Icon(
                                               Icons.visibility_outlined,
-                                              size: 18,
+                                              size: 20,
                                               color: textDark.withValues(alpha: 0.7),
                                             ),
                                             const SizedBox(width: 8),
@@ -769,7 +785,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                               'Demo Mode',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w600,
-                                                fontSize: 13,
+                                                fontSize: 14,
                                                 color: textDark,
                                               ),
                                             ),
@@ -785,7 +801,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 24),
 
                     // 3. Toggle Register/Login Footer Link
                     Row(
@@ -794,7 +810,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                         Text(
                           _isRegisterMode ? 'Sudah memiliki akun? ' : 'Belum memiliki akun? ',
                           style: TextStyle(
-                            fontSize: 13.5,
+                            fontSize: 14.5,
                             color: textDark.withValues(alpha: 0.75),
                           ),
                         ),
@@ -808,7 +824,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                           child: Text(
                             _isRegisterMode ? 'Masuk' : 'Daftar Sekarang',
                             style: TextStyle(
-                              fontSize: 13.5,
+                              fontSize: 14.5,
                               fontWeight: FontWeight.w700,
                               color: primaryColor,
                             ),

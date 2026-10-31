@@ -6,16 +6,18 @@ import '../../ui/theme/theme_controller.dart';
 /// along with an optional seamless wedding doodle wallpaper pattern.
 class WeddingDoodleBackground extends ConsumerWidget {
   final Widget child;
+  final bool forceDisableDoodle;
 
   const WeddingDoodleBackground({
     super.key,
     required this.child,
+    this.forceDisableDoodle = false,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final doodleEnabled = ref.watch(doodlePatternEnabledProvider);
+    final doodleEnabled = !forceDisableDoodle && ref.watch(doodlePatternEnabledProvider);
     final isDark = theme.brightness == Brightness.dark;
 
     return Container(
