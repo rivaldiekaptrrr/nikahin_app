@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../shared/widgets/offline_banner.dart';
+import '../../features/auth/presentation/auth_notifier.dart';
+import '../../features/auth/presentation/auth_state.dart';
 
-class WeddingShellScaffold extends StatelessWidget {
+class WeddingShellScaffold extends ConsumerWidget {
   final String profileId;
   final String location;
   final Widget child;
@@ -90,7 +93,13 @@ class WeddingShellScaffold extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen<AuthState>(authNotifierProvider, (previous, next) {
+      if (next.status == AuthStatus.unauthenticated) {
+        context.go('/login');
+      }
+    });
+
     final selectedIndex = _calculateSelectedIndex();
     final theme = Theme.of(context);
 

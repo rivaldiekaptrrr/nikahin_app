@@ -30,6 +30,16 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
   bool _isClaimingCode = false;
   bool _isUnlinking = false;
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        ref.read(authNotifierProvider.notifier).refreshPartnerState();
+      }
+    });
+  }
+
   Future<void> _generateCode() async {
     final auth = ref.read(authNotifierProvider);
     final uid = auth.userId;
@@ -407,13 +417,14 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
           await ref.read(weddingRepositoryProvider).deleteProfile(weddingId);
         } catch (_) {}
 
-        await ref.read(authNotifierProvider.notifier).refreshPartnerState();
+        // Logout akun pasangan secara total
+        await ref.read(authNotifierProvider.notifier).signOut();
 
         if (mounted) {
-          context.go('/pending-verification');
+          context.go('/login');
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Anda telah keluar dari rencana pernikahan bersama pasangan.'),
+              content: Text('Anda telah keluar dari rencana bersama dan sesi akun telah diakhiri.'),
               behavior: SnackBarBehavior.floating,
             ),
           );

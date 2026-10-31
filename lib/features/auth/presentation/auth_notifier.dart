@@ -54,11 +54,11 @@ class AuthNotifier extends Notifier<AuthState> {
 
           // Validasi dua arah (Bi-directional verification):
           // Jika akun adalah Pasangan (Secondary), verifikasi apakah masih terdaftar di workspace pernikahan
-          if (!isPrimary && partnerOfUid != null && partnerOfUid.isNotEmpty) {
+          if (!isPrimary) {
             bool isStillMember = false;
-            if (activeWeddingId != null && activeWeddingId.isNotEmpty) {
+            if (partnerOfUid != null && partnerOfUid.isNotEmpty && activeWeddingId != null && activeWeddingId.isNotEmpty) {
               try {
-                final weddingDoc = await firestoreService.getDocument(path: 'weddings/$activeWeddingId');
+                final weddingDoc = await firestoreService.getDocument(path: 'weddings/$activeWeddingId', idToken: cachedToken);
                 if (weddingDoc != null) {
                   final members = (weddingDoc['members'] as List<dynamic>?)
                           ?.map((e) => e.toString())
@@ -69,25 +69,18 @@ class AuthNotifier extends Notifier<AuthState> {
               } catch (_) {}
             }
 
-            // Jika tautan telah diputus oleh Buyer (tidak ada lagi di members):
-            if (!isStillMember) {
-              final oldWeddingId = activeWeddingId;
-              partnerOfUid = null;
-              activeWeddingId = null;
-              coupleRole = null;
+            final isUnlinked = !isStillMember || partnerOfUid == null || partnerOfUid.isEmpty;
 
-              await AppPreferences.setPartnerOfUid(null);
-              await AppPreferences.setActiveWeddingId(null);
-              await AppPreferences.setCoupleRole(null);
-
-              // Bersihkan cache lokal profil pernikahan Buyer dari Drift SQLite di HP pasangan
+            // Jika tautan telah diputus dan akun pasangan ini tidak memiliki lisensi berbayar sendiri:
+            if (isUnlinked && level == AccessLevel.none) {
+              final oldWeddingId = activeWeddingId ?? await AppPreferences.getActiveWeddingId();
               if (oldWeddingId != null && oldWeddingId.isNotEmpty) {
                 try {
                   await ref.read(weddingRepositoryProvider).deleteProfile(oldWeddingId);
                 } catch (_) {}
               }
 
-              // Self-healing: bersihkan dokumen Firestore milik pasangan sendiri
+              // Self-healing: bersihkan dokumen Firestore milik pasangan sendiri jika masih ada data residu
               try {
                 await firestoreService.putDocument(
                   path: 'users/$uid',
@@ -98,8 +91,13 @@ class AuthNotifier extends Notifier<AuthState> {
                     'updatedAt': DateTime.now().millisecondsSinceEpoch,
                   },
                   updateMask: ['partnerOfUid', 'activeWeddingId', 'coupleRole', 'updatedAt'],
+                  idToken: cachedToken,
                 );
               } catch (_) {}
+
+              // Akun pasangan bukan buyer dan tidak memiliki lisensi berbayar -> otomatis logout total
+              await signOut();
+              return;
             }
           } else if (isPrimary && partnerOfUid != null && partnerOfUid.isNotEmpty && activeWeddingId != null && activeWeddingId.isNotEmpty) {
             // Jika akun adalah Buyer, verifikasi apakah pasangan masih terdaftar di members
@@ -694,9 +692,9 @@ class AuthNotifier extends Notifier<AuthState> {
         final isPrimary = userDoc.isPrimaryPayer;
 
         // Validasi dua arah (Bi-directional verification):
-        if (!isPrimary && partnerOfUid != null && partnerOfUid.isNotEmpty) {
+        if (!isPrimary) {
           bool isStillMember = false;
-          if (activeWeddingId != null && activeWeddingId.isNotEmpty) {
+          if (partnerOfUid != null && partnerOfUid.isNotEmpty && activeWeddingId != null && activeWeddingId.isNotEmpty) {
             try {
               final weddingDoc = await firestoreService.getDocument(path: 'weddings/$activeWeddingId', idToken: idToken);
               if (weddingDoc != null) {
@@ -709,16 +707,11 @@ class AuthNotifier extends Notifier<AuthState> {
             } catch (_) {}
           }
 
-          if (!isStillMember) {
-            final oldWeddingId = activeWeddingId;
-            partnerOfUid = null;
-            activeWeddingId = null;
-            coupleRole = null;
+          final isUnlinked = !isStillMember || partnerOfUid == null || partnerOfUid.isEmpty;
+          final level = state.isAdmin ? AccessLevel.admin : userDoc.accessLevel;
 
-            await AppPreferences.setPartnerOfUid(null);
-            await AppPreferences.setActiveWeddingId(null);
-            await AppPreferences.setCoupleRole(null);
-
+          if (isUnlinked && level == AccessLevel.none) {
+            final oldWeddingId = activeWeddingId ?? await AppPreferences.getActiveWeddingId();
             if (oldWeddingId != null && oldWeddingId.isNotEmpty) {
               try {
                 await ref.read(weddingRepositoryProvider).deleteProfile(oldWeddingId);
@@ -735,8 +728,13 @@ class AuthNotifier extends Notifier<AuthState> {
                   'updatedAt': DateTime.now().millisecondsSinceEpoch,
                 },
                 updateMask: ['partnerOfUid', 'activeWeddingId', 'coupleRole', 'updatedAt'],
+                idToken: idToken,
               );
             } catch (_) {}
+
+            // Akun pasangan bukan buyer dan tidak memiliki lisensi berbayar -> otomatis logout total
+            await signOut();
+            return;
           }
         } else if (isPrimary && partnerOfUid != null && partnerOfUid.isNotEmpty && activeWeddingId != null && activeWeddingId.isNotEmpty) {
           try {
