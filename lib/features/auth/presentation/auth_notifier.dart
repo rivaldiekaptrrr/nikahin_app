@@ -44,7 +44,8 @@ class AuthNotifier extends Notifier<AuthState> {
       // Verify and refresh latest accessLevel and partner sync from Firestore
       try {
         final firestoreService = ref.read(firestoreServiceProvider);
-        final remoteUser = await firestoreService.getUserInfo(uid);
+        final cachedToken = await AppPreferences.getIdToken();
+        final remoteUser = await firestoreService.getUserInfo(uid, idToken: cachedToken);
         if (remoteUser != null) {
           level = isAdmin ? AccessLevel.admin : remoteUser.accessLevel;
           partnerOfUid = remoteUser.partnerOfUid;
@@ -139,7 +140,6 @@ class AuthNotifier extends Notifier<AuthState> {
 
           // Self-healing: jika dokumen Firestore kehilangan email akibat bug lama, pulihkan otomatis
           if (remoteUser.email.isEmpty) {
-            final cachedToken = await AppPreferences.getIdToken();
             await firestoreService.syncUserInfo(
               AppUserInfo(
                 uid: uid,
