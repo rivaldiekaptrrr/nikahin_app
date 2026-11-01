@@ -220,7 +220,8 @@ class AuthNotifier extends Notifier<AuthState> {
 
       final db = ref.read(databaseProvider);
       final existingMockProfile = await db.getProfileById(MockSeeder.primaryMockProfileId);
-      if (existingMockProfile == null) {
+      final oldExp10 = await db.getExpenseById('exp_10');
+      if (existingMockProfile == null || oldExp10 != null) {
         await MockSeeder.seedAllMockData(db);
       } else if (existingMockProfile.groomName == 'Rivaldi' || existingMockProfile.brideName == 'Alya') {
         await db.updateProfile(existingMockProfile.copyWith(

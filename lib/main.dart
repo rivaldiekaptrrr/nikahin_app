@@ -36,7 +36,8 @@ void main() async {
   if (kUseMockData) {
     final existingMockProfile = await db.getProfileById(MockSeeder.primaryMockProfileId);
     final existingTerms = await db.getPaymentTermsForExpense('exp_1');
-    if (existingMockProfile == null || existingTerms.isEmpty) {
+    final oldExp10 = await db.getExpenseById('exp_10');
+    if (existingMockProfile == null || existingTerms.isEmpty || oldExp10 != null) {
       await MockSeeder.seedAllMockData(db);
     } else if (existingMockProfile.groomName == 'Rivaldi' || existingMockProfile.brideName == 'Alya') {
       await db.updateProfile(existingMockProfile.copyWith(
