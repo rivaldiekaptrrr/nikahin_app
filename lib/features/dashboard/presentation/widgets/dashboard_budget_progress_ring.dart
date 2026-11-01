@@ -22,6 +22,7 @@ class DashboardBudgetProgressRing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final effectiveCap = totalBudgetCap > 0 ? totalBudgetCap : totalEstimated;
     final paidProgress = effectiveCap > 0 ? (totalPaid / effectiveCap).clamp(0.0, 1.0) : 0.0;
     final paidPercentage = (paidProgress * 100).round();
@@ -32,10 +33,22 @@ class DashboardBudgetProgressRing extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        gradient: LinearGradient(
+          colors: isDark
+              ? [
+                  theme.colorScheme.surfaceContainer,
+                  theme.colorScheme.surfaceContainerHigh,
+                ]
+              : [
+                  theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
+                  theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+                ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         borderRadius: BorderRadius.circular(22),
         border: Border.all(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.6),
+          color: theme.colorScheme.primary.withValues(alpha: isDark ? 0.25 : 0.14),
           width: 1.2,
         ),
         boxShadow: [
@@ -103,7 +116,9 @@ class DashboardBudgetProgressRing extends StatelessWidget {
                               child: CircularProgressIndicator(
                                 value: 1.0,
                                 strokeWidth: 8,
-                                color: theme.colorScheme.surfaceContainerHighest,
+                                color: isDark
+                                    ? theme.colorScheme.surfaceContainerHighest
+                                    : Colors.white.withValues(alpha: 0.7),
                               ),
                             ),
                             // Paid progress ring
@@ -183,17 +198,30 @@ class DashboardBudgetProgressRing extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Batas Anggaran',
+                                      'Rencana Biaya',
                                       style: TextStyle(
                                         fontSize: 10.5,
                                         color: theme.colorScheme.onSurfaceVariant,
                                       ),
                                     ),
+                                    const SizedBox(height: 1),
                                     Text(
-                                      CurrencyUtils.formatRupiahCompact(effectiveCap),
-                                      style: const TextStyle(
+                                      CurrencyUtils.formatRupiahCompact(totalEstimated),
+                                      style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w700,
+                                        color: isOverBudget
+                                            ? const Color(0xFFDC2626)
+                                            : null,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 1),
+                                    Text(
+                                      'Plafon ${CurrencyUtils.formatRupiahCompact(effectiveCap)}',
+                                      style: TextStyle(
+                                        fontSize: 9.5,
+                                        color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.75),
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                   ],
@@ -208,12 +236,22 @@ class DashboardBudgetProgressRing extends StatelessWidget {
                                         color: theme.colorScheme.onSurfaceVariant,
                                       ),
                                     ),
+                                    const SizedBox(height: 1),
                                     Text(
                                       CurrencyUtils.formatRupiahCompact(remainingCost),
                                       style: const TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w700,
                                         color: Color(0xFFD97706),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 1),
+                                    Text(
+                                      remainingCost == 0 ? 'Semua lunas' : 'Belum dibayar',
+                                      style: TextStyle(
+                                        fontSize: 9.5,
+                                        color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.75),
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                   ],
@@ -225,32 +263,64 @@ class DashboardBudgetProgressRing extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 16),
 
                   // Bottom Sisa Dana Bar
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                     decoration: BoxDecoration(
                       color: isOverBudget
-                          ? const Color(0xFFFEE2E2)
-                          : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                          ? (isDark ? const Color(0xFF451A1A) : const Color(0xFFFEE2E2))
+                          : (isDark
+                              ? theme.colorScheme.surfaceContainerHigh
+                              : Colors.white.withValues(alpha: 0.8)),
                       borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: isOverBudget
+                            ? const Color(0xFFFCA5A5)
+                            : theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+                        width: 1,
+                      ),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          isOverBudget ? 'Melebihi Batas Anggaran' : 'Sisa Anggaran Tersedia',
-                          style: TextStyle(
-                            fontSize: 11.5,
-                            fontWeight: FontWeight.w600,
-                            color: isOverBudget
-                                ? const Color(0xFF991B1B)
-                                : theme.colorScheme.onSurfaceVariant,
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Icon(
+                                isOverBudget
+                                    ? Icons.info_outline_rounded
+                                    : Icons.check_circle_outline_rounded,
+                                size: 15,
+                                color: isOverBudget
+                                    ? const Color(0xFFDC2626)
+                                    : const Color(0xFF059669),
+                              ),
+                              const SizedBox(width: 6),
+                              Expanded(
+                                child: Text(
+                                  isOverBudget
+                                      ? 'Biaya melebihi plafon'
+                                      : 'Sisa anggaran tersedia',
+                                  style: TextStyle(
+                                    fontSize: 11.5,
+                                    fontWeight: FontWeight.w600,
+                                    color: isOverBudget
+                                        ? const Color(0xFF991B1B)
+                                        : theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
+                        const SizedBox(width: 8),
                         Text(
-                          CurrencyUtils.formatRupiah(isOverBudget ? (totalEstimated - totalBudgetCap) : freeBudget),
+                          CurrencyUtils.formatRupiahCompact(
+                            isOverBudget ? (totalEstimated - totalBudgetCap) : freeBudget,
+                          ),
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w800,
@@ -294,7 +364,7 @@ class DashboardBudgetProgressRing extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: const Text(
-          'Melebihi Batas',
+          'Perlu Evaluasi',
           style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFFDC2626)),
         ),
       );
