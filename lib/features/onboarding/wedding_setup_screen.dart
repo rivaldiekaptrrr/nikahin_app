@@ -356,7 +356,7 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
               ],
               decoration: InputDecoration(
                 labelText: 'Nama Panggilan Mempelai Pria',
-                hintText: 'Contoh: Rivaldi',
+                hintText: 'Contoh: Rama',
                 prefixIcon: const Icon(Icons.male_rounded),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
               ),
@@ -374,7 +374,7 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
               ],
               decoration: InputDecoration(
                 labelText: 'Nama Panggilan Mempelai Wanita',
-                hintText: 'Contoh: Alya',
+                hintText: 'Contoh: Sinta',
                 prefixIcon: const Icon(Icons.female_rounded),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
               ),

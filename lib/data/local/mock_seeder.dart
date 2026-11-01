@@ -6,14 +6,14 @@ class MockSeeder {
 
   /// Seed complete mock data across all 10 wedding modules into SQLite database
   static Future<void> seedAllMockData(AppDatabase db) async {
-    // 1. Single Wedding Profile (Rivaldi & Alya)
+    // 1. Single Wedding Profile (Rama & Sinta)
     final now = DateTime.now();
     final weddingDate = now.add(const Duration(days: 45)).millisecondsSinceEpoch;
 
     final primaryProfile = WeddingProfile(
       id: primaryMockProfileId,
-      groomName: 'Rivaldi',
-      brideName: 'Alya',
+      groomName: 'Rama',
+      brideName: 'Sinta',
       weddingDate: weddingDate,
       totalBudgetCap: 175000000.0,
       religionType: 'ISLAM',

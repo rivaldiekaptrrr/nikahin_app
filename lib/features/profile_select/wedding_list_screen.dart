@@ -345,7 +345,7 @@ class _CreateProfileBottomSheetState extends ConsumerState<_CreateProfileBottomS
                 buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(
                   labelText: 'Nama Mempelai Pria (CPP)',
-                  hintText: 'Contoh: Rivaldi',
+                  hintText: 'Contoh: Rama',
                   prefixIcon: Icon(Icons.person_outline_rounded),
                 ),
                 validator: (v) => ValidationUtils.validateName(v, 'Nama CPP'),
@@ -361,7 +361,7 @@ class _CreateProfileBottomSheetState extends ConsumerState<_CreateProfileBottomS
                 buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(
                   labelText: 'Nama Mempelai Wanita (CPW)',
-                  hintText: 'Contoh: Sarah',
+                  hintText: 'Contoh: Sinta',
                   prefixIcon: Icon(Icons.person_outline_rounded),
                 ),
                 validator: (v) => ValidationUtils.validateName(v, 'Nama CPW'),

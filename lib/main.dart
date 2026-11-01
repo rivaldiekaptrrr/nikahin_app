@@ -38,6 +38,11 @@ void main() async {
     final existingTerms = await db.getPaymentTermsForExpense('exp_1');
     if (existingMockProfile == null || existingTerms.isEmpty) {
       await MockSeeder.seedAllMockData(db);
+    } else if (existingMockProfile.groomName == 'Rivaldi' || existingMockProfile.brideName == 'Alya') {
+      await db.updateProfile(existingMockProfile.copyWith(
+        groomName: 'Rama',
+        brideName: 'Sinta',
+      ));
     }
   }
 
