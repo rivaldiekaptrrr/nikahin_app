@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import '../utils/date_utils.dart';
 
 class DateSelectorButton extends StatelessWidget {
@@ -65,7 +66,7 @@ class DateSelectorButton extends StatelessWidget {
         child: Row(
           children: [
             Icon(
-              Icons.calendar_month_rounded,
+              PhosphorIconsRegular.calendar,
               color: theme.colorScheme.primary,
               size: 22,
             ),
@@ -92,7 +93,8 @@ class DateSelectorButton extends StatelessWidget {
               ),
             ),
             Icon(
-              Icons.arrow_drop_down_rounded,
+              PhosphorIconsRegular.caretDown,
+              size: 18,
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ],

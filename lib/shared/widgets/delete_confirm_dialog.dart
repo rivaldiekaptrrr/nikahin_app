@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 
 Future<void> showDeleteConfirmDialog({
   required BuildContext context,
@@ -22,7 +23,7 @@ Future<void> showDeleteConfirmDialog({
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                Icons.delete_outline_rounded,
+                PhosphorIconsRegular.trash,
                 color: theme.colorScheme.error,
                 size: 20,
               ),

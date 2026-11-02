@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 
 import '../../shared/widgets/offline_banner.dart';
 import '../../shared/widgets/wedding_doodle_background.dart';
@@ -132,33 +133,34 @@ class WeddingShellScaffold extends ConsumerWidget {
         destinations: [
           NavigationDestination(
             icon: Icon(
-              Icons.home_outlined,
+              PhosphorIconsRegular.house,
               color: selectedIndex == 0 ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant,
             ),
-            selectedIcon: Icon(Icons.home_rounded, color: theme.colorScheme.primary),
+            selectedIcon: Icon(PhosphorIconsFill.house, color: theme.colorScheme.primary),
             label: 'Beranda',
           ),
           NavigationDestination(
             icon: Icon(
-              Icons.check_circle_outline_rounded,
+              PhosphorIconsRegular.checkCircle,
               color: selectedIndex == 1 ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant,
             ),
-            selectedIcon: Icon(Icons.check_circle_rounded, color: theme.colorScheme.primary),
+            selectedIcon: Icon(PhosphorIconsFill.checkCircle, color: theme.colorScheme.primary),
             label: 'Tugas',
           ),
           NavigationDestination(
             icon: Icon(
-              Icons.account_balance_wallet_outlined,
+              PhosphorIconsRegular.wallet,
               color: selectedIndex == 2 ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant,
             ),
-            selectedIcon: Icon(Icons.account_balance_wallet_rounded, color: theme.colorScheme.primary),
+            selectedIcon: Icon(PhosphorIconsFill.wallet, color: theme.colorScheme.primary),
             label: 'Anggaran',
           ),
           NavigationDestination(
             icon: Icon(
-              Icons.grid_view_rounded,
+              PhosphorIconsRegular.squaresFour,
               color: theme.colorScheme.onSurfaceVariant,
             ),
+            selectedIcon: Icon(PhosphorIconsFill.squaresFour, color: theme.colorScheme.primary),
             label: 'Menu',
           ),
         ],
@@ -176,13 +178,13 @@ class WeddingMenuGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final items = [
-      _MenuItem('guests', 'Tamu', Icons.people_rounded),
-      _MenuItem('vendors', 'Vendor', Icons.storefront_rounded),
-      _MenuItem('seserahan', 'Seserahan', Icons.card_giftcard_rounded),
-      _MenuItem('committee', 'Panitia', Icons.groups_rounded),
-      _MenuItem('rundown', 'Rundown', Icons.event_note_rounded),
-      _MenuItem('documents', 'Dokumen', Icons.folder_rounded),
-      _MenuItem('settings', 'Pengaturan', Icons.settings_rounded),
+      _MenuItem('guests', 'Tamu', PhosphorIconsRegular.users),
+      _MenuItem('vendors', 'Vendor', PhosphorIconsRegular.storefront),
+      _MenuItem('seserahan', 'Seserahan', PhosphorIconsRegular.gift),
+      _MenuItem('committee', 'Panitia', PhosphorIconsRegular.identificationBadge),
+      _MenuItem('rundown', 'Rundown', PhosphorIconsRegular.calendarCheck),
+      _MenuItem('documents', 'Dokumen', PhosphorIconsRegular.folder),
+      _MenuItem('settings', 'Pengaturan', PhosphorIconsRegular.gear),
     ];
 
     return GridView.builder(

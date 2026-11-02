@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 
 /// Reusable cached network image with graceful wedding-themed placeholder and error fallback.
 class AppCachedNetworkImage extends StatelessWidget {
@@ -57,7 +58,7 @@ class AppCachedNetworkImage extends StatelessWidget {
             height: height,
             color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
             child: Icon(
-              Icons.broken_image_outlined,
+              PhosphorIconsRegular.imageBroken,
               size: (width != null && width! < 40) ? 18 : 24,
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -88,7 +89,7 @@ class AppCachedAvatar extends StatelessWidget {
     this.imageUrl,
     this.radius = 24,
     this.fallbackInitials,
-    this.fallbackIcon = Icons.person_rounded,
+    this.fallbackIcon = PhosphorIconsRegular.user,
     this.onTap,
   });
 

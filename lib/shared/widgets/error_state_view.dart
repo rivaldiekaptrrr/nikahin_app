@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import '../utils/error_handler.dart';
 
 /// Reusable Error State View with descriptive message and Retry CTA
@@ -25,7 +26,7 @@ class ErrorStateView extends StatelessWidget {
 
     final resolvedTitle = title ?? _resolveTitle(appException?.type);
     final resolvedMessage = errorMessage ?? appException?.message ?? 'Gagal memuat informasi. Silakan coba lagi.';
-    final resolvedIcon = icon ?? appException?.icon ?? Icons.error_outline_rounded;
+    final resolvedIcon = icon ?? appException?.icon ?? PhosphorIconsRegular.warningCircle;
 
     return Center(
       child: Padding(
@@ -66,7 +67,7 @@ class ErrorStateView extends StatelessWidget {
               const SizedBox(height: 20),
               FilledButton.tonalIcon(
                 onPressed: onRetry,
-                icon: const Icon(Icons.refresh_rounded, size: 18),
+                icon: const Icon(PhosphorIconsRegular.arrowClockwise, size: 18),
                 label: const Text('Coba Lagi'),
               ),
             ],

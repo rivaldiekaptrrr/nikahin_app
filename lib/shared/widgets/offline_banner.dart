@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import '../../data/services/network_connectivity_service.dart';
 
 /// Reassuring, editorial offline indicator banner.
@@ -31,7 +32,7 @@ class OfflineBanner extends ConsumerWidget {
           child: Row(
             children: [
               Icon(
-                Icons.cloud_off_rounded,
+                PhosphorIconsRegular.cloudSlash,
                 size: 16,
                 color: theme.colorScheme.onSurfaceVariant,
               ),

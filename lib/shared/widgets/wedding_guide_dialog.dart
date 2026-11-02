@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 
 class WeddingGuideFeature {
   final String title;
@@ -45,7 +46,7 @@ Future<void> showWeddingGuideDialog({
                         borderRadius: BorderRadius.circular(14),
                       ),
                       child: Icon(
-                        Icons.lightbulb_outline_rounded,
+                        PhosphorIconsRegular.lightbulb,
                         color: theme.colorScheme.primary,
                         size: 24,
                       ),
@@ -73,7 +74,7 @@ Future<void> showWeddingGuideDialog({
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close_rounded),
+                      icon: const Icon(PhosphorIconsRegular.x),
                       onPressed: () => Navigator.of(ctx).pop(),
                     ),
                   ],
@@ -166,7 +167,7 @@ Future<void> showWeddingGuideDialog({
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Icon(
-                          Icons.tips_and_updates_outlined,
+                          PhosphorIconsRegular.sparkle,
                           size: 18,
                           color: Color(0xFFF57F17),
                         ),

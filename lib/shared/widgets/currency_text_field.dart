@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import '../utils/currency_utils.dart';
 
 class CurrencyTextField extends StatefulWidget {
@@ -65,7 +66,7 @@ class _CurrencyTextFieldState extends State<CurrencyTextField> {
       decoration: InputDecoration(
         labelText: widget.labelText,
         hintText: widget.hintText,
-        prefixIcon: const Icon(Icons.payments_outlined, size: 20),
+        prefixIcon: const Icon(PhosphorIconsRegular.money, size: 20),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
       ),
       validator: widget.isRequired

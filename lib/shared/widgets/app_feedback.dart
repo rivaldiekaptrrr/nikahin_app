@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import '../utils/error_handler.dart';
 
 /// Centralized UI Feedback helper for Success, Error, Info, and Undo actions
@@ -17,7 +18,7 @@ class AppFeedback {
         backgroundColor: const Color(0xFF1B5E20),
         content: Row(
           children: [
-            const Icon(Icons.check_circle_rounded, color: Colors.white, size: 20),
+            const Icon(PhosphorIconsRegular.checkCircle, color: Colors.white, size: 20),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
@@ -41,7 +42,7 @@ class AppFeedback {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     final appException = error != null ? AppErrorHandler.parse(error) : null;
     final resolvedMessage = message ?? appException?.message ?? 'Terjadi kendala pada sistem.';
-    final resolvedIcon = appException?.icon ?? Icons.error_outline_rounded;
+    final resolvedIcon = appException?.icon ?? PhosphorIconsRegular.warningCircle;
     final resolvedBg = appException?.color ?? Theme.of(context).colorScheme.error;
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -81,7 +82,7 @@ class AppFeedback {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         content: Row(
           children: [
-            const Icon(Icons.info_outline_rounded, color: Colors.white, size: 20),
+            const Icon(PhosphorIconsRegular.info, color: Colors.white, size: 20),
             const SizedBox(width: 10),
             Expanded(
               child: Text(

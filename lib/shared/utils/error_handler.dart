@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 
 /// Enum representing standardized error types across Nikahin App
 enum AppErrorType {
@@ -37,25 +38,25 @@ class AppException implements Exception {
   IconData get icon {
     switch (type) {
       case AppErrorType.success:
-        return Icons.check_circle_rounded;
+        return PhosphorIconsRegular.checkCircle;
       case AppErrorType.loading:
-        return Icons.hourglass_top_rounded;
+        return PhosphorIconsRegular.hourglass;
       case AppErrorType.empty:
-        return Icons.inbox_outlined;
+        return PhosphorIconsRegular.tray;
       case AppErrorType.validationError:
-        return Icons.rule_rounded;
+        return PhosphorIconsRegular.warning;
       case AppErrorType.networkError:
-        return Icons.wifi_off_rounded;
+        return PhosphorIconsRegular.wifiSlash;
       case AppErrorType.serverError:
-        return Icons.cloud_off_rounded;
+        return PhosphorIconsRegular.cloudSlash;
       case AppErrorType.authError:
-        return Icons.lock_outline_rounded;
+        return PhosphorIconsRegular.lock;
       case AppErrorType.permissionError:
-        return Icons.security_rounded;
+        return PhosphorIconsRegular.shieldWarning;
       case AppErrorType.timeout:
-        return Icons.timer_off_outlined;
+        return PhosphorIconsRegular.timer;
       case AppErrorType.unknownError:
-        return Icons.error_outline_rounded;
+        return PhosphorIconsRegular.warningCircle;
     }
   }
 
