@@ -1,3 +1,4 @@
+import 'package:phosphor_icons/phosphor_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../../domain/enums/wedding_enums.dart';
@@ -128,7 +129,7 @@ class SettingsProfileFormCard extends StatelessWidget {
                       width: 18,
                       child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                     )
-                  : const Icon(Icons.check_circle_outline_rounded),
+                  : const Icon(PhosphorIconsRegular.checkCircle),
               label: Text(isSaving ? 'Menyimpan...' : 'Simpan Profil & Anggaran'),
             ),
           ),

@@ -1,3 +1,4 @@
+import 'package:phosphor_icons/phosphor_icons.dart';
 import 'package:flutter/material.dart';
 import '../../../../domain/models/wedding_models.dart';
 import '../../../../shared/widgets/bento_card.dart';
@@ -27,7 +28,7 @@ class SettingsDangerZoneCard extends StatelessWidget {
             color: theme.colorScheme.errorContainer,
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Icon(Icons.delete_forever_rounded, color: theme.colorScheme.error, size: 22),
+          child: Icon(PhosphorIconsRegular.trash, color: theme.colorScheme.error, size: 22),
         ),
         title: Text(
           'Hapus Seluruh Data Rencana',

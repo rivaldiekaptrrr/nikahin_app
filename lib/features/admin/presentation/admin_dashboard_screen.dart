@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import '../../../app/config/business_config.dart';
 import '../../../domain/models/access_level.dart';
 import '../../../shared/utils/currency_utils.dart';
@@ -99,7 +100,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
           SnackBar(
             content: Row(
               children: [
-                const Icon(Icons.check_circle_rounded, color: Colors.white, size: 20),
+                const Icon(PhosphorIconsFill.checkCircle, color: Colors.white, size: 20),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -125,7 +126,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
           SnackBar(
             content: const Row(
               children: [
-                Icon(Icons.error_outline_rounded, color: Colors.white, size: 20),
+                Icon(PhosphorIconsRegular.warningCircle, color: Colors.white, size: 20),
                 SizedBox(width: 8),
                 Expanded(child: Text('Gagal memperbarui hak akses pengguna.')),
               ],
@@ -153,7 +154,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
           SnackBar(
             content: Row(
               children: [
-                const Icon(Icons.delete_outline_rounded, color: Colors.white, size: 20),
+                const Icon(PhosphorIconsRegular.trash, color: Colors.white, size: 20),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -173,7 +174,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
           SnackBar(
             content: const Row(
               children: [
-                Icon(Icons.error_outline_rounded, color: Colors.white, size: 20),
+                Icon(PhosphorIconsRegular.warningCircle, color: Colors.white, size: 20),
                 SizedBox(width: 8),
                 Expanded(child: Text('Tidak dapat menghapus data pengguna. Silakan periksa koneksi internet.')),
               ],
@@ -229,7 +230,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
       builder: (ctx) => AlertDialog(
         title: Row(
           children: [
-            Icon(Icons.warning_amber_rounded, color: Theme.of(context).colorScheme.error),
+            Icon(PhosphorIconsRegular.warning, color: Theme.of(context).colorScheme.error),
             const SizedBox(width: 8),
             const Text('Hapus Masal?'),
           ],
@@ -338,7 +339,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
             : theme.colorScheme.surface,
         leading: _isSelectionMode
             ? IconButton(
-                icon: const Icon(Icons.close_rounded),
+                icon: const Icon(PhosphorIconsRegular.x),
                 tooltip: 'Batal Pilih',
                 onPressed: _clearSelection,
               )
@@ -361,7 +362,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                       ),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Icon(Icons.admin_panel_settings_rounded, color: Colors.white, size: 18),
+                    child: const Icon(PhosphorIconsFill.shield, color: Colors.white, size: 18),
                   ),
                   const SizedBox(width: 10),
                   const Expanded(
@@ -386,8 +387,8 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                   },
                   icon: Icon(
                     _selectedUserIds.length == filteredUsers.length
-                        ? Icons.deselect_rounded
-                        : Icons.select_all_rounded,
+                        ? PhosphorIconsRegular.square
+                        : PhosphorIconsRegular.checkSquare,
                     size: 18,
                   ),
                   label: Text(
@@ -405,17 +406,17 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                           height: 16,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : const Icon(Icons.refresh_rounded),
+                      : const Icon(PhosphorIconsRegular.arrowsClockwise),
                   tooltip: 'Muat Ulang Data',
                   onPressed: _isLoading ? null : _loadUsers,
                 ),
                 IconButton(
-                  icon: const Icon(Icons.favorite_rounded, color: Color(0xFFE11D48)),
+                  icon: const Icon(PhosphorIconsFill.heart, color: Color(0xFFE11D48)),
                   tooltip: 'Buka Nikahin',
                   onPressed: () => context.go('/wedding/profile_rivaldi_alya'),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.logout_rounded),
+                  icon: const Icon(PhosphorIconsRegular.signOut),
                   tooltip: 'Keluar',
                   onPressed: () async {
                     await ref.read(authNotifierProvider.notifier).signOut();
@@ -465,7 +466,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                               padding: const EdgeInsets.symmetric(vertical: 10),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                             ),
-                            icon: const Icon(Icons.check_circle_rounded, size: 16),
+                            icon: const Icon(PhosphorIconsFill.checkCircle, size: 16),
                             label: const Text('Aktifkan', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                           ),
                         ),
@@ -479,7 +480,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                               padding: const EdgeInsets.symmetric(vertical: 10),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                             ),
-                            icon: const Icon(Icons.lock_clock_rounded, size: 16),
+                            icon: const Icon(PhosphorIconsRegular.lockKey, size: 16),
                             label: const Text('Kunci', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                           ),
                         ),
@@ -491,7 +492,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                             foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                           ),
-                          icon: const Icon(Icons.delete_forever_rounded, size: 20),
+                          icon: const Icon(PhosphorIconsRegular.trash, size: 20),
                           tooltip: 'Hapus Pengguna Terpilih',
                         ),
                       ],
@@ -532,7 +533,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                         CircleAvatar(
                           radius: 16,
                           backgroundColor: const Color(0xFFF59E0B).withValues(alpha: 0.2),
-                          child: const Icon(Icons.verified_user_rounded, color: Color(0xFFD97706), size: 18),
+                          child: const Icon(PhosphorIconsFill.shieldCheck, color: Color(0xFFD97706), size: 18),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
@@ -593,7 +594,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                               title: 'Total User',
                               value: '$totalCount',
                               subtitle: 'Akun Terdaftar',
-                              icon: Icons.people_alt_rounded,
+                              icon: PhosphorIconsRegular.users,
                               accentColor: theme.colorScheme.primary,
                               gradientColors: [
                                 theme.colorScheme.primary.withValues(alpha: 0.08),
@@ -608,7 +609,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                               title: 'Menunggu',
                               value: '$pendingCount',
                               subtitle: 'Perlu Aktivasi',
-                              icon: Icons.hourglass_empty_rounded,
+                              icon: PhosphorIconsRegular.hourglass,
                               accentColor: const Color(0xFFEA580C),
                               isWarning: pendingCount > 0,
                               gradientColors: [
@@ -628,7 +629,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                               title: 'Lisensi Berbayar',
                               value: '$payingUsersCount',
                               subtitle: linkedPartnerCount > 0 ? '+ $linkedPartnerCount Pasangan' : 'Lifetime Member',
-                              icon: Icons.workspace_premium_rounded,
+                              icon: PhosphorIconsRegular.crown,
                               accentColor: const Color(0xFF059669),
                               gradientColors: [
                                 const Color(0xFF059669).withValues(alpha: 0.1),
@@ -643,7 +644,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                               title: 'Est. Omset',
                               value: CurrencyUtils.formatRupiahCompact(totalOmset),
                               subtitle: 'Total Penjualan',
-                              icon: Icons.monetization_on_rounded,
+                              icon: PhosphorIconsRegular.money,
                               accentColor: const Color(0xFFD97706),
                               gradientColors: [
                                 const Color(0xFFD97706).withValues(alpha: 0.12),
@@ -670,10 +671,10 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                         decoration: InputDecoration(
                           hintText: 'Cari nama, email, atau UID...',
                           hintStyle: TextStyle(fontSize: 12.5, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7)),
-                          prefixIcon: const Icon(Icons.search_rounded, size: 18),
+                          prefixIcon: const Icon(PhosphorIconsRegular.magnifyingGlass, size: 18),
                           suffixIcon: query.isNotEmpty
                               ? IconButton(
-                                  icon: const Icon(Icons.clear_rounded, size: 16),
+                                  icon: const Icon(PhosphorIconsRegular.x, size: 16),
                                   onPressed: () => setState(() => _searchController.clear()),
                                 )
                               : null,
@@ -700,15 +701,15 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                               physics: const BouncingScrollPhysics(),
                               child: Row(
                                 children: [
-                                  _buildFilterPill('ALL', 'Semua', totalCount, Icons.dashboard_rounded),
+                                  _buildFilterPill('ALL', 'Semua', totalCount, PhosphorIconsRegular.squaresFour),
                                   const SizedBox(width: 6),
-                                  _buildFilterPill('NONE', 'Menunggu', pendingCount, Icons.hourglass_top_rounded, color: const Color(0xFFEA580C)),
+                                  _buildFilterPill('NONE', 'Menunggu', pendingCount, PhosphorIconsRegular.hourglass, color: const Color(0xFFEA580C)),
                                   const SizedBox(width: 6),
-                                  _buildFilterPill('PREMIUM', 'Berbayar', payingUsersCount, Icons.verified_rounded, color: const Color(0xFF059669)),
+                                  _buildFilterPill('PREMIUM', 'Berbayar', payingUsersCount, PhosphorIconsFill.sealCheck, color: const Color(0xFF059669)),
                                   const SizedBox(width: 6),
-                                  _buildFilterPill('PARTNER', 'Pasangan', linkedPartnerCount, Icons.favorite_rounded, color: const Color(0xFF8B5CF6)),
+                                  _buildFilterPill('PARTNER', 'Pasangan', linkedPartnerCount, PhosphorIconsFill.heart, color: const Color(0xFF8B5CF6)),
                                   const SizedBox(width: 6),
-                                  _buildFilterPill('ADMIN', 'Admin', adminCount, Icons.shield_rounded, color: const Color(0xFFD97706)),
+                                  _buildFilterPill('ADMIN', 'Admin', adminCount, PhosphorIconsFill.shield, color: const Color(0xFFD97706)),
                                 ],
                               ),
                             ),
@@ -740,7 +741,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Icon(
-                                    _isSelectionMode ? Icons.check_box_rounded : Icons.checklist_rounded,
+                                    _isSelectionMode ? PhosphorIconsFill.checkSquare : PhosphorIconsRegular.checkSquareOffset,
                                     size: 16,
                                     color: _isSelectionMode
                                         ? theme.colorScheme.primary
@@ -802,7 +803,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.cloud_off_rounded, color: theme.colorScheme.error, size: 48),
+                          Icon(PhosphorIconsRegular.cloudSlash, color: theme.colorScheme.error, size: 48),
                           const SizedBox(height: 12),
                           Text(
                             _errorMessage!,
@@ -812,7 +813,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                           const SizedBox(height: 16),
                           FilledButton.icon(
                             onPressed: _loadUsers,
-                            icon: const Icon(Icons.refresh_rounded),
+                            icon: const Icon(PhosphorIconsRegular.arrowsClockwise),
                             label: const Text('Coba Lagi'),
                           ),
                         ],
@@ -830,7 +831,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            query.isEmpty ? Icons.people_outline_rounded : Icons.search_off_rounded,
+                            query.isEmpty ? PhosphorIconsRegular.users : PhosphorIconsRegular.magnifyingGlass,
                             size: 48,
                             color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
                           ),
@@ -1047,23 +1048,23 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
     if (isLinkedPartner) {
       statusColor = const Color(0xFF8B5CF6);
       statusTitle = 'PASANGAN';
-      statusIcon = Icons.favorite_rounded;
+      statusIcon = PhosphorIconsFill.heart;
     } else {
       switch (user.accessLevel) {
         case AccessLevel.admin:
           statusColor = const Color(0xFFD97706);
           statusTitle = 'ADMIN';
-          statusIcon = Icons.shield_rounded;
+          statusIcon = PhosphorIconsFill.shield;
           break;
         case AccessLevel.premium:
           statusColor = const Color(0xFF059669);
           statusTitle = 'PREMIUM';
-          statusIcon = Icons.verified_rounded;
+          statusIcon = PhosphorIconsFill.sealCheck;
           break;
         case AccessLevel.none:
           statusColor = const Color(0xFFEA580C);
           statusTitle = 'MENUNGGU';
-          statusIcon = Icons.hourglass_top_rounded;
+          statusIcon = PhosphorIconsRegular.hourglass;
           break;
       }
     }
@@ -1130,7 +1131,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                                       ? theme.colorScheme.primary
                                       : statusColor.withValues(alpha: 0.12),
                                   child: isSelected
-                                      ? const Icon(Icons.check_rounded, color: Colors.white, size: 18)
+                                      ? const Icon(PhosphorIconsRegular.check, color: Colors.white, size: 18)
                                       : Text(
                                           initial,
                                           style: TextStyle(
@@ -1172,7 +1173,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                                             ),
                                           ),
                                           const SizedBox(width: 4),
-                                          Icon(Icons.copy_rounded, size: 11, color: theme.colorScheme.outline),
+                                          Icon(PhosphorIconsRegular.copy, size: 11, color: theme.colorScheme.outline),
                                         ],
                                       ),
                                     ),
@@ -1217,7 +1218,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                               Expanded(
                                 child: Row(
                                   children: [
-                                    Icon(Icons.calendar_today_rounded, size: 11, color: theme.colorScheme.outline),
+                                    Icon(PhosphorIconsRegular.calendar, size: 11, color: theme.colorScheme.outline),
                                     const SizedBox(width: 4),
                                     Flexible(
                                       child: Text(
@@ -1241,7 +1242,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Icon(Icons.link_rounded, size: 13, color: statusColor),
+                                          Icon(PhosphorIconsRegular.link, size: 13, color: statusColor),
                                           const SizedBox(width: 3),
                                           Text(
                                             'Co-Planner',
@@ -1265,7 +1266,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                       ),
-                                      icon: const Icon(Icons.check_circle_rounded, size: 13),
+                                      icon: const Icon(PhosphorIconsFill.checkCircle, size: 13),
                                       label: const Text(
                                         'Aktifkan',
                                         style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
@@ -1286,7 +1287,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                                   PopupMenuButton<String>(
                                     padding: EdgeInsets.zero,
                                     constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-                                    icon: const Icon(Icons.more_vert_rounded, size: 18),
+                                    icon: const Icon(PhosphorIconsRegular.dotsThreeVertical, size: 18),
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                                     onSelected: (val) {
                                       if (val == 'DELETE') {
@@ -1305,7 +1306,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                                           value: 'PREMIUM',
                                           child: Row(
                                             children: [
-                                              Icon(Icons.verified_rounded, size: 16, color: Color(0xFF059669)),
+                                              Icon(PhosphorIconsFill.sealCheck, size: 16, color: Color(0xFF059669)),
                                               SizedBox(width: 8),
                                               Text('Jadikan Premium Lifetime'),
                                             ],
@@ -1315,7 +1316,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                                           value: 'NONE',
                                           child: Row(
                                             children: [
-                                              Icon(Icons.lock_clock_rounded, size: 16, color: Color(0xFFEA580C)),
+                                              Icon(PhosphorIconsRegular.lockKey, size: 16, color: Color(0xFFEA580C)),
                                               SizedBox(width: 8),
                                               Text('Kunci (Menunggu Pembayaran)'),
                                             ],
@@ -1325,7 +1326,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                                           value: 'ADMIN',
                                           child: Row(
                                             children: [
-                                              Icon(Icons.shield_rounded, size: 16, color: Color(0xFFD97706)),
+                                              Icon(PhosphorIconsFill.shield, size: 16, color: Color(0xFFD97706)),
                                               SizedBox(width: 8),
                                               Text('Jadikan Super Admin'),
                                             ],
@@ -1337,7 +1338,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                                             value: 'DELETE',
                                             child: Row(
                                               children: [
-                                                Icon(Icons.delete_forever_rounded, size: 16, color: Colors.red),
+                                                Icon(PhosphorIconsRegular.trash, size: 16, color: Colors.red),
                                                 SizedBox(width: 8),
                                                 Text(
                                                   'Hapus Pengguna',
@@ -1398,7 +1399,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
       builder: (ctx) => AlertDialog(
         title: Row(
           children: [
-            Icon(Icons.warning_amber_rounded, color: theme.colorScheme.error),
+            Icon(PhosphorIconsRegular.warning, color: theme.colorScheme.error),
             const SizedBox(width: 8),
             const Text('Hapus Pengguna?'),
           ],

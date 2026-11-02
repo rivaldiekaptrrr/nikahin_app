@@ -1,3 +1,4 @@
+import 'package:phosphor_icons/phosphor_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -29,27 +30,27 @@ class SettingsCloudSyncCard extends ConsumerWidget {
       badgeColor = Colors.amber.shade800;
       statusTitle = 'Mode Demo (Hanya Lihat)';
       statusDesc = 'Fitur penambahan & edit dinonaktifkan di mode ini.';
-      statusIcon = Icons.visibility_outlined;
+      statusIcon = PhosphorIconsRegular.eye;
     } else if (isAdmin) {
       badgeColor = Colors.amber.shade800;
       statusTitle = '👑 Akun Super Admin';
       statusDesc = authState.email ?? 'Akses penuh & manajemen pengguna';
-      statusIcon = Icons.admin_panel_settings_rounded;
+      statusIcon = PhosphorIconsFill.shield;
     } else if (isPremium) {
       badgeColor = Colors.green.shade700;
       statusTitle = '✨ Lisensi Premium Aktif';
       statusDesc = authState.email ?? 'Sinkronisasi Cloud & fitur penuh aktif';
-      statusIcon = Icons.verified_rounded;
+      statusIcon = PhosphorIconsFill.sealCheck;
     } else if (isPending) {
       badgeColor = Colors.orange.shade800;
       statusTitle = 'Menunggu Aktivasi Lisensi';
       statusDesc = 'Aktifkan lisensi untuk sinkronisasi cloud penuh';
-      statusIcon = Icons.hourglass_top_rounded;
+      statusIcon = PhosphorIconsRegular.hourglass;
     } else {
       badgeColor = theme.colorScheme.outline;
       statusTitle = 'Penyimpanan Offline';
       statusDesc = 'Semua data tersimpan aman di perangkat lokal.';
-      statusIcon = Icons.cloud_off_rounded;
+      statusIcon = PhosphorIconsRegular.cloudSlash;
     }
 
     return BentoCard(
@@ -100,7 +101,7 @@ class SettingsCloudSyncCard extends ConsumerWidget {
                   backgroundColor: Colors.amber.shade800,
                   foregroundColor: Colors.white,
                 ),
-                icon: const Icon(Icons.shield_rounded, size: 18),
+                icon: const Icon(PhosphorIconsFill.shield, size: 18),
                 label: const Text('Buka Panel Super Admin', style: TextStyle(fontWeight: FontWeight.bold)),
               ),
             ),
@@ -113,7 +114,7 @@ class SettingsCloudSyncCard extends ConsumerWidget {
                 Expanded(
                   child: FilledButton.icon(
                     onPressed: () => context.go('/login'),
-                    icon: const Icon(Icons.login_rounded, size: 16),
+                    icon: const Icon(PhosphorIconsRegular.signIn, size: 16),
                     label: const Text('Masuk / Buat Akun'),
                   ),
                 ),
@@ -121,7 +122,7 @@ class SettingsCloudSyncCard extends ConsumerWidget {
                 Expanded(
                   child: FilledButton.icon(
                     onPressed: () => context.go('/pending-verification'),
-                    icon: const Icon(Icons.shopping_bag_outlined, size: 16),
+                    icon: const Icon(PhosphorIconsRegular.bag, size: 16),
                     label: const Text('Beli / Aktivasi Lisensi'),
                   ),
                 ),
@@ -146,7 +147,7 @@ class SettingsCloudSyncCard extends ConsumerWidget {
                         );
                       }
                     },
-                    icon: const Icon(Icons.sync_rounded, size: 16),
+                    icon: const Icon(PhosphorIconsRegular.arrowsClockwise, size: 16),
                     label: const Text('Sinkronkan'),
                   ),
                 ),
@@ -158,7 +159,7 @@ class SettingsCloudSyncCard extends ConsumerWidget {
                       context.go('/login');
                     }
                   },
-                  icon: const Icon(Icons.logout_rounded, size: 16),
+                  icon: const Icon(PhosphorIconsRegular.signOut, size: 16),
                   label: const Text('Keluar'),
                 ),
               ] else ...[
@@ -174,14 +175,14 @@ class SettingsCloudSyncCard extends ConsumerWidget {
                         );
                       }
                     },
-                    icon: const Icon(Icons.sync_rounded, size: 16),
+                    icon: const Icon(PhosphorIconsRegular.arrowsClockwise, size: 16),
                     label: const Text('Sinkronkan'),
                   ),
                 ),
                 const SizedBox(width: 10),
                 FilledButton.tonalIcon(
                   onPressed: () => context.go('/login'),
-                  icon: const Icon(Icons.person_outline_rounded, size: 16),
+                  icon: const Icon(PhosphorIconsRegular.user, size: 16),
                   label: const Text('Masuk Akun'),
                 ),
               ],

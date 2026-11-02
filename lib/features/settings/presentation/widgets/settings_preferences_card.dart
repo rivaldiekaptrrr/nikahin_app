@@ -1,3 +1,4 @@
+import 'package:phosphor_icons/phosphor_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -71,7 +72,7 @@ class SettingsPreferencesCard extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
-                  Icons.palette_outlined,
+                  PhosphorIconsRegular.palette,
                   color: theme.colorScheme.primary,
                   size: 20,
                 ),
@@ -101,17 +102,17 @@ class SettingsPreferencesCard extends ConsumerWidget {
                 ButtonSegment(
                   value: ThemeMode.system,
                   label: Text('Sistem', style: TextStyle(fontSize: 12)),
-                  icon: Icon(Icons.brightness_auto_outlined, size: 16),
+                  icon: Icon(PhosphorIconsRegular.sunHorizon, size: 16),
                 ),
                 ButtonSegment(
                   value: ThemeMode.light,
                   label: Text('Terang', style: TextStyle(fontSize: 12)),
-                  icon: Icon(Icons.light_mode_outlined, size: 16),
+                  icon: Icon(PhosphorIconsRegular.sun, size: 16),
                 ),
                 ButtonSegment(
                   value: ThemeMode.dark,
                   label: Text('Gelap', style: TextStyle(fontSize: 12)),
-                  icon: Icon(Icons.dark_mode_outlined, size: 16),
+                  icon: Icon(PhosphorIconsRegular.moon, size: 16),
                 ),
               ],
               selected: {themeMode},
@@ -216,7 +217,7 @@ class SettingsPreferencesCard extends ConsumerWidget {
                                 duration: const Duration(milliseconds: 180),
                                 curve: Curves.easeOutBack,
                                 child: const Icon(
-                                  Icons.check_rounded,
+                                  PhosphorIconsRegular.check,
                                   size: 15,
                                   color: Colors.white,
                                 ),
@@ -254,7 +255,7 @@ class SettingsPreferencesCard extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
-                Icons.texture_rounded,
+                PhosphorIconsRegular.sparkle,
                 color: theme.colorScheme.primary,
                 size: 20,
               ),
@@ -285,7 +286,7 @@ class SettingsPreferencesCard extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
-                Icons.notifications_active_outlined,
+                PhosphorIconsRegular.bellRinging,
                 color: theme.colorScheme.primary,
                 size: 20,
               ),
@@ -319,7 +320,7 @@ class SettingsPreferencesCard extends ConsumerWidget {
                     child: Row(
                       children: [
                         Icon(
-                          Icons.schedule_rounded,
+                          PhosphorIconsRegular.clock,
                           size: 15,
                           color: theme.colorScheme.primary,
                         ),
@@ -349,7 +350,7 @@ class SettingsPreferencesCard extends ConsumerWidget {
                         ),
                         const Spacer(),
                         Icon(
-                          Icons.edit_outlined,
+                          PhosphorIconsRegular.pencilSimple,
                           size: 14,
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -366,7 +367,7 @@ class SettingsPreferencesCard extends ConsumerWidget {
                 alignment: Alignment.centerLeft,
                 child: TextButton.icon(
                   onPressed: onTestNotification,
-                  icon: const Icon(Icons.notifications_active_outlined, size: 15),
+                  icon: const Icon(PhosphorIconsRegular.bellRinging, size: 15),
                   label: const Text('Kirim Notifikasi Uji Coba', style: TextStyle(fontSize: 12)),
                   style: TextButton.styleFrom(
                     visualDensity: VisualDensity.compact,
@@ -389,7 +390,7 @@ class SettingsPreferencesCard extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
-                  Icons.fingerprint_rounded,
+                  PhosphorIconsRegular.fingerprint,
                   color: theme.colorScheme.primary,
                   size: 20,
                 ),

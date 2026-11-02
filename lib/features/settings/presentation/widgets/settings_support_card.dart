@@ -1,3 +1,4 @@
+import 'package:phosphor_icons/phosphor_icons.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -134,7 +135,7 @@ class SettingsSupportCard extends StatelessWidget {
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
-                                Icons.add_photo_alternate_outlined,
+                                PhosphorIconsRegular.image,
                                 color: theme.colorScheme.primary,
                                 size: 20,
                               ),
@@ -164,7 +165,7 @@ class SettingsSupportCard extends StatelessWidget {
                               ),
                             ),
                             Icon(
-                              Icons.chevron_right_rounded,
+                              PhosphorIconsRegular.caretRight,
                               color: theme.colorScheme.onSurfaceVariant,
                               size: 18,
                             ),
@@ -220,7 +221,7 @@ class SettingsSupportCard extends StatelessWidget {
                             ),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.close_rounded, size: 20),
+                            icon: const Icon(PhosphorIconsRegular.x, size: 20),
                             color: theme.colorScheme.error,
                             tooltip: 'Hapus Bukti',
                             onPressed: () => setModalState(() => selectedImage = null),
@@ -270,7 +271,7 @@ class SettingsSupportCard extends StatelessWidget {
                           }
                         }
                       },
-                      icon: const Icon(Icons.send_rounded, size: 16),
+                      icon: const Icon(PhosphorIconsRegular.paperPlaneTilt, size: 16),
                       label: const Text('Kirim ke Tim Support'),
                     ),
                   ),
@@ -419,7 +420,7 @@ class SettingsSupportCard extends StatelessWidget {
                 color: theme.colorScheme.primaryContainer,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(Icons.rate_review_outlined, color: theme.colorScheme.primary, size: 20),
+              child: Icon(PhosphorIconsRegular.chatCircleDots, color: theme.colorScheme.primary, size: 20),
             ),
             title: const Text(
               'Kirim Masukan',
@@ -429,7 +430,7 @@ class SettingsSupportCard extends StatelessWidget {
               'Laporkan masalah teknis',
               style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurfaceVariant),
             ),
-            trailing: Icon(Icons.chevron_right_rounded, color: theme.colorScheme.onSurfaceVariant, size: 20),
+            trailing: Icon(PhosphorIconsRegular.caretRight, color: theme.colorScheme.onSurfaceVariant, size: 20),
             onTap: () => _showFeedbackModal(context),
           ),
           Divider(height: 1, thickness: 1, color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4)),
@@ -443,7 +444,7 @@ class SettingsSupportCard extends StatelessWidget {
                 color: theme.colorScheme.tertiaryContainer,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(Icons.help_outline_rounded, color: theme.colorScheme.tertiary, size: 20),
+              child: Icon(PhosphorIconsRegular.question, color: theme.colorScheme.tertiary, size: 20),
             ),
             title: const Text(
               'Pertanyaan Umum (FAQ)',
@@ -453,7 +454,7 @@ class SettingsSupportCard extends StatelessWidget {
               'Panduan ringkas penggunaan & sinkronisasi data',
               style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurfaceVariant),
             ),
-            trailing: Icon(Icons.chevron_right_rounded, color: theme.colorScheme.onSurfaceVariant, size: 20),
+            trailing: Icon(PhosphorIconsRegular.caretRight, color: theme.colorScheme.onSurfaceVariant, size: 20),
             onTap: () => _showFaqModal(context),
           ),
         ],

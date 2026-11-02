@@ -1,3 +1,4 @@
+import 'package:phosphor_icons/phosphor_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -143,7 +144,7 @@ class SettingsUnifiedProfileCard extends ConsumerWidget {
                     Row(
                       children: [
                         Icon(
-                          Icons.event_outlined,
+                          PhosphorIconsRegular.calendar,
                           size: 13,
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -178,7 +179,7 @@ class SettingsUnifiedProfileCard extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                icon: const Icon(Icons.edit_rounded, size: 14),
+                icon: const Icon(PhosphorIconsRegular.pencilSimple, size: 14),
                 label: const Text(
                   'Ubah',
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
@@ -253,7 +254,7 @@ class SettingsUnifiedProfileCard extends ConsumerWidget {
                   ),
                   if (onStatusTap != null)
                     Icon(
-                      Icons.chevron_right_rounded,
+                      PhosphorIconsRegular.caretRight,
                       size: 18,
                       color: theme.colorScheme.onSurfaceVariant,
                     ),

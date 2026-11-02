@@ -1,3 +1,4 @@
+import 'package:phosphor_icons/phosphor_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../../shared/widgets/bento_card.dart';
@@ -62,7 +63,7 @@ class SettingsQuoteCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
-                Icons.format_quote_rounded,
+                PhosphorIconsRegular.quotes,
                 color: theme.colorScheme.primary,
                 size: 20,
               ),
@@ -169,7 +170,7 @@ class SettingsQuoteCard extends StatelessWidget {
                           children: [
                             Row(
                               children: [
-                                Icon(Icons.visibility_outlined, size: 14, color: theme.colorScheme.primary),
+                                Icon(PhosphorIconsRegular.eye, size: 14, color: theme.colorScheme.primary),
                                 const SizedBox(width: 6),
                                 Text(
                                   'Pratinjau Langsung (Live Preview)',

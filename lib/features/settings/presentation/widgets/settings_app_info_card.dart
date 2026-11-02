@@ -1,3 +1,4 @@
+import 'package:phosphor_icons/phosphor_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/config/platform_config.dart';
@@ -125,7 +126,7 @@ class _SettingsAppInfoCardState extends ConsumerState<SettingsAppInfoCard> {
               const SizedBox(height: 18),
               Row(
                 children: [
-                  Icon(Icons.stars_rounded, color: theme.colorScheme.primary, size: 22),
+                  Icon(PhosphorIconsFill.sparkle, color: theme.colorScheme.primary, size: 22),
                   const SizedBox(width: 8),
                   Text(
                     'Fitur Unggulan Nikahin',
@@ -145,42 +146,42 @@ class _SettingsAppInfoCardState extends ConsumerState<SettingsAppInfoCard> {
               const SizedBox(height: 18),
               _buildFeatureItem(
                 theme,
-                icon: Icons.account_balance_wallet_outlined,
+                icon: PhosphorIconsRegular.wallet,
                 title: 'Anggaran & Vendor',
                 desc: 'Catat pos pengeluaran, pantau DP hingga pelunasan, dan simpan kontak vendor.',
               ),
               const SizedBox(height: 12),
               _buildFeatureItem(
                 theme,
-                icon: Icons.event_note_outlined,
+                icon: PhosphorIconsRegular.calendarCheck,
                 title: 'Susunan Acara (Rundown)',
                 desc: 'Atur susunan acara akad serta resepsi lengkap dengan penanggung jawab di lapangan.',
               ),
               const SizedBox(height: 12),
               _buildFeatureItem(
                 theme,
-                icon: Icons.people_outline_rounded,
+                icon: PhosphorIconsRegular.users,
                 title: 'Buku Tamu & RSVP',
                 desc: 'Atur alokasi tamu per sesi (Akad atau Resepsi), kelompok pihak keluarga, dan konfirmasi kehadiran.',
               ),
               const SizedBox(height: 12),
               _buildFeatureItem(
                 theme,
-                icon: Icons.assignment_outlined,
+                icon: PhosphorIconsRegular.clipboardText,
                 title: 'Berkas Dokumen Nikah',
                 desc: 'Daftar kelengkapan berkas KUA atau Catatan Sipil dengan pengingat tenggat waktu.',
               ),
               const SizedBox(height: 12),
               _buildFeatureItem(
                 theme,
-                icon: Icons.card_giftcard_outlined,
+                icon: PhosphorIconsRegular.gift,
                 title: 'Seserahan & Panitia',
                 desc: 'Rincian hantaran mahar serta pembagian tugas dan seragam panitia keluarga.',
               ),
               const SizedBox(height: 12),
               _buildFeatureItem(
                 theme,
-                icon: Icons.print_outlined,
+                icon: PhosphorIconsRegular.printer,
                 title: 'Ekspor PDF & CSV',
                 desc: 'Cetak buku panduan pernikahan yang rapi dan siap dibagikan ke keluarga maupun WO.',
               ),
@@ -262,7 +263,7 @@ class _SettingsAppInfoCardState extends ConsumerState<SettingsAppInfoCard> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.cloud_done_rounded, size: 14, color: Color(0xFFAA771C)),
+                      const Icon(PhosphorIconsFill.cloudCheck, size: 14, color: Color(0xFFAA771C)),
                       const SizedBox(width: 5),
                       Text(
                         'Web PWA Aktif',
@@ -286,7 +287,7 @@ class _SettingsAppInfoCardState extends ConsumerState<SettingsAppInfoCard> {
               child: Row(
                 children: [
                   Icon(
-                    Icons.stars_rounded,
+                    PhosphorIconsFill.sparkle,
                     size: 18,
                     color: theme.colorScheme.primary,
                   ),
@@ -301,7 +302,7 @@ class _SettingsAppInfoCardState extends ConsumerState<SettingsAppInfoCard> {
                     ),
                   ),
                   Icon(
-                    Icons.chevron_right_rounded,
+                    PhosphorIconsRegular.caretRight,
                     size: 18,
                     color: theme.colorScheme.primary,
                   ),

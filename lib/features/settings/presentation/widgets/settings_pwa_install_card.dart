@@ -1,3 +1,4 @@
+import 'package:phosphor_icons/phosphor_icons.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,7 +37,7 @@ class _SettingsPwaInstallCardState extends State<SettingsPwaInstallCard> {
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
-                  Icons.install_mobile_rounded,
+                  PhosphorIconsRegular.deviceMobile,
                   color: Color(0xFFAA771C),
                   size: 22,
                 ),
@@ -97,7 +98,7 @@ class _SettingsPwaInstallCardState extends State<SettingsPwaInstallCard> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            Icons.apple_rounded,
+                            PhosphorIconsRegular.appleLogo,
                             size: 16,
                             color: _selectedPlatformIndex == 0
                                 ? theme.colorScheme.onSurface
@@ -147,7 +148,7 @@ class _SettingsPwaInstallCardState extends State<SettingsPwaInstallCard> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            Icons.android_rounded,
+                            PhosphorIconsRegular.androidLogo,
                             size: 16,
                             color: _selectedPlatformIndex == 1
                                 ? theme.colorScheme.onSurface
@@ -239,7 +240,7 @@ class _SettingsPwaInstallCardState extends State<SettingsPwaInstallCard> {
                 ),
               );
             },
-            icon: const Icon(Icons.link_rounded, size: 18),
+            icon: const Icon(PhosphorIconsRegular.link, size: 18),
             label: const Text('Salin Tautan Web Aplikasi'),
             style: OutlinedButton.styleFrom(
               minimumSize: const Size.fromHeight(40),

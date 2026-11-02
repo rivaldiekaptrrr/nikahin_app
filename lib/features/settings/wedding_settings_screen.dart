@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import '../../data/local/preferences_manager.dart';
 import '../../data/repositories/wedding_repository.dart';
 import '../../data/services/notification_service.dart';
@@ -113,12 +114,12 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
         actions: [
           if (ref.watch(authNotifierProvider).isAdmin)
             IconButton(
-              icon: const Icon(Icons.shield_rounded, color: Colors.amber),
+              icon: const Icon(PhosphorIconsFill.shield, color: Colors.amber),
               tooltip: 'Panel Super Admin',
               onPressed: () => context.push('/admin'),
             ),
           IconButton(
-            icon: const Icon(Icons.info_outline_rounded),
+            icon: const Icon(PhosphorIconsRegular.info),
             tooltip: 'Panduan Fitur',
             onPressed: () => _showSettingsGuide(context),
           ),
@@ -159,7 +160,7 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                 _buildSectionHeader(
                   context,
                   title: 'Sinkronisasi Pasangan',
-                  icon: Icons.favorite_rounded,
+                  icon: PhosphorIconsFill.heart,
                 ),
                 const SizedBox(height: 10),
                 CoupleConnectCard(profile: profile),
@@ -169,7 +170,7 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                 _buildSectionHeader(
                   context,
                   title: 'Kutipan Cinta di Dashboard',
-                  icon: Icons.format_quote_rounded,
+                  icon: PhosphorIconsRegular.quotes,
                 ),
                 const SizedBox(height: 10),
                 SettingsQuoteCard(
@@ -197,7 +198,7 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                 _buildSectionHeader(
                   context,
                   title: 'Tampilan & Keamanan',
-                  icon: Icons.tune_rounded,
+                  icon: PhosphorIconsRegular.sliders,
                 ),
                 const SizedBox(height: 10),
                 SettingsPreferencesCard(
@@ -256,7 +257,7 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                 _buildSectionHeader(
                   context,
                   title: 'Ekspor Data & Cadangan',
-                  icon: Icons.archive_outlined,
+                  icon: PhosphorIconsRegular.archive,
                 ),
                 const SizedBox(height: 10),
                 SettingsBackupCard(
@@ -275,7 +276,7 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                 _buildSectionHeader(
                   context,
                   title: 'Tentang Aplikasi',
-                  icon: Icons.info_outline_rounded,
+                  icon: PhosphorIconsRegular.info,
                 ),
                 const SizedBox(height: 10),
                 const SettingsAppInfoCard(),
@@ -285,7 +286,7 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                 _buildSectionHeader(
                   context,
                   title: 'Bantuan & Dukungan',
-                  icon: Icons.support_agent_rounded,
+                  icon: PhosphorIconsRegular.headset,
                 ),
                 const SizedBox(height: 10),
                 const SettingsSupportCard(),
@@ -295,7 +296,7 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                 _buildSectionHeader(
                   context,
                   title: 'Zona Berbahaya',
-                  icon: Icons.warning_amber_rounded,
+                  icon: PhosphorIconsRegular.warning,
                   color: theme.colorScheme.error,
                 ),
                 const SizedBox(height: 10),
@@ -320,7 +321,7 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                         borderRadius: BorderRadius.circular(14),
                       ),
                     ),
-                    icon: const Icon(Icons.logout_rounded, size: 18),
+                    icon: const Icon(PhosphorIconsRegular.signOut, size: 18),
                     label: Text(
                       ref.watch(authNotifierProvider).isDemoMode
                           ? 'Keluar dari Mode Demo'
@@ -376,7 +377,7 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
       builder: (ctx) => AlertDialog(
         title: Row(
           children: [
-            Icon(Icons.logout_rounded, color: Theme.of(ctx).colorScheme.error, size: 22),
+            Icon(PhosphorIconsRegular.signOut, color: Theme.of(ctx).colorScheme.error, size: 22),
             const SizedBox(width: 10),
             Text(isDemo ? 'Keluar Mode Demo' : 'Keluar Akun'),
           ],
@@ -474,7 +475,7 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                           children: [
                             Row(
                               children: [
-                                Icon(Icons.favorite_rounded, color: theme.colorScheme.primary, size: 22),
+                                Icon(PhosphorIconsFill.heart, color: theme.colorScheme.primary, size: 22),
                                 const SizedBox(width: 8),
                                 Text(
                                   'Ubah Data Pengantin',
@@ -485,7 +486,7 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                               ],
                             ),
                             IconButton(
-                              icon: const Icon(Icons.close_rounded),
+                              icon: const Icon(PhosphorIconsRegular.x),
                               onPressed: () => Navigator.pop(ctx),
                             ),
                           ],
@@ -623,7 +624,7 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
                               );
                             }
                           },
-                          icon: const Icon(Icons.check_circle_outline_rounded),
+                          icon: const Icon(PhosphorIconsRegular.checkCircle),
                           label: const Text('Simpan Perubahan'),
                         ),
                         const SizedBox(height: 20),
@@ -703,7 +704,7 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
       builder: (dialogCtx) => AlertDialog(
         title: const Row(
           children: [
-            Icon(Icons.restore_page_rounded, color: Colors.blue),
+            Icon(PhosphorIconsRegular.arrowCounterClockwise, color: Colors.blue),
             SizedBox(width: 8),
             Text('Pulihkan Cadangan'),
           ],
@@ -806,27 +807,27 @@ class _WeddingSettingsScreenState extends ConsumerState<WeddingSettingsScreen> {
         WeddingGuideFeature(
           title: 'Data Pengantin & Anggaran',
           description: 'Ubah nama pengantin, tanggal pernikahan, target anggaran, dan pilihan adat tradisi.',
-          icon: Icons.favorite_border_rounded,
+          icon: PhosphorIconsRegular.heart,
         ),
         WeddingGuideFeature(
           title: 'Sinkronisasi Pasangan',
           description: 'Hubungkan akun dengan pasangan menggunakan kode undangan agar bisa menyusun rencana bersama.',
-          icon: Icons.favorite_rounded,
+          icon: PhosphorIconsFill.heart,
         ),
         WeddingGuideFeature(
           title: 'Kutipan Cinta & Doa',
           description: 'Pilih kutipan romantis serta ukuran dan gaya huruf untuk kartu utama di beranda.',
-          icon: Icons.format_quote_rounded,
+          icon: PhosphorIconsRegular.quotes,
         ),
         WeddingGuideFeature(
           title: 'Ekspor Dokumen PDF & CSV',
           description: 'Cetak susunan rencana pernikahan ke berkas PDF atau ekspor daftar tamu ke tabel CSV.',
-          icon: Icons.ios_share_rounded,
+          icon: PhosphorIconsRegular.export,
         ),
         WeddingGuideFeature(
           title: 'Tema & Keamanan',
           description: 'Pilih tampilan terang atau gelap, nyalakan pengingat harian, serta amankan aplikasi dengan sidik jari.',
-          icon: Icons.tune_rounded,
+          icon: PhosphorIconsRegular.sliders,
         ),
       ],
       proTip: 'Gunakan tombol Ekspor PDF untuk membagikan susunan persiapan pernikahan ke pihak keluarga maupun wedding organizer!',

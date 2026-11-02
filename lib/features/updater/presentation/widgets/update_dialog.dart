@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import '../../domain/models/app_release_info.dart';
 import '../update_notifier.dart';
 
@@ -55,8 +56,8 @@ class UpdateDialog extends ConsumerWidget {
                       ),
                       child: Icon(
                         isReadyToInstall
-                            ? Icons.check_circle_rounded
-                            : Icons.rocket_launch_rounded,
+                            ? PhosphorIconsFill.checkCircle
+                            : PhosphorIconsFill.rocketLaunch,
                         color: theme.colorScheme.primary,
                         size: 26,
                       ),
@@ -95,7 +96,7 @@ class UpdateDialog extends ConsumerWidget {
                               ),
                               const SizedBox(width: 6),
                               Icon(
-                                Icons.arrow_forward_rounded,
+                                PhosphorIconsRegular.caretRight,
                                 size: 14,
                                 color: theme.colorScheme.outline,
                               ),
@@ -149,7 +150,7 @@ class UpdateDialog extends ConsumerWidget {
                     child: Row(
                       children: [
                         Icon(
-                          Icons.error_outline_rounded,
+                          PhosphorIconsRegular.warningCircle,
                           size: 18,
                           color: theme.colorScheme.error,
                         ),
@@ -190,7 +191,7 @@ class UpdateDialog extends ConsumerWidget {
                               .read(updateNotifierProvider.notifier)
                               .installExistingApk();
                         },
-                        icon: const Icon(Icons.install_mobile_rounded, size: 18),
+                        icon: const Icon(PhosphorIconsRegular.deviceMobile, size: 18),
                         label: const Text('Pasang Sekarang'),
                       )
                     else if (!isDownloading)
@@ -200,7 +201,7 @@ class UpdateDialog extends ConsumerWidget {
                               .read(updateNotifierProvider.notifier)
                               .startDownloadAndInstall(releaseInfo);
                         },
-                        icon: const Icon(Icons.download_rounded, size: 18),
+                        icon: const Icon(PhosphorIconsRegular.downloadSimple, size: 18),
                         label: const Text('Unduh Sekarang'),
                       ),
                   ],
@@ -358,7 +359,7 @@ class UpdateDialog extends ConsumerWidget {
       child: Row(
         children: [
           Icon(
-            Icons.verified_rounded,
+            PhosphorIconsFill.sealCheck,
             color: theme.colorScheme.primary,
             size: 32,
           ),

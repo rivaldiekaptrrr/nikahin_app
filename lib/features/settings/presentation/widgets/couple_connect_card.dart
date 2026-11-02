@@ -1,3 +1,4 @@
+import 'package:phosphor_icons/phosphor_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -166,7 +167,7 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
                           color: const Color(0xFFE11D48).withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: const Icon(Icons.favorite_rounded, color: Color(0xFFE11D48), size: 20),
+                        child: const Icon(PhosphorIconsFill.heart, color: Color(0xFFE11D48), size: 20),
                       ),
                       const SizedBox(width: 12),
                       const Expanded(
@@ -346,7 +347,7 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
                             height: 18,
                             child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                           )
-                        : const Icon(Icons.link_rounded, size: 20),
+                        : const Icon(PhosphorIconsRegular.link, size: 20),
                     label: Text(
                       _isClaimingCode ? 'Menghubungkan...' : 'Verifikasi & Hubungkan',
                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
@@ -376,7 +377,7 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
       builder: (ctx) => AlertDialog(
         title: Row(
           children: [
-            Icon(Icons.link_off_rounded, color: theme.colorScheme.error),
+            Icon(PhosphorIconsRegular.linkBreak, color: theme.colorScheme.error),
             const SizedBox(width: 8),
             Expanded(child: Text(dialogTitle)),
           ],
@@ -468,7 +469,7 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
                     color: const Color(0xFF059669).withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Icon(Icons.favorite_rounded, color: Color(0xFF059669), size: 20),
+                  child: const Icon(PhosphorIconsFill.heart, color: Color(0xFF059669), size: 20),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -513,7 +514,7 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.sync_rounded, size: 16, color: Color(0xFF059669)),
+                  const Icon(PhosphorIconsRegular.arrowsClockwise, size: 16, color: Color(0xFF059669)),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -535,7 +536,7 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
               ),
               icon: _isUnlinking
                   ? const SizedBox(width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2))
-                  : const Icon(Icons.link_off_rounded, size: 16),
+                  : const Icon(PhosphorIconsRegular.linkBreak, size: 16),
               label: Text(_isUnlinking ? 'Memutuskan...' : 'Putuskan Tautan Pasangan'),
             ),
           ],
@@ -557,7 +558,7 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
                   color: const Color(0xFFE11D48).withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.favorite_rounded, color: Color(0xFFE11D48), size: 20),
+                child: const Icon(PhosphorIconsFill.heart, color: Color(0xFFE11D48), size: 20),
               ),
               const SizedBox(width: 12),
               const Expanded(
@@ -609,7 +610,7 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
                       ),
                       const SizedBox(width: 8),
                       IconButton(
-                        icon: const Icon(Icons.copy_rounded, size: 18),
+                        icon: const Icon(PhosphorIconsRegular.copy, size: 18),
                         tooltip: 'Salin Kode',
                         onPressed: () {
                           final formatted = CouplePairingService.formatCodeForDisplay(_activePairingCode!.code);
@@ -661,7 +662,7 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
                       height: 16,
                       child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                     )
-                  : const Icon(Icons.qr_code_rounded, size: 18),
+                  : const Icon(PhosphorIconsRegular.qrCode, size: 18),
               label: Text(
                 _isGeneratingCode ? 'Membuat Kode...' : 'Buat Kode Undangan Pasangan',
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
@@ -676,7 +677,7 @@ class _CoupleConnectCardState extends ConsumerState<CoupleConnectCard> {
               minimumSize: const Size.fromHeight(42),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
-            icon: const Icon(Icons.input_rounded, size: 16),
+            icon: const Icon(PhosphorIconsRegular.signIn, size: 16),
             label: const Text(
               'Punya Kode Undangan Pasangan? Masukkan di sini',
               style: TextStyle(fontSize: 12.5),

@@ -1,3 +1,4 @@
+import 'package:phosphor_icons/phosphor_icons.dart';
 import 'package:flutter/material.dart';
 import '../../../../domain/models/wedding_models.dart';
 import '../../../../shared/widgets/bento_card.dart';
@@ -32,7 +33,7 @@ class SettingsBackupCard extends StatelessWidget {
                 color: Colors.red.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(Icons.picture_as_pdf_rounded, color: Colors.red, size: 22),
+              child: const Icon(PhosphorIconsRegular.filePdf, color: Colors.red, size: 22),
             ),
             title: const Text(
               'Ekspor Buku Panduan Nikah (PDF)',
@@ -42,7 +43,7 @@ class SettingsBackupCard extends StatelessWidget {
               'Rangkuman lengkap berisi anggaran, vendor, susunan acara, dan panitia',
               style: TextStyle(fontSize: 12),
             ),
-            trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
+            trailing: const Icon(PhosphorIconsRegular.caretRight, size: 14),
             onTap: onExportPdf,
           ),
           const Divider(),
@@ -54,7 +55,7 @@ class SettingsBackupCard extends StatelessWidget {
                 color: Colors.teal.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(Icons.table_chart_rounded, color: Colors.teal, size: 22),
+              child: const Icon(PhosphorIconsRegular.table, color: Colors.teal, size: 22),
             ),
             title: const Text(
               'Ekspor Daftar Tamu Undangan (CSV)',
@@ -64,7 +65,7 @@ class SettingsBackupCard extends StatelessWidget {
               'Format tabel Excel/Spreadsheet untuk meja penerima tamu',
               style: TextStyle(fontSize: 12),
             ),
-            trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
+            trailing: const Icon(PhosphorIconsRegular.caretRight, size: 14),
             onTap: onExportCsv,
           ),
           const Divider(),
@@ -76,7 +77,7 @@ class SettingsBackupCard extends StatelessWidget {
                 color: Colors.blue.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(Icons.backup_rounded, color: Colors.blue, size: 22),
+              child: const Icon(PhosphorIconsRegular.cloudArrowUp, color: Colors.blue, size: 22),
             ),
             title: const Text(
               'Cadangkan Data Lengkap (JSON Backup)',
@@ -86,7 +87,7 @@ class SettingsBackupCard extends StatelessWidget {
               'Simpan salinan seluruh rencana pernikahan ke berkas cadangan (.json)',
               style: TextStyle(fontSize: 12),
             ),
-            trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
+            trailing: const Icon(PhosphorIconsRegular.caretRight, size: 14),
             onTap: onExportJson,
           ),
           const Divider(),
@@ -98,7 +99,7 @@ class SettingsBackupCard extends StatelessWidget {
                 color: Colors.amber.shade800.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(Icons.restore_page_rounded, color: Colors.amber.shade800, size: 22),
+              child: Icon(PhosphorIconsRegular.arrowCounterClockwise, color: Colors.amber.shade800, size: 22),
             ),
             title: const Text(
               'Pulihkan Data (Restore Backup)',
@@ -108,7 +109,7 @@ class SettingsBackupCard extends StatelessWidget {
               'Pulihkan data pernikahan dari teks atau berkas cadangan sebelumnya',
               style: TextStyle(fontSize: 12),
             ),
-            trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
+            trailing: const Icon(PhosphorIconsRegular.caretRight, size: 14),
             onTap: onRestoreJson,
           ),
         ],

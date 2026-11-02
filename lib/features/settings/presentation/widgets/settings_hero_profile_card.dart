@@ -1,3 +1,4 @@
+import 'package:phosphor_icons/phosphor_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../../domain/models/wedding_models.dart';
@@ -97,7 +98,7 @@ class SettingsHeroProfileCard extends StatelessWidget {
                     Row(
                       children: [
                         Icon(
-                          Icons.calendar_today_rounded,
+                          PhosphorIconsRegular.calendar,
                           size: 13,
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -136,7 +137,7 @@ class SettingsHeroProfileCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      Icons.timer_outlined,
+                      PhosphorIconsRegular.timer,
                       size: 14,
                       color: theme.colorScheme.onPrimaryContainer,
                     ),
@@ -162,7 +163,7 @@ class SettingsHeroProfileCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        Icons.account_balance_outlined,
+                        PhosphorIconsRegular.bank,
                         size: 14,
                         color: theme.colorScheme.onSecondaryContainer,
                       ),
