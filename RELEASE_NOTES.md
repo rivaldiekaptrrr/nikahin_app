@@ -1,4 +1,4 @@
-• Desain Baru Layar Sambutan: Menghadirkan tampilan kartu cekung editorial yang proporsional, luas, dan anggun sebagai panggung utama informasi fitur unggulan.
-• Ilustrasi & Fotografi Terkurasi: Pembaruan visual pengantin dan foto pernikahan yang presisi, harmonis, dan selaras dengan identitas merek Nikahin.
-• Navigasi Ergonomis & Alur Baca Nyaman: Penataan alur baca vertikal yang ramah jempol satu tangan, indikator titik halaman yang terpusat seimbang, serta tombol aksi penuh yang mantap disentuh.
-• Narasi Bahasa Alami & Mengalir: Penyempurnaan seluruh salinan kalimat pengenalan fitur agar terdengar ramah, hangat, dan luwes menyapa calon mempelai.
+• Pembaruan Ikon Modern: Seluruh antarmuka aplikasi kini menggunakan keluarga Phosphor Icons yang proporsional, elegan, dan konsisten di setiap menu.
+• Kompatibilitas Flutter & Dart 3 Terbaru: Penyesuaian pustaka ikon agar optimal dan stabil pada pembaruan mesin Flutter generasi terbaru.
+• Penyempurnaan Tampilan Dasbor: Kartu ringkasan dokumen KUA dan komponen bento kini tampil lebih bersih dan nyaman dipandang.
+• Peningkatan Kestabilan Sistem: Menjaga kelancaran transisi layar dan efisiensi performa aplikasi saat digunakan merencanakan pernikahan.
