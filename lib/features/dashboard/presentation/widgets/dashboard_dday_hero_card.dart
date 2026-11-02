@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import '../../../../data/repositories/wedding_repository.dart';
 import '../../../../domain/models/wedding_models.dart';
 import '../../../../shared/utils/date_utils.dart';
@@ -202,8 +203,8 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
                   children: [
                     // Tombol Panah Kiri (<)
                     IconButton(
-                      icon: const Icon(Icons.chevron_left_rounded),
-                      iconSize: 24,
+                      icon: const Icon(PhosphorIconsRegular.caretLeft),
+                      iconSize: 20,
                       visualDensity: VisualDensity.compact,
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
@@ -250,8 +251,8 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
 
                     // Tombol Panah Kanan (>)
                     IconButton(
-                      icon: const Icon(Icons.chevron_right_rounded),
-                      iconSize: 24,
+                      icon: const Icon(PhosphorIconsRegular.caretRight),
+                      iconSize: 20,
                       visualDensity: VisualDensity.compact,
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
@@ -398,7 +399,7 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(
-              Icons.event_available_rounded,
+              PhosphorIconsRegular.calendarCheck,
               size: 16,
               color: Color(0xFFE07A5F),
             ),
@@ -532,7 +533,7 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
           Row(
             children: [
               Icon(
-                Icons.format_quote_rounded,
+                PhosphorIconsRegular.quotes,
                 size: 20,
                 color: accentColor,
               ),

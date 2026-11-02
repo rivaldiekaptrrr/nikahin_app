@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import '../../../../data/repositories/wedding_repository.dart';
 import '../../../../domain/models/wedding_models.dart';
 import '../../../../shared/widgets/bento_card.dart';
@@ -105,7 +106,7 @@ class _GuestSnapshotCard extends ConsumerWidget {
             : '$attending Hadir • $pending Menunggu';
 
         return _BentoSnapshotShell(
-          icon: Icons.people_alt_rounded,
+          icon: PhosphorIconsRegular.users,
           iconColor: const Color(0xFFD97706),
           iconBgColor: const Color(0xFFFEF3C7),
           title: 'Tamu & RSVP',
@@ -149,7 +150,7 @@ class _TaskSnapshotCard extends ConsumerWidget {
         final percentage = (progress * 100).round();
 
         return _BentoSnapshotShell(
-          icon: Icons.task_alt_rounded,
+          icon: PhosphorIconsRegular.checkCircle,
           iconColor: const Color(0xFF059669),
           iconBgColor: const Color(0xFFD1FAE5),
           title: 'Checklist Persiapan',
@@ -210,7 +211,7 @@ class _DocumentSnapshotCard extends ConsumerWidget {
             : (remaining == 0 ? 'Semua berkas beres' : 'Tinggal $remaining berkas lagi');
 
         return _BentoSnapshotShell(
-          icon: Icons.assignment_turned_in_rounded,
+          icon: PhosphorIconsRegular.fileText,
           iconColor: const Color(0xFF2563EB),
           iconBgColor: const Color(0xFFDBEAFE),
           title: 'Dokumen KUA',
@@ -291,7 +292,7 @@ class _VendorSnapshotCard extends ConsumerWidget {
         }
 
         return _BentoSnapshotShell(
-          icon: Icons.storefront_rounded,
+          icon: PhosphorIconsRegular.storefront,
           iconColor: const Color(0xFF9333EA),
           iconBgColor: const Color(0xFFF3E8FF),
           title: 'Vendor Pernikahan',
@@ -394,8 +395,8 @@ class _BentoSnapshotShell extends StatelessWidget {
                 ),
               ),
               Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 11,
+                PhosphorIconsRegular.caretRight,
+                size: 14,
                 color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
               ),
             ],

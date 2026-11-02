@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import '../../../../domain/models/wedding_models.dart';
 import '../../../../shared/utils/date_utils.dart';
 
@@ -233,8 +234,8 @@ class _DashboardDDayHeroCardOptionAState extends State<DashboardDDayHeroCardOpti
                           ),
                           child: Icon(
                             isAtWeddingDate
-                                ? Icons.calendar_month_rounded
-                                : Icons.restore_rounded,
+                                ? PhosphorIconsRegular.calendar
+                                : PhosphorIconsRegular.arrowCounterClockwise,
                             size: 20,
                             color: const Color(0xFFE07A5F),
                           ),
@@ -254,8 +255,8 @@ class _DashboardDDayHeroCardOptionAState extends State<DashboardDDayHeroCardOpti
               children: [
                 // Tombol Panah Kiri (<)
                 IconButton(
-                  icon: const Icon(Icons.chevron_left_rounded),
-                  iconSize: 24,
+                  icon: const Icon(PhosphorIconsRegular.caretLeft),
+                  iconSize: 20,
                   visualDensity: VisualDensity.compact,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
@@ -292,8 +293,8 @@ class _DashboardDDayHeroCardOptionAState extends State<DashboardDDayHeroCardOpti
 
                 // Tombol Panah Kanan (>)
                 IconButton(
-                  icon: const Icon(Icons.chevron_right_rounded),
-                  iconSize: 24,
+                  icon: const Icon(PhosphorIconsRegular.caretRight),
+                  iconSize: 20,
                   visualDensity: VisualDensity.compact,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
@@ -326,7 +327,7 @@ class _DashboardDDayHeroCardOptionAState extends State<DashboardDDayHeroCardOpti
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
-                    Icons.favorite_rounded,
+                    PhosphorIconsFill.heart,
                     size: 14,
                     color: theme.colorScheme.primary,
                   ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import '../../app/config/platform_config.dart';
 import '../../data/repositories/wedding_repository.dart';
 import '../../domain/models/wedding_models.dart';
@@ -131,11 +132,11 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.info_outline_rounded),
+            icon: const Icon(PhosphorIconsRegular.info),
             onPressed: () => _showGuideDialog(context),
           ),
           IconButton(
-            icon: const Icon(Icons.settings_outlined),
+            icon: const Icon(PhosphorIconsRegular.gear),
             onPressed: () => context.go('/wedding/${widget.profileId}/settings'),
           ),
         ],
@@ -185,7 +186,7 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
             context,
             theme,
             label: 'Catat\nPengeluaran',
-            icon: Icons.add_rounded,
+            icon: PhosphorIconsRegular.plus,
             isPrimary: true,
             onTap: () => context.go('/wedding/${widget.profileId}/budget'),
           ),
@@ -196,7 +197,7 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
             context,
             theme,
             label: 'Kelola\nTamu',
-            icon: Icons.people_rounded,
+            icon: PhosphorIconsRegular.users,
             isPrimary: false,
             onTap: () => context.go('/wedding/${widget.profileId}/guests'),
           ),
@@ -207,7 +208,7 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
             context,
             theme,
             label: 'Lihat\nSusunan Acara',
-            icon: Icons.event_note_rounded,
+            icon: PhosphorIconsRegular.calendarCheck,
             isPrimary: false,
             onTap: () => context.go('/wedding/${widget.profileId}/rundown'),
           ),
@@ -279,22 +280,22 @@ class _WeddingDashboardScreenState extends ConsumerState<WeddingDashboardScreen>
       screenPurpose: 'Pusat informasi utama untuk memantau ringkasan dan perkembangan persiapan pernikahanmu secara praktis.',
       features: const [
         WeddingGuideFeature(
-          icon: Icons.timer_rounded,
+          icon: PhosphorIconsRegular.timer,
           title: 'Hitung Mundur & Kalender',
           description: 'Melihat sisa hari menuju hari pernikahan bahagiamu dan mengecek agenda harian.',
         ),
         WeddingGuideFeature(
-          icon: Icons.format_quote_rounded,
+          icon: PhosphorIconsRegular.quotes,
           title: 'Pesan Cinta & Doa',
           description: 'Tampilkan kata mutiara romantis atau doa bersama yang bisa kamu ubah di menu pengaturan.',
         ),
         WeddingGuideFeature(
-          icon: Icons.account_balance_wallet_rounded,
+          icon: PhosphorIconsRegular.wallet,
           title: 'Kesehatan Anggaran',
           description: 'Pantau total pengeluaran, status lunas atau DP, dan sisa anggaran langsung dari beranda.',
         ),
         WeddingGuideFeature(
-          icon: Icons.dashboard_customize_rounded,
+          icon: PhosphorIconsRegular.squaresFour,
           title: 'Kilas Kesiapan Acara',
           description: 'Pantau tamu undangan, daftar tugas, berkas KUA, hingga vendor pernikahan dalam satu tampilan bento yang praktis.',
         ),

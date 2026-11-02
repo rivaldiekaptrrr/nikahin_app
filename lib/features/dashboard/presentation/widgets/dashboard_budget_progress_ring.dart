@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import '../../../../shared/utils/currency_utils.dart';
 
 /// Kartu Progres Anggaran & Cincin Visual Interaktif berstandar Appllama High-Fidelity.
@@ -80,7 +81,7 @@ class DashboardBudgetProgressRing extends StatelessWidget {
                       Row(
                         children: [
                           Icon(
-                            Icons.pie_chart_rounded,
+                            PhosphorIconsRegular.chartPie,
                             size: 20,
                             color: theme.colorScheme.primary,
                           ),
@@ -289,8 +290,8 @@ class DashboardBudgetProgressRing extends StatelessWidget {
                             children: [
                               Icon(
                                 isOverBudget
-                                    ? Icons.info_outline_rounded
-                                    : Icons.check_circle_outline_rounded,
+                                    ? PhosphorIconsRegular.info
+                                    : PhosphorIconsRegular.checkCircle,
                                 size: 15,
                                 color: isOverBudget
                                     ? const Color(0xFFDC2626)
