@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/repositories/wedding_repository.dart';
 import '../../domain/enums/wedding_enums.dart';
@@ -67,7 +68,7 @@ class _WeddingCommitteeScreenState extends ConsumerState<WeddingCommitteeScreen>
         title: const Text('Panitia & Seragam'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.info_outline_rounded),
+            icon: const Icon(PhosphorIconsRegular.info),
             tooltip: 'Panduan Fitur',
             onPressed: () => _showCommitteeGuide(context),
           ),
@@ -156,7 +157,7 @@ class _WeddingCommitteeScreenState extends ConsumerState<WeddingCommitteeScreen>
       floatingActionButton: _isModuleEnabled
           ? FloatingActionButton(
               onPressed: () => _showAddMemberDialog(context),
-              child: const Icon(Icons.person_add_alt_1_rounded),
+              child: const Icon(PhosphorIconsRegular.plus),
             )
           : null,
     );
@@ -177,7 +178,7 @@ class _WeddingCommitteeScreenState extends ConsumerState<WeddingCommitteeScreen>
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                Icons.checkroom_outlined,
+                PhosphorIconsRegular.coatHanger,
                 size: 52,
                 color: theme.colorScheme.primary,
               ),
@@ -204,7 +205,7 @@ class _WeddingCommitteeScreenState extends ConsumerState<WeddingCommitteeScreen>
             const SizedBox(height: 24),
             FilledButton.icon(
               onPressed: () => _setModuleEnabled(true),
-              icon: const Icon(Icons.toggle_on_outlined),
+              icon: const Icon(PhosphorIconsRegular.toggleRight),
               label: const Text('Aktifkan Modul Panitia'),
             ),
           ],
@@ -288,7 +289,7 @@ class _WeddingCommitteeScreenState extends ConsumerState<WeddingCommitteeScreen>
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
-                    Icons.person_rounded,
+                    PhosphorIconsRegular.user,
                     size: 20,
                     color: theme.colorScheme.primary,
                   ),
@@ -329,7 +330,7 @@ class _WeddingCommitteeScreenState extends ConsumerState<WeddingCommitteeScreen>
                 PopupMenuButton<String>(
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-                  icon: Icon(Icons.more_vert_rounded, size: 20, color: theme.colorScheme.outline),
+                  icon: Icon(PhosphorIconsRegular.dotsThreeVertical, size: 20, color: theme.colorScheme.outline),
                   onSelected: (action) {
                     if (action == 'edit') {
                       _showAddMemberDialog(context, memberToEdit: member);
@@ -463,7 +464,7 @@ class _WeddingCommitteeScreenState extends ConsumerState<WeddingCommitteeScreen>
                 color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.groups_outlined, size: 48, color: theme.colorScheme.primary),
+              child: Icon(PhosphorIconsRegular.users, size: 48, color: theme.colorScheme.primary),
             ),
             const SizedBox(height: 16),
             Text(
@@ -479,7 +480,7 @@ class _WeddingCommitteeScreenState extends ConsumerState<WeddingCommitteeScreen>
             const SizedBox(height: 18),
             FilledButton.tonalIcon(
               onPressed: () => _showAddMemberDialog(context),
-              icon: const Icon(Icons.person_add_rounded),
+              icon: const Icon(PhosphorIconsRegular.plus),
               label: const Text('Tambah Panitia Pertama'),
             ),
           ],
@@ -528,7 +529,7 @@ class _WeddingCommitteeScreenState extends ConsumerState<WeddingCommitteeScreen>
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.inventory_2_outlined, color: Colors.grey),
+              leading: const Icon(PhosphorIconsRegular.package, color: Colors.grey),
               title: const Text('Belum Dibagi'),
               onTap: () {
                 Navigator.pop(ctx);
@@ -536,7 +537,7 @@ class _WeddingCommitteeScreenState extends ConsumerState<WeddingCommitteeScreen>
               },
             ),
             ListTile(
-              leading: const Icon(Icons.cut_outlined, color: Colors.orange),
+              leading: const Icon(PhosphorIconsRegular.scissors, color: Colors.orange),
               title: const Text('Sedang Jahit'),
               onTap: () {
                 Navigator.pop(ctx);
@@ -544,7 +545,7 @@ class _WeddingCommitteeScreenState extends ConsumerState<WeddingCommitteeScreen>
               },
             ),
             ListTile(
-              leading: const Icon(Icons.check_circle_outline, color: Colors.green),
+              leading: const Icon(PhosphorIconsRegular.checkCircle, color: Colors.green),
               title: const Text('Siap Pakai'),
               onTap: () {
                 Navigator.pop(ctx);
@@ -567,22 +568,22 @@ class _WeddingCommitteeScreenState extends ConsumerState<WeddingCommitteeScreen>
         WeddingGuideFeature(
           title: 'Bisa Dinonaktifkan',
           description: 'Gunakan sakelar di sudut kanan atas jika kamu menyewa seragam atau tidak membentuk panitia mandiri.',
-          icon: Icons.toggle_on_outlined,
+          icon: PhosphorIconsRegular.toggleRight,
         ),
         WeddingGuideFeature(
           title: 'Pembagian Pihak & Peran',
           description: 'Kelompokkan panitia berdasarkan pihak keluarga mempelai pria, keluarga mempelai wanita, atau rekan dengan tugas yang jelas.',
-          icon: Icons.assignment_ind_outlined,
+          icon: PhosphorIconsRegular.userCheck,
         ),
         WeddingGuideFeature(
           title: 'Status Pembuatan Seragam',
           description: 'Pantau seragam dari status Belum Dibagi, Sedang Dijahit, hingga Siap Digunakan saat hari pernikahan.',
-          icon: Icons.checkroom_outlined,
+          icon: PhosphorIconsRegular.coatHanger,
         ),
         WeddingGuideFeature(
           title: 'Perhitungan Bahan Kain',
           description: 'Total kebutuhan meteran bahan dihitung otomatis untuk memudahkan perkiraan saat berbelanja di toko kain.',
-          icon: Icons.straighten_outlined,
+          icon: PhosphorIconsRegular.ruler,
         ),
       ],
       proTip: 'Ketuk kartu panitia untuk memperbarui status seragam dengan cepat.',

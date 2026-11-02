@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import '../../data/repositories/wedding_repository.dart';
 import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/date_utils.dart';
@@ -83,7 +84,7 @@ class _WeddingRundownScreenState extends ConsumerState<WeddingRundownScreen>
             title: const Text('Susunan Acara'),
             actions: [
               IconButton(
-                icon: const Icon(Icons.info_outline_rounded),
+                icon: const Icon(PhosphorIconsRegular.info),
                 tooltip: 'Panduan Fitur',
                 onPressed: () => _showRundownGuide(context),
               ),
@@ -122,7 +123,7 @@ class _WeddingRundownScreenState extends ConsumerState<WeddingRundownScreen>
                           ),
                           // Frameless web-style '+' icon button
                           IconButton(
-                            icon: const Icon(Icons.add_rounded, size: 22),
+                            icon: const Icon(PhosphorIconsRegular.plus, size: 22),
                             tooltip: 'Tambah Acara Baru',
                             splashRadius: 20,
                             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -149,7 +150,7 @@ class _WeddingRundownScreenState extends ConsumerState<WeddingRundownScreen>
                       _showAddRundownItemDialog(context, _events[currentEventIndex].eventId);
                     }
                   },
-                  child: const Icon(Icons.more_time_rounded),
+                  child: const Icon(PhosphorIconsRegular.plus),
                 )
               : null,
         );
@@ -193,7 +194,7 @@ class _WeddingRundownScreenState extends ConsumerState<WeddingRundownScreen>
                           color: theme.colorScheme.primary.withValues(alpha: 0.15),
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(Icons.event_available_rounded, color: theme.colorScheme.primary, size: 22),
+                        child: Icon(PhosphorIconsRegular.calendarCheck, color: theme.colorScheme.primary, size: 22),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -221,7 +222,7 @@ class _WeddingRundownScreenState extends ConsumerState<WeddingRundownScreen>
                       PopupMenuButton<String>(
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-                        icon: Icon(Icons.more_vert_rounded, size: 20, color: theme.colorScheme.outline),
+                        icon: Icon(PhosphorIconsRegular.dotsThreeVertical, size: 20, color: theme.colorScheme.outline),
                         onSelected: (action) {
                           if (action == 'edit') {
                             _showAddEventDialog(context, eventToEdit: event);
@@ -423,7 +424,7 @@ class _WeddingRundownScreenState extends ConsumerState<WeddingRundownScreen>
                         PopupMenuButton<String>(
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-                          icon: Icon(Icons.more_vert_rounded, size: 18, color: theme.colorScheme.outline),
+                          icon: Icon(PhosphorIconsRegular.dotsThreeVertical, size: 18, color: theme.colorScheme.outline),
                           onSelected: (action) {
                             if (action == 'edit') {
                               _showAddRundownItemDialog(context, item.eventId, itemToEdit: item);
@@ -470,7 +471,7 @@ class _WeddingRundownScreenState extends ConsumerState<WeddingRundownScreen>
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(
-                                  Icons.person_pin_circle_outlined,
+                                  PhosphorIconsRegular.userCheck,
                                   size: 13,
                                   color: theme.colorScheme.primary,
                                 ),
@@ -513,7 +514,7 @@ class _WeddingRundownScreenState extends ConsumerState<WeddingRundownScreen>
                 color: theme.colorScheme.primaryContainer.withValues(alpha: 0.4),
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.event_note_rounded, size: 52, color: theme.colorScheme.primary),
+              child: Icon(PhosphorIconsRegular.calendarPlus, size: 52, color: theme.colorScheme.primary),
             ),
             const SizedBox(height: 16),
             Text(
@@ -529,7 +530,7 @@ class _WeddingRundownScreenState extends ConsumerState<WeddingRundownScreen>
             const SizedBox(height: 20),
             FilledButton.icon(
               onPressed: () => _showAddEventDialog(context),
-              icon: const Icon(Icons.add_rounded),
+              icon: const Icon(PhosphorIconsRegular.plus),
               label: const Text('Buat Acara Baru'),
             ),
           ],
@@ -545,7 +546,7 @@ class _WeddingRundownScreenState extends ConsumerState<WeddingRundownScreen>
       child: Center(
         child: Column(
           children: [
-            Icon(Icons.schedule_outlined, size: 44, color: theme.colorScheme.outline),
+            Icon(PhosphorIconsRegular.clock, size: 44, color: theme.colorScheme.outline),
             const SizedBox(height: 12),
             const Text(
               'Belum Ada Susunan Rundown',
@@ -560,7 +561,7 @@ class _WeddingRundownScreenState extends ConsumerState<WeddingRundownScreen>
             const SizedBox(height: 16),
             FilledButton.tonalIcon(
               onPressed: () => _showAddRundownItemDialog(context, eventId),
-              icon: const Icon(Icons.add_alarm_rounded),
+              icon: const Icon(PhosphorIconsRegular.plus),
               label: const Text('Tambah Sesi Pertama'),
             ),
           ],
@@ -616,22 +617,22 @@ class _WeddingRundownScreenState extends ConsumerState<WeddingRundownScreen>
         WeddingGuideFeature(
           title: 'Rangkaian Acara Terpisah',
           description: 'Kelola jadwal terpisah antara Akad Nikah, Resepsi, Siraman, atau acara adat lainnya dalam bilah berbeda.',
-          icon: Icons.tab_rounded,
+          icon: PhosphorIconsRegular.tabs,
         ),
         WeddingGuideFeature(
           title: 'Urutan Waktu Terhubung',
           description: 'Pantau urutan waktu yang saling terhubung dari awal kedatangan hingga acara selesai.',
-          icon: Icons.timeline_rounded,
+          icon: PhosphorIconsRegular.clockAfternoon,
         ),
         WeddingGuideFeature(
           title: 'Narahubung & Penanggung Jawab',
           description: 'Tetapkan panitia atau anggota keluarga yang bertugas pada setiap mata acara agar koordinasi lapangan berjalan lancar.',
-          icon: Icons.person_pin_circle_outlined,
+          icon: PhosphorIconsRegular.userCheck,
         ),
         WeddingGuideFeature(
           title: 'Perhitungan Durasi Otomatis',
           description: 'Lama pelaksanaan dan jumlah rangkaian mata acara terhitung otomatis pada ringkasan di atas.',
-          icon: Icons.timer_outlined,
+          icon: PhosphorIconsRegular.timer,
         ),
       ],
       proTip: 'Susunan acara ini bisa langsung kamu ekspor menjadi dokumen panduan PDF di menu Pengaturan.',
@@ -859,7 +860,7 @@ class _AddRundownItemBottomSheetState extends ConsumerState<_AddRundownItemBotto
                         ),
                         child: Row(
                           children: [
-                            Icon(Icons.schedule_rounded, color: theme.colorScheme.primary, size: 20),
+                            Icon(PhosphorIconsRegular.clock, color: theme.colorScheme.primary, size: 20),
                             const SizedBox(width: 8),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

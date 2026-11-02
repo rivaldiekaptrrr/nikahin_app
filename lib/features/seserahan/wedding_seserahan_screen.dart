@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../data/repositories/wedding_repository.dart';
 import '../../domain/enums/wedding_enums.dart';
@@ -160,7 +161,7 @@ class _WeddingSeserahanScreenState extends ConsumerState<WeddingSeserahanScreen>
         title: const Text('Seserahan & Mahar'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.info_outline_rounded),
+            icon: const Icon(PhosphorIconsRegular.info),
             onPressed: () => _showSeserahanGuide(context),
           ),
         ],
@@ -232,7 +233,7 @@ class _WeddingSeserahanScreenState extends ConsumerState<WeddingSeserahanScreen>
           if (_tabController.index == 2) direction = 'MAHAR';
           _showAddItemDialog(context, initialDirection: direction);
         },
-        child: const Icon(Icons.add_shopping_cart_rounded),
+        child: const Icon(PhosphorIconsRegular.plus),
       ),
     );
   }
@@ -383,7 +384,7 @@ class _WeddingSeserahanScreenState extends ConsumerState<WeddingSeserahanScreen>
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
-                    item.direction == 'MAHAR' ? Icons.diamond_outlined : Icons.card_giftcard_rounded,
+                    item.direction == 'MAHAR' ? PhosphorIconsRegular.diamond : PhosphorIconsRegular.gift,
                     size: 20,
                     color: theme.colorScheme.primary,
                   ),
@@ -422,7 +423,7 @@ class _WeddingSeserahanScreenState extends ConsumerState<WeddingSeserahanScreen>
                 PopupMenuButton<String>(
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-                  icon: Icon(Icons.more_vert_rounded, size: 20, color: theme.colorScheme.outline),
+                  icon: Icon(PhosphorIconsRegular.dotsThreeVertical, size: 20, color: theme.colorScheme.outline),
                   onSelected: (action) {
                     if (action == 'edit') {
                       _showAddItemDialog(context, itemToEdit: item);
@@ -511,7 +512,7 @@ class _WeddingSeserahanScreenState extends ConsumerState<WeddingSeserahanScreen>
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(
-                                  Icons.link_rounded,
+                                  PhosphorIconsRegular.link,
                                   size: 15,
                                   color: theme.colorScheme.primary,
                                 ),
@@ -557,7 +558,7 @@ class _WeddingSeserahanScreenState extends ConsumerState<WeddingSeserahanScreen>
                 color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.card_giftcard_outlined, size: 48, color: theme.colorScheme.primary),
+              child: Icon(PhosphorIconsRegular.gift, size: 48, color: theme.colorScheme.primary),
             ),
             const SizedBox(height: 16),
             Text(
@@ -573,7 +574,7 @@ class _WeddingSeserahanScreenState extends ConsumerState<WeddingSeserahanScreen>
             const SizedBox(height: 18),
             FilledButton.tonalIcon(
               onPressed: () => _showAddItemDialog(context, initialDirection: direction),
-              icon: const Icon(Icons.add_shopping_cart_rounded),
+              icon: const Icon(PhosphorIconsRegular.plus),
               label: const Text('Tambah Barang Pertama'),
             ),
           ],
@@ -623,7 +624,7 @@ class _WeddingSeserahanScreenState extends ConsumerState<WeddingSeserahanScreen>
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.radio_button_unchecked, color: Colors.grey),
+              leading: const Icon(PhosphorIconsRegular.circle, color: Colors.grey),
               title: const Text('Belum Beli'),
               onTap: () {
                 Navigator.pop(ctx);
@@ -631,7 +632,7 @@ class _WeddingSeserahanScreenState extends ConsumerState<WeddingSeserahanScreen>
               },
             ),
             ListTile(
-              leading: const Icon(Icons.shopping_bag_outlined, color: Colors.purple),
+              leading: const Icon(PhosphorIconsRegular.shoppingBag, color: Colors.purple),
               title: const Text('Sudah Dibeli'),
               onTap: () {
                 Navigator.pop(ctx);
@@ -639,7 +640,7 @@ class _WeddingSeserahanScreenState extends ConsumerState<WeddingSeserahanScreen>
               },
             ),
             ListTile(
-              leading: const Icon(Icons.card_giftcard, color: Colors.orange),
+              leading: const Icon(PhosphorIconsRegular.gift, color: Colors.orange),
               title: const Text('Sedang Dihias'),
               onTap: () {
                 Navigator.pop(ctx);
@@ -647,7 +648,7 @@ class _WeddingSeserahanScreenState extends ConsumerState<WeddingSeserahanScreen>
               },
             ),
             ListTile(
-              leading: const Icon(Icons.check_circle_outline, color: Colors.green),
+              leading: const Icon(PhosphorIconsRegular.checkCircle, color: Colors.green),
               title: const Text('Siap'),
               onTap: () {
                 Navigator.pop(ctx);
@@ -670,22 +671,22 @@ class _WeddingSeserahanScreenState extends ConsumerState<WeddingSeserahanScreen>
         WeddingGuideFeature(
           title: 'Tiga Kategori Terpisah',
           description: 'Pemisahan jelas antara barang seserahan pria, balasan wanita, dan mahar perkawinan.',
-          icon: Icons.tab_rounded,
+          icon: PhosphorIconsRegular.tabs,
         ),
         WeddingGuideFeature(
           title: 'Tautan Belanja Online',
           description: 'Simpan tautan produk toko daring untuk mempermudah pembelian dan pengecekan rincian barang.',
-          icon: Icons.link_rounded,
+          icon: PhosphorIconsRegular.link,
         ),
         WeddingGuideFeature(
           title: 'Status Kesiapan',
           description: 'Pantau barang dari status Belum Beli, Sudah Dibeli, Sedang Dihias, hingga Siap untuk hari pernikahan.',
-          icon: Icons.check_circle_outline_rounded,
+          icon: PhosphorIconsRegular.checkCircle,
         ),
         WeddingGuideFeature(
           title: 'Perhitungan Total Biaya',
           description: 'Perkiraan biaya dan persentase kesiapan barang terhitung langsung di setiap kategori.',
-          icon: Icons.auto_graph_rounded,
+          icon: PhosphorIconsRegular.chartLineUp,
         ),
       ],
       proTip: 'Ketuk kartu barang untuk memperbarui status kesiapannya secara cepat.',
@@ -857,7 +858,7 @@ class _AddSeserahanBottomSheetState extends ConsumerState<_AddSeserahanBottomShe
                 decoration: const InputDecoration(
                   labelText: 'Link Produk (Opsional)',
                   hintText: 'Cth: https://tk.tokopedia.com/...',
-                  prefixIcon: Icon(Icons.link_rounded),
+                  prefixIcon: Icon(PhosphorIconsRegular.link),
                 ),
                 keyboardType: TextInputType.url,
                 validator: (v) => ValidationUtils.validateUrl(v, isRequired: false),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../data/repositories/wedding_repository.dart';
 import '../../domain/enums/wedding_enums.dart';
@@ -39,7 +40,7 @@ class _WeddingVendorScreenState extends ConsumerState<WeddingVendorScreen> {
         title: const Text('Vendor Pernikahan'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.info_outline_rounded),
+            icon: const Icon(PhosphorIconsRegular.info),
             onPressed: () => _showVendorGuide(context),
           ),
         ],
@@ -88,7 +89,7 @@ class _WeddingVendorScreenState extends ConsumerState<WeddingVendorScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddVendorDialog(context),
         tooltip: 'Tambah Vendor',
-        child: const Icon(Icons.add_business_rounded),
+        child: const Icon(PhosphorIconsRegular.plus),
       ),
     );
   }
@@ -301,7 +302,7 @@ class _WeddingVendorScreenState extends ConsumerState<WeddingVendorScreen> {
                       IconButton.filledTonal(
                         constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
                         padding: EdgeInsets.zero,
-                        icon: const Icon(Icons.phone_rounded, size: 18),
+                        icon: const Icon(PhosphorIconsRegular.phone, size: 18),
                         tooltip: 'Telepon',
                         onPressed: () => _launchCaller(vendor.phoneNumber!),
                       ),
@@ -309,7 +310,7 @@ class _WeddingVendorScreenState extends ConsumerState<WeddingVendorScreen> {
                       IconButton.filledTonal(
                         constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
                         padding: EdgeInsets.zero,
-                        icon: const Icon(Icons.chat_bubble_outline_rounded, size: 18),
+                        icon: const Icon(PhosphorIconsRegular.whatsappLogo, size: 18),
                         tooltip: 'Chat WhatsApp',
                         onPressed: () => _launchWhatsApp(vendor.phoneNumber!),
                       ),
@@ -318,7 +319,7 @@ class _WeddingVendorScreenState extends ConsumerState<WeddingVendorScreen> {
                     IconButton(
                       constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
                       padding: EdgeInsets.zero,
-                      icon: const Icon(Icons.more_vert_rounded, size: 20),
+                      icon: const Icon(PhosphorIconsRegular.dotsThreeVertical, size: 20),
                       onPressed: () => _showVendorOptions(context, vendor),
                     ),
                   ],
@@ -394,7 +395,7 @@ class _WeddingVendorScreenState extends ConsumerState<WeddingVendorScreen> {
                 color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.storefront_outlined, size: 48, color: theme.colorScheme.primary),
+              child: Icon(PhosphorIconsRegular.storefront, size: 48, color: theme.colorScheme.primary),
             ),
             const SizedBox(height: 16),
             Text(
@@ -410,7 +411,7 @@ class _WeddingVendorScreenState extends ConsumerState<WeddingVendorScreen> {
             const SizedBox(height: 18),
             FilledButton.tonalIcon(
               onPressed: () => _showAddVendorDialog(context),
-              icon: const Icon(Icons.add_rounded),
+              icon: const Icon(PhosphorIconsRegular.plus),
               label: const Text('Tambah Vendor Pertama'),
             ),
           ],
@@ -427,7 +428,7 @@ class _WeddingVendorScreenState extends ConsumerState<WeddingVendorScreen> {
         child: Wrap(
           children: [
             ListTile(
-              leading: const Icon(Icons.edit_outlined),
+              leading: const Icon(PhosphorIconsRegular.pencilSimple),
               title: const Text('Edit Vendor'),
               onTap: () {
                 Navigator.pop(ctx);
@@ -435,7 +436,7 @@ class _WeddingVendorScreenState extends ConsumerState<WeddingVendorScreen> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.delete_outline_rounded, color: Colors.red),
+              leading: const Icon(PhosphorIconsRegular.trash, color: Colors.red),
               title: const Text('Hapus Vendor', style: TextStyle(color: Colors.red)),
               onTap: () {
                 Navigator.pop(ctx);
@@ -624,22 +625,22 @@ class _WeddingVendorScreenState extends ConsumerState<WeddingVendorScreen> {
         WeddingGuideFeature(
           title: 'Pantau Tahapan & Kontrak',
           description: 'Lacak tahap kerja sama: mulai dari survei atau riset, tanda jadi, kontrak aktif, hingga selesai.',
-          icon: Icons.assignment_turned_in_outlined,
+          icon: PhosphorIconsRegular.checkSquareOffset,
         ),
         WeddingGuideFeature(
           title: 'Narahubung Cepat (WhatsApp & Telepon)',
           description: 'Hubungi narahubung vendor langsung via WhatsApp atau panggilan telepon sekali ketuk.',
-          icon: Icons.chat_bubble_outline_rounded,
+          icon: PhosphorIconsRegular.chatCircleDots,
         ),
         WeddingGuideFeature(
           title: 'Kategori Vendor Lengkap',
           description: 'Saring vendor berdasarkan kebutuhan: Gedung, Katering, Foto & Video, Dekorasi, Tata Rias & Busana, dan lainnya.',
-          icon: Icons.category_outlined,
+          icon: PhosphorIconsRegular.squaresFour,
         ),
         WeddingGuideFeature(
           title: 'Total Komitmen Biaya',
           description: 'Pantau jumlah keseluruhan biaya dari semua vendor yang telah disepakati secara langsung.',
-          icon: Icons.account_balance_wallet_outlined,
+          icon: PhosphorIconsRegular.wallet,
         ),
       ],
       proTip: 'Catat nomor kontak cadangan dan rincian paket di catatan vendor agar mudah dihubungi saat hari H.',

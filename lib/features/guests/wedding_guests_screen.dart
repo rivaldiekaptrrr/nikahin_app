@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import '../../app/config/platform_config.dart';
 import '../../data/repositories/wedding_repository.dart';
 import '../../domain/enums/wedding_enums.dart';
@@ -90,25 +91,25 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
         titleSpacing: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.share_outlined),
+            icon: const Icon(PhosphorIconsRegular.shareNetwork),
             tooltip: 'Ekspor Dokumen CSV',
             onPressed: () => _exportCsv(context, ref),
           ),
           IconButton(
-            icon: const Icon(Icons.contacts_outlined),
+            icon: const Icon(PhosphorIconsRegular.addressBook),
             tooltip: 'Impor dari Kontak',
             onPressed: () => _importContacts(context, ref),
           ),
           IconButton(
-            icon: const Icon(Icons.info_outline_rounded),
+            icon: const Icon(PhosphorIconsRegular.info),
             onPressed: () => _showGuestsGuide(context),
           ),
         ],
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(icon: Icon(Icons.people_alt_outlined), text: 'Daftar Tamu'),
-            Tab(icon: Icon(Icons.restaurant_menu_outlined), text: 'Kalkulator Katering'),
+            Tab(icon: Icon(PhosphorIconsRegular.users), text: 'Daftar Tamu'),
+            Tab(icon: Icon(PhosphorIconsRegular.forkKnife), text: 'Kalkulator Katering'),
           ],
         ),
       ),
@@ -143,7 +144,7 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
       floatingActionButton: _tabController.index == 0
           ? FloatingActionButton(
               onPressed: () => _showAddGuestDialog(context),
-              child: const Icon(Icons.person_add_rounded),
+              child: const Icon(PhosphorIconsRegular.plus),
             )
           : null,
     );
@@ -205,7 +206,7 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
                 buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: InputDecoration(
                   hintText: 'Cari nama tamu...',
-                  prefixIcon: const Icon(Icons.search_rounded),
+                  prefixIcon: const Icon(PhosphorIconsRegular.magnifyingGlass),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   filled: true,
                   fillColor: theme.colorScheme.surface,
@@ -233,7 +234,7 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
                 icon: Badge(
                   isLabelVisible: _hasActiveFilters,
                   child: Icon(
-                    Icons.tune_rounded,
+                    PhosphorIconsRegular.faders,
                     color: _hasActiveFilters
                         ? theme.colorScheme.onPrimaryContainer
                         : theme.colorScheme.onSurfaceVariant,
@@ -372,7 +373,7 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
                 color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.people_outline_rounded, size: 48, color: theme.colorScheme.primary),
+              child: Icon(PhosphorIconsRegular.users, size: 48, color: theme.colorScheme.primary),
             ),
             const SizedBox(height: 16),
             Text(
@@ -393,12 +394,12 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
               children: [
                 FilledButton.icon(
                   onPressed: () => _showAddGuestDialog(context),
-                  icon: const Icon(Icons.person_add_rounded, size: 18),
+                  icon: const Icon(PhosphorIconsRegular.plus, size: 18),
                   label: const Text('Tambah Tamu'),
                 ),
                 FilledButton.tonalIcon(
                   onPressed: () => _importContacts(context, ref),
-                  icon: const Icon(Icons.contacts_rounded, size: 18),
+                  icon: const Icon(PhosphorIconsRegular.addressBook, size: 18),
                   label: const Text('Import Kontak'),
                 ),
               ],
@@ -455,7 +456,7 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
                 buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                 decoration: const InputDecoration(
                   labelText: 'Estimasi Jumlah Undangan Resepsi (Pax)',
-                  prefixIcon: Icon(Icons.group_outlined),
+                  prefixIcon: Icon(PhosphorIconsRegular.users),
                 ),
                 onChanged: (val) {
                   setState(() => _resepsiPax = int.tryParse(val) ?? 0);
@@ -502,7 +503,7 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
             children: [
               Row(
                 children: [
-                  Icon(Icons.restaurant_rounded, color: theme.colorScheme.primary),
+                  Icon(PhosphorIconsRegular.forkKnife, color: theme.colorScheme.primary),
                   const SizedBox(width: 8),
                   Text(
                     'Rekomendasi Pesanan Katering',
@@ -621,7 +622,7 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.check_circle_outline, color: Colors.green),
+              leading: const Icon(PhosphorIconsRegular.checkCircle, color: Colors.green),
               title: const Text('Hadir'),
               onTap: () {
                 Navigator.pop(ctx);
@@ -629,7 +630,7 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
               },
             ),
             ListTile(
-              leading: const Icon(Icons.help_outline, color: Colors.orange),
+              leading: const Icon(PhosphorIconsRegular.question, color: Colors.orange),
               title: const Text('Menunggu Konfirmasi'),
               onTap: () {
                 Navigator.pop(ctx);
@@ -637,7 +638,7 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
               },
             ),
             ListTile(
-              leading: const Icon(Icons.cancel_outlined, color: Colors.red),
+              leading: const Icon(PhosphorIconsRegular.xCircle, color: Colors.red),
               title: const Text('Tidak Hadir'),
               onTap: () {
                 Navigator.pop(ctx);
@@ -716,7 +717,7 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
                 contentPadding: EdgeInsets.zero,
                 leading: CircleAvatar(
                   backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                  child: Icon(Icons.contact_phone_rounded, color: Theme.of(context).colorScheme.primary),
+                  child: Icon(PhosphorIconsRegular.addressBook, color: Theme.of(context).colorScheme.primary),
                 ),
                 title: const Text('Buka Kontak HP', style: TextStyle(fontWeight: FontWeight.w600)),
                 subtitle: const Text('Pilih langsung dari daftar kontak di HP Anda'),
@@ -730,7 +731,7 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
                 contentPadding: EdgeInsets.zero,
                 leading: CircleAvatar(
                   backgroundColor: Colors.blue.withAlpha(30),
-                  child: const Icon(Icons.checklist_rounded, color: Colors.blue),
+                  child: const Icon(PhosphorIconsRegular.checkSquareOffset, color: Colors.blue),
                 ),
                 title: const Text('Pilih Sekaligus', style: TextStyle(fontWeight: FontWeight.w600)),
                 subtitle: const Text('Tampilkan daftar kontak dan centang beberapa sekaligus'),
@@ -890,17 +891,17 @@ class _WeddingGuestsScreenState extends ConsumerState<WeddingGuestsScreen>
           'Catat daftar undangan, pantau konfirmasi kehadiran (RSVP), dan perkirakan kebutuhan porsi katering agar jamuan hari bahagiamu pas serta nyaman bagi para tamu.',
       features: const [
         WeddingGuideFeature(
-          icon: Icons.groups_rounded,
+          icon: PhosphorIconsRegular.users,
           title: 'Kelompok & Jumlah Hadir (Pax)',
           description: 'Bagi tamu berdasarkan Keluarga Mempelai Pria/Wanita, Rekan, atau Tamu Khusus (VIP) beserta jumlah hadir per undangan.',
         ),
         WeddingGuideFeature(
-          icon: Icons.how_to_reg_rounded,
+          icon: PhosphorIconsRegular.userCheck,
           title: 'Konfirmasi Kehadiran (RSVP)',
           description: 'Ketuk nama tamu untuk memperbarui status konfirmasi (Hadir, Menunggu, atau Tidak Hadir).',
         ),
         WeddingGuideFeature(
-          icon: Icons.restaurant_menu_rounded,
+          icon: PhosphorIconsRegular.forkKnife,
           title: 'Kalkulator Katering',
           description: 'Hitung otomatis kebutuhan porsi prasmanan dan gubukan berdasarkan jumlah tamu dengan cadangan aman.',
         ),
@@ -1353,7 +1354,7 @@ class _BatchContactPickerDialogState
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.people_alt_rounded, color: primaryColor, size: 24),
+                          Icon(PhosphorIconsRegular.users, color: primaryColor, size: 24),
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
@@ -1365,7 +1366,7 @@ class _BatchContactPickerDialogState
                             ),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.close_rounded),
+                            icon: const Icon(PhosphorIconsRegular.x),
                             onPressed: () => Navigator.pop(context),
                             tooltip: 'Tutup',
                           ),
@@ -1381,10 +1382,10 @@ class _BatchContactPickerDialogState
                         decoration: InputDecoration(
                           hintText: 'Cari nama atau nomor HP...',
                           hintStyle: TextStyle(fontSize: 13, color: Colors.grey[500]),
-                          prefixIcon: const Icon(Icons.search_rounded, size: 20),
+                          prefixIcon: const Icon(PhosphorIconsRegular.magnifyingGlass, size: 20),
                           suffixIcon: _searchController.text.isNotEmpty
                               ? IconButton(
-                                  icon: const Icon(Icons.clear_rounded, size: 18),
+                                  icon: const Icon(PhosphorIconsRegular.x, size: 18),
                                   onPressed: () => _searchController.clear(),
                                 )
                               : null,
@@ -1414,8 +1415,8 @@ class _BatchContactPickerDialogState
                             onPressed: _filteredItems.isEmpty ? null : _toggleSelectAll,
                             icon: Icon(
                               isAllFilteredSelected
-                                  ? Icons.deselect_rounded
-                                  : Icons.select_all_rounded,
+                                  ? PhosphorIconsRegular.checkSquareOffset
+                                  : PhosphorIconsRegular.square,
                               size: 16,
                             ),
                             label: Text(
@@ -1437,7 +1438,7 @@ class _BatchContactPickerDialogState
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.search_off_rounded, size: 48, color: Colors.grey[400]),
+                              Icon(PhosphorIconsRegular.magnifyingGlass, size: 48, color: Colors.grey[400]),
                               const SizedBox(height: 8),
                               Text(
                                 'Kontak tidak ditemukan',
@@ -1589,7 +1590,7 @@ class _BatchContactPickerDialogState
                                 height: 16,
                                 child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                               )
-                            : const Icon(Icons.download_rounded, size: 18),
+                            : const Icon(PhosphorIconsRegular.downloadSimple, size: 18),
                         label: Text(_isImporting
                             ? 'Mengimpor...'
                             : 'Import (${_selectedKeys.length})'),

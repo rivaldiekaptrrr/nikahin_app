@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../domain/enums/wedding_enums.dart';
 import '../../../../domain/models/wedding_models.dart';
@@ -120,7 +121,7 @@ class GuestListItemCard extends StatelessWidget {
           child: Row(
             children: [
               Icon(
-                isAttending ? Icons.replay_rounded : Icons.check_circle_rounded,
+                isAttending ? PhosphorIconsRegular.arrowClockwise : PhosphorIconsRegular.checkCircle,
                 color: Colors.white,
                 size: 24,
               ),
@@ -147,7 +148,7 @@ class GuestListItemCard extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
               SizedBox(width: 8),
-              Icon(Icons.chat_bubble_rounded, color: Colors.white, size: 22),
+              Icon(PhosphorIconsRegular.whatsappLogo, color: Colors.white, size: 22),
             ],
           ),
         ),
@@ -170,7 +171,7 @@ class GuestListItemCard extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  isVip ? Icons.star_rounded : Icons.person_rounded,
+                  isVip ? PhosphorIconsFill.star : PhosphorIconsRegular.user,
                   size: 20,
                   color: isVip ? const Color(0xFFD97706) : theme.colorScheme.primary,
                 ),
@@ -262,7 +263,7 @@ class GuestListItemCard extends StatelessWidget {
 
               // Popup Menu
               PopupMenuButton<String>(
-                icon: Icon(Icons.more_vert_rounded, size: 18, color: theme.colorScheme.outline),
+                icon: Icon(PhosphorIconsRegular.dotsThreeVertical, size: 18, color: theme.colorScheme.outline),
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
                 onSelected: (action) {
@@ -279,7 +280,7 @@ class GuestListItemCard extends StatelessWidget {
                     value: 'wa',
                     child: Row(
                       children: [
-                        Icon(Icons.chat_bubble_outline_rounded, size: 16, color: Color(0xFF25D366)),
+                        Icon(PhosphorIconsRegular.whatsappLogo, size: 16, color: Color(0xFF25D366)),
                         SizedBox(width: 8),
                         Text('Kirim WhatsApp'),
                       ],
@@ -289,7 +290,7 @@ class GuestListItemCard extends StatelessWidget {
                     value: 'edit',
                     child: Row(
                       children: [
-                        Icon(Icons.edit_outlined, size: 16),
+                        Icon(PhosphorIconsRegular.pencilSimple, size: 16),
                         SizedBox(width: 8),
                         Text('Edit Data'),
                       ],
@@ -299,7 +300,7 @@ class GuestListItemCard extends StatelessWidget {
                     value: 'delete',
                     child: Row(
                       children: [
-                        Icon(Icons.delete_outline_rounded, size: 16, color: Colors.red),
+                        Icon(PhosphorIconsRegular.trash, size: 16, color: Colors.red),
                         SizedBox(width: 8),
                         Text('Hapus', style: TextStyle(color: Colors.red)),
                       ],

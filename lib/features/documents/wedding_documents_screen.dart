@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import '../../data/repositories/wedding_repository.dart';
 import '../../domain/models/wedding_models.dart';
 import '../../shared/utils/currency_utils.dart';
@@ -39,7 +40,7 @@ class _WeddingDocumentsScreenState extends ConsumerState<WeddingDocumentsScreen>
         title: const Text('Dokumen Pernikahan'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.info_outline_rounded),
+            icon: const Icon(PhosphorIconsRegular.info),
             tooltip: 'Panduan Fitur',
             onPressed: () => _showDocumentsGuide(context),
           ),
@@ -168,7 +169,7 @@ class _WeddingDocumentsScreenState extends ConsumerState<WeddingDocumentsScreen>
           if (!DemoGuard.checkAction(context, ref: ref, actionName: 'menambah dokumen')) return;
           _showAddDocDialog(context);
         },
-        child: const Icon(Icons.note_add_rounded),
+        child: const Icon(PhosphorIconsRegular.plus),
       ),
     );
   }
@@ -293,7 +294,7 @@ class _WeddingDocumentsScreenState extends ConsumerState<WeddingDocumentsScreen>
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
-                                isOverdue ? Icons.error_outline_rounded : Icons.event_outlined,
+                                isOverdue ? PhosphorIconsRegular.warningCircle : PhosphorIconsRegular.calendar,
                                 size: 12,
                                 color: doc.isCompleted
                                     ? Colors.grey[500]
@@ -336,7 +337,7 @@ class _WeddingDocumentsScreenState extends ConsumerState<WeddingDocumentsScreen>
             PopupMenuButton<String>(
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-              icon: Icon(Icons.more_vert_rounded, size: 18, color: theme.colorScheme.outline),
+              icon: Icon(PhosphorIconsRegular.dotsThreeVertical, size: 18, color: theme.colorScheme.outline),
               onSelected: (action) {
                 if (action == 'edit') {
                   if (!DemoGuard.checkAction(context, ref: ref, actionName: 'mengedit dokumen')) return;
@@ -394,7 +395,7 @@ class _WeddingDocumentsScreenState extends ConsumerState<WeddingDocumentsScreen>
                 color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.description_outlined, size: 48, color: theme.colorScheme.primary),
+              child: Icon(PhosphorIconsRegular.fileText, size: 48, color: theme.colorScheme.primary),
             ),
             const SizedBox(height: 16),
             Text(
@@ -413,7 +414,7 @@ class _WeddingDocumentsScreenState extends ConsumerState<WeddingDocumentsScreen>
                 if (!DemoGuard.checkAction(context, ref: ref, actionName: 'menambah dokumen')) return;
                 _showAddDocDialog(context);
               },
-              icon: const Icon(Icons.add_rounded),
+              icon: const Icon(PhosphorIconsRegular.plus),
               label: const Text('Tambah Dokumen Pertama'),
             ),
           ],
@@ -444,22 +445,22 @@ class _WeddingDocumentsScreenState extends ConsumerState<WeddingDocumentsScreen>
         WeddingGuideFeature(
           title: 'Batas Waktu Pengurusan',
           description: 'Atur batas waktu pengurusan berkas agar proses pendaftaran tetap tenang dan tidak terburu-buru sebelum hari akad.',
-          icon: Icons.event_available_rounded,
+          icon: PhosphorIconsRegular.calendarCheck,
         ),
         WeddingGuideFeature(
           title: 'Prioritas Otomatis',
           description: 'Berkas mendesak tampil di bagian atas, sedangkan berkas yang telah selesai otomatis berpindah ke bawah.',
-          icon: Icons.sort_rounded,
+          icon: PhosphorIconsRegular.sortAscending,
         ),
         WeddingGuideFeature(
           title: 'Pemilik Berkas',
           description: 'Bagi berkas antara pihak mempelai pria, mempelai wanita, atau berkas bersama agar pembagian tugas jelas.',
-          icon: Icons.badge_outlined,
+          icon: PhosphorIconsRegular.identificationCard,
         ),
         WeddingGuideFeature(
           title: 'Catatan Biaya Administrasi',
           description: 'Pantau total biaya pendaftaran nikah dan formulir kelurahan secara transparan.',
-          icon: Icons.payments_outlined,
+          icon: PhosphorIconsRegular.creditCard,
         ),
       ],
       proTip: 'Urus surat pengantar kelurahan (N1 hingga N4) sekitar 1 sampai 3 bulan sebelum tanggal akad pernikahan.',

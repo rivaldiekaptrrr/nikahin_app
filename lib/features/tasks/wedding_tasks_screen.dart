@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import '../../data/repositories/wedding_repository.dart';
 import '../../domain/enums/wedding_enums.dart';
 import '../../domain/models/wedding_models.dart';
@@ -38,7 +39,7 @@ class _WeddingTasksScreenState extends ConsumerState<WeddingTasksScreen> {
         title: const Text('Tugas'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.info_outline_rounded),
+            icon: const Icon(PhosphorIconsRegular.info),
             onPressed: () => _showTasksGuide(context),
           ),
         ],
@@ -153,7 +154,7 @@ class _WeddingTasksScreenState extends ConsumerState<WeddingTasksScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddTaskDialog(context),
-        child: const Icon(Icons.add_rounded),
+        child: const Icon(PhosphorIconsRegular.plus),
       ),
     );
   }
@@ -268,7 +269,7 @@ class _WeddingTasksScreenState extends ConsumerState<WeddingTasksScreen> {
               ),
             ),
             PopupMenuButton<String>(
-              icon: Icon(Icons.more_vert_rounded, size: 18, color: theme.colorScheme.outline),
+              icon: Icon(PhosphorIconsRegular.dotsThreeVertical, size: 18, color: theme.colorScheme.outline),
               onSelected: (action) {
                 if (action == 'edit') {
                   _showAddTaskDialog(context, taskToEdit: task);
@@ -315,7 +316,7 @@ class _WeddingTasksScreenState extends ConsumerState<WeddingTasksScreen> {
       child: Center(
         child: Column(
           children: [
-            Icon(Icons.checklist_rounded, size: 48, color: theme.colorScheme.outline),
+            Icon(PhosphorIconsRegular.checkSquareOffset, size: 48, color: theme.colorScheme.outline),
             const SizedBox(height: 12),
             Text(
               'Tidak Ada Tugas di Fase Ini',
@@ -360,17 +361,17 @@ class _WeddingTasksScreenState extends ConsumerState<WeddingTasksScreen> {
           'Catat dan pantau seluruh kebutuhan persiapan pernikahan secara bertahap agar tidak ada hal penting yang terlewat.',
       features: const [
         WeddingGuideFeature(
-          icon: Icons.calendar_month_rounded,
+          icon: PhosphorIconsRegular.calendar,
           title: 'Tahapan Waktu',
           description: 'Pilah tugas berdasarkan rentang waktu persiapan, mulai dari 12 bulan sebelum hingga hari H.',
         ),
         WeddingGuideFeature(
-          icon: Icons.assignment_ind_rounded,
+          icon: PhosphorIconsRegular.userCheck,
           title: 'Penanggung Jawab',
           description: 'Bagi tugas dengan jelas antara mempelai pria, mempelai wanita, keluarga, atau Wedding Organizer (WO).',
         ),
         WeddingGuideFeature(
-          icon: Icons.check_circle_outline_rounded,
+          icon: PhosphorIconsRegular.checkCircle,
           title: 'Tenggat Waktu & Status Selesai',
           description: 'Tugas yang paling mendekati tenggat waktu tampil di urutan atas, dan tugas yang sudah selesai otomatis berpindah ke bawah.',
         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import '../../data/repositories/wedding_repository.dart';
 import '../../domain/enums/wedding_enums.dart';
 import '../../domain/models/wedding_models.dart';
@@ -47,7 +48,7 @@ class _WeddingBudgetScreenState extends ConsumerState<WeddingBudgetScreen> {
         title: const Text('Anggaran Pernikahan'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.info_outline_rounded),
+            icon: const Icon(PhosphorIconsRegular.info),
             onPressed: () => _showBudgetGuide(context),
           ),
         ],
@@ -118,7 +119,7 @@ class _WeddingBudgetScreenState extends ConsumerState<WeddingBudgetScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddExpenseDialog(context),
-        child: const Icon(Icons.add_rounded),
+        child: const Icon(PhosphorIconsRegular.plus),
       ),
     );
   }
@@ -490,8 +491,8 @@ class _WeddingBudgetScreenState extends ConsumerState<WeddingBudgetScreen> {
                 ),
                 const SizedBox(width: 6),
                 Icon(
-                  Icons.chevron_right_rounded,
-                  size: 18,
+                  PhosphorIconsRegular.caretRight,
+                  size: 16,
                   color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
                 ),
               ],
@@ -515,7 +516,7 @@ class _WeddingBudgetScreenState extends ConsumerState<WeddingBudgetScreen> {
                 color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.receipt_long_outlined, size: 48, color: theme.colorScheme.primary),
+              child: Icon(PhosphorIconsRegular.receipt, size: 48, color: theme.colorScheme.primary),
             ),
             const SizedBox(height: 16),
             Text(
@@ -531,7 +532,7 @@ class _WeddingBudgetScreenState extends ConsumerState<WeddingBudgetScreen> {
             const SizedBox(height: 18),
             FilledButton.tonalIcon(
               onPressed: () => _showAddExpenseDialog(context),
-              icon: const Icon(Icons.add_rounded),
+              icon: const Icon(PhosphorIconsRegular.plus),
               label: const Text('Tambah Pengeluaran Pertama'),
             ),
           ],
@@ -567,7 +568,7 @@ class _WeddingBudgetScreenState extends ConsumerState<WeddingBudgetScreen> {
         child: Wrap(
           children: [
             ListTile(
-              leading: const Icon(Icons.edit_outlined),
+              leading: const Icon(PhosphorIconsRegular.pencilSimple),
               title: const Text('Edit Pengeluaran'),
               onTap: () {
                 Navigator.pop(ctx);
@@ -575,7 +576,7 @@ class _WeddingBudgetScreenState extends ConsumerState<WeddingBudgetScreen> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.delete_outline_rounded, color: Colors.red),
+              leading: const Icon(PhosphorIconsRegular.trash, color: Colors.red),
               title: const Text('Hapus Pengeluaran', style: TextStyle(color: Colors.red)),
               onTap: () {
                 Navigator.pop(ctx);
@@ -625,22 +626,22 @@ class _WeddingBudgetScreenState extends ConsumerState<WeddingBudgetScreen> {
           'Membantumu merencanakan alokasi dana, mencatat estimasi biaya vendor, dan memantau pembayaran agar keuangan pernikahan tetap aman dan teratur.',
       features: const [
         WeddingGuideFeature(
-          icon: Icons.pie_chart_rounded,
+          icon: PhosphorIconsRegular.chartPie,
           title: 'Target & Ringkasan Anggaran',
           description: 'Pantau target total biaya, jumlah yang sudah dibayar, serta sisa dana yang masih tersedia secara langsung.',
         ),
         WeddingGuideFeature(
-          icon: Icons.category_rounded,
+          icon: PhosphorIconsRegular.squaresFour,
           title: 'Kategori Pengeluaran',
           description: 'Kelompokkan biaya seperti Gedung, Katering, MUA, atau buat kategori baru sendiri dengan ikon pilihanmu.',
         ),
         WeddingGuideFeature(
-          icon: Icons.account_balance_wallet_rounded,
+          icon: PhosphorIconsRegular.wallet,
           title: 'Sumber Dana Transparan',
           description: 'Atur siapa yang membiayai pos ini (Dana Bersama, Tabungan CPP/CPW, atau Orang Tua) dan saring sesuai kebutuhan.',
         ),
         WeddingGuideFeature(
-          icon: Icons.receipt_long_rounded,
+          icon: PhosphorIconsRegular.receipt,
           title: 'Riwayat & Catat Pembayaran',
           description: 'Ketuk salah satu pos pengeluaran untuk melihat rincian cicilan (DP atau Pelunasan) serta mencatat pembayaran baru.',
         ),
@@ -670,90 +671,85 @@ class _AddExpenseBottomSheetState extends ConsumerState<_AddExpenseBottomSheet> 
   String _paidBy = 'BERSAMA';
   double _estimatedAmount = 0.0;
   bool _isLoading = false;
-  IconData _selectedIcon = Icons.auto_awesome_rounded;
+  IconData _selectedIcon = PhosphorIconsRegular.sparkle;
 
   static const List<IconData> _availableCategoryIcons = [
     // Acara & Tempat
-    Icons.celebration_rounded,
-    Icons.apartment_rounded,
-    Icons.nightlife_rounded,
-    Icons.deck_rounded,
-    Icons.church_rounded,
-    Icons.mosque_rounded,
-    Icons.temple_buddhist_rounded,
-    Icons.temple_hindu_rounded,
-    Icons.park_rounded,
-    Icons.beach_access_rounded,
-    Icons.home_rounded,
-    Icons.theater_comedy_rounded,
+    PhosphorIconsRegular.confetti,
+    PhosphorIconsRegular.buildings,
+    PhosphorIconsRegular.martini,
+    PhosphorIconsRegular.armchair,
+    PhosphorIconsRegular.church,
+    PhosphorIconsRegular.mosque,
+    PhosphorIconsRegular.tree,
+    PhosphorIconsRegular.sunHorizon,
+    PhosphorIconsRegular.house,
+    PhosphorIconsRegular.maskHappy,
 
     // Makanan & Minuman
-    Icons.restaurant_rounded,
-    Icons.local_dining_rounded,
-    Icons.cake_rounded,
-    Icons.wine_bar_rounded,
-    Icons.local_bar_rounded,
-    Icons.coffee_rounded,
-    Icons.icecream_rounded,
-    Icons.bakery_dining_rounded,
+    PhosphorIconsRegular.forkKnife,
+    PhosphorIconsRegular.cookingPot,
+    PhosphorIconsRegular.cake,
+    PhosphorIconsRegular.wine,
+    PhosphorIconsRegular.coffee,
+    PhosphorIconsRegular.iceCream,
+    PhosphorIconsRegular.cookie,
 
     // Foto, Video & Hiburan
-    Icons.photo_camera_rounded,
-    Icons.camera_alt_rounded,
-    Icons.videocam_rounded,
-    Icons.music_note_rounded,
-    Icons.mic_rounded,
-    Icons.speaker_rounded,
-    Icons.auto_awesome_rounded,
-    Icons.stars_rounded,
+    PhosphorIconsRegular.camera,
+    PhosphorIconsRegular.videoCamera,
+    PhosphorIconsRegular.musicNote,
+    PhosphorIconsRegular.microphone,
+    PhosphorIconsRegular.speakerHigh,
+    PhosphorIconsRegular.sparkle,
+    PhosphorIconsRegular.star,
 
     // Busana, Kecantikan & Romansa
-    Icons.brush_rounded,
-    Icons.palette_rounded,
-    Icons.spa_rounded,
-    Icons.face_retouching_natural_rounded,
-    Icons.diamond_rounded,
-    Icons.favorite_rounded,
-    Icons.favorite_border_rounded,
-    Icons.volunteer_activism_rounded,
+    PhosphorIconsRegular.paintBrush,
+    PhosphorIconsRegular.palette,
+    PhosphorIconsRegular.flowerLotus,
+    PhosphorIconsRegular.dress,
+    PhosphorIconsRegular.coatHanger,
+    PhosphorIconsRegular.diamond,
+    PhosphorIconsRegular.heart,
+    PhosphorIconsRegular.handHeart,
 
     // Undangan, Hadiah & Souvenir
-    Icons.card_giftcard_rounded,
-    Icons.mark_email_read_rounded,
-    Icons.mail_rounded,
-    Icons.inventory_2_rounded,
-    Icons.print_rounded,
-    Icons.badge_rounded,
-    Icons.confirmation_number_rounded,
-    Icons.storefront_rounded,
+    PhosphorIconsRegular.gift,
+    PhosphorIconsRegular.envelopeOpen,
+    PhosphorIconsRegular.envelope,
+    PhosphorIconsRegular.package,
+    PhosphorIconsRegular.printer,
+    PhosphorIconsRegular.identificationBadge,
+    PhosphorIconsRegular.ticket,
+    PhosphorIconsRegular.storefront,
 
     // Bunga & Dekorasi
-    Icons.local_florist_rounded,
-    Icons.wb_sunny_rounded,
-    Icons.emoji_events_rounded,
-    Icons.light_rounded,
-    Icons.filter_vintage_rounded,
+    PhosphorIconsRegular.flower,
+    PhosphorIconsRegular.sun,
+    PhosphorIconsRegular.trophy,
+    PhosphorIconsRegular.lightbulb,
+    PhosphorIconsRegular.plant,
 
     // Transportasi & Honeymoon
-    Icons.flight_takeoff_rounded,
-    Icons.local_airport_rounded,
-    Icons.directions_car_rounded,
-    Icons.drive_eta_rounded,
-    Icons.train_rounded,
-    Icons.hotel_rounded,
-    Icons.luggage_rounded,
+    PhosphorIconsRegular.airplaneTilt,
+    PhosphorIconsRegular.airplane,
+    PhosphorIconsRegular.car,
+    PhosphorIconsRegular.taxi,
+    PhosphorIconsRegular.train,
+    PhosphorIconsRegular.bed,
+    PhosphorIconsRegular.suitcaseSimple,
 
     // Keuangan, Keamanan & Lainnya
-    Icons.receipt_long_rounded,
-    Icons.account_balance_wallet_rounded,
-    Icons.savings_rounded,
-    Icons.payments_rounded,
-    Icons.security_rounded,
-    Icons.groups_rounded,
-    Icons.diversity_1_rounded,
-    Icons.handshake_rounded,
-    Icons.cleaning_services_rounded,
-    Icons.category_rounded,
+    PhosphorIconsRegular.receipt,
+    PhosphorIconsRegular.wallet,
+    PhosphorIconsRegular.piggyBank,
+    PhosphorIconsRegular.creditCard,
+    PhosphorIconsRegular.shieldCheck,
+    PhosphorIconsRegular.users,
+    PhosphorIconsRegular.handshake,
+    PhosphorIconsRegular.broom,
+    PhosphorIconsRegular.squaresFour,
   ];
 
   void _openIconPickerModal(BuildContext context) {
@@ -783,7 +779,7 @@ class _AddExpenseBottomSheetState extends ConsumerState<_AddExpenseBottomSheet> 
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close_rounded),
+                      icon: const Icon(PhosphorIconsRegular.x),
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                       onPressed: () => Navigator.pop(dialogCtx),
@@ -973,7 +969,7 @@ class _AddExpenseBottomSheetState extends ConsumerState<_AddExpenseBottomSheet> 
                                       shape: BoxShape.circle,
                                     ),
                                     child: Icon(
-                                      Icons.edit_rounded,
+                                      PhosphorIconsRegular.pencilSimple,
                                       size: 10,
                                       color: theme.colorScheme.onPrimary,
                                     ),
@@ -1571,7 +1567,7 @@ class _ExpenseDetailBottomSheetState extends ConsumerState<_ExpenseDetailBottomS
                                                     ),
                                                     const SizedBox(width: 4),
                                                     IconButton(
-                                                      icon: Icon(Icons.delete_outline_rounded, size: 20, color: theme.colorScheme.error),
+                                                      icon: Icon(PhosphorIconsRegular.trash, size: 20, color: theme.colorScheme.error),
                                                       visualDensity: VisualDensity.compact,
                                                       padding: EdgeInsets.zero,
                                                       constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
@@ -1615,7 +1611,7 @@ class _ExpenseDetailBottomSheetState extends ConsumerState<_ExpenseDetailBottomS
                       width: double.infinity,
                       height: 48,
                       child: FilledButton.icon(
-                        icon: const Icon(Icons.payment_rounded, size: 20),
+                        icon: const Icon(PhosphorIconsRegular.creditCard, size: 20),
                         label: const Text('Catat Pembayaran', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                         style: FilledButton.styleFrom(
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -1630,7 +1626,7 @@ class _ExpenseDetailBottomSheetState extends ConsumerState<_ExpenseDetailBottomS
                       children: [
                         Expanded(
                           child: OutlinedButton.icon(
-                            icon: const Icon(Icons.edit_outlined, size: 18),
+                            icon: const Icon(PhosphorIconsRegular.pencilSimple, size: 18),
                             label: const Text('Edit Data'),
                             style: OutlinedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -1652,7 +1648,7 @@ class _ExpenseDetailBottomSheetState extends ConsumerState<_ExpenseDetailBottomS
                         const SizedBox(width: 10),
                         Expanded(
                           child: OutlinedButton.icon(
-                            icon: const Icon(Icons.delete_outline_rounded, size: 18),
+                            icon: const Icon(PhosphorIconsRegular.trash, size: 18),
                             label: const Text('Hapus'),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: theme.colorScheme.error,
@@ -1824,83 +1820,83 @@ IconData _getCategoryIcon(String key) {
   switch (upper) {
     case 'VENUE':
     case 'GEDUNG':
-      return Icons.apartment_rounded;
+      return PhosphorIconsRegular.buildings;
     case 'CATERING':
     case 'KATERING':
-      return Icons.restaurant_rounded;
+      return PhosphorIconsRegular.forkKnife;
     case 'DECOR':
     case 'DEKORASI':
-      return Icons.celebration_rounded;
+      return PhosphorIconsRegular.sparkle;
     case 'MUA':
     case 'MAKEUP':
-      return Icons.brush_rounded;
+      return PhosphorIconsRegular.paintBrush;
     case 'BUSANA':
     case 'ATTIRE':
-      return Icons.checkroom_rounded;
+      return PhosphorIconsRegular.coatHanger;
     case 'DOKUMENTASI':
     case 'FOTO':
     case 'VIDEO':
     case 'PHOTOGRAPHY':
-      return Icons.photo_camera_rounded;
+      return PhosphorIconsRegular.camera;
     case 'SESERAHAN':
     case 'MAHAR':
-      return Icons.card_giftcard_rounded;
+      return PhosphorIconsRegular.gift;
     case 'UNDANGAN':
     case 'SOUVENIR':
-      return Icons.mark_email_read_rounded;
+      return PhosphorIconsRegular.envelopeOpen;
     case 'HONEYMOON':
     case 'BULAN MADU':
     case 'FLIGHT':
-      return Icons.flight_takeoff_rounded;
+      return PhosphorIconsRegular.airplaneTilt;
     case 'PHOTOBOOTH':
-      return Icons.camera_alt_rounded;
+      return PhosphorIconsRegular.camera;
     case 'MUSIK':
     case 'BAND':
     case 'MUSIC':
     case 'ENTERTAINMENT':
-      return Icons.music_note_rounded;
+      return PhosphorIconsRegular.musicNote;
     case 'CINCIN':
     case 'PERHIASAN':
     case 'RING':
-      return Icons.diamond_rounded;
+      return PhosphorIconsRegular.diamond;
     case 'KUE':
     case 'CAKE':
-      return Icons.cake_rounded;
+      return PhosphorIconsRegular.cake;
     case 'MOBIL':
     case 'TRANSPORT':
     case 'MOBIL PENGANTIN':
-      return Icons.directions_car_rounded;
+      return PhosphorIconsRegular.car;
     case 'BUNGA':
     case 'HANDBOUQUET':
-      return Icons.local_florist_rounded;
+      return PhosphorIconsRegular.flower;
     case 'HOTEL':
     case 'AKOMODASI':
-      return Icons.hotel_rounded;
+      return PhosphorIconsRegular.bed;
     case 'SPA':
     case 'PERAWATAN':
-      return Icons.spa_rounded;
+      return PhosphorIconsRegular.flowerLotus;
     case 'SERAGAM':
-      return Icons.palette_rounded;
+      return PhosphorIconsRegular.palette;
     case 'MC':
     case 'SOUND':
-      return Icons.mic_rounded;
+      return PhosphorIconsRegular.microphone;
     case 'KEAMANAN':
     case 'PARKIR':
-      return Icons.security_rounded;
+      return PhosphorIconsRegular.shieldCheck;
     case 'KONSUMSI':
     case 'SNACK':
-      return Icons.local_dining_rounded;
+      return PhosphorIconsRegular.coffee;
     case 'CETAK':
     case 'BUKU TAMU':
-      return Icons.print_rounded;
+      return PhosphorIconsRegular.printer;
     case 'ADAT':
     case 'IBADAH':
-      return Icons.church_rounded;
+      return PhosphorIconsRegular.church;
     case 'PESTA':
     case 'AFTER PARTY':
-      return Icons.celebration_rounded;
+      return PhosphorIconsRegular.confetti;
     default:
-      return Icons.receipt_long_rounded;
+      return PhosphorIconsRegular.receipt;
   }
 }
 
