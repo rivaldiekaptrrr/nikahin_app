@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 
 import '../../shared/utils/validation_utils.dart';
 import '../../shared/widgets/google_logo.dart';
@@ -276,7 +277,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               title: const Row(
                 children: [
-                  Icon(Icons.lock_reset_rounded, color: Color(0xFFE11D48)),
+                  Icon(PhosphorIconsRegular.lockKey, color: Color(0xFFE11D48)),
                   SizedBox(width: 8),
                   Text('Lupa Kata Sandi?', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                 ],
@@ -300,7 +301,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                     decoration: InputDecoration(
                       labelText: 'Email Terdaftar',
                       hintText: 'nama@example.com',
-                      prefixIcon: const Icon(Icons.email_outlined),
+                      prefixIcon: const Icon(PhosphorIconsRegular.envelopeSimple),
                       errorText: resetError,
                     ),
                   ),
@@ -336,7 +337,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                 SnackBar(
                                   content: Row(
                                     children: [
-                                      const Icon(Icons.mark_email_read_rounded, color: Colors.white, size: 20),
+                                      const Icon(PhosphorIconsFill.checkCircle, color: Colors.white, size: 20),
                                       const SizedBox(width: 8),
                                       Expanded(
                                         child: Text(
@@ -491,7 +492,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                     ),
                                     child: Row(
                                       children: [
-                                        Icon(Icons.error_outline_rounded, color: theme.colorScheme.error, size: 20),
+                                        Icon(PhosphorIconsRegular.warningCircle, color: theme.colorScheme.error, size: 20),
                                         const SizedBox(width: 10),
                                         Expanded(
                                           child: Text(
@@ -535,7 +536,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                     ),
                                     filled: true,
                                     fillColor: fieldBgColor,
-                                    prefixIcon: Icon(Icons.mail_outline_rounded, size: 22, color: textDark.withValues(alpha: 0.45)),
+                                    prefixIcon: Icon(PhosphorIconsRegular.envelopeSimple, size: 22, color: textDark.withValues(alpha: 0.45)),
                                     contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(18),
@@ -580,10 +581,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                     ),
                                     filled: true,
                                     fillColor: fieldBgColor,
-                                    prefixIcon: Icon(Icons.lock_outline_rounded, size: 22, color: textDark.withValues(alpha: 0.45)),
+                                    prefixIcon: Icon(PhosphorIconsRegular.lock, size: 22, color: textDark.withValues(alpha: 0.45)),
                                     suffixIcon: IconButton(
                                       icon: Icon(
-                                        _passwordVisible ? Icons.visibility_off_rounded : Icons.visibility_rounded,
+                                        _passwordVisible ? PhosphorIconsRegular.eyeSlash : PhosphorIconsRegular.eye,
                                         size: 22,
                                         color: textDark.withValues(alpha: 0.45),
                                       ),
@@ -776,7 +777,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Icon(
-                                              Icons.visibility_outlined,
+                                              PhosphorIconsRegular.eye,
                                               size: 20,
                                               color: textDark.withValues(alpha: 0.7),
                                             ),

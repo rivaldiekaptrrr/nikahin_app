@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../app/config/business_config.dart';
@@ -274,12 +275,12 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                   Row(
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.download_rounded, color: Colors.black87),
+                        icon: const Icon(PhosphorIconsRegular.downloadSimple, color: Colors.black87),
                         tooltip: 'Download QRIS',
                         onPressed: _downloadQrisImage,
                       ),
                       IconButton(
-                        icon: const Icon(Icons.close_rounded, color: Colors.black54),
+                        icon: const Icon(PhosphorIconsRegular.x, color: Colors.black54),
                         onPressed: () => Navigator.of(ctx).pop(),
                       ),
                     ],
@@ -397,7 +398,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout_rounded),
+            icon: const Icon(PhosphorIconsRegular.signOut),
             tooltip: 'Keluar Akun',
             onPressed: () async {
               await ref.read(authNotifierProvider.notifier).signOut();
@@ -447,7 +448,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
             ),
             child: Center(
               child: Icon(
-                Icons.qr_code_scanner_rounded,
+                PhosphorIconsRegular.qrCode,
                 size: 38,
                 color: theme.colorScheme.primary,
               ),
@@ -468,7 +469,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
             child: const Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.hourglass_top_rounded, size: 14, color: Colors.amber),
+                Icon(PhosphorIconsRegular.hourglass, size: 14, color: Colors.amber),
                 SizedBox(width: 5),
                 Text(
                   'MENUNGGU PEMBAYARAN',
@@ -535,7 +536,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.workspace_premium_rounded, size: 14, color: Colors.white),
+                        Icon(PhosphorIconsFill.crown, size: 14, color: Colors.white),
                         SizedBox(width: 4),
                         Text(
                           'VIP LIFETIME PASS',
@@ -613,7 +614,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                         ),
                       );
                     },
-                    icon: const Icon(Icons.copy_rounded, size: 18),
+                    icon: const Icon(PhosphorIconsRegular.copy, size: 18),
                     tooltip: 'Salin Nominal',
                   ),
                 ],
@@ -633,7 +634,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                 children: [
                   const Row(
                     children: [
-                      Icon(Icons.qr_code_2_rounded, size: 20),
+                      Icon(PhosphorIconsRegular.qrCode, size: 20),
                       SizedBox(width: 6),
                       Text(
                         'QRIS Nasional',
@@ -667,7 +668,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                                 height: 16,
                                 child: CircularProgressIndicator(strokeWidth: 2),
                               )
-                            : const Icon(Icons.download_rounded, size: 20),
+                            : const Icon(PhosphorIconsRegular.downloadSimple, size: 20),
                         tooltip: 'Download Gambar QRIS',
                         visualDensity: VisualDensity.compact,
                         style: IconButton.styleFrom(
@@ -715,7 +716,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
 
               TextButton.icon(
                 onPressed: () => _showFullQrisDialog(context),
-                icon: const Icon(Icons.zoom_in_rounded, size: 18),
+                icon: const Icon(PhosphorIconsRegular.magnifyingGlassPlus, size: 18),
                 label: const Text(
                   'Ketuk untuk memperbesar QRIS',
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
@@ -745,7 +746,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
             children: [
               const Row(
                 children: [
-                  Icon(Icons.checklist_rounded, size: 18),
+                  Icon(PhosphorIconsRegular.checks, size: 18),
                   SizedBox(width: 8),
                   Text(
                     'Langkah Pembayaran & Verifikasi:',
@@ -814,7 +815,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                   height: 18,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 )
-              : const Icon(Icons.sync_rounded, size: 18),
+              : const Icon(PhosphorIconsRegular.arrowsClockwise, size: 18),
           label: Text(_isCheckingStatus ? 'Memeriksa status...' : 'Cek Status Aktivasi'),
         ),
         const SizedBox(height: 14),
@@ -896,7 +897,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
             ),
             child: Center(
               child: Icon(
-                Icons.favorite_rounded,
+                PhosphorIconsFill.heart,
                 size: 40,
                 color: theme.colorScheme.primary,
               ),
@@ -917,7 +918,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
             child: const Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.star_rounded, size: 15, color: Colors.amber),
+                Icon(PhosphorIconsFill.star, size: 15, color: Colors.amber),
                 SizedBox(width: 4),
                 Text(
                   'Dipercaya 10.000+ Calon Pengantin',
@@ -983,7 +984,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.workspace_premium_rounded, size: 14, color: Colors.white),
+                        Icon(PhosphorIconsFill.crown, size: 14, color: Colors.white),
                         SizedBox(width: 4),
                         Text(
                           'VIP LIFETIME PASS',
@@ -1070,7 +1071,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
             Expanded(
               child: _buildBentoFeatureCard(
                 theme: theme,
-                icon: Icons.account_balance_wallet_outlined,
+                icon: PhosphorIconsRegular.wallet,
                 title: 'Anggaran & Vendor',
                 desc: 'Termin DP & lunas otomatis',
               ),
@@ -1079,7 +1080,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
             Expanded(
               child: _buildBentoFeatureCard(
                 theme: theme,
-                icon: Icons.people_outline_rounded,
+                icon: PhosphorIconsRegular.users,
                 title: 'Buku Tamu Digital',
                 desc: 'RSVP real-time & kategori',
               ),
@@ -1092,7 +1093,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
             Expanded(
               child: _buildBentoFeatureCard(
                 theme: theme,
-                icon: Icons.event_note_outlined,
+                icon: PhosphorIconsRegular.calendarCheck,
                 title: 'Rundown & PIC',
                 desc: 'Skrip acara menit-ke-menit',
               ),
@@ -1101,7 +1102,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
             Expanded(
               child: _buildBentoFeatureCard(
                 theme: theme,
-                icon: Icons.picture_as_pdf_outlined,
+                icon: PhosphorIconsRegular.filePdf,
                 title: 'Panduan PDF & KUA',
                 desc: 'Ekspor dokumen siap cetak',
               ),
@@ -1120,11 +1121,11 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
           ),
           child: Row(
             children: [
-              _buildTrustItem(Icons.lock_outline_rounded, 'Enkripsi 256-bit'),
+              _buildTrustItem(PhosphorIconsRegular.lock, 'Enkripsi 256-bit'),
               Container(width: 1, height: 16, color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
-              _buildTrustItem(Icons.qr_code_rounded, 'QRIS Resmi'),
+              _buildTrustItem(PhosphorIconsRegular.qrCode, 'QRIS Resmi'),
               Container(width: 1, height: 16, color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
-              _buildTrustItem(Icons.bolt_rounded, 'Aktivasi Instan'),
+              _buildTrustItem(PhosphorIconsRegular.lightning, 'Aktivasi Instan'),
             ],
           ),
         ),
@@ -1146,7 +1147,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                   height: 20,
                   child: CircularProgressIndicator(strokeWidth: 2.5, color: Colors.white),
                 )
-              : const Icon(Icons.flash_on_rounded, size: 20),
+              : const Icon(PhosphorIconsFill.lightning, size: 20),
           label: Text(
             _isPaymentLoading ? 'Menyiapkan Pembayaran...' : 'Bayar Sekarang',
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
@@ -1247,7 +1248,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Icon(
-                  Icons.favorite_rounded,
+                  PhosphorIconsFill.heart,
                   color: Color(0xFFE11D48),
                   size: 20,
                 ),
@@ -1298,7 +1299,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                 color: theme.colorScheme.primary.withValues(alpha: 0.4),
               ),
             ),
-            icon: const Icon(Icons.link_rounded, size: 18),
+            icon: const Icon(PhosphorIconsRegular.link, size: 18),
             label: const Text(
               'Masukkan Kode Pairing Pasangan',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
@@ -1356,7 +1357,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                           color: const Color(0xFFE11D48).withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: const Icon(Icons.favorite_rounded, color: Color(0xFFE11D48), size: 20),
+                        child: const Icon(PhosphorIconsFill.heart, color: Color(0xFFE11D48), size: 20),
                       ),
                       const SizedBox(width: 12),
                       const Expanded(
@@ -1535,7 +1536,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                             height: 18,
                             child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                           )
-                        : const Icon(Icons.link_rounded, size: 20),
+                        : const Icon(PhosphorIconsRegular.link, size: 20),
                     label: Text(
                       isClaiming ? 'Menghubungkan...' : 'Verifikasi & Hubungkan',
                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
@@ -1663,7 +1664,7 @@ class _SmoothToastWidgetState extends State<_SmoothToastWidget>
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
-                      Icons.check_circle_rounded,
+                      PhosphorIconsFill.checkCircle,
                       color: Color(0xFF4ADE80),
                       size: 18,
                     ),

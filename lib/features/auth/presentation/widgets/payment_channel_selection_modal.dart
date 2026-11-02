@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import '../../../../domain/models/midtrans_core_models.dart';
 import '../../../../shared/widgets/bento_card.dart';
 
@@ -89,7 +90,7 @@ class _PaymentChannelSelectionModalState extends State<PaymentChannelSelectionMo
                     const SizedBox(height: 3),
                     Row(
                       children: [
-                        const Icon(Icons.verified_user_outlined, size: 13, color: Colors.green),
+                        const Icon(PhosphorIconsFill.shieldCheck, size: 13, color: Colors.green),
                         const SizedBox(width: 4),
                         Text(
                           'Midtrans Official • Otomatis & Terverifikasi',
@@ -105,7 +106,7 @@ class _PaymentChannelSelectionModalState extends State<PaymentChannelSelectionMo
                 ),
               ),
               IconButton.filledTonal(
-                icon: const Icon(Icons.close_rounded, size: 20),
+                icon: const Icon(PhosphorIconsRegular.x, size: 20),
                 onPressed: () => Navigator.of(context).pop(),
                 visualDensity: VisualDensity.compact,
               ),
@@ -352,7 +353,7 @@ class _PaymentChannelSelectionModalState extends State<PaymentChannelSelectionMo
 
               const SizedBox(width: 8),
               Icon(
-                isAvailable ? Icons.chevron_right_rounded : Icons.lock_outline_rounded,
+                isAvailable ? PhosphorIconsRegular.caretRight : PhosphorIconsRegular.lock,
                 size: 20,
                 color: theme.colorScheme.onSurfaceVariant.withValues(
                   alpha: isAvailable ? 0.6 : 0.35,

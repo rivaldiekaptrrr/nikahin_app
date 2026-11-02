@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import '../../app/config/mock_config.dart';
 import '../../data/local/mock_seeder.dart';
 import '../../data/repositories/wedding_repository.dart';
@@ -38,7 +39,7 @@ class WeddingListScreen extends ConsumerWidget {
                 color: theme.colorScheme.primaryContainer,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(Icons.favorite_rounded, color: theme.colorScheme.primary, size: 20),
+              child: Icon(PhosphorIconsFill.heart, color: theme.colorScheme.primary, size: 20),
             ),
             const SizedBox(width: 10),
             const Text('Nikahin'),
@@ -89,7 +90,7 @@ class WeddingListScreen extends ConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showCreateProfileDialog(context, ref),
-        icon: const Icon(Icons.add_rounded),
+        icon: const Icon(PhosphorIconsRegular.plus),
         label: const Text('Buat Rencana Baru'),
       ),
     );
@@ -149,7 +150,7 @@ class WeddingListScreen extends ConsumerWidget {
             const SizedBox(height: 10),
             Row(
               children: [
-                Icon(Icons.calendar_today_rounded, size: 16, color: theme.colorScheme.outline),
+                Icon(PhosphorIconsRegular.calendar, size: 16, color: theme.colorScheme.outline),
                 const SizedBox(width: 6),
                 Text(
                   WeddingDateUtils.formatFull(profile.weddingDate),
@@ -162,7 +163,7 @@ class WeddingListScreen extends ConsumerWidget {
             const SizedBox(height: 6),
             Row(
               children: [
-                Icon(Icons.account_balance_wallet_outlined, size: 16, color: theme.colorScheme.outline),
+                Icon(PhosphorIconsRegular.wallet, size: 16, color: theme.colorScheme.outline),
                 const SizedBox(width: 6),
                 Expanded(
                   child: Text(
@@ -175,7 +176,7 @@ class WeddingListScreen extends ConsumerWidget {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.delete_outline_rounded, color: theme.colorScheme.error, size: 20),
+                  icon: Icon(PhosphorIconsRegular.trash, color: theme.colorScheme.error, size: 20),
                   onPressed: () {
                     showDeleteConfirmDialog(
                       context: context,
@@ -216,7 +217,7 @@ class WeddingListScreen extends ConsumerWidget {
                 color: theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.favorite_outline_rounded, size: 64, color: theme.colorScheme.primary),
+              child: Icon(PhosphorIconsRegular.heart, size: 64, color: theme.colorScheme.primary),
             ),
             const SizedBox(height: 24),
             Text(
@@ -234,7 +235,7 @@ class WeddingListScreen extends ConsumerWidget {
             const SizedBox(height: 24),
             FilledButton.icon(
               onPressed: () => _showCreateProfileDialog(context, ref),
-              icon: const Icon(Icons.add_rounded),
+              icon: const Icon(PhosphorIconsRegular.plus),
               label: const Text('Buat Rencana Pernikahan'),
             ),
             if (kUseMockData) ...[
@@ -249,7 +250,7 @@ class WeddingListScreen extends ConsumerWidget {
                     );
                   }
                 },
-                icon: const Icon(Icons.dataset_rounded),
+                icon: const Icon(PhosphorIconsRegular.database),
                 label: const Text('Muat Contoh Data Pernikahan'),
               ),
             ],
@@ -346,7 +347,7 @@ class _CreateProfileBottomSheetState extends ConsumerState<_CreateProfileBottomS
                 decoration: const InputDecoration(
                   labelText: 'Nama Mempelai Pria (CPP)',
                   hintText: 'Contoh: Rama',
-                  prefixIcon: Icon(Icons.person_outline_rounded),
+                  prefixIcon: Icon(PhosphorIconsRegular.user),
                 ),
                 validator: (v) => ValidationUtils.validateName(v, 'Nama CPP'),
               ),
@@ -362,7 +363,7 @@ class _CreateProfileBottomSheetState extends ConsumerState<_CreateProfileBottomS
                 decoration: const InputDecoration(
                   labelText: 'Nama Mempelai Wanita (CPW)',
                   hintText: 'Contoh: Sinta',
-                  prefixIcon: Icon(Icons.person_outline_rounded),
+                  prefixIcon: Icon(PhosphorIconsRegular.user),
                 ),
                 validator: (v) => ValidationUtils.validateName(v, 'Nama CPW'),
               ),

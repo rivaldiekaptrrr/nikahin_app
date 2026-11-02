@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import '../../data/local/preferences_manager.dart';
 import '../../data/repositories/wedding_repository.dart';
 import '../../domain/enums/wedding_enums.dart';
@@ -165,7 +166,7 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
         title: const Text('Setup Rencana Pernikahan', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
         leading: _currentStep > 0
             ? IconButton(
-                icon: const Icon(Icons.arrow_back_rounded),
+                icon: const Icon(PhosphorIconsRegular.caretLeft),
                 onPressed: _onPrevStep,
                 tooltip: 'Kembali',
               )
@@ -173,7 +174,7 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
         actions: [
           if (auth.isAdmin)
             IconButton(
-              icon: const Icon(Icons.shield_rounded, color: Color(0xFFD97706)),
+              icon: const Icon(PhosphorIconsFill.shield, color: Color(0xFFD97706)),
               tooltip: 'Buka Panel Super Admin',
               onPressed: () => context.push('/admin'),
             ),
@@ -310,7 +311,7 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
                       color: theme.colorScheme.primary,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.favorite_rounded, color: Colors.white, size: 28),
+                    child: const Icon(PhosphorIconsFill.heart, color: Colors.white, size: 28),
                   ),
                   const SizedBox(height: 12),
                   Text(
@@ -357,7 +358,7 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
               decoration: InputDecoration(
                 labelText: 'Nama Panggilan Mempelai Pria',
                 hintText: 'Contoh: Rama',
-                prefixIcon: const Icon(Icons.male_rounded),
+                prefixIcon: const Icon(PhosphorIconsRegular.genderMale),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
               ),
               validator: (v) => ValidationUtils.validateName(v, 'Nama CPP'),
@@ -375,7 +376,7 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
               decoration: InputDecoration(
                 labelText: 'Nama Panggilan Mempelai Wanita',
                 hintText: 'Contoh: Sinta',
-                prefixIcon: const Icon(Icons.female_rounded),
+                prefixIcon: const Icon(PhosphorIconsRegular.genderFemale),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
               ),
               validator: (v) => ValidationUtils.validateName(v, 'Nama CPW'),
@@ -570,7 +571,7 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.pie_chart_outline_rounded, size: 18, color: theme.colorScheme.primary),
+                        Icon(PhosphorIconsRegular.chartPie, size: 18, color: theme.colorScheme.primary),
                         const SizedBox(width: 8),
                         Text(
                           'Contoh Pembagian Pos Biaya:',
@@ -587,7 +588,7 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
                     const Divider(height: 16),
                     Row(
                       children: [
-                        Icon(Icons.info_outline_rounded, size: 14, color: theme.colorScheme.onSurfaceVariant),
+                        Icon(PhosphorIconsRegular.info, size: 14, color: theme.colorScheme.onSurfaceVariant),
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
@@ -624,7 +625,7 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
                   theme: theme,
                   title: 'KUA',
                   subtitle: 'Buku Nikah Muslim',
-                  icon: Icons.menu_book_rounded,
+                  icon: PhosphorIconsRegular.bookOpen,
                   isSelected: _religionType == 'ISLAM',
                   onTap: () {
                     HapticFeedback.lightImpact();
@@ -641,7 +642,7 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
                   theme: theme,
                   title: 'Catatan Sipil',
                   subtitle: 'Akta Nikah Dukcapil',
-                  icon: Icons.account_balance_rounded,
+                  icon: PhosphorIconsRegular.bank,
                   isSelected: _religionType == 'NON_ISLAM',
                   onTap: () {
                     HapticFeedback.lightImpact();
@@ -767,7 +768,7 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
                 ),
                 if (isSelected)
                   Icon(
-                    Icons.check_circle_rounded,
+                    PhosphorIconsFill.checkCircle,
                     size: 18,
                     color: theme.colorScheme.primary,
                   ),
@@ -837,10 +838,10 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
                       foregroundColor: Colors.white,
                       elevation: 1,
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           'Lanjut',
                           style: TextStyle(
                             fontSize: 14.5,
@@ -848,8 +849,8 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
                             letterSpacing: 0.2,
                           ),
                         ),
-                        SizedBox(width: 8),
-                        Icon(Icons.arrow_forward_rounded, size: 18),
+                        const SizedBox(width: 8),
+                        const Icon(PhosphorIconsRegular.caretRight, size: 18),
                       ],
                     ),
                   ),
@@ -874,7 +875,7 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        Icons.arrow_back_rounded,
+                        PhosphorIconsRegular.caretLeft,
                         size: 16,
                         color: theme.colorScheme.onSurface,
                       ),
@@ -935,7 +936,7 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
                           )
                         else
                           Icon(
-                            isLastStep ? Icons.auto_awesome_rounded : Icons.arrow_forward_rounded,
+                            isLastStep ? PhosphorIconsFill.sparkle : PhosphorIconsRegular.caretRight,
                             size: 18,
                           ),
                       ],

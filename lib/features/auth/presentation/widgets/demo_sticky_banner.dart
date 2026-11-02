@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import '../auth_notifier.dart';
 
 class DemoStickyBanner extends ConsumerWidget {
@@ -28,7 +29,7 @@ class DemoStickyBanner extends ConsumerWidget {
       child: Row(
         children: [
           Icon(
-            Icons.visibility_outlined,
+            PhosphorIconsRegular.eye,
             size: 18,
             color: theme.colorScheme.primary,
           ),

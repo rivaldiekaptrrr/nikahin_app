@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 
 void showDemoRestrictionSheet(
   BuildContext context, {
@@ -62,7 +63,7 @@ class _DemoRestrictionSheetContent extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                Icons.lock_outline_rounded,
+                PhosphorIconsRegular.lock,
                 size: 32,
                 color: theme.colorScheme.primary,
               ),
@@ -100,11 +101,11 @@ class _DemoRestrictionSheetContent extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  _buildBenefitRow(theme, Icons.cloud_sync_outlined, 'Simpan data tersinkronisasi aman di Cloud'),
+                  _buildBenefitRow(theme, PhosphorIconsRegular.cloudArrowUp, 'Simpan data tersinkronisasi aman di Cloud'),
                   const SizedBox(height: 8),
-                  _buildBenefitRow(theme, Icons.devices_rounded, 'Akses bersama pasangan di berbagai perangkat'),
+                  _buildBenefitRow(theme, PhosphorIconsRegular.devices, 'Akses bersama pasangan di berbagai perangkat'),
                   const SizedBox(height: 8),
-                  _buildBenefitRow(theme, Icons.picture_as_pdf_outlined, 'Ekspor buku panduan PDF & CSV tanpa batas'),
+                  _buildBenefitRow(theme, PhosphorIconsRegular.filePdf, 'Ekspor buku panduan PDF & CSV tanpa batas'),
                 ],
               ),
             ),
@@ -119,7 +120,7 @@ class _DemoRestrictionSheetContent extends StatelessWidget {
                   Navigator.of(context).pop();
                   context.go('/login');
                 },
-                icon: const Icon(Icons.login_rounded, size: 18),
+                icon: const Icon(PhosphorIconsRegular.signIn, size: 18),
                 label: const Text(
                   'Masuk / Daftar Akun',
                   style: TextStyle(fontWeight: FontWeight.bold),

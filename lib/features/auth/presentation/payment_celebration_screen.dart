@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import '../../../shared/widgets/bento_card.dart';
 
 /// Halaman Selebrasi Pembayaran Berhasil (Non-Scrollable 1-Screen Responsive Layout)
@@ -184,7 +185,7 @@ class _PaymentCelebrationScreenState extends State<PaymentCelebrationScreen> wit
                                 ),
                                 child: Center(
                                   child: Icon(
-                                    Icons.verified_rounded,
+                                    PhosphorIconsFill.sealCheck,
                                     size: innerIconSize,
                                     color: Colors.white,
                                   ),
@@ -254,7 +255,7 @@ class _PaymentCelebrationScreenState extends State<PaymentCelebrationScreen> wit
                                         child: const Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Icon(Icons.workspace_premium_rounded, size: 13, color: Colors.white),
+                                            Icon(PhosphorIconsFill.crown, size: 13, color: Colors.white),
                                             SizedBox(width: 4),
                                             Text(
                                               'VIP LIFETIME PASS',
@@ -313,7 +314,7 @@ class _PaymentCelebrationScreenState extends State<PaymentCelebrationScreen> wit
                                 elevation: 3,
                                 shadowColor: theme.colorScheme.primary.withValues(alpha: 0.4),
                               ),
-                              icon: const Icon(Icons.favorite_rounded, size: 19),
+                              icon: const Icon(PhosphorIconsFill.heart, size: 19),
                               label: Text(
                                 'Mulai Rencanakan Hari Bahagiamu ✨',
                                 style: TextStyle(

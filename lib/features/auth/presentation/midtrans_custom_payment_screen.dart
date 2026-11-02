@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../data/remote/midtrans_payment_service.dart';
 import '../../../domain/models/midtrans_core_models.dart';
@@ -115,7 +116,7 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.check_circle_rounded, color: Colors.white, size: 18),
+            const Icon(PhosphorIconsFill.checkCircle, color: Colors.white, size: 18),
             const SizedBox(width: 8),
             Expanded(child: Text('$label berhasil disalin!')),
           ],
@@ -166,7 +167,7 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
       appBar: AppBar(
         title: const Text('Pembayaran Tagihan'),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded),
+          icon: const Icon(PhosphorIconsRegular.caretLeft),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -252,7 +253,7 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
 
     if (isCompleted) {
       circleColor = Colors.green;
-      child = const Icon(Icons.check_rounded, size: 14, color: Colors.white);
+      child = const Icon(PhosphorIconsRegular.check, size: 14, color: Colors.white);
     } else if (isActive) {
       circleColor = theme.colorScheme.primary;
       child = AnimatedBuilder(
@@ -373,7 +374,7 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.check_circle_rounded, size: 12, color: Colors.green),
+                    Icon(PhosphorIconsFill.checkCircle, size: 12, color: Colors.green),
                     SizedBox(width: 4),
                     Text(
                       'Bebas Admin',
@@ -399,7 +400,7 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
               Expanded(
                 child: Row(
                   children: [
-                    Icon(Icons.timer_outlined, size: 14, color: Colors.red.shade700),
+                    Icon(PhosphorIconsRegular.timer, size: 14, color: Colors.red.shade700),
                     const SizedBox(width: 4),
                     Text(
                       'Sisa: ',
@@ -485,7 +486,7 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
                   color: const Color(0xFFC8102E).withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.qr_code_scanner_rounded, color: Color(0xFFC8102E), size: 24),
+                child: const Icon(PhosphorIconsRegular.qrCode, color: Color(0xFFC8102E), size: 24),
               ),
               const SizedBox(width: 12),
               const Expanded(
@@ -559,7 +560,7 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.verified_rounded, size: 14, color: Color(0xFFC8102E)),
+                    const Icon(PhosphorIconsFill.sealCheck, size: 14, color: Color(0xFFC8102E)),
                     const SizedBox(width: 4),
                     Text(
                       'NMID: ID102003847291 • QRIS STANDAR BI',
@@ -595,7 +596,7 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.qr_code_2_rounded, size: 100, color: Colors.grey.shade800),
+            Icon(PhosphorIconsRegular.qrCode, size: 100, color: Colors.grey.shade800),
             const SizedBox(height: 6),
             Text(
               'QRIS MIDTRANS CORE',
@@ -688,7 +689,7 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
                     backgroundColor: isCopied ? Colors.green.shade700 : null,
                     foregroundColor: isCopied ? Colors.white : null,
                   ),
-                  icon: Icon(isCopied ? Icons.check_circle_rounded : Icons.copy_rounded, size: 16),
+                  icon: Icon(isCopied ? PhosphorIconsFill.checkCircle : PhosphorIconsRegular.copy, size: 16),
                   label: Text(
                     isCopied ? 'Tersalin!' : 'Salin',
                     style: const TextStyle(fontWeight: FontWeight.bold),
@@ -721,7 +722,7 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
                   color: const Color(0xFF003D79).withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.account_balance_rounded, color: Color(0xFF003D79), size: 24),
+                child: const Icon(PhosphorIconsRegular.bank, color: Color(0xFF003D79), size: 24),
               ),
               const SizedBox(width: 12),
               const Expanded(
@@ -761,7 +762,7 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
                   ],
                 ),
                 IconButton(
-                  icon: Icon(isCodeCopied ? Icons.check_circle_rounded : Icons.copy_rounded, size: 18, color: isCodeCopied ? Colors.green : null),
+                  icon: Icon(isCodeCopied ? PhosphorIconsFill.checkCircle : PhosphorIconsRegular.copy, size: 18, color: isCodeCopied ? Colors.green : null),
                   tooltip: 'Salin Kode Perusahaan',
                   onPressed: () => _copyToClipboard(billerCode, 'Kode Perusahaan'),
                 ),
@@ -788,7 +789,7 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
                   ],
                 ),
                 IconButton(
-                  icon: Icon(isKeyCopied ? Icons.check_circle_rounded : Icons.copy_rounded, size: 18, color: isKeyCopied ? Colors.green : null),
+                  icon: Icon(isKeyCopied ? PhosphorIconsFill.checkCircle : PhosphorIconsRegular.copy, size: 18, color: isKeyCopied ? Colors.green : null),
                   tooltip: 'Salin Kode Bayar',
                   onPressed: () => _copyToClipboard(billKey, 'Kode Bayar'),
                 ),
@@ -846,7 +847,7 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               ),
-              icon: const Icon(Icons.open_in_new_rounded, size: 18),
+              icon: const Icon(PhosphorIconsRegular.arrowSquareOut, size: 18),
               label: Text(
                 'Buka Aplikasi ${_data.channel.name}',
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
@@ -867,7 +868,7 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
         children: [
           Row(
             children: [
-              Icon(Icons.info_outline_rounded, size: 18, color: theme.colorScheme.primary),
+              Icon(PhosphorIconsRegular.info, size: 18, color: theme.colorScheme.primary),
               const SizedBox(width: 8),
               const Text(
                 'Panduan Cara Pembayaran',
