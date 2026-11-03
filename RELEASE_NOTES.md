@@ -1,4 +1,4 @@
-• Pembaruan Ikon Modern: Seluruh antarmuka aplikasi kini menggunakan keluarga Phosphor Icons yang proporsional, elegan, dan konsisten di setiap menu.
-• Kompatibilitas Flutter & Dart 3 Terbaru: Penyesuaian pustaka ikon agar optimal dan stabil pada pembaruan mesin Flutter generasi terbaru.
-• Penyempurnaan Tampilan Dasbor: Kartu ringkasan dokumen KUA dan komponen bento kini tampil lebih bersih dan nyaman dipandang.
-• Peningkatan Kestabilan Sistem: Menjaga kelancaran transisi layar dan efisiensi performa aplikasi saat digunakan merencanakan pernikahan.
+• Redesain Paywall & Aktivasi Lisensi Eksklusif: Tampilan aktivasi lisensi mengusung konsep Single-Viewport Editorial Bento yang ringkas, elegan, dan bebas dari scrolling. Dilengkapi badge tiket resmi Lifetime Pass untuk 2 akun.
+• Kanal Pembayaran Midtrans Lengkap: Integrasi logo resmi kanal pembayaran (BCA, BNI, BRI, Mandiri, BSI, CIMB, Permata, QRIS, GoPay, ShopeePay) dengan struk virtual account yang bersih dan instruksi pembayaran interaktif.
+• Penyempurnaan Alur Hubungkan Pasangan: Modal pairing kode pasangan kini lebih intuitif dengan kontrol tab peran responsif dan tombol tempel kode kilat dari papan klip.
+• Pusat Tanya Jawab & Keamanan Lisensi: Lembar tanya jawab interaktif untuk menjawab pertanyaan seputar lisensi tanpa mengotori layar utama aktivasi.
