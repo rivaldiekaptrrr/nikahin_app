@@ -126,9 +126,17 @@ class MidtransPaymentService {
           fallbackAmount: amount,
         );
         return MidtransCoreChargeResult.success(data: chargeData);
+      } else {
+        try {
+          final errJson = jsonDecode(res.body) as Map<String, dynamic>;
+          final errMsg = errJson['error'] ?? errJson['status_message'] ?? errJson['details'] ?? 'Gagal memproses pembayaran (${res.statusCode})';
+          return MidtransCoreChargeResult.error(message: errMsg.toString());
+        } catch (_) {
+          return MidtransCoreChargeResult.error(message: 'Server pembayaran merespons galat (${res.statusCode}).');
+        }
       }
     } catch (_) {
-      // Fallback ke direct Midtrans API call
+      // Fallback ke direct Midtrans API call jika backend tidak terjangkau
     }
 
       // 2. Direct Midtrans Core API Request (Coba Sandbox lalu Production jika 401)

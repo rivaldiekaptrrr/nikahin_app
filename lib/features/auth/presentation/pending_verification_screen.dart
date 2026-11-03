@@ -327,47 +327,29 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
 
     setState(() => _isPaymentLoading = true);
     try {
-      // 1. Prioritaskan checkout resmi Midtrans Snap
-      final snapResult = await ref.read(authNotifierProvider.notifier).createMidtransPayment(
-        accessLevel: 'WEDDING',
+      // Eksekusi pembayaran langsung Midtrans Core API (100% In-App Native)
+      final result = await ref.read(authNotifierProvider.notifier).chargeMidtransCoreApi(
+        channel: selectedChannel,
       );
       if (!mounted) return;
 
-      switch (snapResult) {
-        case MidtransPaymentSuccess(:final redirectUrl):
-          final uri = Uri.parse(redirectUrl);
-          final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
-          if (!launched) {
-            await launchUrl(uri);
-          }
+      switch (result) {
+        case MidtransCoreChargeSuccess(:final data):
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (ctx) => MidtransCustomPaymentScreen(chargeData: data),
+            ),
+          );
           break;
 
-        case MidtransPaymentError():
-          // Fallback ke Core API jika Snap backend sedang tidak terjangkau
-          final result = await ref.read(authNotifierProvider.notifier).chargeMidtransCoreApi(
-            channel: selectedChannel,
+        case MidtransCoreChargeError(:final message):
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(message),
+              backgroundColor: Theme.of(context).colorScheme.error,
+              behavior: SnackBarBehavior.floating,
+            ),
           );
-          if (!mounted) return;
-
-          switch (result) {
-            case MidtransCoreChargeSuccess(:final data):
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (ctx) => MidtransCustomPaymentScreen(chargeData: data),
-                ),
-              );
-              break;
-
-            case MidtransCoreChargeError(:final message):
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(message),
-                  backgroundColor: Theme.of(context).colorScheme.error,
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
-              break;
-          }
           break;
       }
     } catch (e) {
