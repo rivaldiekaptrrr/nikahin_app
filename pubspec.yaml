@@ -86,6 +86,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/payment/
     - assets/logo/png/
     - assets/logo/svg/
 
