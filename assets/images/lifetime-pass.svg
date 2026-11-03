@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 260" width="460" height="260">
+  <path d="M50 35 H410 Q420 35 420 45 V50.1 A7 7 0 0 0 420 64.1 V74.4 A7 7 0 0 0 420 88.4 V98.7 A7 7 0 0 0 420 112.7 V123.0 A7 7 0 0 0 420 137.0 V147.3 A7 7 0 0 0 420 161.3 V171.6 A7 7 0 0 0 420 185.6 V195.9 A7 7 0 0 0 420 209.9 V215 Q420 225 410 225 H50 Q40 225 40 215 V209.9 A7 7 0 0 0 40 195.9 V185.6 A7 7 0 0 0 40 171.6 V161.3 A7 7 0 0 0 40 147.3 V137.0 A7 7 0 0 0 40 123.0 V112.7 A7 7 0 0 0 40 98.7 V88.4 A7 7 0 0 0 40 74.4 V64.1 A7 7 0 0 0 40 50.1 V45 Q40 35 50 35Z" fill="none" stroke="#B76E79" stroke-width="5" stroke-linejoin="round"/>
+  <rect x="62" y="68" width="336" height="124" rx="24" fill="#FBE8E6" stroke="#B76E79" stroke-width="5"/>
+  <line x1="192" y1="68" x2="192" y2="192" stroke="#B76E79" stroke-width="5"/>
+  <path d="M127 130 C117 106 88 106 88 130 C88 154 117 154 127 130 C137 106 166 106 166 130 C166 154 137 154 127 130Z" fill="none" stroke="#B76E79" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+  <g font-weight="700" fill="#B76E79" text-anchor="middle">
+    <text x="295" y="125" font-size="28" letter-spacing="2">LIFETIME</text>
+    <text x="295" y="165" font-size="28" letter-spacing="3">PASS</text>
+  </g>
+</svg>

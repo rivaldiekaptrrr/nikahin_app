@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
@@ -376,8 +377,9 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
-        title: const Text('Aktivasi Lisensi'),
-        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
         actions: [
           IconButton(
             icon: const Icon(PhosphorIconsRegular.signOut),
@@ -849,75 +851,27 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
     );
   }
 
-  /// Tampilan Direct Payment Midtrans Core API (Jika mode manual = false)
+  /// Tampilan Direct Payment Midtrans Core API (Clean Editorial Luxury Edition)
   Widget _buildDirectPaymentContent(ThemeData theme, String userEmail) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Hero Romantic Header
+        const SizedBox(height: 12),
+
+        // 1. Logo Resmi Simbol Nikahin
         Center(
-          child: Container(
-            width: 76,
-            height: 76,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                colors: [
-                  theme.colorScheme.primaryContainer,
-                  theme.colorScheme.surfaceContainerHighest,
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.2),
-                  blurRadius: 20,
-                  offset: const Offset(0, 8),
-                ),
-              ],
-            ),
-            child: Center(
-              child: Icon(
-                PhosphorIconsFill.heart,
-                size: 40,
-                color: theme.colorScheme.primary,
-              ),
-            ),
+          child: Image.asset(
+            'assets/logo/png/nikahin-symbol-master-512.png',
+            width: 72,
+            height: 72,
+            fit: BoxFit.contain,
           ),
         ),
-        const SizedBox(height: 14),
+        const SizedBox(height: 18),
 
-        // Social Proof Chip
-        Center(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            decoration: BoxDecoration(
-              color: Colors.amber.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.amber.withValues(alpha: 0.3)),
-            ),
-            child: const Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(PhosphorIconsFill.star, size: 15, color: Colors.amber),
-                SizedBox(width: 4),
-                Text(
-                  'Dipercaya 10.000+ Calon Pengantin',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFFB78103),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 10),
-
+        // 2. Headline & Subtitle
         Text(
-          'Satu Langkah Menuju Pernikahan Impian 💍',
+          'Aktivasi Akses Penuh',
           textAlign: TextAlign.center,
           style: theme.textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.w900,
@@ -925,28 +879,28 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
           ),
         ),
         const SizedBox(height: 6),
-        Text(
-          'Akun ($userEmail) siap digunakan. Dapatkan akses penuh seumur hidup tanpa biaya langganan berulang.',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 12.5,
-            color: theme.colorScheme.onSurfaceVariant,
-            height: 1.4,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            'Rencanakan momen bahagiamu bersama pasangan dalam satu aplikasi tanpa biaya langganan.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 13,
+              color: theme.colorScheme.onSurfaceVariant,
+              height: 1.4,
+            ),
           ),
         ),
-        const SizedBox(height: 18),
+        const SizedBox(height: 24),
 
-        // Akses Co-Planner Pasangan (Bypass Pembayaran)
-        _buildCouplePairingBanner(context, theme),
-        const SizedBox(height: 18),
-
-        // VIP Lifetime Pass Card
+        // 3. Single Clean Offer Bento Card
         BentoCard(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(22),
+          borderRadius: 22,
           gradient: LinearGradient(
             colors: [
-              theme.colorScheme.primaryContainer.withValues(alpha: 0.65),
-              theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.75),
+              theme.colorScheme.primaryContainer.withValues(alpha: 0.4),
+              theme.colorScheme.surface,
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -955,263 +909,392 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primary,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(PhosphorIconsFill.crown, size: 14, color: Colors.white),
-                        SizedBox(width: 4),
                         Text(
-                          'VIP LIFETIME PASS',
+                          'Akses Penuh Pasangan',
                           style: TextStyle(
-                            fontSize: 10.5,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            letterSpacing: 0.5,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w800,
+                            color: theme.colorScheme.primary,
+                            letterSpacing: -0.2,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '1 lisensi aktif untuk 2 akun (kamu & pasangan)',
+                          style: TextStyle(
+                            fontSize: 11.5,
+                            color: theme.colorScheme.onSurfaceVariant,
+                            height: 1.3,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                    decoration: BoxDecoration(
-                      color: Colors.red.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: const Text(
-                      'HEMAT 50%',
-                      style: TextStyle(
-                        fontSize: 10.5,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red,
-                      ),
-                    ),
+                  const SizedBox(width: 14),
+                  SvgPicture.asset(
+                    'assets/images/lifetime-pass.svg',
+                    height: 50,
+                    fit: BoxFit.contain,
                   ),
                 ],
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 16),
 
-              Text(
-                BusinessConfig.packageName,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              const SizedBox(height: 6),
-
+              // Harga
               Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
                 children: [
-                  Flexible(
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        CurrencyUtils.formatRupiah(BusinessConfig.lifetimePrice),
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w900,
-                          color: theme.colorScheme.primary,
-                          letterSpacing: -0.5,
-                        ),
-                      ),
+                  Text(
+                    CurrencyUtils.formatRupiah(BusinessConfig.lifetimePrice),
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w900,
+                      color: theme.colorScheme.onSurface,
+                      letterSpacing: -0.8,
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 4),
-                    child: Text(
-                      CurrencyUtils.formatRupiah(BusinessConfig.originalPrice),
-                      style: TextStyle(
-                        fontSize: 13,
-                        decoration: TextDecoration.lineThrough,
-                        color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
-                      ),
+                  Text(
+                    '/ selamanya',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 2),
-              Text(
-                'Cukup bayar sekali untuk menikmati semua fitur dan pembaruan selamanya.',
-                style: TextStyle(fontSize: 11.5, color: theme.colorScheme.onSurfaceVariant),
+              const SizedBox(height: 16),
+              Divider(
+                height: 1,
+                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+              ),
+              const SizedBox(height: 16),
+
+              // Daftar 3 Benefit Utama
+              _buildBenefitRow(
+                theme: theme,
+                icon: PhosphorIconsFill.checkCircle,
+                text: 'Sinkronisasi real-time dua arah dengan akun pasangan',
+              ),
+              const SizedBox(height: 10),
+              _buildBenefitRow(
+                theme: theme,
+                icon: PhosphorIconsFill.checkCircle,
+                text: 'Kelola anggaran, termin vendor, rundown, & buku tamu',
+              ),
+              const SizedBox(height: 10),
+              _buildBenefitRow(
+                theme: theme,
+                icon: PhosphorIconsFill.checkCircle,
+                text: 'Ekspor dokumen panduan PDF & checklist KUA resmi',
               ),
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 24),
 
-        // Bento Grid Highlights (2x2 Grid)
-        Row(
-          children: [
-            Expanded(
-              child: _buildBentoFeatureCard(
-                theme: theme,
-                icon: PhosphorIconsRegular.wallet,
-                title: 'Anggaran & Vendor',
-                desc: 'Termin DP & lunas otomatis',
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: _buildBentoFeatureCard(
-                theme: theme,
-                icon: PhosphorIconsRegular.users,
-                title: 'Buku Tamu Digital',
-                desc: 'RSVP real-time & kategori',
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        Row(
-          children: [
-            Expanded(
-              child: _buildBentoFeatureCard(
-                theme: theme,
-                icon: PhosphorIconsRegular.calendarCheck,
-                title: 'Rundown & PIC',
-                desc: 'Skrip acara menit-ke-menit',
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: _buildBentoFeatureCard(
-                theme: theme,
-                icon: PhosphorIconsRegular.filePdf,
-                title: 'Panduan PDF & KUA',
-                desc: 'Ekspor dokumen siap cetak',
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-
-        // Trust & Security Badges Row
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.35),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.25)),
-          ),
-          child: Row(
-            children: [
-              _buildTrustItem(PhosphorIconsRegular.lock, 'Enkripsi 256-bit'),
-              Container(width: 1, height: 16, color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
-              _buildTrustItem(PhosphorIconsRegular.qrCode, 'QRIS Resmi'),
-              Container(width: 1, height: 16, color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
-              _buildTrustItem(PhosphorIconsRegular.lightning, 'Aktivasi Instan'),
-            ],
-          ),
-        ),
-        const SizedBox(height: 18),
-
-        // Clean Action Button
+        // 4. Tombol Utama (Pilih Metode Pembayaran)
         FilledButton.icon(
           onPressed: _isPaymentLoading ? null : _handleMidtransCorePurchase,
           style: FilledButton.styleFrom(
             backgroundColor: theme.colorScheme.primary,
-            foregroundColor: Colors.white,
-            minimumSize: const Size.fromHeight(54),
+            foregroundColor: theme.colorScheme.onPrimary,
+            minimumSize: const Size.fromHeight(52),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            elevation: 2,
+            elevation: 0,
           ),
           icon: _isPaymentLoading
               ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2.5, color: Colors.white),
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                 )
-              : const Icon(PhosphorIconsFill.lightning, size: 20),
+              : const Icon(PhosphorIconsRegular.wallet, size: 18),
           label: Text(
-            _isPaymentLoading ? 'Menyiapkan Pembayaran...' : 'Bayar Sekarang',
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            _isPaymentLoading ? 'Menyiapkan Pembayaran...' : 'Pilih Metode Pembayaran',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14.5),
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 14),
 
-        // Footer Note
-        Text(
-          'Pembayaran diverifikasi secara otomatis dalam hitungan detik setelah transaksi selesai.',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 11.5,
-            color: theme.colorScheme.onSurfaceVariant,
-            height: 1.35,
-          ),
+        // 5. Tautan Pasangan (Secondary Action yang Bersih)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Punya kode dari pasangan?',
+              style: TextStyle(
+                fontSize: 12.5,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            TextButton(
+              onPressed: () => _showPairingCodeModal(context),
+              style: TextButton.styleFrom(
+                visualDensity: VisualDensity.compact,
+                padding: const EdgeInsets.symmetric(horizontal: 6),
+              ),
+              child: Text(
+                'Hubungkan Akun',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12.5,
+                  color: theme.colorScheme.primary,
+                ),
+              ),
+            ),
+          ],
         ),
-        const SizedBox(height: 18),
+        const SizedBox(height: 6),
+
+        // 6. Utility Footer (Trust Badge & Akses Tanya Jawab)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              PhosphorIconsRegular.shieldCheck,
+              size: 13,
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.65),
+            ),
+            const SizedBox(width: 4),
+            Text(
+              'Transaksi Aman',
+              style: TextStyle(
+                fontSize: 11,
+                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Text(
+                '•',
+                style: TextStyle(
+                  fontSize: 11,
+                  color: theme.colorScheme.outlineVariant,
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () => _showFaqModal(context),
+              child: Text(
+                'Tanya Jawab',
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: theme.colorScheme.primary.withValues(alpha: 0.9),
+                  decoration: TextDecoration.underline,
+                  decorationColor: theme.colorScheme.primary.withValues(alpha: 0.35),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
       ],
     );
   }
 
-  Widget _buildBentoFeatureCard({
-    required ThemeData theme,
-    required IconData icon,
-    required String title,
-    required String desc,
-  }) {
-    return BentoCard(
-      padding: const EdgeInsets.all(14),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(7),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primaryContainer.withValues(alpha: 0.7),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(icon, size: 18, color: theme.colorScheme.primary),
-          ),
-          const SizedBox(height: 10),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            alignment: Alignment.centerLeft,
-            child: Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            desc,
-            style: TextStyle(fontSize: 11, color: theme.colorScheme.onSurfaceVariant),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
+  /// Menampilkan Tanya Jawab seputar lisensi via Bottom Sheet (Menjaga halaman utama tetap 100% no-scroll)
+  void _showFaqModal(BuildContext context) {
+    final theme = Theme.of(context);
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: theme.colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
+      builder: (ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 16, bottom: 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(
+                        PhosphorIconsRegular.question,
+                        color: theme.colorScheme.primary,
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    const Expanded(
+                      child: Text(
+                        'Tanya Jawab Lisensi',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Hal yang sering ditanyakan calon pengantin seputar aktivasi aplikasi Nikahin.',
+                  style: TextStyle(fontSize: 12.5, color: theme.colorScheme.onSurfaceVariant),
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+                    ),
+                  ),
+                  child: Theme(
+                    data: theme.copyWith(dividerColor: Colors.transparent),
+                    child: Column(
+                      children: [
+                        _buildFaqItem(
+                          theme: theme,
+                          question: 'Apakah pasangan saya perlu membayar lagi?',
+                          answer:
+                              'Tidak perlu. Cukup 1 kali pembelian untuk satu pernikahan. Setelah aktif, pasanganmu bisa langsung masuk lewat kode undangan tanpa biaya tambahan.',
+                        ),
+                        Divider(
+                          height: 1,
+                          thickness: 1,
+                          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+                          indent: 16,
+                          endIndent: 16,
+                        ),
+                        _buildFaqItem(
+                          theme: theme,
+                          question: 'Bagaimana jika acara kami masih tahun depan?',
+                          answer:
+                              'Akses akun aktif selamanya tanpa batas waktu dan tanpa tagihan bulanan. Kamu bisa merencanakan setiap detail pernikahan kapan saja dengan tenang.',
+                        ),
+                        Divider(
+                          height: 1,
+                          thickness: 1,
+                          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+                          indent: 16,
+                          endIndent: 16,
+                        ),
+                        _buildFaqItem(
+                          theme: theme,
+                          question: 'Apakah data tetap aman jika berganti HP?',
+                          answer:
+                              'Semua data anggaran, vendor, dan daftar tamu tersimpan otomatis di akunmu. Kamu cukup masuk kembali dengan email yang sama di ponsel baru.',
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 18),
+                FilledButton(
+                  onPressed: () => Navigator.of(ctx).pop(),
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 13),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  ),
+                  child: const Text('Mengerti', style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildTrustItem(IconData icon, String label) {
-    return Expanded(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 14, color: Colors.green.shade700),
-          const SizedBox(width: 4),
-          Flexible(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                label,
-                style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w600, color: Colors.grey.shade700),
-                maxLines: 1,
-              ),
+  Widget _buildFaqItem({
+    required ThemeData theme,
+    required String question,
+    required String answer,
+  }) {
+    return ExpansionTile(
+      shape: const RoundedRectangleBorder(),
+      collapsedShape: const RoundedRectangleBorder(),
+      tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+      childrenPadding: const EdgeInsets.only(left: 16, right: 16, bottom: 14),
+      iconColor: theme.colorScheme.primary,
+      collapsedIconColor: theme.colorScheme.onSurfaceVariant,
+      title: Text(
+        question,
+        style: TextStyle(
+          fontSize: 12.5,
+          fontWeight: FontWeight.w600,
+          color: theme.colorScheme.onSurface,
+        ),
+      ),
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            answer,
+            style: TextStyle(
+              fontSize: 12,
+              color: theme.colorScheme.onSurfaceVariant,
+              height: 1.45,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBenefitRow({
+    required ThemeData theme,
+    required IconData icon,
+    required String text,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          margin: const EdgeInsets.only(top: 1.5),
+          padding: const EdgeInsets.all(2.5),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primary.withValues(alpha: 0.12),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            PhosphorIconsBold.check,
+            size: 10,
+            color: theme.colorScheme.primary,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 12.5,
+              fontWeight: FontWeight.w500,
+              color: theme.colorScheme.onSurface,
+              height: 1.35,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -1336,10 +1419,10 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFE11D48).withValues(alpha: 0.12),
+                          color: theme.colorScheme.primary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: const Icon(PhosphorIconsFill.heart, color: Color(0xFFE11D48), size: 20),
+                        child: Icon(PhosphorIconsRegular.linkSimple, color: theme.colorScheme.primary, size: 20),
                       ),
                       const SizedBox(width: 12),
                       const Expanded(
@@ -1361,23 +1444,37 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                     textCapitalization: TextCapitalization.characters,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 4.0,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 3.5,
                     ),
                     maxLength: 12,
                     decoration: InputDecoration(
                       hintText: 'NK-XXXXXX',
                       hintStyle: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 3.0,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 2.5,
                         color: theme.colorScheme.outlineVariant,
                       ),
                       counterText: '',
                       filled: true,
                       fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      suffixIcon: IconButton(
+                        tooltip: 'Tempel kode',
+                        icon: const Icon(PhosphorIconsRegular.clipboardText, size: 20),
+                        onPressed: () async {
+                          final data = await Clipboard.getData(Clipboard.kTextPlain);
+                          final text = data?.text?.trim() ?? '';
+                          if (text.isNotEmpty) {
+                            codeController.text = text;
+                            if (localError != null) {
+                              setModalState(() => localError = null);
+                            }
+                          }
+                        },
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
                         borderSide: BorderSide(color: theme.colorScheme.outlineVariant),
@@ -1405,34 +1502,104 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                       textAlign: TextAlign.center,
                     ),
                   ],
-                  const SizedBox(height: 14),
-                  const Text(
-                    'Peran Anda:',
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Anda sebagai',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12.5,
+                      color: theme.colorScheme.onSurface,
+                    ),
                   ),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ChoiceChip(
-                          label: const Center(child: Text('Pengantin Wanita 👰')),
-                          selected: selectedRole == 'BRIDE',
-                          onSelected: (val) {
-                            if (val) setModalState(() => selectedRole = 'BRIDE');
-                          },
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(9),
+                            onTap: () => setModalState(() => selectedRole = 'BRIDE'),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              decoration: BoxDecoration(
+                                color: selectedRole == 'BRIDE'
+                                    ? theme.colorScheme.surface
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(9),
+                                boxShadow: selectedRole == 'BRIDE'
+                                    ? [
+                                        BoxShadow(
+                                          color: theme.brightness == Brightness.dark
+                                              ? Colors.black.withValues(alpha: 0.3)
+                                              : Colors.black.withValues(alpha: 0.06),
+                                          blurRadius: 4,
+                                          offset: const Offset(0, 1),
+                                        ),
+                                      ]
+                                    : null,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Mempelai Wanita',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: selectedRole == 'BRIDE' ? FontWeight.w600 : FontWeight.normal,
+                                    color: selectedRole == 'BRIDE'
+                                        ? theme.colorScheme.primary
+                                        : theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: ChoiceChip(
-                          label: const Center(child: Text('Pengantin Pria 🤵')),
-                          selected: selectedRole == 'GROOM',
-                          onSelected: (val) {
-                            if (val) setModalState(() => selectedRole = 'GROOM');
-                          },
+                        Expanded(
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(9),
+                            onTap: () => setModalState(() => selectedRole = 'GROOM'),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              decoration: BoxDecoration(
+                                color: selectedRole == 'GROOM'
+                                    ? theme.colorScheme.surface
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(9),
+                                boxShadow: selectedRole == 'GROOM'
+                                    ? [
+                                        BoxShadow(
+                                          color: theme.brightness == Brightness.dark
+                                              ? Colors.black.withValues(alpha: 0.3)
+                                              : Colors.black.withValues(alpha: 0.06),
+                                          blurRadius: 4,
+                                          offset: const Offset(0, 1),
+                                        ),
+                                      ]
+                                    : null,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Mempelai Pria',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: selectedRole == 'GROOM' ? FontWeight.w600 : FontWeight.normal,
+                                    color: selectedRole == 'GROOM'
+                                        ? theme.colorScheme.primary
+                                        : theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 20),
                   FilledButton.icon(
@@ -1456,8 +1623,8 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
 
                             final result = await pairingService.verifyAndClaimPairingCode(
                               rawCode: raw,
-                              partnerUid: partnerUid,
                               partnerRole: selectedRole,
+                              partnerUid: partnerUid,
                             );
 
                             if (result.isSuccess) {
@@ -1518,9 +1685,9 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                             height: 18,
                             child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                           )
-                        : const Icon(PhosphorIconsRegular.link, size: 20),
+                        : const Icon(PhosphorIconsRegular.linkSimple, size: 20),
                     label: Text(
-                      isClaiming ? 'Menghubungkan...' : 'Verifikasi & Hubungkan',
+                      isClaiming ? 'Menghubungkan...' : 'Hubungkan',
                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                     ),
                   ),
