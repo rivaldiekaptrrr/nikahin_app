@@ -3,23 +3,30 @@ import 'package:flutter/services.dart';
 import 'package:phosphor_icons/phosphor_icons.dart';
 import '../../../../domain/models/midtrans_core_models.dart';
 import '../../../../shared/widgets/bento_card.dart';
+import 'payment_brand_badge.dart';
 
-/// Modal bottom sheet untuk memilih metode pembayaran Midtrans Core API (Luxury Bento Edition)
+/// Modal pemilihan metode pembayaran Midtrans Core API (Standar Produksi Fintech & Bento Grid)
 class PaymentChannelSelectionModal extends StatefulWidget {
   final ValueChanged<PaymentChannel> onChannelSelected;
+  final PaymentChannel? initialChannel;
 
   const PaymentChannelSelectionModal({
     super.key,
     required this.onChannelSelected,
+    this.initialChannel,
   });
 
-  static Future<PaymentChannel?> show(BuildContext context) {
+  static Future<PaymentChannel?> show(
+    BuildContext context, {
+    PaymentChannel? initialChannel,
+  }) {
     HapticFeedback.mediumImpact();
     return showModalBottomSheet<PaymentChannel>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) => PaymentChannelSelectionModal(
+        initialChannel: initialChannel,
         onChannelSelected: (channel) => Navigator.of(ctx).pop(channel),
       ),
     );
@@ -30,213 +37,247 @@ class PaymentChannelSelectionModal extends StatefulWidget {
 }
 
 class _PaymentChannelSelectionModalState extends State<PaymentChannelSelectionModal> {
-  int _selectedFilterIndex = 0; // 0: Semua, 1: QRIS, 2: Virtual Account, 3: E-Wallet
+  late PaymentChannel _selectedChannel;
 
-  final List<String> _categories = ['Semua', '⚡ QRIS', '🏦 Virtual Account', '📱 E-Wallet'];
+  // Status expand/collapse seksi
+  bool _isRecommendedExpanded = true;
+  bool _isVaExpanded = true;
+  bool _isEwalletExpanded = true;
+  bool _isUpcomingExpanded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Default pilihan ke GoPay atau initialChannel
+    _selectedChannel = widget.initialChannel ?? PaymentChannel.gopay;
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    final filteredChannels = _getFilteredChannels();
+    final isDark = theme.brightness == Brightness.dark;
 
     return Container(
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: isDark ? theme.colorScheme.surface : const Color(0xFFF8FAFC),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
       ),
-      padding: EdgeInsets.only(
-        top: 16,
-        bottom: MediaQuery.of(context).viewPadding.bottom + 16,
-        left: 20,
-        right: 20,
-      ),
       constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.88,
+        maxHeight: MediaQuery.of(context).size.height * 0.90,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Drag handle
+          const SizedBox(height: 12),
           Center(
             child: Container(
               width: 44,
               height: 4.5,
               decoration: BoxDecoration(
-                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.6),
+                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.7),
                 borderRadius: BorderRadius.circular(3),
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
 
-          // Header
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Pilih Metode Pembayaran',
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: -0.5,
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    Row(
-                      children: [
-                        const Icon(PhosphorIconsFill.shieldCheck, size: 13, color: Colors.green),
-                        const SizedBox(width: 4),
-                        Text(
-                          'Midtrans Official • Otomatis & Terverifikasi',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: theme.colorScheme.onSurfaceVariant,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              IconButton.filledTonal(
-                icon: const Icon(PhosphorIconsRegular.x, size: 20),
-                onPressed: () => Navigator.of(context).pop(),
-                visualDensity: VisualDensity.compact,
-              ),
-            ],
-          ),
-          const SizedBox(height: 14),
-
-          // Category Chips / Filter Bar
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
+          // Header Bar
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
-              children: List.generate(_categories.length, (index) {
-                final isSelected = _selectedFilterIndex == index;
-                return Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: ChoiceChip(
-                    label: Text(_categories[index]),
-                    selected: isSelected,
-                    onSelected: (val) {
-                      if (val) {
-                        HapticFeedback.selectionClick();
-                        setState(() => _selectedFilterIndex = index);
-                      }
-                    },
-                    labelStyle: TextStyle(
-                      fontSize: 12.5,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                      color: isSelected ? theme.colorScheme.onPrimary : theme.colorScheme.onSurface,
-                    ),
-                    selectedColor: theme.colorScheme.primary,
-                    backgroundColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                    showCheckmark: false,
-                    visualDensity: VisualDensity.compact,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Metode Pembayaran',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        'Pilih metode pembayaran yang paling nyaman untukmu',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: theme.colorScheme.onSurfaceVariant,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
-                );
-              }),
+                ),
+                IconButton.filledTonal(
+                  icon: const Icon(PhosphorIconsRegular.x, size: 18),
+                  onPressed: () => Navigator.of(context).pop(),
+                  visualDensity: VisualDensity.compact,
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 10),
 
-          // Scrollable list of payment channels
+          // Divider lembut
+          Divider(
+            height: 1,
+            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+          ),
+
+          // Scrollable Daftar Metode Pembayaran (Collapsible Categories)
           Expanded(
-            child: ListView.separated(
-              itemCount: filteredChannels.length,
-              separatorBuilder: (_, _) => const SizedBox(height: 10),
-              itemBuilder: (context, index) {
-                final channel = filteredChannels[index];
-                return _buildChannelCard(
-                  context: context,
-                  channel: channel,
-                  isHighlight: channel == PaymentChannel.qris,
-                );
-              },
+            child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+              children: [
+                // 1. REKOMENDASI PEMBAYARAN (AKTIF LIVE)
+                _buildSectionHeader(
+                  title: 'Rekomendasi Pembayaran',
+                  isExpanded: _isRecommendedExpanded,
+                  onToggle: () => setState(() => _isRecommendedExpanded = !_isRecommendedExpanded),
+                  theme: theme,
+                ),
+                if (_isRecommendedExpanded) ...[
+                  const SizedBox(height: 8),
+                  _buildChannelIslandCard(
+                    channel: PaymentChannel.gopay,
+                    theme: theme,
+                  ),
+                  const SizedBox(height: 14),
+                ],
+
+                // 2. VIRTUAL ACCOUNT OTOMATIS 24 JAM
+                _buildSectionHeader(
+                  title: 'Virtual Account (Otomatis 24 Jam)',
+                  isExpanded: _isVaExpanded,
+                  onToggle: () => setState(() => _isVaExpanded = !_isVaExpanded),
+                  theme: theme,
+                ),
+                if (_isVaExpanded) ...[
+                  const SizedBox(height: 8),
+                  _buildChannelIslandCard(channel: PaymentChannel.briVa, theme: theme),
+                  const SizedBox(height: 8),
+                  _buildChannelIslandCard(channel: PaymentChannel.mandiriBill, theme: theme),
+                  const SizedBox(height: 8),
+                  _buildChannelIslandCard(channel: PaymentChannel.bniVa, theme: theme),
+                  const SizedBox(height: 8),
+                  _buildChannelIslandCard(channel: PaymentChannel.permataVa, theme: theme),
+                  const SizedBox(height: 8),
+                  _buildChannelIslandCard(channel: PaymentChannel.cimbVa, theme: theme),
+                  const SizedBox(height: 14),
+                ],
+
+                // 3. PEMBAYARAN INSTAN & QRIS
+                _buildSectionHeader(
+                  title: 'Dompet Digital & QRIS',
+                  isExpanded: _isEwalletExpanded,
+                  onToggle: () => setState(() => _isEwalletExpanded = !_isEwalletExpanded),
+                  theme: theme,
+                ),
+                if (_isEwalletExpanded) ...[
+                  const SizedBox(height: 8),
+                  _buildChannelIslandCard(channel: PaymentChannel.qris, theme: theme),
+                  const SizedBox(height: 8),
+                  _buildChannelIslandCard(channel: PaymentChannel.shopeepay, theme: theme),
+                  const SizedBox(height: 14),
+                ],
+
+                // 4. SALURAN DALAM PROSES AKTIVASI
+                _buildSectionHeader(
+                  title: 'Segera Hadir',
+                  isExpanded: _isUpcomingExpanded,
+                  onToggle: () => setState(() => _isUpcomingExpanded = !_isUpcomingExpanded),
+                  theme: theme,
+                ),
+                if (_isUpcomingExpanded) ...[
+                  const SizedBox(height: 8),
+                  _buildChannelIslandCard(channel: PaymentChannel.bcaVa, theme: theme),
+                  const SizedBox(height: 8),
+                  _buildChannelIslandCard(channel: PaymentChannel.bsiVa, theme: theme),
+                  const SizedBox(height: 14),
+                ],
+              ],
             ),
           ),
+
+          // Sticky Bottom Bar (Total Pembayaran & Tombol Lanjutkan)
+          _buildStickyBottomBar(theme),
         ],
       ),
     );
   }
 
-  List<PaymentChannel> _getFilteredChannels() {
-    switch (_selectedFilterIndex) {
-      case 1:
-        return [PaymentChannel.qris];
-      case 2:
-        return [
-          PaymentChannel.mandiriBill,
-          PaymentChannel.briVa,
-          PaymentChannel.bniVa,
-          PaymentChannel.permataVa,
-          PaymentChannel.cimbVa,
-          PaymentChannel.bsiVa,
-          PaymentChannel.bcaVa,
-        ];
-      case 3:
-        return [
-          PaymentChannel.gopay,
-          PaymentChannel.shopeepay,
-        ];
-      default:
-        return [
-          PaymentChannel.mandiriBill,
-          PaymentChannel.briVa,
-          PaymentChannel.bniVa,
-          PaymentChannel.permataVa,
-          PaymentChannel.cimbVa,
-          PaymentChannel.gopay,
-          PaymentChannel.qris,
-          PaymentChannel.bsiVa,
-          PaymentChannel.bcaVa,
-          PaymentChannel.shopeepay,
-        ];
-    }
+  Widget _buildSectionHeader({
+    required String title,
+    required bool isExpanded,
+    required VoidCallback onToggle,
+    required ThemeData theme,
+  }) {
+    return InkWell(
+      onTap: () {
+        HapticFeedback.selectionClick();
+        onToggle();
+      },
+      borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w800,
+                color: theme.colorScheme.onSurfaceVariant,
+                letterSpacing: -0.2,
+              ),
+            ),
+            Icon(
+              isExpanded ? PhosphorIconsRegular.caretUp : PhosphorIconsRegular.caretDown,
+              size: 16,
+              color: theme.colorScheme.primary,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
-  Widget _buildChannelCard({
-    required BuildContext context,
+  Widget _buildChannelIslandCard({
     required PaymentChannel channel,
-    bool isHighlight = false,
+    required ThemeData theme,
+    String? recommendedBadge,
   }) {
-    final theme = Theme.of(context);
-    final brandColor = _getBrandColor(channel);
+    final isSelected = _selectedChannel == channel;
     final isAvailable = channel.isAvailable;
+    final isDark = theme.brightness == Brightness.dark;
 
     final card = BentoCard(
       padding: EdgeInsets.zero,
-      gradient: (isHighlight && isAvailable)
-          ? LinearGradient(
-              colors: [
-                theme.colorScheme.primaryContainer.withValues(alpha: 0.4),
-                theme.colorScheme.surface,
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            )
-          : null,
+      backgroundColor: isDark ? theme.colorScheme.surfaceContainerHigh : Colors.white,
+      border: Border.all(
+        color: isSelected
+            ? theme.colorScheme.primary
+            : theme.colorScheme.outlineVariant.withValues(alpha: isDark ? 0.3 : 0.45),
+        width: isSelected ? 1.6 : 1.0,
+      ),
+      borderRadius: 16,
       child: InkWell(
         onTap: isAvailable
             ? () {
-                HapticFeedback.lightImpact();
-                widget.onChannelSelected(channel);
+                HapticFeedback.selectionClick();
+                setState(() => _selectedChannel = channel);
               }
             : () {
-                HapticFeedback.selectionClick();
+                HapticFeedback.mediumImpact();
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                      'Metode ${channel.name} masih menunggu aktivasi dari Midtrans dan akan segera hadir.',
+                      'Metode ${channel.name} sedang dalam proses aktivasi Midtrans dan akan segera hadir.',
                     ),
                     behavior: SnackBarBehavior.floating,
                     duration: const Duration(seconds: 2),
@@ -245,34 +286,17 @@ class _PaymentChannelSelectionModalState extends State<PaymentChannelSelectionMo
               },
         borderRadius: BorderRadius.circular(16),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
           child: Row(
             children: [
-              // Icon container with specific brand styling
-              Container(
-                width: 46,
-                height: 46,
-                decoration: BoxDecoration(
-                  color: isAvailable
-                      ? brandColor.withValues(alpha: 0.12)
-                      : theme.colorScheme.onSurface.withValues(alpha: 0.05),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(
-                    color: isAvailable
-                        ? brandColor.withValues(alpha: 0.25)
-                        : theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
-                    width: 1,
-                  ),
-                ),
-                child: Icon(
-                  channel.icon,
-                  color: isAvailable ? brandColor : theme.colorScheme.onSurfaceVariant,
-                  size: 24,
-                ),
+              // Logo Resmi Tanpa Kotak Pembungkus
+              PaymentBrandBadge(
+                channel: channel,
+                size: 40,
               ),
               const SizedBox(width: 14),
 
-              // Title, Subtitle, & Badge
+              // Info & Subtitle
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -283,82 +307,92 @@ class _PaymentChannelSelectionModalState extends State<PaymentChannelSelectionMo
                           child: Text(
                             channel.name,
                             style: TextStyle(
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w700,
                               fontSize: 14,
                               color: isAvailable
                                   ? theme.colorScheme.onSurface
-                                  : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                  : theme.colorScheme.onSurface.withValues(alpha: 0.5),
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        const SizedBox(width: 6),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: channel.badgeColor.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Text(
-                            channel.badge,
-                            style: TextStyle(
-                              fontSize: 9.5,
-                              fontWeight: FontWeight.w800,
-                              color: channel.badgeColor,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 3),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            channel.subtitle,
-                            style: TextStyle(
-                              fontSize: 11.5,
-                              color: theme.colorScheme.onSurfaceVariant.withValues(
-                                alpha: isAvailable ? 1.0 : 0.6,
-                              ),
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        if (isAvailable) ...[
+                        if (recommendedBadge != null && isAvailable) ...[
                           const SizedBox(width: 6),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
-                              color: Colors.green.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(4),
+                              color: theme.colorScheme.primary.withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(6),
                             ),
-                            child: const Text(
-                              'Bebas Biaya',
+                            child: Text(
+                              recommendedBadge,
                               style: TextStyle(
-                                fontSize: 9,
+                                fontSize: 9.5,
+                                fontWeight: FontWeight.w800,
+                                color: theme.colorScheme.primary,
+                              ),
+                            ),
+                          ),
+                        ] else if (!isAvailable) ...[
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              'Segera',
+                              style: TextStyle(
+                                fontSize: 9.5,
                                 fontWeight: FontWeight.w700,
-                                color: Colors.green,
+                                color: theme.colorScheme.onSurfaceVariant,
                               ),
                             ),
                           ),
                         ],
                       ],
                     ),
+                    const SizedBox(height: 3),
+                    Text(
+                      channel.subtitle,
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        color: theme.colorScheme.onSurfaceVariant.withValues(
+                          alpha: isAvailable ? 1.0 : 0.6,
+                        ),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ],
                 ),
               ),
+              const SizedBox(width: 10),
 
-              const SizedBox(width: 8),
-              Icon(
-                isAvailable ? PhosphorIconsRegular.caretRight : PhosphorIconsRegular.lock,
-                size: 20,
-                color: theme.colorScheme.onSurfaceVariant.withValues(
-                  alpha: isAvailable ? 0.6 : 0.35,
+              // Radio Button Elegan (Nikahin Theme Dynamic)
+              if (isAvailable)
+                Container(
+                  width: 22,
+                  height: 22,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: isSelected
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.outlineVariant.withValues(alpha: 0.8),
+                      width: isSelected ? 6.5 : 1.5,
+                    ),
+                    color: Colors.white,
+                  ),
+                )
+              else
+                Icon(
+                  PhosphorIconsRegular.lockSimple,
+                  size: 16,
+                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
                 ),
-              ),
             ],
           ),
         ),
@@ -367,35 +401,110 @@ class _PaymentChannelSelectionModalState extends State<PaymentChannelSelectionMo
 
     if (!isAvailable) {
       return Opacity(
-        opacity: 0.65,
+        opacity: 0.62,
         child: card,
       );
     }
     return card;
   }
 
-  Color _getBrandColor(PaymentChannel channel) {
-    switch (channel) {
-      case PaymentChannel.qris:
-        return const Color(0xFFC8102E); // QRIS Red
-      case PaymentChannel.bcaVa:
-        return const Color(0xFF005EAA); // BCA Blue
-      case PaymentChannel.mandiriBill:
-        return const Color(0xFF003D79); // Mandiri Deep Blue
-      case PaymentChannel.briVa:
-        return const Color(0xFF00529C); // BRI Blue
-      case PaymentChannel.bniVa:
-        return const Color(0xFFF15A24); // BNI Orange
-      case PaymentChannel.permataVa:
-        return const Color(0xFF008080); // Permata Teal
-      case PaymentChannel.cimbVa:
-        return const Color(0xFF880E4F); // CIMB Maroon
-      case PaymentChannel.bsiVa:
-        return const Color(0xFF00796B); // BSI Teal
-      case PaymentChannel.gopay:
-        return const Color(0xFF00AA13); // GoPay Green
-      case PaymentChannel.shopeepay:
-        return const Color(0xFFEE4D2D); // ShopeePay Orange
-    }
+  Widget _buildStickyBottomBar(ThemeData theme) {
+    final bottomInset = MediaQuery.of(context).viewPadding.bottom;
+
+    return Container(
+      padding: EdgeInsets.only(
+        left: 20,
+        right: 20,
+        top: 14,
+        bottom: bottomInset > 0 ? bottomInset + 8 : 16,
+      ),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        border: Border(
+          top: BorderSide(
+            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+            width: 1,
+          ),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 10,
+            offset: const Offset(0, -3),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Total Pembayaran
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'Total Pembayaran',
+                    style: TextStyle(
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Icon(
+                    PhosphorIconsRegular.info,
+                    size: 13,
+                    color: theme.colorScheme.primary,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 2),
+              Text(
+                'Rp 49.000',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  color: theme.colorScheme.onSurface,
+                  letterSpacing: -0.5,
+                ),
+              ),
+            ],
+          ),
+
+          // Tombol Pilih / Lanjutkan
+          FilledButton(
+            onPressed: () {
+              HapticFeedback.mediumImpact();
+              widget.onChannelSelected(_selectedChannel);
+            },
+            style: FilledButton.styleFrom(
+              backgroundColor: theme.colorScheme.primary,
+              foregroundColor: theme.colorScheme.onPrimary,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+              elevation: 0,
+            ),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Lanjutkan',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+                SizedBox(width: 6),
+                Icon(PhosphorIconsRegular.arrowRight, size: 16),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

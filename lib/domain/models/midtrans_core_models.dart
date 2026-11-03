@@ -5,8 +5,8 @@ import 'package:phosphor_icons/phosphor_icons.dart';
 enum PaymentChannel {
   qris(
     id: 'qris',
-    name: 'QRIS (Semua Bank & E-Wallet)',
-    subtitle: 'Sedang proses aktivasi di Midtrans (sekitar 3 hari kerja)',
+    name: 'QRIS',
+    subtitle: 'Semua Bank & E-Wallet',
     icon: PhosphorIconsRegular.qrCode,
     badge: 'SEGERA HADIR',
     badgeColor: Color(0xFFE65100),
@@ -15,7 +15,7 @@ enum PaymentChannel {
   mandiriBill(
     id: 'mandiri_bill',
     name: 'Mandiri Bill Payment',
-    subtitle: 'Transfer via Livin\' by Mandiri, ATM, atau Internet Banking',
+    subtitle: 'Virtual Account',
     icon: PhosphorIconsRegular.bank,
     badge: 'OTOMATIS 24 JAM',
     badgeColor: Color(0xFF00695C),
@@ -23,8 +23,8 @@ enum PaymentChannel {
   ),
   briVa(
     id: 'bri_va',
-    name: 'BRI Virtual Account (BRIVA)',
-    subtitle: 'Transfer via BRImo, ATM BRI, atau Internet Banking',
+    name: 'BRI Virtual Account',
+    subtitle: 'Virtual Account',
     icon: PhosphorIconsRegular.bank,
     badge: 'OTOMATIS 24 JAM',
     badgeColor: Color(0xFF0277BD),
@@ -33,7 +33,7 @@ enum PaymentChannel {
   bniVa(
     id: 'bni_va',
     name: 'BNI Virtual Account',
-    subtitle: 'Transfer via BNI Mobile Banking, ATM, atau SMS Banking',
+    subtitle: 'Virtual Account',
     icon: PhosphorIconsRegular.bank,
     badge: 'OTOMATIS 24 JAM',
     badgeColor: Color(0xFFD84315),
@@ -42,7 +42,7 @@ enum PaymentChannel {
   permataVa(
     id: 'permata_va',
     name: 'Permata Virtual Account',
-    subtitle: 'Transfer via PermataMobile X, ATM, atau Bank Lain',
+    subtitle: 'Virtual Account',
     icon: PhosphorIconsRegular.bank,
     badge: 'OTOMATIS 24 JAM',
     badgeColor: Color(0xFF4527A0),
@@ -51,7 +51,7 @@ enum PaymentChannel {
   cimbVa(
     id: 'cimb_va',
     name: 'CIMB Niaga Virtual Account',
-    subtitle: 'Transfer via OCTO Mobile, ATM CIMB, atau Bank Lain',
+    subtitle: 'Virtual Account',
     icon: PhosphorIconsRegular.bank,
     badge: 'OTOMATIS 24 JAM',
     badgeColor: Color(0xFF880E4F),
@@ -60,7 +60,7 @@ enum PaymentChannel {
   bsiVa(
     id: 'bsi_va',
     name: 'BSI Virtual Account',
-    subtitle: 'Sedang proses aktivasi perbankan syariah (sekitar 4 hari kerja)',
+    subtitle: 'Virtual Account',
     icon: PhosphorIconsRegular.bank,
     badge: 'SEGERA HADIR',
     badgeColor: Color(0xFF00796B),
@@ -69,7 +69,7 @@ enum PaymentChannel {
   gopay(
     id: 'gopay',
     name: 'GoPay / Gojek',
-    subtitle: 'Buka dan bayar langsung di aplikasi Gojek / GoPay',
+    subtitle: 'Instan 1-Ketuk',
     icon: PhosphorIconsRegular.wallet,
     badge: 'DEEPLINK',
     badgeColor: Color(0xFF00838F),
@@ -78,7 +78,7 @@ enum PaymentChannel {
   bcaVa(
     id: 'bca_va',
     name: 'BCA Virtual Account',
-    subtitle: 'Transfer via BCA (Bisa lewat Bank Lain)',
+    subtitle: 'Virtual Account',
     icon: PhosphorIconsRegular.bank,
     badge: 'SEGERA HADIR',
     badgeColor: Color(0xFF757575),
@@ -87,7 +87,7 @@ enum PaymentChannel {
   shopeepay(
     id: 'shopeepay',
     name: 'ShopeePay',
-    subtitle: 'Sedang proses aktivasi e-wallet (sekitar 20 hari kerja)',
+    subtitle: 'E-Wallet',
     icon: PhosphorIconsRegular.bag,
     badge: 'SEGERA HADIR',
     badgeColor: Color(0xFFE65100),
