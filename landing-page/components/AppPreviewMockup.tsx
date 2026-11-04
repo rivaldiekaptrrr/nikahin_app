@@ -34,54 +34,56 @@ export default function AppPreviewMockup() {
         </div>
 
         {/* Feature Tabs Bar */}
-        <div className="flex items-center justify-center gap-2 max-w-xl mx-auto p-1.5 rounded-2xl bg-slate-100/80 mb-12 overflow-x-auto">
-          <button
-            onClick={() => setActiveTab('budget')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
-              activeTab === 'budget'
-                ? 'bg-white text-[#d81b60] shadow-sm'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <Wallet className="w-4 h-4" />
-            <span>Anggaran & Termin</span>
-          </button>
+        <div className="w-full flex justify-center mb-12 px-2 sm:px-0">
+          <div className="flex items-center justify-start sm:justify-center gap-2 max-w-full sm:max-w-xl p-1.5 rounded-2xl bg-slate-100/90 overflow-x-auto scroll-smooth touch-pan-x [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <button
+              onClick={() => setActiveTab('budget')}
+              className={`flex items-center gap-2 px-3.5 py-2.5 sm:px-4 rounded-xl text-xs font-bold transition-all shrink-0 ${
+                activeTab === 'budget'
+                  ? 'bg-white text-[#d81b60] shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Wallet className="w-4 h-4" />
+              <span>Anggaran & Termin</span>
+            </button>
 
-          <button
-            onClick={() => setActiveTab('rundown')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
-              activeTab === 'rundown'
-                ? 'bg-white text-[#d81b60] shadow-sm'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <Clock className="w-4 h-4" />
-            <span>Rundown & PIC</span>
-          </button>
+            <button
+              onClick={() => setActiveTab('rundown')}
+              className={`flex items-center gap-2 px-3.5 py-2.5 sm:px-4 rounded-xl text-xs font-bold transition-all shrink-0 ${
+                activeTab === 'rundown'
+                  ? 'bg-white text-[#d81b60] shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Clock className="w-4 h-4" />
+              <span>Rundown & PIC</span>
+            </button>
 
-          <button
-            onClick={() => setActiveTab('guests')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
-              activeTab === 'guests'
-                ? 'bg-white text-[#d81b60] shadow-sm'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <Users2 className="w-4 h-4" />
-            <span>Tamu & RSVP</span>
-          </button>
+            <button
+              onClick={() => setActiveTab('guests')}
+              className={`flex items-center gap-2 px-3.5 py-2.5 sm:px-4 rounded-xl text-xs font-bold transition-all shrink-0 ${
+                activeTab === 'guests'
+                  ? 'bg-white text-[#d81b60] shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Users2 className="w-4 h-4" />
+              <span>Tamu & RSVP</span>
+            </button>
 
-          <button
-            onClick={() => setActiveTab('couple')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
-              activeTab === 'couple'
-                ? 'bg-white text-[#d81b60] shadow-sm'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <HeartHandshake className="w-4 h-4" />
-            <span>Koneksi Pasangan</span>
-          </button>
+            <button
+              onClick={() => setActiveTab('couple')}
+              className={`flex items-center gap-2 px-3.5 py-2.5 sm:px-4 rounded-xl text-xs font-bold transition-all shrink-0 ${
+                activeTab === 'couple'
+                  ? 'bg-white text-[#d81b60] shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <HeartHandshake className="w-4 h-4" />
+              <span>Koneksi Pasangan</span>
+            </button>
+          </div>
         </div>
 
         {/* Realistic Smartphone Frame (Center Showcase) */}
