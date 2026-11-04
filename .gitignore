@@ -62,3 +62,9 @@ test_midtrans_core_api.py
 # Cloudflare Wrangler CLI state
 .wrangler/
 
+
+# Web / Landing Page (Next.js)
+landing-page/node_modules/
+landing-page/.next/
+landing-page/out/
+landing-page/.vercel/
