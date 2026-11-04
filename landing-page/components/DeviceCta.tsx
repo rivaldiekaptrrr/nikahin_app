@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useSyncExternalStore } from 'react';
-import { Download, Apple, QrCode, Sparkles, CheckCircle } from 'lucide-react';
+import { Download, Apple, QrCode } from 'lucide-react';
 import IosInstallModal from './IosInstallModal';
 import DesktopQrModal from './DesktopQrModal';
 import { detectDevice, DeviceType } from '@/lib/device-detector';
@@ -105,23 +105,6 @@ export default function DeviceCta({
               </button>
             </>
           )}
-        </div>
-
-        {/* Info mikro jaminan */}
-        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-xs text-slate-500 pt-1">
-          <span className="flex items-center gap-1 font-medium">
-            <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
-            Ringan & Praktis
-          </span>
-          <span className="text-slate-300">•</span>
-          <span className="flex items-center gap-1 font-medium">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-            1 Akun untuk Berdua
-          </span>
-          <span className="text-slate-300">•</span>
-          <span className="font-medium text-slate-600">
-            Gratis Coba & Bebas Iklan
-          </span>
         </div>
       </div>
 
