@@ -1,0 +1,114 @@
+'use client';
+
+import React from 'react';
+import { X, Share, PlusSquare, ExternalLink, Smartphone } from 'lucide-react';
+
+interface IosPwaModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  pwaUrl: string;
+}
+
+export default function IosPwaModal({ isOpen, onClose, pwaUrl }: IosPwaModalProps) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+      <div
+        className="relative w-full max-w-md bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-slate-100 overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-5 right-5 p-2 text-slate-400 hover:text-slate-700 rounded-full hover:bg-slate-100 transition-colors"
+          aria-label="Tutup modal"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        {/* Modal Header */}
+        <div className="flex items-center gap-3.5 mb-5">
+          <div className="w-11 h-11 rounded-2xl bg-[#fdf0de] flex items-center justify-center text-[#d81b60]">
+            <Smartphone className="w-6 h-6" />
+          </div>
+          <div>
+            <h3 className="font-extrabold text-lg text-slate-900">
+              Pasang Nikahin di iPhone
+            </h3>
+            <p className="text-xs text-slate-500 font-medium">
+              Bebas instal tanpa App Store via Safari
+            </p>
+          </div>
+        </div>
+
+        {/* 3 Steps Guide */}
+        <div className="space-y-3.5 my-6">
+          {/* Step 1 */}
+          <div className="flex items-start gap-3.5 p-3.5 rounded-2xl bg-[#fff9fa] border border-[#ffd9e2]/50">
+            <div className="w-7 h-7 rounded-full bg-[#d81b60] text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+              1
+            </div>
+            <div>
+              <p className="text-xs font-bold text-slate-900">
+                Buka di Peramban Safari
+              </p>
+              <p className="text-[11.5px] text-slate-600 mt-0.5 leading-relaxed">
+                Pastikan kamu membuka tautan menggunakan browser Safari bawaan iPhone (bukan in-app browser WA/Instagram).
+              </p>
+            </div>
+          </div>
+
+          {/* Step 2 */}
+          <div className="flex items-start gap-3.5 p-3.5 rounded-2xl bg-[#fff9fa] border border-[#ffd9e2]/50">
+            <div className="w-7 h-7 rounded-full bg-[#d81b60] text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+              2
+            </div>
+            <div>
+              <p className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                <span>Tekan Tombol Bagikan</span>
+                <Share className="w-3.5 h-3.5 text-[#d81b60]" />
+              </p>
+              <p className="text-[11.5px] text-slate-600 mt-0.5 leading-relaxed">
+                Ketuk ikon <span className="font-semibold text-slate-800">Share</span> di bagian bilah navigasi bawah Safari.
+              </p>
+            </div>
+          </div>
+
+          {/* Step 3 */}
+          <div className="flex items-start gap-3.5 p-3.5 rounded-2xl bg-[#fff9fa] border border-[#ffd9e2]/50">
+            <div className="w-7 h-7 rounded-full bg-[#d81b60] text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+              3
+            </div>
+            <div>
+              <p className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                <span>Pilih &quot;Tambah ke Layar Utama&quot;</span>
+                <PlusSquare className="w-3.5 h-3.5 text-[#d81b60]" />
+              </p>
+              <p className="text-[11.5px] text-slate-600 mt-0.5 leading-relaxed">
+                Gulir ke bawah dan pilih <span className="font-semibold text-slate-800">Add to Home Screen</span>. Ikon Nikahin akan langsung muncul di beranda layarmu.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Button */}
+        <div className="pt-2">
+          <a
+            href={pwaUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-5 rounded-2xl bg-[#d81b60] hover:bg-[#c2185b] text-white font-bold text-sm shadow-md shadow-[#d81b60]/25 transition-all"
+          >
+            <span>Buka Web App Sekarang</span>
+            <ExternalLink className="w-4 h-4" />
+          </a>
+          <p className="text-center text-[11px] text-slate-400 mt-2.5">
+            Otomatis berjalan fullscreen tanpa toolbar browser.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+

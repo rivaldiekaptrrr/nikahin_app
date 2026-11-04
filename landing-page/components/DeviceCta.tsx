@@ -1,0 +1,163 @@
+'use client';
+
+import React, { useState, useSyncExternalStore } from 'react';
+import { Download, Globe, Apple, QrCode, Sparkles, CheckCircle } from 'lucide-react';
+import IosPwaModal from './IosPwaModal';
+import DesktopQrModal from './DesktopQrModal';
+import { detectDevice, DeviceType } from '@/lib/device-detector';
+import { ReleaseMetadata } from '@/lib/github-release';
+
+interface DeviceCtaProps {
+  release: ReleaseMetadata;
+  pwaUrl?: string;
+}
+
+function useUserAgentDevice(): DeviceType {
+  return useSyncExternalStore(
+    () => () => {},
+    () => detectDevice(navigator.userAgent),
+    () => 'desktop'
+  );
+}
+
+function useIsClient(): boolean {
+  return useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
+}
+
+export default function DeviceCta({
+  release,
+  pwaUrl = 'https://nikahin-app.pages.dev',
+}: DeviceCtaProps) {
+  const device = useUserAgentDevice();
+  const isClient = useIsClient();
+  const [iosModalOpen, setIosModalOpen] = useState(false);
+  const [qrModalOpen, setQrModalOpen] = useState(false);
+
+  // Selama SSR, render tampilan netral yang seimbang
+  if (!isClient) {
+    return (
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-2">
+        <div className="h-14 w-60 bg-slate-200/60 rounded-2xl animate-pulse" />
+        <div className="h-14 w-44 bg-slate-100 rounded-2xl animate-pulse" />
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className="flex flex-col items-center gap-3">
+        {/* Tombol Utama Adaptif Sesuai Perangkat */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full max-w-md sm:max-w-none">
+          {/* Skenario 1: Pengguna Android */}
+          {device === 'android' && (
+            <>
+              <a
+                href={release.apkUrl}
+                download
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-2xl bg-[#d81b60] hover:bg-[#c2185b] text-white font-extrabold text-base shadow-lg shadow-[#d81b60]/25 hover:shadow-xl hover:shadow-[#d81b60]/35 hover:-translate-y-0.5 transition-all"
+              >
+                <Download className="w-5 h-5" />
+                <span>Unduh APK ({release.version})</span>
+              </a>
+              <a
+                href={pwaUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm border border-slate-200 shadow-sm hover:shadow transition-all"
+              >
+                <Globe className="w-4 h-4 text-slate-500" />
+                <span>Buka Versi Web</span>
+              </a>
+            </>
+          )}
+
+          {/* Skenario 2: Pengguna iPhone / iPad */}
+          {device === 'ios' && (
+            <>
+              <button
+                onClick={() => setIosModalOpen(true)}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-[#d81b60] hover:bg-[#c2185b] text-white font-extrabold text-base shadow-lg shadow-[#d81b60]/25 hover:shadow-xl hover:shadow-[#d81b60]/35 hover:-translate-y-0.5 transition-all"
+              >
+                <Apple className="w-5 h-5" />
+                <span>Buka & Pasang di iPhone</span>
+              </button>
+              <a
+                href={pwaUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm border border-slate-200 shadow-sm hover:shadow transition-all"
+              >
+                <Globe className="w-4 h-4 text-slate-500" />
+                <span>Buka Web App Langsung</span>
+              </a>
+            </>
+          )}
+
+          {/* Skenario 3: Pengguna Komputer / Desktop */}
+          {device === 'desktop' && (
+            <>
+              <a
+                href={release.apkUrl}
+                download
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-2xl bg-[#d81b60] hover:bg-[#c2185b] text-white font-extrabold text-base shadow-lg shadow-[#d81b60]/25 hover:shadow-xl hover:shadow-[#d81b60]/35 hover:-translate-y-0.5 transition-all"
+              >
+                <Download className="w-5 h-5" />
+                <span>Unduh APK Android ({release.version})</span>
+              </a>
+
+              <button
+                onClick={() => setIosModalOpen(true)}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm border border-slate-200 shadow-sm hover:shadow transition-all"
+              >
+                <Apple className="w-4 h-4 text-[#d81b60]" />
+                <span>Pasang di iPhone (PWA)</span>
+              </button>
+
+              <button
+                onClick={() => setQrModalOpen(true)}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-4 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm transition-all"
+                title="Buka QR Code untuk smartphone"
+              >
+                <QrCode className="w-4 h-4" />
+                <span className="sm:hidden">Pindai QR</span>
+              </button>
+            </>
+          )}
+        </div>
+
+        {/* Info mikro versi & jaminan */}
+        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-xs text-slate-500 pt-1">
+          <span className="flex items-center gap-1 font-medium">
+            <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
+            Ukuran Berkas: {release.fileSizeMb}
+          </span>
+          <span className="text-slate-300">•</span>
+          <span className="flex items-center gap-1 font-medium">
+            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+            Diperbarui: {release.publishedAt}
+          </span>
+          <span className="text-slate-300">•</span>
+          <span className="font-medium text-slate-600">
+            Gratis Coba & Tanpa Iklan
+          </span>
+        </div>
+      </div>
+
+      {/* Modal Dialogs */}
+      <IosPwaModal
+        isOpen={iosModalOpen}
+        onClose={() => setIosModalOpen(false)}
+        pwaUrl={pwaUrl}
+      />
+      <DesktopQrModal
+        isOpen={qrModalOpen}
+        onClose={() => setQrModalOpen(false)}
+        targetUrl="https://getnikahin.my.id"
+      />
+    </>
+  );
+}
