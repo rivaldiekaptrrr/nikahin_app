@@ -9,7 +9,7 @@ interface HeroSectionProps {
 
 export default function HeroSection({ release }: HeroSectionProps) {
   return (
-    <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden">
+    <section id="hero" className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden">
       {/* Background Soft Glow Decoration */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-[#ffd9e2]/40 via-[#fdf0de]/50 to-transparent blur-3xl pointer-events-none -z-10" />
 
@@ -22,17 +22,15 @@ export default function HeroSection({ release }: HeroSectionProps) {
 
         {/* Main Headline */}
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 tracking-tight leading-[1.12] mb-6">
-          Rencanakan Hari Bahagiamu Berdua,{' '}
+          Catat Anggaran Bersama,{' '}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#d81b60] to-[#ad1457]">
-            Lebih Tenang & Rapi
+            Wujudkan Pernikahan Impian dengan Tenang
           </span>
         </h1>
 
         {/* Subtitle */}
         <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto font-normal leading-relaxed mb-9">
-          Satu aplikasi lengkap untuk kelola anggaran, vendor, susunan acara,
-          buku tamu, hingga berkas KUA. Terhubung langsung dengan akun pasanganmu
-          secara real-time.
+          Kelola rincian biaya, vendor, susunan acara, buku tamu, hingga berkas KUA dalam satu aplikasi terpadu yang langsung terhubung dengan pasanganmu.
         </p>
 
         {/* Interactive Device Adaptive CTA */}

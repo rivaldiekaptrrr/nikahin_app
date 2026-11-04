@@ -22,7 +22,7 @@ export default function FaqAccordion() {
     },
     {
       q: 'Bagaimana cara memasang aplikasi Nikahin di iPhone?',
-      a: 'Aplikasi Nikahin di iPhone menggunakan teknologi Progressive Web App (PWA). Cukup buka tautan di peramban Safari, ketuk tombol "Bagikan" (Share), lalu pilih "Tambah ke Layar Utama" (Add to Home Screen). Aplikasi akan terpasang di layar utama ponselmu dan berjalan seperti aplikasi native.',
+      a: 'Sangat praktis tanpa perlu App Store. Cukup buka tautan aplikasi di peramban Safari, ketuk tombol "Bagikan" (ikon kotak dengan panah ke atas), lalu pilih "Tambah ke Layar Utama" (Add to Home Screen). Ikon Nikahin akan langsung muncul di layar utama iPhone kamu dan bisa dibuka kapan pun seperti aplikasi biasa.',
     },
     {
       q: 'Apakah data saya tetap aman jika berganti perangkat ponsel?',

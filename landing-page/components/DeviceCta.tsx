@@ -1,15 +1,15 @@
 'use client';
 
 import React, { useState, useSyncExternalStore } from 'react';
-import { Download, Globe, Apple, QrCode, Sparkles, CheckCircle } from 'lucide-react';
-import IosPwaModal from './IosPwaModal';
+import { Download, Apple, QrCode, Sparkles, CheckCircle } from 'lucide-react';
+import IosInstallModal from './IosInstallModal';
 import DesktopQrModal from './DesktopQrModal';
 import { detectDevice, DeviceType } from '@/lib/device-detector';
 import { ReleaseMetadata } from '@/lib/github-release';
 
 interface DeviceCtaProps {
   release: ReleaseMetadata;
-  pwaUrl?: string;
+  appUrl?: string;
 }
 
 function useUserAgentDevice(): DeviceType {
@@ -30,7 +30,7 @@ function useIsClient(): boolean {
 
 export default function DeviceCta({
   release,
-  pwaUrl = 'https://nikahin-app.pages.dev',
+  appUrl = 'https://nikahin-app.pages.dev',
 }: DeviceCtaProps) {
   const device = useUserAgentDevice();
   const isClient = useIsClient();
@@ -54,47 +54,25 @@ export default function DeviceCta({
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full max-w-md sm:max-w-none">
           {/* Skenario 1: Pengguna Android */}
           {device === 'android' && (
-            <>
-              <a
-                href={release.apkUrl}
-                download
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-2xl bg-[#d81b60] hover:bg-[#c2185b] text-white font-extrabold text-base shadow-lg shadow-[#d81b60]/25 hover:shadow-xl hover:shadow-[#d81b60]/35 hover:-translate-y-0.5 transition-all"
-              >
-                <Download className="w-5 h-5" />
-                <span>Unduh APK ({release.version})</span>
-              </a>
-              <a
-                href={pwaUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm border border-slate-200 shadow-sm hover:shadow transition-all"
-              >
-                <Globe className="w-4 h-4 text-slate-500" />
-                <span>Buka Versi Web</span>
-              </a>
-            </>
+            <a
+              href={release.apkUrl}
+              download
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-[#d81b60] hover:bg-[#c2185b] text-white font-extrabold text-base shadow-lg shadow-[#d81b60]/25 hover:shadow-xl hover:shadow-[#d81b60]/35 hover:-translate-y-0.5 transition-all"
+            >
+              <Download className="w-5 h-5" />
+              <span>Unduh APK</span>
+            </a>
           )}
 
           {/* Skenario 2: Pengguna iPhone / iPad */}
           {device === 'ios' && (
-            <>
-              <button
-                onClick={() => setIosModalOpen(true)}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-[#d81b60] hover:bg-[#c2185b] text-white font-extrabold text-base shadow-lg shadow-[#d81b60]/25 hover:shadow-xl hover:shadow-[#d81b60]/35 hover:-translate-y-0.5 transition-all"
-              >
-                <Apple className="w-5 h-5" />
-                <span>Buka & Pasang di iPhone</span>
-              </button>
-              <a
-                href={pwaUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm border border-slate-200 shadow-sm hover:shadow transition-all"
-              >
-                <Globe className="w-4 h-4 text-slate-500" />
-                <span>Buka Web App Langsung</span>
-              </a>
-            </>
+            <button
+              onClick={() => setIosModalOpen(true)}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-[#d81b60] hover:bg-[#c2185b] text-white font-extrabold text-base shadow-lg shadow-[#d81b60]/25 hover:shadow-xl hover:shadow-[#d81b60]/35 hover:-translate-y-0.5 transition-all"
+            >
+              <Apple className="w-5 h-5" />
+              <span>Pasang di iPhone</span>
+            </button>
           )}
 
           {/* Skenario 3: Pengguna Komputer / Desktop */}
@@ -106,7 +84,7 @@ export default function DeviceCta({
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-2xl bg-[#d81b60] hover:bg-[#c2185b] text-white font-extrabold text-base shadow-lg shadow-[#d81b60]/25 hover:shadow-xl hover:shadow-[#d81b60]/35 hover:-translate-y-0.5 transition-all"
               >
                 <Download className="w-5 h-5" />
-                <span>Unduh APK Android ({release.version})</span>
+                <span>Unduh APK</span>
               </a>
 
               <button
@@ -114,7 +92,7 @@ export default function DeviceCta({
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm border border-slate-200 shadow-sm hover:shadow transition-all"
               >
                 <Apple className="w-4 h-4 text-[#d81b60]" />
-                <span>Pasang di iPhone (PWA)</span>
+                <span>Pasang di iPhone</span>
               </button>
 
               <button
@@ -129,7 +107,7 @@ export default function DeviceCta({
           )}
         </div>
 
-        {/* Info mikro versi & jaminan */}
+        {/* Info mikro jaminan */}
         <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-xs text-slate-500 pt-1">
           <span className="flex items-center gap-1 font-medium">
             <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
@@ -138,7 +116,7 @@ export default function DeviceCta({
           <span className="text-slate-300">•</span>
           <span className="flex items-center gap-1 font-medium">
             <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-            Diperbarui: {release.publishedAt}
+            1 Akun untuk Berdua
           </span>
           <span className="text-slate-300">•</span>
           <span className="font-medium text-slate-600">
@@ -148,10 +126,10 @@ export default function DeviceCta({
       </div>
 
       {/* Modal Dialogs */}
-      <IosPwaModal
+      <IosInstallModal
         isOpen={iosModalOpen}
         onClose={() => setIosModalOpen(false)}
-        pwaUrl={pwaUrl}
+        appUrl={appUrl}
       />
       <DesktopQrModal
         isOpen={qrModalOpen}

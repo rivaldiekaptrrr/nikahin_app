@@ -62,15 +62,7 @@ export default function Navbar() {
         {/* Desktop CTA Button */}
         <div className="hidden md:flex items-center gap-3">
           <a
-            href="https://nikahin-app.pages.dev"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs font-semibold text-slate-700 hover:text-[#d81b60] px-3.5 py-2 rounded-lg hover:bg-slate-100/70 transition-all"
-          >
-            Buka Web App
-          </a>
-          <a
-            href="#download"
+            href="#hero"
             className="inline-flex items-center gap-2 text-xs font-bold text-white bg-[#d81b60] hover:bg-[#c2185b] px-4 py-2.5 rounded-full shadow-sm shadow-[#d81b60]/20 hover:shadow-md hover:shadow-[#d81b60]/30 transition-all"
           >
             <Smartphone className="w-3.5 h-3.5" />
@@ -123,15 +115,7 @@ export default function Navbar() {
           </nav>
           <div className="pt-3 border-t border-slate-100 flex flex-col gap-2.5">
             <a
-              href="https://nikahin-app.pages.dev"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full text-center text-sm font-semibold text-slate-700 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 transition-colors"
-            >
-              Buka Web PWA
-            </a>
-            <a
-              href="#download"
+              href="#hero"
               onClick={() => setMobileMenuOpen(false)}
               className="w-full inline-flex items-center justify-center gap-2 text-sm font-bold text-white bg-[#d81b60] py-2.5 rounded-xl shadow-md transition-all"
             >

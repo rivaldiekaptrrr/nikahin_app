@@ -3,13 +3,13 @@
 import React from 'react';
 import { X, Share, PlusSquare, ExternalLink, Smartphone } from 'lucide-react';
 
-interface IosPwaModalProps {
+interface IosInstallModalProps {
   isOpen: boolean;
   onClose: () => void;
-  pwaUrl: string;
+  appUrl: string;
 }
 
-export default function IosPwaModal({ isOpen, onClose, pwaUrl }: IosPwaModalProps) {
+export default function IosInstallModal({ isOpen, onClose, appUrl }: IosInstallModalProps) {
   if (!isOpen) return null;
 
   return (
@@ -37,7 +37,7 @@ export default function IosPwaModal({ isOpen, onClose, pwaUrl }: IosPwaModalProp
               Pasang Nikahin di iPhone
             </h3>
             <p className="text-xs text-slate-500 font-medium">
-              Bebas instal tanpa App Store via Safari
+              Bisa langsung dipasang lewat Safari tanpa App Store
             </p>
           </div>
         </div>
@@ -54,7 +54,7 @@ export default function IosPwaModal({ isOpen, onClose, pwaUrl }: IosPwaModalProp
                 Buka di Peramban Safari
               </p>
               <p className="text-[11.5px] text-slate-600 mt-0.5 leading-relaxed">
-                Pastikan kamu membuka tautan menggunakan browser Safari bawaan iPhone (bukan in-app browser WA/Instagram).
+                Pastikan kamu membuka tautan aplikasi menggunakan browser Safari bawaan iPhone.
               </p>
             </div>
           </div>
@@ -70,7 +70,7 @@ export default function IosPwaModal({ isOpen, onClose, pwaUrl }: IosPwaModalProp
                 <Share className="w-3.5 h-3.5 text-[#d81b60]" />
               </p>
               <p className="text-[11.5px] text-slate-600 mt-0.5 leading-relaxed">
-                Ketuk ikon <span className="font-semibold text-slate-800">Share</span> di bagian bilah navigasi bawah Safari.
+                Ketuk ikon <span className="font-semibold text-slate-800">Share</span> (kotak berpanah atas) di menu bilah bawah Safari.
               </p>
             </div>
           </div>
@@ -86,7 +86,7 @@ export default function IosPwaModal({ isOpen, onClose, pwaUrl }: IosPwaModalProp
                 <PlusSquare className="w-3.5 h-3.5 text-[#d81b60]" />
               </p>
               <p className="text-[11.5px] text-slate-600 mt-0.5 leading-relaxed">
-                Gulir ke bawah dan pilih <span className="font-semibold text-slate-800">Add to Home Screen</span>. Ikon Nikahin akan langsung muncul di beranda layarmu.
+                Gulir ke bawah lalu pilih <span className="font-semibold text-slate-800">Add to Home Screen</span>. Ikon Nikahin akan langsung muncul di beranda iPhone kamu.
               </p>
             </div>
           </div>
@@ -95,16 +95,16 @@ export default function IosPwaModal({ isOpen, onClose, pwaUrl }: IosPwaModalProp
         {/* Action Button */}
         <div className="pt-2">
           <a
-            href={pwaUrl}
+            href={appUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-5 rounded-2xl bg-[#d81b60] hover:bg-[#c2185b] text-white font-bold text-sm shadow-md shadow-[#d81b60]/25 transition-all"
           >
-            <span>Buka Web App Sekarang</span>
+            <span>Buka Aplikasi di Safari</span>
             <ExternalLink className="w-4 h-4" />
           </a>
           <p className="text-center text-[11px] text-slate-400 mt-2.5">
-            Otomatis berjalan fullscreen tanpa toolbar browser.
+            Aplikasi otomatis terbuka layar penuh seperti aplikasi biasa.
           </p>
         </div>
       </div>
