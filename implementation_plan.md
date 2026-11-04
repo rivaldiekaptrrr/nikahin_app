@@ -236,20 +236,20 @@ Di panel penyedia domain DNS `getnikahin.my.id`:
 
 ## 9. Rencana Kerja Bertahap (Milestones)
 
-- [ ] **Milestone 1 — Fondasi Proyek (`landing-page/`)**:
-  - Inisialisasi Next.js 15, konfigurasi Tailwind CSS dengan palet warna resmi Nikahin, dan setup Lucide Icons.
-- [ ] **Milestone 2 — Integrasi Data GitHub Releases**:
+- [x] **Milestone 1 — Fondasi Proyek (`landing-page/`)**:
+  - Inisialisasi Next.js 16, konfigurasi Tailwind CSS dengan palet warna resmi Nikahin, dan setup Lucide Icons.
+- [x] **Milestone 2 — Integrasi Data GitHub Releases**:
   - Implementasi `lib/github-release.ts` untuk mengambil data versi APK dinamis dari GitHub API dengan caching ISR.
-- [ ] **Milestone 3 — Komponen Hero & Smart Device CTA**:
+- [x] **Milestone 3 — Komponen Hero & Smart Device CTA**:
   - Implementasi deteksi User-Agent (Android, iOS, Desktop).
   - Pembuatan modal 3 langkah pemasangan iPhone PWA dan modal QR Code untuk desktop.
-- [ ] **Milestone 4 — Visual Mockup Fitur Interaktif & Bento Grid**:
+- [x] **Milestone 4 — Visual Mockup Fitur Interaktif & Bento Grid**:
   - Pembuatan mockup smartphone CSS interaktif (Anggaran, Rundown, Tamu, Couple Sync).
   - Seksi penjelasan fitur, nilai privasi, dan keunggulan sekali bayar tanpa langganan.
-- [ ] **Milestone 5 — FAQ, Footer, & SEO Metadata**:
+- [x] **Milestone 5 — FAQ, Footer, & SEO Metadata**:
   - Akordeon tanya jawab calon pengantin.
   - Setup OpenGraph, meta tag sosial media (WhatsApp share preview), dan favicon.
-- [ ] **Milestone 6 — Deployment Vercel & Penautan Domain `getnikahin.my.id`**:
+- [x] **Milestone 6 — Deployment Vercel & Penautan Domain `getnikahin.my.id`**:
   - Setup Vercel deployment dengan root directory `landing-page`.
   - Verifikasi DNS SSL HTTPS di `getnikahin.my.id`.
   - Uji coba live dari perangkat Android & iPhone asli.
