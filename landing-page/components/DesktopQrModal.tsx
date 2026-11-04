@@ -37,7 +37,7 @@ export default function DesktopQrModal({ isOpen, onClose, targetUrl }: DesktopQr
           Buka di Ponselmu
         </h3>
         <p className="text-xs text-slate-500 font-medium mb-6">
-          Arahkan kamera smartphone untuk langsung membuka tautan unduh atau pasang aplikasi.
+          Arahkan kamera ponsel ke kode QR untuk membuka aplikasi langsung di HP kamu.
         </p>
 
         {/* QR Code Frame */}
@@ -55,7 +55,7 @@ export default function DesktopQrModal({ isOpen, onClose, targetUrl }: DesktopQr
         <div className="flex items-center justify-center gap-4 text-xs font-semibold text-slate-600">
           <span className="flex items-center gap-1.5">
             <Smartphone className="w-4 h-4 text-[#d81b60]" />
-            Android & iPhone
+            Tersedia untuk Android & iPhone
           </span>
         </div>
       </div>

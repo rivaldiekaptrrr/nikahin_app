@@ -14,8 +14,8 @@ export default function FeatureBentoGrid() {
     {
       icon: Wallet,
       title: 'Manajemen Anggaran & Termin Vendor',
-      desc: 'Pantau arus kas pernikahan secara terperinci. Catat status pembayaran DP, lunas, atau belum bayar dengan pengingat jatuh tempo.',
-      tag: 'Finansial Rapi',
+      desc: 'Pantau setiap pengeluaran pernikahan dengan jelas. Catat DP, pelunasan, hingga sisa tagihan vendor agar tidak overbudget.',
+      tag: 'Anggaran Jelas',
       colSpan: 'md:col-span-2',
       highlight: true,
     },
@@ -29,7 +29,7 @@ export default function FeatureBentoGrid() {
     {
       icon: Users2,
       title: 'Buku Tamu, VIP, & RSVP',
-      desc: 'Kelola ratusan undangan dengan pengelompokan keluarga CPP, CPW, dan VIP. Ekspor data ke format CSV kapan saja.',
+      desc: 'Kelola ratusan undangan dengan pengelompokan keluarga kedua pihak dan tamu VIP. Ekspor daftar tamu ke format CSV kapan saja.',
       tag: 'Manajemen Undangan',
       colSpan: 'md:col-span-1',
     },
@@ -49,9 +49,9 @@ export default function FeatureBentoGrid() {
     },
     {
       icon: FileCheck2,
-      title: 'Checklist Berkas Legal KUA & Sipil',
-      desc: 'Panduan lengkap syarat dokumen nikah resmi KUA dan Catatan Sipil agar proses administrasi bebas hambatan.',
-      tag: 'Administrasi Legal',
+      title: 'Daftar Syarat Berkas KUA & Catatan Sipil',
+      desc: 'Panduan lengkap syarat dokumen nikah resmi KUA dan Catatan Sipil agar pengurusan berkas pernikahan beres tanpa bingung.',
+      tag: 'Dokumen KUA & Sipil',
       colSpan: 'md:col-span-3',
       wide: true,
     },

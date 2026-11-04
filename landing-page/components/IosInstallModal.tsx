@@ -37,7 +37,7 @@ export default function IosInstallModal({ isOpen, onClose, appUrl }: IosInstallM
               Pasang Nikahin di iPhone
             </h3>
             <p className="text-xs text-slate-500 font-medium">
-              Bisa langsung dipasang lewat Safari tanpa App Store
+              Cukup buka di Safari dan tambahkan ke layar utama, tanpa repot lewat App Store
             </p>
           </div>
         </div>

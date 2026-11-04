@@ -322,7 +322,7 @@ export default function AppPreviewMockup() {
                         Status Terhubung
                       </h4>
                       <p className="text-[11px] text-slate-600 mt-0.5">
-                        Rivaldi (CPP) & Annisa (CPW)
+                        Rivaldi & Annisa (Pasangan Terhubung)
                       </p>
                       <div className="mt-3 p-2 bg-white rounded-xl border border-slate-200/80 inline-flex items-center gap-2">
                         <span className="text-[10px] text-slate-400 font-semibold">Kode Unik:</span>

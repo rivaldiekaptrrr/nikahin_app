@@ -15,7 +15,7 @@ export default function CoupleSyncBanner() {
             <div className="lg:col-span-7 space-y-5">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#ffd9e2] text-[#d81b60] text-xs font-bold uppercase tracking-wider">
                 <HeartHandshake className="w-4 h-4" />
-                <span>Teknologi Couple Sync</span>
+                <span>Akun Terhubung</span>
               </div>
 
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 tracking-tight leading-tight">
@@ -25,7 +25,7 @@ export default function CoupleSyncBanner() {
               <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
                 Kamu tidak perlu membayar dua kali atau berbagi akun email yang sama. 
                 Cukup bagikan <strong>6 karakter kode undangan</strong> kepada pasanganmu untuk langsung 
-                terhubung secara real-time.
+                terhubung secara otomatis.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
@@ -34,9 +34,9 @@ export default function CoupleSyncBanner() {
                     <RefreshCw className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-slate-900">Sinkronisasi Instan</h4>
+                    <h4 className="text-xs font-bold text-slate-900">Sinkronisasi Cepat</h4>
                     <p className="text-[11px] text-slate-500 mt-0.5">
-                      Ubah data anggaran, pasangan langsung melihat update seketika.
+                      Catat pengeluaran, langsung muncul di ponsel pasangan.
                     </p>
                   </div>
                 </div>
@@ -46,9 +46,9 @@ export default function CoupleSyncBanner() {
                     <KeyRound className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-slate-900">Privasi Mandiri</h4>
+                    <h4 className="text-xs font-bold text-slate-900">Akun Masing-Masing</h4>
                     <p className="text-[11px] text-slate-500 mt-0.5">
-                      Login dengan akun Google masing-masing tanpa tukar kata sandi.
+                      Masuk dengan Google sendiri tanpa perlu bertukar kata sandi.
                     </p>
                   </div>
                 </div>
@@ -87,7 +87,7 @@ export default function CoupleSyncBanner() {
 
                 <div className="flex items-center justify-center gap-2 text-xs font-bold text-slate-700 bg-slate-50 py-2.5 px-4 rounded-xl">
                   <Smartphone className="w-4 h-4 text-emerald-600" />
-                  <span>Mendukung Android & iOS Sekaligus</span>
+                  <span>Bisa Digunakan di Android & iPhone</span>
                 </div>
               </div>
             </div>

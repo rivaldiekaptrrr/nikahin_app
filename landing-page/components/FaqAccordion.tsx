@@ -13,12 +13,12 @@ export default function FaqAccordion() {
 
   const faqs: FaqItem[] = [
     {
-      q: 'Apakah pasangan saya harus membayar biaya lisensi lagi secara terpisah?',
-      a: 'Tidak perlu. Cukup satu kali aktivasi untuk satu pernikahan. Setelah aktif, kamu tinggal membagikan 6 digit kode undangan kepada pasanganmu. Pasangan dapat langsung terhubung tanpa biaya tambahan apa pun.',
+      q: 'Apakah pasangan harus membayar lagi secara terpisah?',
+      a: 'Tidak perlu. Cukup satu kali pembayaran untuk satu acara pernikahan. Setelah aktif, kamu tinggal membagikan 6 karakter kode pasangan kepada calon suami/istrimu. Akun pasangan akan langsung terhubung tanpa biaya tambahan apa pun.',
     },
     {
       q: 'Bagaimana jika tanggal pernikahan kami masih tahun depan atau belum ditentukan?',
-      a: 'Akses akun berlaku selamanya (Lifetime Access) tanpa batas waktu dan tanpa tagihan bulanan berulang. Kamu bisa merencanakan setiap detail pernikahan kapan saja dengan tenang.',
+      a: 'Akses akun berlaku selamanya tanpa batas waktu dan tanpa biaya langganan bulanan. Kamu bisa mencicil persiapan pernikahan kapan saja dengan tenang.',
     },
     {
       q: 'Bagaimana cara memasang aplikasi Nikahin di iPhone?',
@@ -33,8 +33,8 @@ export default function FaqAccordion() {
       a: 'Ya, Nikahin dilengkapi dengan penyimpanan lokal pintar. Data yang sudah dibuka sebelumnya tetap dapat kamu lihat dan baca saat berada di lokasi pernikahan tanpa sinyal internet.',
     },
     {
-      q: 'Metode pembayaran apa saja yang didukung untuk aktivasi lisensi?',
-      a: 'Nikahin mendukung pembayaran otomatis 24 jam melalui QRIS (semua e-wallet dan mobile banking), Virtual Account BCA, Mandiri, BRI, BNI, BSI, CIMB, Permata, serta GoPay dan ShopeePay.',
+      q: 'Bagaimana cara pembayaran untuk membuka akses penuh?',
+      a: 'Nikahin mendukung pembayaran otomatis 24 jam melalui QRIS (bisa dari semua e-wallet dan mobile banking), Virtual Account BCA, Mandiri, BRI, BNI, BSI, CIMB, Permata, serta GoPay dan ShopeePay.',
     },
   ];
 

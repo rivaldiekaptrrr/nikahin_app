@@ -17,7 +17,7 @@ export default function HeroSection({ release }: HeroSectionProps) {
         {/* Subtle Brand Eyebrow */}
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#fdf0de] border border-[#f7e2c4] text-[#ad1457] text-xs font-bold tracking-wide uppercase mb-6 shadow-xs">
           <Heart className="w-3.5 h-3.5 fill-[#d81b60] text-[#d81b60]" />
-          <span>Aplikasi Pendamping Pernikahan Modern</span>
+          <span>Perencana Pernikahan Bersama Pasangan</span>
         </div>
 
         {/* Main Headline */}
@@ -42,15 +42,15 @@ export default function HeroSection({ release }: HeroSectionProps) {
         <div className="pt-6 border-t border-slate-200/60 flex flex-wrap items-center justify-center gap-y-3 gap-x-8 text-xs font-semibold text-slate-600">
           <div className="flex items-center gap-2">
             <Users className="w-4 h-4 text-[#d81b60]" />
-            <span>1 Pembelian untuk 2 Akun (CPP & CPW)</span>
+            <span>Cukup 1 Akun untuk Kamu & Pasangan</span>
           </div>
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>Sinkronisasi Cloud Real-Time</span>
+            <span>Otomatis Tersambung di HP Berdua</span>
           </div>
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-amber-500" />
-            <span>Sekali Bayar Tanpa Iuran Bulanan</span>
+            <span>Sekali Bayar, Aktif Selamanya</span>
           </div>
         </div>
       </div>

@@ -111,7 +111,7 @@ export default function DeviceCta({
         <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-xs text-slate-500 pt-1">
           <span className="flex items-center gap-1 font-medium">
             <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
-            Ukuran Berkas: {release.fileSizeMb}
+            Ringan & Praktis
           </span>
           <span className="text-slate-300">•</span>
           <span className="flex items-center gap-1 font-medium">
@@ -120,7 +120,7 @@ export default function DeviceCta({
           </span>
           <span className="text-slate-300">•</span>
           <span className="font-medium text-slate-600">
-            Gratis Coba & Tanpa Iklan
+            Gratis Coba & Bebas Iklan
           </span>
         </div>
       </div>
