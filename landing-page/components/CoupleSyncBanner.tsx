@@ -13,10 +13,10 @@ export default function CoupleSyncBanner() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
             {/* Left Content */}
             <div className="lg:col-span-7 space-y-5">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#ffd9e2] text-[#d81b60] text-xs font-bold uppercase tracking-wider">
+              <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#d81b60]">
                 <HeartHandshake className="w-4 h-4" />
                 <span>Akun Terhubung</span>
-              </div>
+              </p>
 
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 tracking-tight leading-tight">
                 Satu Pembelian, Otomatis Aktif untuk Dua Akun Pasangan

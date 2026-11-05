@@ -63,7 +63,7 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-3">
           <a
             href="#hero"
-            className="inline-flex items-center gap-2 text-xs font-bold text-white bg-[#d81b60] hover:bg-[#c2185b] px-4 py-2.5 rounded-full shadow-sm shadow-[#d81b60]/20 hover:shadow-md hover:shadow-[#d81b60]/30 transition-all"
+            className="inline-flex items-center gap-2 text-xs font-bold text-white bg-[#d81b60] hover:bg-[#c2185b] px-4 py-2.5 rounded-xl shadow-sm shadow-[#d81b60]/20 hover:shadow-md hover:shadow-[#d81b60]/30 transition-all"
           >
             <Smartphone className="w-3.5 h-3.5" />
             <span>Pasang Sekarang</span>

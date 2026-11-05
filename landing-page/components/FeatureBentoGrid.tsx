@@ -86,7 +86,7 @@ export default function FeatureBentoGrid() {
                     <div className="w-12 h-12 rounded-2xl bg-[#ffd9e2]/40 text-[#d81b60] flex items-center justify-center">
                       <IconComponent className="w-6 h-6" />
                     </div>
-                    <span className="text-[11px] font-bold text-[#ad1457] bg-[#fdf0de] px-2.5 py-1 rounded-full border border-[#f7e2c4]">
+                    <span className="text-xs font-bold tracking-wider text-[#ad1457] uppercase">
                       {f.tag}
                     </span>
                   </div>

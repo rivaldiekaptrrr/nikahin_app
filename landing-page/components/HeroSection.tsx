@@ -14,11 +14,11 @@ export default function HeroSection({ release }: HeroSectionProps) {
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-[#ffd9e2]/40 via-[#fdf0de]/50 to-transparent blur-3xl pointer-events-none -z-10" />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-        {/* Subtle Brand Eyebrow */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#fdf0de] border border-[#f7e2c4] text-[#ad1457] text-xs font-bold tracking-wide uppercase mb-6 shadow-xs">
+        {/* Editorial Eyebrow */}
+        <p className="flex items-center justify-center gap-2 text-xs font-bold tracking-wider text-[#ad1457] uppercase mb-4">
           <Heart className="w-3.5 h-3.5 fill-[#d81b60] text-[#d81b60]" />
           <span>Perencana Pernikahan Bersama Pasangan</span>
-        </div>
+        </p>
 
         {/* Main Headline */}
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 tracking-tight leading-[1.12] mb-6">

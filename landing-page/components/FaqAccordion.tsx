@@ -42,10 +42,10 @@ export default function FaqAccordion() {
     <section id="faq" className="py-20 md:py-28 bg-[#fff9fa]/50 border-t border-slate-200/60">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <div className="text-center max-w-xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#fdf0de] text-[#ad1457] text-xs font-bold uppercase tracking-wider mb-3">
+          <p className="flex items-center justify-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#ad1457] mb-3">
             <HelpCircle className="w-3.5 h-3.5" />
             <span>Tanya Jawab</span>
-          </div>
+          </p>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
             Pertanyaan yang Sering Diajukan
           </h2>
