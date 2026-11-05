@@ -239,15 +239,28 @@ class _SettingsAppInfoCardState extends ConsumerState<SettingsAppInfoCard> {
                 ),
               ),
               if (AppPlatformConfig.isApkUpdaterAvailable)
-                FilledButton.tonal(
+                FilledButton.tonalIcon(
                   onPressed: _isCheckingUpdate ? null : _handleCheckUpdate,
-                  child: _isCheckingUpdate
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    minimumSize: Size.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    textStyle: const TextStyle(
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  icon: _isCheckingUpdate
                       ? const SizedBox(
-                          width: 14,
-                          height: 14,
-                          child: CircularProgressIndicator(strokeWidth: 2),
+                          width: 12,
+                          height: 12,
+                          child: CircularProgressIndicator(strokeWidth: 1.8),
                         )
-                      : const Text('Cek Update'),
+                      : const Icon(PhosphorIconsRegular.arrowClockwise, size: 13),
+                  label: Text(_isCheckingUpdate ? 'Memeriksa...' : 'Cek Update'),
                 )
               else
                 Container(
