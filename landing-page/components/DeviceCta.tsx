@@ -55,8 +55,8 @@ export default function DeviceCta({
           {/* Skenario 1: Pengguna Android */}
           {device === 'android' && (
             <a
-              href={release.apkUrl}
-              download
+              href="/download"
+              download="nikahin.apk"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-[#d81b60] hover:bg-[#c2185b] text-white font-extrabold text-base shadow-lg shadow-[#d81b60]/25 hover:shadow-xl hover:shadow-[#d81b60]/35 hover:-translate-y-0.5 transition-all"
             >
               <Download className="w-5 h-5" />
@@ -79,8 +79,8 @@ export default function DeviceCta({
           {device === 'desktop' && (
             <>
               <a
-                href={release.apkUrl}
-                download
+                href="/download"
+                download="nikahin.apk"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-2xl bg-[#d81b60] hover:bg-[#c2185b] text-white font-extrabold text-base shadow-lg shadow-[#d81b60]/25 hover:shadow-xl hover:shadow-[#d81b60]/35 hover:-translate-y-0.5 transition-all"
               >
                 <Download className="w-5 h-5" />

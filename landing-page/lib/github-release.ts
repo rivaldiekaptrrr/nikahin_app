@@ -66,7 +66,7 @@ export async function getLatestRelease(): Promise<ReleaseMetadata> {
 
     return {
       version: data.tag_name || 'v1.1.12',
-      apkUrl: apkAsset?.browser_download_url || `https://github.com/rivaldiekaptrrr/nikahin_app/releases/tag/${data.tag_name || 'v1.1.12'}`,
+      apkUrl: '/download',
       fileSizeMb,
       publishedAt,
       changelog: changelog.length > 0 ? changelog : [
@@ -79,7 +79,7 @@ export async function getLatestRelease(): Promise<ReleaseMetadata> {
     // Fallback data aman saat build time atau jika rate limit GitHub terlampaui
     return {
       version: 'v1.1.12',
-      apkUrl: 'https://github.com/rivaldiekaptrrr/nikahin_app/releases/latest',
+      apkUrl: '/download',
       fileSizeMb: '38.5 MB',
       publishedAt: 'November 2026',
       changelog: [
