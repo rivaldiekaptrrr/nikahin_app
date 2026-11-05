@@ -190,11 +190,13 @@ jobs:
               --file "build/app/outputs/flutter-apk/app-arm64.apk" \
               --content-type "application/vnd.android.package-archive" \
               --content-disposition 'attachment; filename="nikahin.apk"' \
+              --cache-control "public, max-age=300, must-revalidate" \
               --remote
             npx wrangler r2 object put nikahin-releases/nikahin.apk \
               --file "build/app/outputs/flutter-apk/app-arm64.apk" \
               --content-type "application/vnd.android.package-archive" \
               --content-disposition 'attachment; filename="nikahin.apk"' \
+              --cache-control "public, max-age=300, must-revalidate" \
               --remote
 
             # 2. Universal APK (Fallback untuk HP lawas 32-bit)
@@ -202,6 +204,7 @@ jobs:
               --file "build/app/outputs/flutter-apk/app-universal.apk" \
               --content-type "application/vnd.android.package-archive" \
               --content-disposition 'attachment; filename="nikahin.apk"' \
+              --cache-control "public, max-age=300, must-revalidate" \
               --remote
             echo "Successfully synced release APKs to Cloudflare R2."
           else
