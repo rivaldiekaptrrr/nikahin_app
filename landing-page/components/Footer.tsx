@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Heart } from 'lucide-react';
 
 export default function Footer() {
@@ -11,7 +12,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-10 border-b border-slate-100">
           {/* Brand Info */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left gap-2">
-            <div className="flex items-center gap-2.5">
+            <Link href="/" className="flex items-center gap-2.5">
               <Image
                 src="/assets/nikahin-symbol-master-512.png"
                 alt="Logo Nikahin"
@@ -22,7 +23,7 @@ export default function Footer() {
               <span className="font-extrabold text-lg text-slate-900 tracking-tight">
                 Nikahin
               </span>
-            </div>
+            </Link>
             <p className="text-xs text-slate-500 max-w-sm">
               Aplikasi pendamping pernikahan terlengkap untuk calon pengantin Indonesia. Rencanakan momen bahagiamu dengan tenang dan teratur.
             </p>
@@ -30,23 +31,45 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div className="flex flex-wrap items-center justify-center gap-6 font-medium text-slate-600">
-            <a href="#fitur" className="hover:text-[#d81b60] transition-colors">
+            <a href="/#fitur" className="hover:text-[#d81b60] transition-colors">
               Fitur Utama
             </a>
-            <a href="#preview" className="hover:text-[#d81b60] transition-colors">
+            <a href="/#preview" className="hover:text-[#d81b60] transition-colors">
               Tampilan Aplikasi
             </a>
-            <a href="#pasangan" className="hover:text-[#d81b60] transition-colors">
+            <a href="/#pasangan" className="hover:text-[#d81b60] transition-colors">
               Akun Pasangan
             </a>
-            <a href="#faq" className="hover:text-[#d81b60] transition-colors">
+            <a href="/#faq" className="hover:text-[#d81b60] transition-colors">
               Tanya Jawab
             </a>
+            <Link href="/contact" className="hover:text-[#d81b60] transition-colors font-semibold">
+              Bantuan
+            </Link>
           </div>
         </div>
 
+        {/* Legal & Policy Links */}
+        <div className="pt-6 pb-4 flex flex-wrap items-center justify-center md:justify-start gap-x-5 gap-y-2 text-xs text-slate-500 font-medium">
+          <Link href="/privacy" className="hover:text-[#d81b60] transition-colors">
+            Kebijakan Privasi
+          </Link>
+          <span className="text-slate-300">•</span>
+          <Link href="/terms" className="hover:text-[#d81b60] transition-colors">
+            Syarat & Ketentuan
+          </Link>
+          <span className="text-slate-300">•</span>
+          <Link href="/data-deletion" className="hover:text-[#d81b60] transition-colors">
+            Penghapusan Data
+          </Link>
+          <span className="text-slate-300">•</span>
+          <Link href="/contact" className="hover:text-[#d81b60] transition-colors">
+            Kontak Resmi
+          </Link>
+        </div>
+
         {/* Bottom Copyright & Blessing */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+        <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
           <p>© {currentYear} Nikahin App. Hak Cipta Dilindungi.</p>
           <p className="flex items-center gap-1 text-slate-500">
             <span>Dibuat dengan</span>
