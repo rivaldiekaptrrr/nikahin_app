@@ -185,13 +185,21 @@ jobs:
         run: |
           if [ -n "$CLOUDFLARE_API_TOKEN" ]; then
             echo "Deploying release APK to Cloudflare R2 bucket 'nikahin-releases'..."
-            npx wrangler r2 object put nikahin-releases/nikahin.apk \
-              --file "build/app/outputs/flutter-apk/app-universal.apk" \
+            # 1. ARM64 APK (Optimized 43MB untuk 99% HP modern)
+            npx wrangler r2 object put nikahin-releases/nikahin-arm64.apk \
+              --file "build/app/outputs/flutter-apk/app-arm64.apk" \
               --content-type "application/vnd.android.package-archive" \
               --content-disposition 'attachment; filename="nikahin.apk"' \
               --remote
-            npx wrangler r2 object put nikahin-releases/nikahin-arm64.apk \
+            npx wrangler r2 object put nikahin-releases/nikahin.apk \
               --file "build/app/outputs/flutter-apk/app-arm64.apk" \
+              --content-type "application/vnd.android.package-archive" \
+              --content-disposition 'attachment; filename="nikahin.apk"' \
+              --remote
+
+            # 2. Universal APK (Fallback untuk HP lawas 32-bit)
+            npx wrangler r2 object put nikahin-releases/nikahin-universal.apk \
+              --file "build/app/outputs/flutter-apk/app-universal.apk" \
               --content-type "application/vnd.android.package-archive" \
               --content-disposition 'attachment; filename="nikahin.apk"' \
               --remote

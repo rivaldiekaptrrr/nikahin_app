@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useSyncExternalStore } from 'react';
+import React, { useState, useEffect, useSyncExternalStore } from 'react';
 import { Download, Apple, QrCode } from 'lucide-react';
 import IosInstallModal from './IosInstallModal';
 import DesktopQrModal from './DesktopQrModal';
@@ -8,7 +8,7 @@ import { detectDevice, DeviceType } from '@/lib/device-detector';
 import { ReleaseMetadata } from '@/lib/github-release';
 
 interface DeviceCtaProps {
-  release: ReleaseMetadata;
+  release?: ReleaseMetadata;
   appUrl?: string;
 }
 
@@ -36,6 +36,28 @@ export default function DeviceCta({
   const isClient = useIsClient();
   const [iosModalOpen, setIosModalOpen] = useState(false);
   const [qrModalOpen, setQrModalOpen] = useState(false);
+  const [downloadHref, setDownloadHref] = useState('/download');
+
+  useEffect(() => {
+    // Deteksi arsitektur 32-bit vs 64-bit di peramban pengguna
+    const nav = navigator as unknown as {
+      userAgentData?: {
+        getHighEntropyValues: (hints: string[]) => Promise<{ bitness?: string; architecture?: string }>;
+      };
+    };
+
+    if (nav.userAgentData?.getHighEntropyValues) {
+      nav.userAgentData.getHighEntropyValues(['bitness', 'architecture'])
+        .then((hints) => {
+          if (hints.bitness === '32') {
+            setDownloadHref('/download?arch=universal');
+          } else if (hints.bitness === '64') {
+            setDownloadHref('/download?arch=arm64');
+          }
+        })
+        .catch(() => {});
+    }
+  }, []);
 
   // Selama SSR, render tampilan netral yang seimbang
   if (!isClient) {
@@ -55,7 +77,7 @@ export default function DeviceCta({
           {/* Skenario 1: Pengguna Android */}
           {device === 'android' && (
             <a
-              href="/download"
+              href={downloadHref}
               download="nikahin.apk"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-[#d81b60] hover:bg-[#c2185b] text-white font-extrabold text-base shadow-lg shadow-[#d81b60]/25 hover:shadow-xl hover:shadow-[#d81b60]/35 hover:-translate-y-0.5 transition-all"
             >
@@ -79,7 +101,7 @@ export default function DeviceCta({
           {device === 'desktop' && (
             <>
               <a
-                href="/download"
+                href={downloadHref}
                 download="nikahin.apk"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-2xl bg-[#d81b60] hover:bg-[#c2185b] text-white font-extrabold text-base shadow-lg shadow-[#d81b60]/25 hover:shadow-xl hover:shadow-[#d81b60]/35 hover:-translate-y-0.5 transition-all"
               >
