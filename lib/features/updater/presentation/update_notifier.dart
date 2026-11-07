@@ -178,6 +178,7 @@ class UpdateNotifier extends Notifier<UpdateState> {
       final file = await _downloader.downloadApk(
         downloadUrl: release.apkDownloadUrl!,
         fileName: release.apkFileName ?? 'app-nikahin-${release.tagName}.apk',
+        expectedSha256: release.expectedSha256,
         onProgress: (progress, received, total, speed) {
           state = state.copyWith(
             downloadProgress: progress,

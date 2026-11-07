@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
@@ -12,11 +13,13 @@ class AppUpdateDownloader {
       : _client = client ?? http.Client();
 
   /// Mengunduh APK dari [downloadUrl] ke direktori cache lokal.
+  /// Mendukung validasi integritas [expectedSha256] untuk mencegah file corrupt atau termanipulasi.
   /// Memanggil callback [onProgress] dengan nilai persentase 0.0 s/d 1.0, byte diterima, total byte, dan kecepatan (bytes/sec).
   /// Mengembalikan [File] APK yang telah selesai diunduh.
   Future<File> downloadApk({
     required String downloadUrl,
     required String fileName,
+    String? expectedSha256,
     required void Function(
       double progress,
       int received,
@@ -107,6 +110,29 @@ class AppUpdateDownloader {
     } finally {
       stopwatch.stop();
       await sink.close();
+    }
+
+    // Validasi Integritas SHA-256 (jika disediakan oleh rilis)
+    if (expectedSha256 != null && expectedSha256.isNotEmpty) {
+      try {
+        final bytes = await file.readAsBytes();
+        final actualSha256 = sha256.convert(bytes).toString().toLowerCase();
+        if (actualSha256 != expectedSha256.toLowerCase()) {
+          debugPrint(
+            '[AppUpdateDownloader] SHA-256 mismatch! Expected: $expectedSha256, Actual: $actualSha256',
+          );
+          if (await file.exists()) {
+            await file.delete();
+          }
+          throw HttpException(
+            'Integritas berkas pembaruan tidak valid (checksum SHA-256 tidak cocok). Unduhan dibatalkan untuk keamanan.',
+            uri: uri,
+          );
+        }
+      } catch (e) {
+        if (e is HttpException) rethrow;
+        debugPrint('[AppUpdateDownloader] Gagal memeriksa hash SHA-256: $e');
+      }
     }
 
     return file;

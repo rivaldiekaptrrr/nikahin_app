@@ -10,6 +10,7 @@ class AppReleaseInfo {
   final String? apkDownloadUrl;
   final String? apkFileName;
   final int apkFileSize;
+  final String? expectedSha256;
   final DateTime? publishedAt;
 
   const AppReleaseInfo({
@@ -20,6 +21,7 @@ class AppReleaseInfo {
     this.apkDownloadUrl,
     this.apkFileName,
     this.apkFileSize = 0,
+    this.expectedSha256,
     this.publishedAt,
   });
 
@@ -90,6 +92,23 @@ class AppReleaseInfo {
       publishedDate = DateTime.tryParse(json['published_at'] as String);
     }
 
+    // Ekstraksi checksum SHA-256 dari catatan rilis untuk file APK yang terpilih
+    String? expectedSha256;
+    if (apkName != null && releaseNotes.isNotEmpty) {
+      final lines = releaseNotes.split('\n');
+      for (final line in lines) {
+        if (line.toLowerCase().contains(apkName.toLowerCase()) ||
+            line.toLowerCase().contains('sha256') ||
+            line.toLowerCase().contains('checksum')) {
+          final match = RegExp(r'[a-fA-F0-9]{64}').firstMatch(line);
+          if (match != null) {
+            expectedSha256 = match.group(0)?.toLowerCase();
+            break;
+          }
+        }
+      }
+    }
+
     return AppReleaseInfo(
       tagName: tagName,
       versionName: versionName,
@@ -98,6 +117,7 @@ class AppReleaseInfo {
       apkDownloadUrl: apkUrl,
       apkFileName: apkName,
       apkFileSize: apkSize,
+      expectedSha256: expectedSha256,
       publishedAt: publishedDate,
     );
   }

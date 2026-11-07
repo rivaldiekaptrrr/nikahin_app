@@ -85,6 +85,25 @@ void main() {
       expect(release.hasApk, isTrue);
       expect(release.apkDownloadUrl, isNotEmpty);
     });
+
+    test('AppReleaseInfo mengekstrak hash SHA-256 dari release notes dengan benar', () {
+      const sampleSha = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
+      final jsonWithChecksum = {
+        'tag_name': 'v1.3.0',
+        'name': 'Release 1.3.0',
+        'body': 'Pembaruan aplikasi.\n\nSHA256 Checksums:\n$sampleSha  app-nikahin-v1.3.0.apk',
+        'assets': [
+          {
+            'name': 'app-nikahin-v1.3.0.apk',
+            'browser_download_url': 'https://example.com/app.apk',
+            'size': 1000000,
+          }
+        ],
+      };
+
+      final release = AppReleaseInfo.fromJson(jsonWithChecksum);
+      expect(release.expectedSha256, equals(sampleSha));
+    });
   });
 
   group('UpdateState Speed & Time Estimation', () {
