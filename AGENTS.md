@@ -72,6 +72,7 @@ Knowledge graph data and MCP configurations are versioned inside `.agents/`:
 - `.agents/skills/humanizer-indonesia/SKILL.md`: Standar penyuntingan teks bahasa Indonesia agar luwes, tidak kaku, bebas dari tell AI dan kalke terjemahan.
 - `docs/MAESTRO_AND_EMULATOR_SETUP_GUIDE.md`: Complete guide for Android Emulator (CLI without Android Studio) and Maestro MCP testing.
 - `docs/BRAND_GUIDELINES.md`: Panduan identitas visual resmi Nikahin App, palet warna, tipografi, dan aturan penggunaan logo.
+- `docs/FIREBASE_CRASHLYTICS_GUIDE.md`: Panduan teknis pemantauan kestabilan, inisialisasi, dan pencatatan galat (crash reporting) Firebase Crashlytics.
 
 ---
 
