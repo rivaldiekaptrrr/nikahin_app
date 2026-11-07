@@ -73,3 +73,5 @@ landing-page/.vercel/
 .kotlin/
 **/android/.kotlin/
 *.salive
+
+.playwright-mcp/
