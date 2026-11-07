@@ -24,3 +24,4 @@
 # 5. Core Desugaring & Kotlin Coroutines
 -dontwarn java.lang.invoke.**
 -dontwarn java.util.concurrent.**
+
