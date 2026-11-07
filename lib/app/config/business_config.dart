@@ -35,21 +35,6 @@ class BusinessConfig {
   /// Status Lingkungan Midtrans (false = Sandbox, true = Production)
   static const bool isProduction = bool.fromEnvironment('MIDTRANS_IS_PRODUCTION', defaultValue: true);
 
-  /// Server Key Midtrans Sandbox (Testing)
-  static const String midtransSandboxServerKey = String.fromEnvironment(
-    'MIDTRANS_SANDBOX_SERVER_KEY',
-    defaultValue: 'SB-Mid-server-PLACEHOLDER',
-  );
-
-  /// Server Key Midtrans Production (Live)
-  static const String midtransProductionServerKey = String.fromEnvironment(
-    'MIDTRANS_PRODUCTION_SERVER_KEY',
-    defaultValue: 'Mid-server-PLACEHOLDER',
-  );
-
-  /// Server Key aktif berdasarkan lingkungan
-  static String get midtransServerKey => isProduction ? midtransProductionServerKey : midtransSandboxServerKey;
-
   /// Kode Paket Lisensi Midtrans
   static const String midtransPackageCode = 'WEDDING';
 
