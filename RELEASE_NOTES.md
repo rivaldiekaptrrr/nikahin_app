@@ -1,4 +1,5 @@
-• Penyesuaian Tombol Pembaruan: Tombol Cek Update pada menu Pengaturan kini lebih ramping, proporsional, dan dilengkapi indikator status.
-• Pembaruan Halaman Web Resmi: Peluncuran halaman penutup ajakan, halaman legal resmi (Kebijakan Privasi, Ketentuan Layanan, Penghapusan Data, Kontak), dan penyempurnaan unduhan APK.
-• Optimasi Deteksi Perangkat & Unduhan: Sistem unduhan otomatis mendeteksi arsitektur perangkat pengguna (ARM64 dan Universal 32-bit).
-• Peningkatan Stabilitas & Performa: Pengoptimalan alur in-app update dan perbaikan bug minor.
+• Arsitektur Keamanan Zero-Trust: Seluruh alur transaksi pembayaran Midtrans kini diproses langsung di sisi server secara aman tanpa menyimpan kunci rahasia di perangkat pengguna.
+• Validasi Integritas Pembaruan (Anti-Tamper): Pembaruan aplikasi kini otomatis memverifikasi kode checksum SHA-256 untuk memastikan berkas instalasi 100% utuh, asli, dan terhindar dari berkas yang korup.
+• Pemantauan Stabilitas Lapangan: Integrasi Firebase Crashlytics aktif untuk memantau performa dan mendeteksi kendala secara real-time demi pengalaman yang lebih andal.
+• Proteksi Biner R8 & Optimasi Performa: Perlindungan kode biner tingkat lanjut, pemangkasan aset yang tidak terpakai, dan efisiensi memori yang lebih optimal saat aplikasi berjalan.
+• Peningkatan Kenyamanan & Kestabilan Sistem: Berbagai penyempurnaan alur data offline-online, konsistensi tema, serta perbaikan minor di berbagai modul perencanaan pernikahan.
