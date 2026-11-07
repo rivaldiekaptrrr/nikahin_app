@@ -25,3 +25,6 @@
 -dontwarn java.lang.invoke.**
 -dontwarn java.util.concurrent.**
 
+# 6. Firebase Crashlytics
+-keep public class * extends java.lang.Exception
+
