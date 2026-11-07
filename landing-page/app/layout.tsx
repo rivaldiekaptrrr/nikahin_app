@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
+import MetaPixel from '@/components/MetaPixel';
 import './globals.css';
 
 const jakartaSans = Plus_Jakarta_Sans({
@@ -79,6 +80,7 @@ export default function RootLayout({
   return (
     <html lang="id" className={`${jakartaSans.variable} font-sans scroll-smooth`}>
       <body className="min-h-screen bg-[#fff9fa] text-slate-900 antialiased selection:bg-[#ffd9e2] selection:text-[#3e001d]">
+        <MetaPixel />
         {children}
       </body>
     </html>

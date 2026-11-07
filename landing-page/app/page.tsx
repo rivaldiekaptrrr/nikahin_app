@@ -7,6 +7,7 @@ import CoupleSyncBanner from '@/components/CoupleSyncBanner';
 import FaqAccordion from '@/components/FaqAccordion';
 import FinalCtaSection from '@/components/FinalCtaSection';
 import Footer from '@/components/Footer';
+import TrackViewContent from '@/components/TrackViewContent';
 import { getLatestRelease } from '@/lib/github-release';
 
 export default async function HomePage() {
@@ -14,6 +15,7 @@ export default async function HomePage() {
 
   return (
     <main className="min-h-screen flex flex-col bg-[#fff9fa] selection:bg-[#ffd9e2] selection:text-[#3e001d]">
+      <TrackViewContent />
       <Navbar />
 
       <HeroSection release={release} />

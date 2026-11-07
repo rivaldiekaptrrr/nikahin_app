@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { X, Share, PlusSquare, ExternalLink, Smartphone } from 'lucide-react';
+import { trackDownloadClick } from '@/lib/fpixel';
 
 interface IosInstallModalProps {
   isOpen: boolean;
@@ -98,6 +99,7 @@ export default function IosInstallModal({ isOpen, onClose, appUrl }: IosInstallM
             href={appUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackDownloadClick('ios', { source: 'safari_install_modal_open_app' })}
             className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-5 rounded-2xl bg-[#d81b60] hover:bg-[#c2185b] text-white font-bold text-sm shadow-md shadow-[#d81b60]/25 transition-all"
           >
             <span>Buka Aplikasi di Safari</span>

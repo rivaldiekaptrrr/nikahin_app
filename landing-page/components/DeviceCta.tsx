@@ -6,6 +6,7 @@ import IosInstallModal from './IosInstallModal';
 import DesktopQrModal from './DesktopQrModal';
 import { detectDevice, DeviceType } from '@/lib/device-detector';
 import { ReleaseMetadata } from '@/lib/github-release';
+import { trackDownloadClick } from '@/lib/fpixel';
 
 interface DeviceCtaProps {
   release?: ReleaseMetadata;
@@ -79,6 +80,7 @@ export default function DeviceCta({
             <a
               href={downloadHref}
               download="nikahin.apk"
+              onClick={() => trackDownloadClick('android', { source: 'device_cta_button' })}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-[#d81b60] hover:bg-[#c2185b] text-white font-extrabold text-base shadow-lg shadow-[#d81b60]/25 hover:shadow-xl hover:shadow-[#d81b60]/35 hover:-translate-y-0.5 transition-all"
             >
               <Download className="w-5 h-5" />
@@ -89,7 +91,10 @@ export default function DeviceCta({
           {/* Skenario 2: Pengguna iPhone / iPad */}
           {device === 'ios' && (
             <button
-              onClick={() => setIosModalOpen(true)}
+              onClick={() => {
+                trackDownloadClick('ios', { source: 'device_cta_open_modal' });
+                setIosModalOpen(true);
+              }}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-[#d81b60] hover:bg-[#c2185b] text-white font-extrabold text-base shadow-lg shadow-[#d81b60]/25 hover:shadow-xl hover:shadow-[#d81b60]/35 hover:-translate-y-0.5 transition-all"
             >
               <Apple className="w-5 h-5" />
@@ -103,6 +108,7 @@ export default function DeviceCta({
               <a
                 href={downloadHref}
                 download="nikahin.apk"
+                onClick={() => trackDownloadClick('android', { source: 'desktop_download_apk' })}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-2xl bg-[#d81b60] hover:bg-[#c2185b] text-white font-extrabold text-base shadow-lg shadow-[#d81b60]/25 hover:shadow-xl hover:shadow-[#d81b60]/35 hover:-translate-y-0.5 transition-all"
               >
                 <Download className="w-5 h-5" />
@@ -110,7 +116,10 @@ export default function DeviceCta({
               </a>
 
               <button
-                onClick={() => setIosModalOpen(true)}
+                onClick={() => {
+                  trackDownloadClick('ios', { source: 'desktop_open_ios_modal' });
+                  setIosModalOpen(true);
+                }}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm border border-slate-200 shadow-sm hover:shadow transition-all"
               >
                 <Apple className="w-4 h-4 text-[#d81b60]" />
