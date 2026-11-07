@@ -68,3 +68,8 @@ landing-page/node_modules/
 landing-page/.next/
 landing-page/out/
 landing-page/.vercel/
+
+# Android Kotlin compiler daemon artifacts
+.kotlin/
+**/android/.kotlin/
+*.salive
