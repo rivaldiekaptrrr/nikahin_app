@@ -28,3 +28,6 @@
 # 6. Firebase Crashlytics
 -keep public class * extends java.lang.Exception
 
+# 7. Flutter Deferred Components / Play Core
+-dontwarn com.google.android.play.core.**
+
