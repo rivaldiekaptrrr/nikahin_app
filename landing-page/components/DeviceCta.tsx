@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useSyncExternalStore } from 'react';
 import { Download, Apple, QrCode } from 'lucide-react';
 import IosInstallModal from './IosInstallModal';
+import AndroidInstallModal from './AndroidInstallModal';
 import DesktopQrModal from './DesktopQrModal';
 import { detectDevice, DeviceType } from '@/lib/device-detector';
 import { ReleaseMetadata } from '@/lib/github-release';
@@ -36,6 +37,7 @@ export default function DeviceCta({
   const device = useUserAgentDevice();
   const isClient = useIsClient();
   const [iosModalOpen, setIosModalOpen] = useState(false);
+  const [androidModalOpen, setAndroidModalOpen] = useState(false);
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [downloadHref, setDownloadHref] = useState('/download');
 
@@ -80,7 +82,10 @@ export default function DeviceCta({
             <a
               href={downloadHref}
               download="nikahin.apk"
-              onClick={() => trackDownloadClick('android', { source: 'device_cta_button' })}
+              onClick={() => {
+                trackDownloadClick('android', { source: 'device_cta_button' });
+                setAndroidModalOpen(true);
+              }}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-[#d81b60] hover:bg-[#c2185b] text-white font-extrabold text-base shadow-lg shadow-[#d81b60]/25 hover:shadow-xl hover:shadow-[#d81b60]/35 hover:-translate-y-0.5 transition-all"
             >
               <Download className="w-5 h-5" />
@@ -140,6 +145,11 @@ export default function DeviceCta({
       </div>
 
       {/* Modal Dialogs */}
+      <AndroidInstallModal
+        isOpen={androidModalOpen}
+        onClose={() => setAndroidModalOpen(false)}
+        downloadUrl={downloadHref}
+      />
       <IosInstallModal
         isOpen={iosModalOpen}
         onClose={() => setIosModalOpen(false)}
