@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { X, ShieldCheck, Download, AlertTriangle, Settings, CheckCircle2 } from 'lucide-react';
+import { X, ShieldCheck, Settings, CheckCircle2, AlertTriangle } from 'lucide-react';
 
 interface AndroidInstallModalProps {
   isOpen: boolean;
@@ -41,10 +41,10 @@ export default function AndroidInstallModal({
           </div>
           <div>
             <h3 className="font-extrabold text-lg text-slate-900 leading-snug">
-              Panduan Pemasangan di Android
+              Panduan Memasang di Android
             </h3>
             <p className="text-xs text-slate-500 font-medium mt-0.5">
-              Unduhan sedang berjalan otomatis di latar belakang
+              Aplikasi sedang diunduh di latar belakang
             </p>
           </div>
         </div>
@@ -53,7 +53,7 @@ export default function AndroidInstallModal({
         <div className="mb-4 p-3 rounded-2xl bg-[#fff9fa] border border-[#ffd9e2] flex items-center gap-2.5">
           <CheckCircle2 className="w-4 h-4 text-[#d81b60] shrink-0" />
           <p className="text-[11.5px] text-slate-700 font-medium leading-relaxed">
-            Berkas resmi Nikahin terverifikasi <span className="font-bold text-[#ad1457]">100% aman</span>, bersih, dan bebas dari malware.
+            Aplikasi resmi Nikahin dijamin <span className="font-bold text-[#ad1457]">100% aman</span>, bersih, dan bebas dari malware.
           </p>
         </div>
 
@@ -65,11 +65,11 @@ export default function AndroidInstallModal({
               1
             </div>
             <div>
-              <p className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                <span>Pilih &quot;Tetap Download&quot; / &quot;Download Anyway&quot;</span>
+              <p className="text-xs font-bold text-slate-900">
+                Pilih &quot;Tetap download&quot; (Download anyway)
               </p>
               <p className="text-[11.5px] text-slate-600 mt-1 leading-relaxed">
-                Chrome menampilkan peringatan ini untuk semua berkas APK di luar Play Store. Silakan tekan tombol konfirmasi unduh.
+                Browser biasanya menampilkan pesan ini saat memasang aplikasi dari luar Play Store. Cukup pilih Tetap download untuk melanjutkan.
               </p>
             </div>
           </div>
@@ -81,11 +81,11 @@ export default function AndroidInstallModal({
             </div>
             <div>
               <p className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                <span>Buka Berkas & Aktifkan Izin Sumber</span>
+                <span>Buka aplikasi & aktifkan izin pemasangan</span>
                 <Settings className="w-3.5 h-3.5 text-[#d81b60]" />
               </p>
               <p className="text-[11.5px] text-slate-600 mt-1 leading-relaxed">
-                Ketuk notifikasi selesai unduh. Jika muncul permintaan izin, aktifkan opsi <span className="font-semibold text-slate-800">&quot;Izinkan dari sumber ini&quot;</span> pada pengaturan ponsel.
+                Setelah selesai diunduh, buka notifikasinya. Jika ponsel meminta izin, aktifkan pilihan <span className="font-semibold text-slate-800">&quot;Izinkan dari sumber ini&quot;</span>.
               </p>
             </div>
           </div>
@@ -97,11 +97,11 @@ export default function AndroidInstallModal({
             </div>
             <div>
               <p className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                <span>Jika Ada Play Protect: Ketuk &quot;Tetap Pasang&quot;</span>
+                <span>Bila muncul Play Protect, pilih &quot;Tetap pasang&quot;</span>
                 <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
               </p>
               <p className="text-[11.5px] text-slate-600 mt-1 leading-relaxed">
-                Jika muncul pop-up Play Protect, ketuk teks <span className="font-semibold text-slate-800">&quot;Detail selengkapnya&quot;</span> lalu pilih <span className="font-bold text-[#ad1457]">&quot;Tetap pasang (Install anyway)&quot;</span>.
+                Jika Google Play Protect muncul, ketuk <span className="font-semibold text-slate-800">&quot;Detail selengkapnya&quot;</span> (More details), lalu pilih <span className="font-bold text-[#ad1457]">&quot;Tetap pasang&quot;</span> (Install anyway).
               </p>
             </div>
           </div>
@@ -113,7 +113,7 @@ export default function AndroidInstallModal({
             onClick={onClose}
             className="w-full py-3.5 px-4 rounded-2xl bg-[#d81b60] hover:bg-[#c2185b] text-white font-bold text-sm shadow-md shadow-[#d81b60]/20 transition-all text-center"
           >
-            Saya Mengerti, Lanjutkan
+            Saya Mengerti
           </button>
 
           <a
@@ -121,7 +121,7 @@ export default function AndroidInstallModal({
             download="nikahin.apk"
             className="text-center text-xs font-medium text-slate-500 hover:text-[#d81b60] transition-colors py-1.5"
           >
-            Unduhan tidak berjalan otomatis? <span className="font-bold underline">Klik di sini untuk mengunduh ulang</span>
+            Unduhan belum mulai? <span className="font-bold underline">Klik di sini untuk mengunduh ulang</span>
           </a>
         </div>
       </div>
