@@ -29,15 +29,15 @@ export default function IosInstallModal({ isOpen, onClose, appUrl }: IosInstallM
         </button>
 
         {/* Modal Header */}
-        <div className="flex items-center gap-3.5 mb-5">
-          <div className="w-11 h-11 rounded-2xl bg-[#fdf0de] flex items-center justify-center text-[#d81b60]">
+        <div className="flex items-center gap-3.5 mb-5 pr-8">
+          <div className="w-11 h-11 rounded-2xl bg-[#fdf0de] flex items-center justify-center text-[#d81b60] shrink-0">
             <Smartphone className="w-6 h-6" />
           </div>
           <div>
-            <h3 className="font-extrabold text-lg text-slate-900">
+            <h3 className="font-extrabold text-lg text-slate-900 leading-snug">
               Pasang Nikahin di iPhone
             </h3>
-            <p className="text-xs text-slate-500 font-medium text-justify">
+            <p className="text-xs text-slate-500 font-medium mt-0.5 text-justify">
               Cukup buka di Safari dan tambahkan ke layar utama, tanpa repot lewat App Store
             </p>
           </div>
@@ -105,7 +105,7 @@ export default function IosInstallModal({ isOpen, onClose, appUrl }: IosInstallM
             <span>Buka Aplikasi di Safari</span>
             <ExternalLink className="w-4 h-4" />
           </a>
-          <p className="text-center text-[11px] text-slate-400 mt-2.5">
+          <p className="text-left text-[11px] text-slate-400 mt-2.5 leading-relaxed text-justify">
             Aplikasi otomatis terbuka layar penuh seperti aplikasi biasa.
           </p>
         </div>

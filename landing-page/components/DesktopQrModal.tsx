@@ -16,7 +16,7 @@ export default function DesktopQrModal({ isOpen, onClose, targetUrl }: DesktopQr
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
       <div
-        className="relative w-full max-w-sm bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-slate-100 text-center"
+        className="relative w-full max-w-sm bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-slate-100"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
@@ -29,34 +29,37 @@ export default function DesktopQrModal({ isOpen, onClose, targetUrl }: DesktopQr
         </button>
 
         {/* Modal Header */}
-        <div className="w-12 h-12 rounded-2xl bg-[#fdf0de] mx-auto flex items-center justify-center text-[#d81b60] mb-4">
-          <QrCode className="w-6 h-6" />
+        <div className="flex items-center gap-3.5 mb-5 pr-8">
+          <div className="w-11 h-11 rounded-2xl bg-[#fdf0de] flex items-center justify-center text-[#d81b60] shrink-0">
+            <QrCode className="w-6 h-6" />
+          </div>
+          <div>
+            <h3 className="font-extrabold text-lg text-slate-900 leading-snug">
+              Buka di Ponselmu
+            </h3>
+            <p className="text-xs text-slate-500 font-medium mt-0.5 text-justify">
+              Arahkan kamera ponsel ke kode QR untuk membuka aplikasi langsung di HP kamu.
+            </p>
+          </div>
         </div>
 
-        <h3 className="font-extrabold text-lg text-slate-900 mb-1">
-          Buka di Ponselmu
-        </h3>
-        <p className="text-xs text-slate-500 font-medium mb-6">
-          Arahkan kamera ponsel ke kode QR untuk membuka aplikasi langsung di HP kamu.
-        </p>
-
         {/* QR Code Frame */}
-        <div className="p-4 bg-white rounded-2xl border-2 border-dashed border-[#ffd9e2] inline-block shadow-inner mb-5">
-          <QRCodeSVG
-            value={targetUrl}
-            size={180}
-            level="M"
-            includeMargin={true}
-            fgColor="#0f172a"
-          />
+        <div className="flex justify-center mb-5">
+          <div className="p-4 bg-white rounded-2xl border-2 border-dashed border-[#ffd9e2] shadow-inner">
+            <QRCodeSVG
+              value={targetUrl}
+              size={180}
+              level="M"
+              includeMargin={true}
+              fgColor="#0f172a"
+            />
+          </div>
         </div>
 
         {/* Device Notes */}
-        <div className="flex items-center justify-center gap-4 text-xs font-semibold text-slate-600">
-          <span className="flex items-center gap-1.5">
-            <Smartphone className="w-4 h-4 text-[#d81b60]" />
-            Tersedia untuk Android & iPhone
-          </span>
+        <div className="flex items-center justify-center gap-2 text-xs font-semibold text-slate-600">
+          <Smartphone className="w-4 h-4 text-[#d81b60]" />
+          <span>Tersedia untuk Android & iPhone</span>
         </div>
       </div>
     </div>

@@ -119,7 +119,7 @@ export default function AndroidInstallModal({
           <a
             href={downloadUrl}
             download="nikahin.apk"
-            className="text-center text-xs font-medium text-slate-500 hover:text-[#d81b60] transition-colors py-1.5"
+            className="text-left text-xs font-medium text-slate-500 hover:text-[#d81b60] transition-colors py-1"
           >
             Unduhan belum mulai? <span className="font-bold underline">Klik di sini untuk mengunduh ulang</span>
           </a>
