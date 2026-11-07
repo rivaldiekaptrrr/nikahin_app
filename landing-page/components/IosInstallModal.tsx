@@ -37,7 +37,7 @@ export default function IosInstallModal({ isOpen, onClose, appUrl }: IosInstallM
             <h3 className="font-extrabold text-lg text-slate-900">
               Pasang Nikahin di iPhone
             </h3>
-            <p className="text-xs text-slate-500 font-medium">
+            <p className="text-xs text-slate-500 font-medium text-justify">
               Cukup buka di Safari dan tambahkan ke layar utama, tanpa repot lewat App Store
             </p>
           </div>
@@ -50,11 +50,11 @@ export default function IosInstallModal({ isOpen, onClose, appUrl }: IosInstallM
             <div className="w-7 h-7 rounded-full bg-[#d81b60] text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
               1
             </div>
-            <div>
+            <div className="flex-1">
               <p className="text-xs font-bold text-slate-900">
                 Buka di Peramban Safari
               </p>
-              <p className="text-[11.5px] text-slate-600 mt-0.5 leading-relaxed">
+              <p className="text-[11.5px] text-slate-600 mt-0.5 leading-relaxed text-justify">
                 Pastikan kamu membuka tautan aplikasi menggunakan browser Safari bawaan iPhone.
               </p>
             </div>
@@ -65,12 +65,12 @@ export default function IosInstallModal({ isOpen, onClose, appUrl }: IosInstallM
             <div className="w-7 h-7 rounded-full bg-[#d81b60] text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
               2
             </div>
-            <div>
+            <div className="flex-1">
               <p className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
                 <span>Tekan Tombol Bagikan</span>
                 <Share className="w-3.5 h-3.5 text-[#d81b60]" />
               </p>
-              <p className="text-[11.5px] text-slate-600 mt-0.5 leading-relaxed">
+              <p className="text-[11.5px] text-slate-600 mt-0.5 leading-relaxed text-justify">
                 Ketuk ikon <span className="font-semibold text-slate-800">Share</span> (kotak berpanah atas) di menu bilah bawah Safari.
               </p>
             </div>
@@ -81,12 +81,12 @@ export default function IosInstallModal({ isOpen, onClose, appUrl }: IosInstallM
             <div className="w-7 h-7 rounded-full bg-[#d81b60] text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
               3
             </div>
-            <div>
+            <div className="flex-1">
               <p className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
                 <span>Pilih &quot;Tambah ke Layar Utama&quot;</span>
                 <PlusSquare className="w-3.5 h-3.5 text-[#d81b60]" />
               </p>
-              <p className="text-[11.5px] text-slate-600 mt-0.5 leading-relaxed">
+              <p className="text-[11.5px] text-slate-600 mt-0.5 leading-relaxed text-justify">
                 Gulir ke bawah lalu pilih <span className="font-semibold text-slate-800">Add to Home Screen</span>. Ikon Nikahin akan langsung muncul di beranda iPhone kamu.
               </p>
             </div>

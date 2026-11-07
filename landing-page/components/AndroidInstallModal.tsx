@@ -43,7 +43,7 @@ export default function AndroidInstallModal({
             <h3 className="font-extrabold text-lg text-slate-900 leading-snug">
               Panduan Memasang di Android
             </h3>
-            <p className="text-xs text-slate-500 font-medium mt-0.5">
+            <p className="text-xs text-slate-500 font-medium mt-0.5 text-justify">
               Aplikasi sedang diunduh di latar belakang
             </p>
           </div>
@@ -52,7 +52,7 @@ export default function AndroidInstallModal({
         {/* Banner Jaminan Keamanan */}
         <div className="mb-4 p-3 rounded-2xl bg-[#fff9fa] border border-[#ffd9e2] flex items-center gap-2.5">
           <CheckCircle2 className="w-4 h-4 text-[#d81b60] shrink-0" />
-          <p className="text-[11.5px] text-slate-700 font-medium leading-relaxed">
+          <p className="text-[11.5px] text-slate-700 font-medium leading-relaxed text-justify">
             Aplikasi resmi Nikahin dijamin <span className="font-bold text-[#ad1457]">100% aman</span>, bersih, dan bebas dari malware.
           </p>
         </div>
@@ -64,11 +64,11 @@ export default function AndroidInstallModal({
             <div className="w-6 h-6 rounded-full bg-[#d81b60] text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
               1
             </div>
-            <div>
+            <div className="flex-1">
               <p className="text-xs font-bold text-slate-900">
                 Pilih &quot;Tetap download&quot; (Download anyway)
               </p>
-              <p className="text-[11.5px] text-slate-600 mt-1 leading-relaxed">
+              <p className="text-[11.5px] text-slate-600 mt-1 leading-relaxed text-justify">
                 Browser biasanya menampilkan pesan ini saat memasang aplikasi dari luar Play Store. Cukup pilih Tetap download untuk melanjutkan.
               </p>
             </div>
@@ -79,12 +79,12 @@ export default function AndroidInstallModal({
             <div className="w-6 h-6 rounded-full bg-[#d81b60] text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
               2
             </div>
-            <div>
+            <div className="flex-1">
               <p className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
                 <span>Buka aplikasi & aktifkan izin pemasangan</span>
                 <Settings className="w-3.5 h-3.5 text-[#d81b60]" />
               </p>
-              <p className="text-[11.5px] text-slate-600 mt-1 leading-relaxed">
+              <p className="text-[11.5px] text-slate-600 mt-1 leading-relaxed text-justify">
                 Setelah selesai diunduh, buka notifikasinya. Jika ponsel meminta izin, aktifkan pilihan <span className="font-semibold text-slate-800">&quot;Izinkan dari sumber ini&quot;</span>.
               </p>
             </div>
@@ -95,12 +95,12 @@ export default function AndroidInstallModal({
             <div className="w-6 h-6 rounded-full bg-[#d81b60] text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
               3
             </div>
-            <div>
+            <div className="flex-1">
               <p className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
                 <span>Bila muncul Play Protect, pilih &quot;Tetap pasang&quot;</span>
                 <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
               </p>
-              <p className="text-[11.5px] text-slate-600 mt-1 leading-relaxed">
+              <p className="text-[11.5px] text-slate-600 mt-1 leading-relaxed text-justify">
                 Jika Google Play Protect muncul, ketuk <span className="font-semibold text-slate-800">&quot;Detail selengkapnya&quot;</span> (More details), lalu pilih <span className="font-bold text-[#ad1457]">&quot;Tetap pasang&quot;</span> (Install anyway).
               </p>
             </div>
