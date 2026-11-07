@@ -1,3 +1,4 @@
+// ignore_for_file: depend_on_referenced_packages
 import 'dart:convert';
 import 'dart:io';
 import 'package:crypto/crypto.dart';
@@ -57,7 +58,7 @@ void main() {
         downloadUrl: 'https://github.com/rivaldiekaptrrr/nikahin_app/releases/download/v1.1.13/app-nikahin-v1.1.13.apk',
         fileName: 'app-valid.apk',
         expectedSha256: validSha256,
-        onProgress: (_, __, ___, ____) {},
+        onProgress: (received, total, isDownload, message) {},
       );
 
       // 3. Verifikasi file berhasil tersimpan dan utuh
@@ -89,7 +90,7 @@ void main() {
           downloadUrl: 'https://github.com/rivaldiekaptrrr/nikahin_app/releases/download/v1.1.13/app-nikahin-v1.1.13.apk',
           fileName: 'app-corrupted.apk',
           expectedSha256: officialExpectedSha256,
-          onProgress: (_, __, ___, ____) {},
+          onProgress: (received, total, isDownload, message) {},
         ),
         throwsA(
           isA<HttpException>().having(
