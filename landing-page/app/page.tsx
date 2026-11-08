@@ -10,6 +10,8 @@ import Footer from '@/components/Footer';
 import TrackViewContent from '@/components/TrackViewContent';
 import { getLatestRelease } from '@/lib/github-release';
 
+export const revalidate = 300;
+
 export default async function HomePage() {
   const release = await getLatestRelease();
 
