@@ -16,7 +16,7 @@ export default function DesktopQrModal({ isOpen, onClose, targetUrl }: DesktopQr
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
       <div
-        className="relative w-full max-w-sm bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-slate-100"
+        className="relative w-full max-w-sm bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-slate-100 text-left"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
@@ -37,7 +37,7 @@ export default function DesktopQrModal({ isOpen, onClose, targetUrl }: DesktopQr
             <h3 className="font-extrabold text-lg text-slate-900 leading-snug">
               Buka di Ponselmu
             </h3>
-            <p className="text-xs text-slate-500 font-medium mt-0.5 text-justify">
+            <p className="text-xs text-slate-500 font-medium mt-0.5">
               Arahkan kamera ponsel ke kode QR untuk membuka aplikasi langsung di HP kamu.
             </p>
           </div>

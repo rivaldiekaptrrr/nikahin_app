@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { X, Share, PlusSquare, ExternalLink, Smartphone } from 'lucide-react';
+import { X, Share, PlusSquare, ExternalLink, Smartphone, Compass } from 'lucide-react';
 import { trackDownloadClick } from '@/lib/fpixel';
 
 interface IosInstallModalProps {
@@ -16,7 +16,7 @@ export default function IosInstallModal({ isOpen, onClose, appUrl }: IosInstallM
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
       <div
-        className="relative w-full max-w-md bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-slate-100 overflow-hidden"
+        className="relative w-full max-w-md bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-slate-100 overflow-hidden text-left"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
@@ -37,7 +37,7 @@ export default function IosInstallModal({ isOpen, onClose, appUrl }: IosInstallM
             <h3 className="font-extrabold text-lg text-slate-900 leading-snug">
               Pasang Nikahin di iPhone
             </h3>
-            <p className="text-xs text-slate-500 font-medium mt-0.5 text-justify">
+            <p className="text-xs text-slate-500 font-medium mt-0.5">
               Cukup buka di Safari dan tambahkan ke layar utama, tanpa repot lewat App Store
             </p>
           </div>
@@ -51,10 +51,11 @@ export default function IosInstallModal({ isOpen, onClose, appUrl }: IosInstallM
               1
             </div>
             <div className="flex-1">
-              <p className="text-xs font-bold text-slate-900">
-                Buka di Peramban Safari
+              <p className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                <span>Buka di Peramban Safari</span>
+                <Compass className="w-3.5 h-3.5 text-[#d81b60] shrink-0" />
               </p>
-              <p className="text-[11.5px] text-slate-600 mt-0.5 leading-relaxed text-justify">
+              <p className="text-[11.5px] text-slate-600 mt-0.5 leading-relaxed">
                 Pastikan kamu membuka tautan aplikasi menggunakan browser Safari bawaan iPhone.
               </p>
             </div>
@@ -68,9 +69,9 @@ export default function IosInstallModal({ isOpen, onClose, appUrl }: IosInstallM
             <div className="flex-1">
               <p className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
                 <span>Tekan Tombol Bagikan</span>
-                <Share className="w-3.5 h-3.5 text-[#d81b60]" />
+                <Share className="w-3.5 h-3.5 text-[#d81b60] shrink-0" />
               </p>
-              <p className="text-[11.5px] text-slate-600 mt-0.5 leading-relaxed text-justify">
+              <p className="text-[11.5px] text-slate-600 mt-0.5 leading-relaxed">
                 Ketuk ikon <span className="font-semibold text-slate-800">Share</span> (kotak berpanah atas) di menu bilah bawah Safari.
               </p>
             </div>
@@ -84,9 +85,9 @@ export default function IosInstallModal({ isOpen, onClose, appUrl }: IosInstallM
             <div className="flex-1">
               <p className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
                 <span>Pilih &quot;Tambah ke Layar Utama&quot;</span>
-                <PlusSquare className="w-3.5 h-3.5 text-[#d81b60]" />
+                <PlusSquare className="w-3.5 h-3.5 text-[#d81b60] shrink-0" />
               </p>
-              <p className="text-[11.5px] text-slate-600 mt-0.5 leading-relaxed text-justify">
+              <p className="text-[11.5px] text-slate-600 mt-0.5 leading-relaxed">
                 Gulir ke bawah lalu pilih <span className="font-semibold text-slate-800">Add to Home Screen</span>. Ikon Nikahin akan langsung muncul di beranda iPhone kamu.
               </p>
             </div>
@@ -105,7 +106,7 @@ export default function IosInstallModal({ isOpen, onClose, appUrl }: IosInstallM
             <span>Buka Aplikasi di Safari</span>
             <ExternalLink className="w-4 h-4" />
           </a>
-          <p className="text-left text-[11px] text-slate-400 mt-2.5 leading-relaxed text-justify">
+          <p className="text-left text-[11px] text-slate-400 mt-2.5 leading-relaxed">
             Aplikasi otomatis terbuka layar penuh seperti aplikasi biasa.
           </p>
         </div>
