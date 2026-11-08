@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
 import MetaPixel from '@/components/MetaPixel';
+import FirebaseAnalytics from '@/components/FirebaseAnalytics';
 import './globals.css';
 
 const jakartaSans = Plus_Jakarta_Sans({
@@ -186,6 +187,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-[#fff9fa] text-slate-900 antialiased selection:bg-[#ffd9e2] selection:text-[#3e001d]">
         <MetaPixel />
+        <FirebaseAnalytics />
         {children}
       </body>
     </html>

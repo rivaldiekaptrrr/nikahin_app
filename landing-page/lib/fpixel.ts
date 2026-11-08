@@ -1,6 +1,6 @@
 export const FB_PIXEL_ID = process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID || '';
 
-// Deklarasi tipe global untuk window.fbq
+// Deklarasi tipe global untuk window.fbq dan window.gtag
 declare global {
   interface Window {
     fbq?: ((...args: unknown[]) => void) & {
@@ -11,6 +11,8 @@ declare global {
       push?: (...args: unknown[]) => void;
     };
     _fbq?: unknown;
+    dataLayer?: unknown[];
+    gtag?: (...args: unknown[]) => void;
   }
 }
 
@@ -44,8 +46,10 @@ export const trackCustom = (name: string, options: Record<string, unknown> = {})
 };
 
 /**
- * Helper khusus untuk mencatat event interaksi unduhan (DownloadClick & Lead)
- * Memancarkan baik Custom Event 'DownloadClick' maupun Standard Event 'Lead' untuk optimasi iklan Meta
+ * Helper khusus untuk mencatat event interaksi unduhan ke Meta Pixel dan Firebase Analytics
+ * Mencatat:
+ * 1. Meta Pixel: Custom 'DownloadClick' & Standard 'Lead'
+ * 2. Firebase Analytics: 'app_download_click' & 'generate_lead'
  */
 export const trackDownloadClick = (
   platform: 'android' | 'ios' | 'pwa',
@@ -59,25 +63,47 @@ export const trackDownloadClick = (
     ...metadata,
   };
 
-  // 1. Custom event spesifik untuk pelacakan internal
+  // 1. Meta Pixel Tracking
   trackCustom('DownloadClick', payload);
-
-  // 2. Standard event Meta 'Lead' agar mudah dipetakan sebagai conversion event di Meta Ads Manager
   event('Lead', {
     content_name: `Nikahin App (${platform.toUpperCase()})`,
     content_category: 'App Download',
   });
+
+  // 2. Firebase Analytics (GA4) Tracking
+  if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+    window.gtag('event', 'app_download_click', {
+      platform,
+      file_name: platform === 'android' ? 'nikahin.apk' : 'nikahin-ios-pwa',
+      content_name: 'Nikahin Wedding Planner App',
+      ...metadata,
+    });
+    window.gtag('event', 'generate_lead', {
+      event_category: 'App Download',
+      event_label: platform.toUpperCase(),
+      value: 1,
+    });
+  }
 };
 
 /**
- * Helper khusus untuk mencatat event ketertarikan konten (ViewContent)
+ * Helper khusus untuk mencatat event ketertarikan konten (ViewContent & select_content)
  */
 export const trackViewContent = (metadata: Record<string, unknown> = {}) => {
+  // 1. Meta Pixel
   event('ViewContent', {
     content_name: 'Nikahin Landing Page',
     content_category: 'Wedding Planner Mobile App',
     content_type: 'product',
     ...metadata,
   });
-};
 
+  // 2. Firebase Analytics
+  if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+    window.gtag('event', 'select_content', {
+      content_type: 'landing_page',
+      item_id: 'nikahin_landing',
+      ...metadata,
+    });
+  }
+};
