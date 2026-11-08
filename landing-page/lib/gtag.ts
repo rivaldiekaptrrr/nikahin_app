@@ -33,3 +33,4 @@ export const event = (eventName: string, params: Record<string, unknown> = {}) =
     window.gtag('event', eventName, params);
   }
 };
+

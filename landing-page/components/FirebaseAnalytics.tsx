@@ -1,19 +1,18 @@
 'use client';
 
-import React, { useEffect, Suspense } from 'react';
+import React, { useEffect } from 'react';
 import Script from 'next/script';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { GA_MEASUREMENT_ID, pageview } from '@/lib/gtag';
 
 function FirebaseAnalyticsTracker() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
-    if (!GA_MEASUREMENT_ID) return;
-    const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '');
+    if (!GA_MEASUREMENT_ID || typeof window === 'undefined') return;
+    const url = window.location.pathname + window.location.search;
     pageview(url);
-  }, [pathname, searchParams]);
+  }, [pathname]);
 
   return null;
 }
@@ -45,9 +44,7 @@ export default function FirebaseAnalytics() {
           `,
         }}
       />
-      <Suspense fallback={null}>
-        <FirebaseAnalyticsTracker />
-      </Suspense>
+      <FirebaseAnalyticsTracker />
     </>
   );
 }

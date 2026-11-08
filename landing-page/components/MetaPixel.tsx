@@ -1,18 +1,17 @@
 'use client';
 
-import React, { useEffect, Suspense } from 'react';
+import React, { useEffect } from 'react';
 import Script from 'next/script';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { FB_PIXEL_ID, pageview } from '@/lib/fpixel';
 
 function MetaPixelTracker() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
     if (!FB_PIXEL_ID) return;
     pageview();
-  }, [pathname, searchParams]);
+  }, [pathname]);
 
   return null;
 }
@@ -48,7 +47,6 @@ export default function MetaPixel() {
         }}
       />
       <noscript>
-        {/* Fallback tracking image jika JS dimatikan di browser */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           height="1"
@@ -58,11 +56,7 @@ export default function MetaPixel() {
           alt=""
         />
       </noscript>
-
-      <Suspense fallback={null}>
-        <MetaPixelTracker />
-      </Suspense>
+      <MetaPixelTracker />
     </>
   );
 }
-
