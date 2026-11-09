@@ -25,7 +25,8 @@ class MidtransCustomPaymentScreen extends ConsumerStatefulWidget {
   ConsumerState<MidtransCustomPaymentScreen> createState() => _MidtransCustomPaymentScreenState();
 }
 
-class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaymentScreen> {
+class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaymentScreen>
+    with WidgetsBindingObserver {
   late MidtransChargeData _data;
   Timer? _countdownTimer;
   Timer? _pollingTimer;
@@ -37,10 +38,18 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _data = widget.chargeData;
 
     _initExpiryTimer();
     _startStatusPolling();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && mounted && !_isSuccess) {
+      _checkStatusOnce();
+    }
   }
 
   void _initExpiryTimer() {
@@ -62,32 +71,33 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
     });
   }
 
+  Future<void> _checkStatusOnce() async {
+    if (!mounted || _isSuccess) return;
+
+    // 1. Cek via Firestore / AuthNotifier
+    final accessLevel = await ref.read(authNotifierProvider.notifier).checkAccessStatus();
+    if (accessLevel.isPremium || accessLevel.isAdmin) {
+      _pollingTimer?.cancel();
+      _onPaymentSuccess();
+      return;
+    }
+
+    // 2. Cek status via Midtrans Core API status endpoint
+    try {
+      final paymentService = ref.read(midtransPaymentServiceProvider);
+      final status = await paymentService.checkCoreApiStatus(_data.orderId);
+      if (status.isSuccess) {
+        _pollingTimer?.cancel();
+        await ref.read(authNotifierProvider.notifier).checkAccessStatus();
+        _onPaymentSuccess();
+      }
+    } catch (_) {}
+  }
+
   void _startStatusPolling() {
     _pollingTimer?.cancel();
-    _pollingTimer = Timer.periodic(const Duration(seconds: 4), (timer) async {
-      if (!mounted || _isSuccess) {
-        timer.cancel();
-        return;
-      }
-
-      // 1. Cek via Firestore / AuthNotifier
-      final accessLevel = await ref.read(authNotifierProvider.notifier).checkAccessStatus();
-      if (accessLevel.isPremium || accessLevel.isAdmin) {
-        timer.cancel();
-        _onPaymentSuccess();
-        return;
-      }
-
-      // 2. Cek status via Midtrans Core API status endpoint
-      try {
-        final paymentService = ref.read(midtransPaymentServiceProvider);
-        final status = await paymentService.checkCoreApiStatus(_data.orderId);
-        if (status.isSuccess) {
-          timer.cancel();
-          await ref.read(authNotifierProvider.notifier).checkAccessStatus();
-          _onPaymentSuccess();
-        }
-      } catch (_) {}
+    _pollingTimer = Timer.periodic(const Duration(seconds: 4), (_) async {
+      await _checkStatusOnce();
     });
   }
 
@@ -159,6 +169,7 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _countdownTimer?.cancel();
     _pollingTimer?.cancel();
     super.dispose();

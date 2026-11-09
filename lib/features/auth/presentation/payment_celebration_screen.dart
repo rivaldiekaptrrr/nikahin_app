@@ -2,12 +2,17 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:phosphor_icons/phosphor_icons.dart';
+import '../../../data/local/database.dart';
+import '../../../data/local/preferences_manager.dart';
+import '../../../data/remote/midtrans_payment_service.dart';
 import '../../../shared/widgets/bento_card.dart';
+import 'auth_notifier.dart';
 
 /// Halaman Selebrasi Pembayaran Berhasil (Non-Scrollable 1-Screen Responsive Layout)
-class PaymentCelebrationScreen extends StatefulWidget {
+class PaymentCelebrationScreen extends ConsumerStatefulWidget {
   final String orderId;
 
   const PaymentCelebrationScreen({
@@ -30,10 +35,10 @@ class PaymentCelebrationScreen extends StatefulWidget {
   }
 
   @override
-  State<PaymentCelebrationScreen> createState() => _PaymentCelebrationScreenState();
+  ConsumerState<PaymentCelebrationScreen> createState() => _PaymentCelebrationScreenState();
 }
 
-class _PaymentCelebrationScreenState extends State<PaymentCelebrationScreen> with TickerProviderStateMixin {
+class _PaymentCelebrationScreenState extends ConsumerState<PaymentCelebrationScreen> with TickerProviderStateMixin {
   late AnimationController _animController;
   late AnimationController _exitAnimController;
   late Animation<double> _scaleAnimation;
@@ -41,6 +46,7 @@ class _PaymentCelebrationScreenState extends State<PaymentCelebrationScreen> wit
   late Animation<double> _exitFadeAnimation;
   Timer? _autoRedirectTimer;
   bool _hasNavigated = false;
+  bool _isProceeding = false;
 
   @override
   void initState() {
@@ -75,27 +81,98 @@ class _PaymentCelebrationScreenState extends State<PaymentCelebrationScreen> wit
     _animController.forward();
     HapticFeedback.heavyImpact();
 
+    // Segera sinkronkan status akses dari server di background dengan retry
+    _syncLatestStatus();
+
     // Otomatis berpindah setelah 4.5 detik selebrasi jika pengguna tidak menekan tombol
     _autoRedirectTimer = Timer(const Duration(milliseconds: 4500), () {
-      if (mounted && !_hasNavigated) {
+      if (mounted && !_hasNavigated && !_isProceeding) {
         _proceedToApp();
       }
     });
   }
 
+  Future<void> _syncLatestStatus() async {
+    for (int i = 0; i < 3; i++) {
+      if (!mounted || _isProceeding) return;
+      try {
+        final level = await ref.read(authNotifierProvider.notifier).refreshAccessLevel();
+        if (level.isPremium || level.isAdmin) return;
+      } catch (_) {}
+      await Future.delayed(const Duration(milliseconds: 1500));
+    }
+  }
+
   Future<void> _proceedToApp() async {
-    if (_hasNavigated || !mounted) return;
-    _hasNavigated = true;
+    if (_hasNavigated || _isProceeding || !mounted) return;
     _autoRedirectTimer?.cancel();
+    setState(() => _isProceeding = true);
     HapticFeedback.mediumImpact();
 
-    // Jalankan animasi transisi keluar (fade-out bersih)
+    // 1. Pastikan status akun aktif (retry hingga 3 kali jika server masih memproses webhook)
+    for (int i = 0; i < 3; i++) {
+      if (!mounted) return;
+      try {
+        final level = await ref.read(authNotifierProvider.notifier).refreshAccessLevel();
+        if (level.isPremium || level.isAdmin) break;
+
+        // Fallback pengecekan via Midtrans Core API jika orderId tersedia
+        if (widget.orderId.isNotEmpty) {
+          final paymentService = ref.read(midtransPaymentServiceProvider);
+          final status = await paymentService.checkCoreApiStatus(widget.orderId);
+          if (status.isSuccess) {
+            await ref.read(authNotifierProvider.notifier).refreshAccessLevel();
+            break;
+          }
+        }
+      } catch (_) {}
+      await Future.delayed(const Duration(milliseconds: 1200));
+    }
+
+    _hasNavigated = true;
+
+    // 2. Jalankan animasi transisi keluar (fade-out bersih)
     await _exitAnimController.forward();
     if (!mounted) return;
 
-    // Bersihkan seluruh stack navigator imperative agar kembali ke root router
-    Navigator.of(context, rootNavigator: true).popUntil((route) => route.isFirst);
-    context.go('/');
+    final userId = await AppPreferences.getUserId();
+    final activeWeddingId = await AppPreferences.getActiveWeddingId();
+    var userProfileId = await AppPreferences.getUserProfileId(userId);
+    if ((userProfileId == null || userProfileId.isEmpty) && activeWeddingId != null && activeWeddingId.isNotEmpty) {
+      userProfileId = activeWeddingId;
+      await AppPreferences.setUserProfileId(userId, userProfileId);
+    }
+
+    final db = AppDatabase();
+    String destination = '/setup';
+    try {
+      if (userProfileId != null && userProfileId.isNotEmpty) {
+        final profile = await db.getProfileById(userProfileId);
+        if (profile != null) {
+          await AppPreferences.setActiveProfileId(userProfileId);
+          destination = '/wedding/$userProfileId';
+        }
+      } else {
+        final allProfiles = await db.getAllProfiles();
+        if (allProfiles.isNotEmpty) {
+          final firstId = allProfiles.first.id;
+          await AppPreferences.setActiveProfileId(firstId);
+          await AppPreferences.setUserProfileId(userId, firstId);
+          destination = '/wedding/$firstId';
+        }
+      }
+    } catch (_) {}
+
+    if (!mounted) return;
+    try {
+      if (Navigator.of(context, rootNavigator: true).canPop()) {
+        Navigator.of(context, rootNavigator: true).popUntil((route) => route.isFirst);
+      }
+    } catch (_) {}
+
+    if (mounted) {
+      context.go(destination);
+    }
   }
 
   @override
@@ -111,9 +188,9 @@ class _PaymentCelebrationScreenState extends State<PaymentCelebrationScreen> wit
     final theme = Theme.of(context);
 
     return PopScope(
-      canPop: true,
+      canPop: false,
       onPopInvokedWithResult: (didPop, result) {
-        if (!didPop) {
+        if (!didPop && !_isProceeding) {
           _proceedToApp();
         }
       },
@@ -214,7 +291,7 @@ class _PaymentCelebrationScreenState extends State<PaymentCelebrationScreen> wit
                                 ),
                                 const SizedBox(height: 6),
                                 Text(
-                                  'Selamat! Akunmu sudah aktif selamanya. Sekarang kamu dan pasangan bisa merencanakan pernikahan dengan seluruh fitur Nikahin tanpa batas.',
+                                  'Selamat! Akunmu sudah aktif. Kamu dan pasangan kini bisa menggunakan seluruh fitur Nikahin tanpa batas.',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: isSmallScreen ? 12 : 13,
@@ -287,7 +364,7 @@ class _PaymentCelebrationScreenState extends State<PaymentCelebrationScreen> wit
                                     ],
                                   ),
                                   Divider(height: isSmallScreen ? 16 : 22),
-                                  _buildInfoRow('Order ID', widget.orderId),
+                                  _buildInfoRow('Order ID', widget.orderId.isNotEmpty ? widget.orderId : 'NIKAHIN-CORE-VIP'),
                                   const SizedBox(height: 6),
                                   _buildInfoRow('Masa Berlaku', 'Seumur Hidup (Selamanya)'),
                                   const SizedBox(height: 6),
@@ -303,7 +380,7 @@ class _PaymentCelebrationScreenState extends State<PaymentCelebrationScreen> wit
                           FadeTransition(
                             opacity: _fadeAnimation,
                             child: FilledButton.icon(
-                              onPressed: _proceedToApp,
+                              onPressed: _isProceeding ? null : _proceedToApp,
                               style: FilledButton.styleFrom(
                                 backgroundColor: theme.colorScheme.primary,
                                 foregroundColor: Colors.white,
@@ -314,9 +391,20 @@ class _PaymentCelebrationScreenState extends State<PaymentCelebrationScreen> wit
                                 elevation: 3,
                                 shadowColor: theme.colorScheme.primary.withValues(alpha: 0.4),
                               ),
-                              icon: const Icon(PhosphorIconsFill.heart, size: 19),
+                              icon: _isProceeding
+                                  ? const SizedBox(
+                                      width: 18,
+                                      height: 18,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                      ),
+                                    )
+                                  : const Icon(PhosphorIconsFill.heart, size: 19),
                               label: Text(
-                                'Mulai Rencanakan Hari Bahagiamu ✨',
+                                _isProceeding
+                                    ? 'Menyiapkan akun...'
+                                    : 'Mulai Rencanakan Pernikahan',
                                 style: TextStyle(
                                   fontSize: isSmallScreen ? 13.5 : 14.5,
                                   fontWeight: FontWeight.w800,

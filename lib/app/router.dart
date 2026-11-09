@@ -16,6 +16,7 @@ import '../features/settings/wedding_settings_screen.dart';
 import '../features/tasks/wedding_tasks_screen.dart';
 import '../features/vendors/wedding_vendor_screen.dart';
 import '../features/splash/presentation/splash_screen.dart';
+import '../features/auth/presentation/payment_celebration_screen.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
@@ -38,7 +39,10 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: '/payment-finish',
-      builder: (context, state) => const SplashScreen(),
+      builder: (context, state) {
+        final orderId = state.uri.queryParameters['order_id'] ?? '';
+        return PaymentCelebrationScreen(orderId: orderId);
+      },
     ),
     GoRoute(
       path: '/setup',

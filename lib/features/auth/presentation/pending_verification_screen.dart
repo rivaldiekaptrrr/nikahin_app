@@ -33,7 +33,8 @@ class PendingVerificationScreen extends ConsumerStatefulWidget {
   ConsumerState<PendingVerificationScreen> createState() => _PendingVerificationScreenState();
 }
 
-class _PendingVerificationScreenState extends ConsumerState<PendingVerificationScreen> {
+class _PendingVerificationScreenState extends ConsumerState<PendingVerificationScreen>
+    with WidgetsBindingObserver {
   bool _isPaymentLoading = false;
   bool _isCheckingStatus = false;
   bool _isDownloadingQris = false;
@@ -43,6 +44,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     // Auto-polling status verifikasi berkala (setiap 10 detik) jika akun belum premium
     _statusPollTimer = Timer.periodic(const Duration(seconds: 10), (_) {
       _silentCheckStatus();
@@ -50,7 +52,15 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && mounted) {
+      _silentCheckStatus();
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _statusPollTimer?.cancel();
     _qrisToastOverlay?.remove();
     _qrisToastOverlay = null;
