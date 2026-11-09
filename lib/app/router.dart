@@ -37,6 +37,10 @@ final appRouter = GoRouter(
       builder: (context, state) => const PendingVerificationScreen(),
     ),
     GoRoute(
+      path: '/payment-finish',
+      builder: (context, state) => const SplashScreen(),
+    ),
+    GoRoute(
       path: '/setup',
       builder: (context, state) => const WeddingSetupScreen(),
     ),

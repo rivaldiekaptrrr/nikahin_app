@@ -34,6 +34,13 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- Deep Link Intent Filter untuk Callback Pembayaran E-Wallet (GoPay, ShopeePay, dll.) -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="nikahin" android:host="payment-finish"/>
+            </intent-filter>
         </activity>
         <!-- Flutter Local Notifications Receivers -->
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
