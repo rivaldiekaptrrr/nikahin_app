@@ -40,6 +40,7 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data android:scheme="nikahin" android:host="payment-finish"/>
+                <data android:scheme="nikahin" />
             </intent-filter>
         </activity>
         <!-- Flutter Local Notifications Receivers -->

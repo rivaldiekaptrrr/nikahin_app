@@ -20,10 +20,32 @@ import '../features/auth/presentation/payment_celebration_screen.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
+  redirect: (context, state) {
+    final uri = state.uri;
+    // Tangkap jika aplikasi dibuka via deep link kembalian pembayaran
+    // baik berupa nikahin://payment-finish, nikahin:///payment-finish, atau query order_id
+    final isPaymentReturn = uri.host == 'payment-finish' ||
+        uri.path == '/payment-finish' ||
+        (uri.queryParameters.containsKey('order_id') && uri.queryParameters['result'] == 'success');
+
+    if (isPaymentReturn && state.matchedLocation != '/payment-finish') {
+      final orderId = uri.queryParameters['order_id'] ?? '';
+      return '/payment-finish?order_id=$orderId';
+    }
+    return null;
+  },
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const SplashScreen(),
+      builder: (context, state) {
+        // Fallback proteksi: jika root didatangi membawa order_id atau host payment-finish
+        if (state.uri.host == 'payment-finish' ||
+            (state.uri.queryParameters.containsKey('order_id') && state.uri.queryParameters['result'] == 'success')) {
+          final orderId = state.uri.queryParameters['order_id'] ?? '';
+          return PaymentCelebrationScreen(orderId: orderId);
+        }
+        return const SplashScreen();
+      },
     ),
     GoRoute(
       path: '/welcome',
