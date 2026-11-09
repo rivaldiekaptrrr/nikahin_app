@@ -1,5 +1,4 @@
-• Arsitektur Keamanan Zero-Trust: Seluruh alur transaksi pembayaran Midtrans kini diproses langsung di sisi server secara aman tanpa menyimpan kunci rahasia di perangkat pengguna.
-• Validasi Integritas Pembaruan (Anti-Tamper): Pembaruan aplikasi kini otomatis memverifikasi kode checksum SHA-256 untuk memastikan berkas instalasi 100% utuh, asli, dan terhindar dari berkas yang korup.
-• Pemantauan Stabilitas Lapangan: Integrasi Firebase Crashlytics aktif untuk memantau performa dan mendeteksi kendala secara real-time demi pengalaman yang lebih andal.
-• Proteksi Biner R8 & Optimasi Performa: Perlindungan kode biner tingkat lanjut, pemangkasan aset yang tidak terpakai, dan efisiensi memori yang lebih optimal saat aplikasi berjalan.
+• Kembalian Pembayaran Otomatis (Deep Link E-Wallet): Integrasi skema tautan langsung nikahin://payment-finish pada GoPay dan ShopeePay sehingga setelah pembayaran berhasil, aplikasi otomatis kembali terbuka tanpa membuka peramban web.
+• Pembaruan Verifikasi Webhook Real-Time: Sinkronisasi status pembayaran kini memiliki verifikasi fallback otomatis langsung ke server Midtrans untuk aktivasi instan tanpa kendala signature.
+• Peningkatan Stabilitas Routing Transaksi: Penambahan rute khusus /payment-finish untuk menangani pembukaan aplikasi secara mulus langsung menuju layar utama.
 • Peningkatan Kenyamanan & Kestabilan Sistem: Berbagai penyempurnaan alur data offline-online, konsistensi tema, serta perbaikan minor di berbagai modul perencanaan pernikahan.
