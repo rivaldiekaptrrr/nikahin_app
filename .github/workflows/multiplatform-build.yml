@@ -49,6 +49,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+          cache: 'gradle'
 
       - name: Setup Flutter SDK
         uses: subosito/flutter-action@v2
@@ -99,12 +100,12 @@ jobs:
         run: |
           DART_DEFINES="--dart-define=MIDTRANS_IS_PRODUCTION=true"
 
-          # 1. Build Universal APK (armeabi-v7a + arm64-v8a)
-          flutter build apk --release $DART_DEFINES
+          # 1. Build Universal APK (armeabi-v7a + arm64-v8a) dengan toleransi retry
+          flutter build apk --release $DART_DEFINES || (echo "Retry build universal APK..." && sleep 15 && flutter build apk --release $DART_DEFINES)
           cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/app-universal.apk
 
-          # 2. Build Optimized ARM64 APK (~22MB) khusus HP Android modern
-          flutter build apk --release --target-platform android-arm64 $DART_DEFINES
+          # 2. Build Optimized ARM64 APK (~22MB) khusus HP Android modern dengan toleransi retry
+          flutter build apk --release --target-platform android-arm64 $DART_DEFINES || (echo "Retry build ARM64 APK..." && sleep 15 && flutter build apk --release --target-platform android-arm64 $DART_DEFINES)
           cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/app-arm64.apk
 
       # Skenario 1: Push ke branch main / master (Build Internal Developer)
