@@ -1,4 +1,4 @@
-• Kembalian Pembayaran Otomatis (Deep Link E-Wallet): Integrasi skema tautan langsung nikahin://payment-finish pada GoPay dan ShopeePay sehingga setelah pembayaran berhasil, aplikasi otomatis kembali terbuka tanpa membuka peramban web.
-• Pembaruan Verifikasi Webhook Real-Time: Sinkronisasi status pembayaran kini memiliki verifikasi fallback otomatis langsung ke server Midtrans untuk aktivasi instan tanpa kendala signature.
-• Peningkatan Stabilitas Routing Transaksi: Penambahan rute khusus /payment-finish untuk menangani pembukaan aplikasi secara mulus langsung menuju layar utama.
-• Peningkatan Kenyamanan & Kestabilan Sistem: Berbagai penyempurnaan alur data offline-online, konsistensi tema, serta perbaikan minor di berbagai modul perencanaan pernikahan.
+• Layar Selebrasi Pembayaran Instan: Rute kembalian pembayaran kini langsung menampilkan layar selebrasi animasi confetti dan kartu VIP pass tanpa terlewat ke splash screen.
+• Sinkronisasi Latar Belakang & Jeda Cerdas: Status aktivasi akun disinkronkan otomatis saat animasi selebrasi berlangsung dengan mekanisme verifikasi cadangan ke server Midtrans.
+• Deteksi Aplikasi Aktif (Lifecycle Resume): Aplikasi langsung mengecek status pembayaran saat kembali dibuka dari GoPay secara manual tanpa menunggu jeda waktu timer.
+• Tombol Konfirmasi Bebas Hambatan: Navigasi tombol selebrasi kini memiliki indikator pemrosesan halus dan langsung mengantar ke dasbor atau persiapan awal begitu akun terverifikasi aktif.
