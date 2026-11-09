@@ -63,7 +63,12 @@ jobs:
         with:
           ndk-version: r28c
           link-to-sdk: true
-          local-cache: true
+          local-cache: false
+
+      - name: Ensure Android NDK Executable Permissions
+        run: |
+          chmod -R +x $ANDROID_NDK_ROOT/toolchains/llvm/prebuilt/linux-x86_64/bin || true
+          chmod -R +x /usr/local/lib/android/sdk/ndk/*/toolchains/llvm/prebuilt/linux-x86_64/bin || true
 
       - name: Get Dependencies
         run: flutter pub get
