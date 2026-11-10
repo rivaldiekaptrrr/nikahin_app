@@ -1,4 +1,3 @@
-• Penanganan Deep Link Pembayaran Presisi: Penambahan pendeteksi rute universal pada GoRouter dan filter intent Android sehingga tautan kembali dari e-wallet (GoPay/ShopeePay) dijamin 100% membuka layar selebrasi tanpa terlempar ke splash screen atau layar verifikasi.
-• Sinkronisasi Latar Belakang & Jeda Cerdas: Status aktivasi akun disinkronkan otomatis saat animasi selebrasi berlangsung dengan mekanisme verifikasi cadangan ke server Midtrans.
-• Deteksi Aplikasi Aktif (Lifecycle Resume): Aplikasi langsung mengecek status pembayaran saat kembali dibuka dari GoPay secara manual tanpa menunggu jeda waktu timer.
-• Tombol Konfirmasi Bebas Hambatan: Navigasi tombol selebrasi kini memiliki indikator pemrosesan halus dan langsung mengantar ke dasbor atau persiapan awal begitu akun terverifikasi aktif.
+• Penyesuaian Harga Spesial Lisensi: Paket Wedding Planner Seumur Hidup (Lifetime) kini hadir dengan harga baru yang lebih terjangkau, yaitu Rp 29.000.
+• Sinkronisasi Nominal Multi-Kanal: Pembaruan tagihan terhubung langsung secara presisi ke Midtrans Core API dan pembayaran transfer.
+• Integrasi Tampilan Terpusat: Nilai nominal pada panduan transfer, modal pembayaran, dan dasbor kini sepenuhnya tersinkronisasi.
