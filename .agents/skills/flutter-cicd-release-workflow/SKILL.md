@@ -73,10 +73,15 @@ Gunakan saat versi baru siap didistribusikan ke pengguna (memicu pop-up In-App U
    ```
 2. **Tulis catatan rilis di [`RELEASE_NOTES.md`](file:///c:/Rivaldi/nikahin_app/RELEASE_NOTES.md)**:
    > ⚠️ **PENTING**: Gunakan **plain text ringkas** (gunakan simbol bullet `•` atau `-`), **JANGAN** gunakan format markdown kompleks (seperti heading `###`, divider `---`, tebal/miring `**`/`*`) karena isi file ini dibaca langsung sebagai teks biasa pada dialog pop-up pembaruan di dalam aplikasi Flutter. Batasi 3–5 poin utama agar mudah dibaca pengguna di layar HP.
+   > 
+   > 🛡️ **ATURAN WAJIB RELEASE NOTES RAMAH PENGGUNA (USER-CENTRIC & ANTI-BLUNDER)**:
+   > - **Dilarang Keras Menyebut Penurunan Harga / Angka Tarif Bisnis**: Jangan pernah menuliskan penurunan nominal harga, angka perubahan tarif, atau strategi harga internal di catatan rilis (misal: "harga turun jadi Rp 29.000"). Ini merusak persepsi nilai produk dan memicu kekecewaan (*buyer's remorse*) bagi pengguna lama yang sudah membayar di harga sebelumnya.
+   > - **Fokus Pada Manfaat & Pengalaman Pengguna (User Value)**: Selalu bungkus perbaikan dari sudut pandang stabilitas, kelancaran proses transaksi, peningkatan performa, perbaikan bug, atau kenyamanan antarmuka (misalnya: *"Optimalisasi keandalan sistem pembayaran multi-kanal"*, *"Peningkatan responsivitas dasbor dan panduan verifikasi"*).
+   > - **Strategi Promosi di UI, Bukan di Catatan Rilis**: Jika ada promo atau harga spesial, tampilkan sebagai penawaran diskon terbatas / harga coret di dalam kartu paywall UI, bukan di pengumuman rilis umum.
    ```text
-   • Pembaruan sistem in-app update otomatis.
-   • Peningkatan stabilitas dan perbaikan izin instalasi aplikasi.
-   • Optimasi performa dan perbaikan bug minor.
+   • Peningkatan stabilitas dan keandalan sistem pembayaran multi-kanal.
+   • Optimalisasi responsivitas antarmuka dasbor dan panduan verifikasi.
+   • Perbaikan performa dan pengalaman pengguna yang lebih mulus.
    ```
 3. **Validasi & Build Lokal Wajib**:
    ```bash

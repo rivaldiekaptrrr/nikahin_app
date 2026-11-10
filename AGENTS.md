@@ -95,6 +95,10 @@ Knowledge graph data and MCP configurations are versioned inside `.agents/`:
   1. **Seluruh string teks UI** (judul, subjudul, tombol, placeholder, tooltip, snackbar, dialog, dan pesan kesalahan/sukses). Dilarang keras menggunakan gaya bahasa kaku, istilah teknis/korporat mentah (*SLA*, *proses verifikasi aktivasi*), atau kalimat klise robotik (*"Terjadi kesalahan saat..."*).
   2. **Seluruh teks jawaban percakapan kepada pengguna**. Bahasa wajib mengalir wajar, bernada santun dan profesional, serta terbebas dari *tell AI*.
   3. **Self-Check Wajib Sebelum Commit**: Sebelum mengajukan atau membuat commit yang memuat teks bahasa Indonesia, agen wajib melakukan audit kilat: *"Apakah kalimat ini sudah luwes dan terdengar seperti tulisan manusia asli?"*.
+- **User-Centric Release Notes & Anti-Blunder Policy**:
+  - **Dilarang Keras Menyebut Penurunan Harga atau Kebijakan Bisnis Internal**: Di `RELEASE_NOTES.md`, dilarang keras mengumumkan penurunan nominal harga, perubahan angka tarif, atau diskon mendadak (misalnya: *"harga turun jadi Rp 29.000"*). Hal ini bertujuan menjaga reputasi aplikasi, menjaga nilai persepsi produk (*perceived value*), serta menghormati pengguna lama yang telah membeli lisensi dengan harga normal.
+  - **Fokus Pada Nilai Pengguna (User Value & Experience)**: Seluruh poin catatan rilis wajib dibingkai dari sudut pandang manfaat teknis dan kenyamanan pengguna, seperti stabilitas sistem pembayaran, kelancaran verifikasi multi-kanal, peningkatan responsivitas antarmuka, dan optimasi performa.
+  - **Strategi Penawaran di UI**: Perubahan harga atau promo wajib dikemas sebagai program penawaran spesial / diskon terbatas di dalam kartu paywall UI, bukan diumumkan secara terbuka pada pop-up pembaruan aplikasi.
 
 ---
 
