@@ -601,9 +601,9 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: BusinessConfig.lifetimePrice.toInt().toString()));
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Nominal Rp 49.000 berhasil disalin ke papan klip'),
-                          duration: Duration(seconds: 2),
+                        SnackBar(
+                          content: Text('Nominal ${CurrencyUtils.formatRupiah(BusinessConfig.lifetimePrice)} berhasil disalin ke papan klip'),
+                          duration: const Duration(seconds: 2),
                           behavior: SnackBarBehavior.floating,
                         ),
                       );
@@ -761,7 +761,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
               const SizedBox(height: 8),
               _buildStepItem(
                 number: '3',
-                text: 'Selesaikan pembayaran sejumlah Rp 49.000 & simpan bukti transfer.',
+                text: 'Selesaikan pembayaran sejumlah ${CurrencyUtils.formatRupiah(BusinessConfig.lifetimePrice)} & simpan bukti transfer.',
               ),
               const SizedBox(height: 8),
               _buildStepItem(

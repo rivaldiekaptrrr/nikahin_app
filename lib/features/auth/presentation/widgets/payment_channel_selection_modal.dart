@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:phosphor_icons/phosphor_icons.dart';
+import '../../../../app/config/business_config.dart';
 import '../../../../domain/models/midtrans_core_models.dart';
+import '../../../../shared/utils/currency_utils.dart';
 import '../../../../shared/widgets/bento_card.dart';
 import 'payment_brand_badge.dart';
 
@@ -462,7 +464,7 @@ class _PaymentChannelSelectionModalState extends State<PaymentChannelSelectionMo
               ),
               const SizedBox(height: 2),
               Text(
-                'Rp 49.000',
+                CurrencyUtils.formatRupiah(BusinessConfig.lifetimePrice),
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w900,

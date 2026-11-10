@@ -327,7 +327,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
     final linkedPartnerCount = _users.where((u) => u.isPartnerLinked || (u.accessLevel == AccessLevel.premium && !u.isPrimaryPayer)).length;
     final pendingCount = _users.where((u) => u.accessLevel == AccessLevel.none && !u.isPartnerLinked).length;
     final adminCount = _users.where((u) => u.accessLevel == AccessLevel.admin).length;
-    final totalOmset = payingUsersCount * 49000.0;
+    final totalOmset = payingUsersCount * BusinessConfig.lifetimePrice;
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,

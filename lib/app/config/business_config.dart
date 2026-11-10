@@ -39,7 +39,7 @@ class BusinessConfig {
   static const String midtransPackageCode = 'WEDDING';
 
   /// Informasi Harga Paket Lisensi
-  static const double lifetimePrice = 49000.0;
+  static const double lifetimePrice = 29000.0;
   static const double originalPrice = 99000.0;
   static const String packageName = 'Paket Wedding Planner Seumur Hidup (Lifetime)';
 
@@ -49,7 +49,7 @@ class BusinessConfig {
   }) {
     final targetNumber = useManualPaymentMode ? manualPaymentWhatsAppNumber : adminWhatsAppNumber;
     final message = '''
-Halo Tim Nikahin, saya sudah melakukan pembayaran lisensi via QRIS (Rp 49.000):
+Halo Tim Nikahin, saya sudah melakukan pembayaran lisensi via QRIS (Rp 29.000):
 
 Email Terdaftar: $userEmail
 
