@@ -159,8 +159,13 @@ jobs:
             echo "Pembaruan rilis resmi Nikahin ${{ steps.release_env.outputs.TAG_NAME }}." > RELEASE_NOTES.md
           fi
           echo "" >> RELEASE_NOTES.md
-          echo "### Checksum SHA-256" >> RELEASE_NOTES.md
+          echo "<details>" >> RELEASE_NOTES.md
+          echo "<summary>🛡️ Checksum Verifikasi Integritas (SHA-256)</summary>" >> RELEASE_NOTES.md
+          echo "" >> RELEASE_NOTES.md
+          echo '```' >> RELEASE_NOTES.md
           sha256sum build/app/outputs/flutter-apk/app-nikahin-*.apk | sed 's|build/app/outputs/flutter-apk/||' >> RELEASE_NOTES.md
+          echo '```' >> RELEASE_NOTES.md
+          echo "</details>" >> RELEASE_NOTES.md
 
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')

@@ -216,7 +216,7 @@ class UpdateDialog extends ConsumerWidget {
 
   Widget _buildReleaseNotes(BuildContext context) {
     final theme = Theme.of(context);
-    final notes = releaseInfo.releaseNotes.trim();
+    final notes = releaseInfo.userFriendlyNotes;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

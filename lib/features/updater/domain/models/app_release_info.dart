@@ -124,4 +124,21 @@ class AppReleaseInfo {
 
   /// Memeriksa apakah berkas APK tersedia di rilis ini
   bool get hasApk => apkDownloadUrl != null && apkDownloadUrl!.isNotEmpty;
+
+  /// Catatan rilis bersih yang disaring untuk tampilan pengguna (membuang blok teknis seperti Checksum SHA-256)
+  String get userFriendlyNotes {
+    if (releaseNotes.isEmpty) return '';
+
+    // Potong teks jika menemukan penanda checksum teknis, SHA-256, atau tag <details>
+    final delimiterRegex = RegExp(
+      r'(?:###?\s*Checksum|<details>|SHA-?256\s*Checksum)',
+      caseSensitive: false,
+    );
+    final match = delimiterRegex.firstMatch(releaseNotes);
+    if (match != null) {
+      final filtered = releaseNotes.substring(0, match.start).trim();
+      return filtered.isNotEmpty ? filtered : releaseNotes.trim();
+    }
+    return releaseNotes.trim();
+  }
 }

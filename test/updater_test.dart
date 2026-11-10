@@ -118,6 +118,28 @@ void main() {
       expect(stateZero.formattedSpeed, isEmpty);
     });
 
+    test('AppReleaseInfo memfilter blok teknis checksum dari userFriendlyNotes', () {
+      const rawNotes = '''
+• Peningkatan stabilitas sistem pembayaran.
+• Optimasi antarmuka dasbor.
+
+### Checksum SHA-256
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 app.apk
+''';
+
+      final release = AppReleaseInfo(
+        tagName: 'v2.0.5',
+        versionName: '2.0.5',
+        releaseName: 'Release 2.0.5',
+        releaseNotes: rawNotes,
+      );
+
+      expect(
+        release.userFriendlyNotes,
+        '• Peningkatan stabilitas sistem pembayaran.\n• Optimasi antarmuka dasbor.',
+      );
+    });
+
     test('formattedRemainingTime mengestimasi sisa waktu unduhan dengan benar', () {
       // 10 MB total, 5 MB received, 1 MB/s -> sisa 5 detik
       const stateSeconds = UpdateState(
