@@ -1,3 +1,3 @@
-• Penyesuaian Harga Spesial Lisensi: Paket Wedding Planner Seumur Hidup (Lifetime) kini hadir dengan harga baru yang lebih terjangkau, yaitu Rp 29.000.
-• Sinkronisasi Nominal Multi-Kanal: Pembaruan tagihan terhubung langsung secara presisi ke Midtrans Core API dan pembayaran transfer.
-• Integrasi Tampilan Terpusat: Nilai nominal pada panduan transfer, modal pembayaran, dan dasbor kini sepenuhnya tersinkronisasi.
+• Keandalan Transaksi Multi-Kanal: Optimalisasi integrasi saluran pembayaran dan kelancaran proses verifikasi otomatis.
+• Penyempurnaan Tampilan & Antarmuka: Penyesuaian detail dialog pembayaran dan panduan transaksi agar lebih presisi serta responsif.
+• Peningkatan Stabilitas Aplikasi: Pembaruan performa menyeluruh untuk mendukung pengalaman perencanaan pernikahan yang lebih mulus.
