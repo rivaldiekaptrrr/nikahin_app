@@ -58,60 +58,60 @@ export default function FeatureBentoGrid() {
   ];
 
   return (
-    <section id="fitur" className="py-20 md:py-28 bg-[#fff9fa]/60 border-y border-slate-200/50">
+    <section id="fitur" className="py-20 md:py-28 relative border-y border-[#1f1b16]/8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <p className="text-xs font-bold uppercase tracking-wider text-[#d81b60] mb-2.5">
-            Fitur Lengkap Nikahin
+          <p className="text-xs font-medium text-stone-600 mb-2">
+            Fitur lengkap Nikahin
           </p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            Semua yang Kamu Butuhkan, Dalam Satu Aplikasi
+          <h2 className="text-3xl sm:text-4xl font-semibold text-stone-900 tracking-tight">
+            Semua yang kamu butuhkan, dalam satu aplikasi
           </h2>
-          <p className="text-slate-600 text-sm sm:text-base mt-3">
-            Bebas dari spreadsheet yang berantakan atau catatan terpisah di WhatsApp.
+          <p className="text-stone-600 text-sm sm:text-base mt-3">
+            Bebas dari spreadsheet yang rumit atau catatan terpisah di WhatsApp.
           </p>
         </div>
 
-        {/* Bento Grid Container */}
+        {/* Bento Grid Container (Stationery Cards with Quiet Hairlines) */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {features.map((f, idx) => {
             const IconComponent = f.icon;
             return (
               <div
                 key={idx}
-                className={`p-7 rounded-3xl bg-white border border-slate-200/70 shadow-xs hover:shadow-md hover:border-[#ffd9e2] transition-all flex flex-col justify-between ${f.colSpan}`}
+                className={`p-6 sm:p-7 rounded-2xl bg-white border border-[#1f1b16]/8 shadow-[0_4px_16px_-4px_rgba(28,25,23,0.05)] hover:border-[#1f1b16]/18 transition-colors flex flex-col justify-between ${f.colSpan}`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-5">
-                    <div className="w-12 h-12 rounded-2xl bg-[#ffd9e2]/40 text-[#d81b60] flex items-center justify-center">
-                      <IconComponent className="w-6 h-6" />
+                    <div className="w-10 h-10 rounded-xl bg-stone-100 border border-[#1f1b16]/6 text-stone-800 flex items-center justify-center">
+                      <IconComponent className="w-5 h-5 text-stone-700" />
                     </div>
-                    <span className="text-xs font-bold tracking-wider text-[#ad1457] uppercase">
+                    <span className="text-xs font-medium text-stone-500">
                       {f.tag}
                     </span>
                   </div>
 
-                  <h3 className="text-lg font-bold text-slate-900 mb-2">
+                  <h3 className="text-base sm:text-lg font-semibold text-stone-900 mb-2">
                     {f.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
                     {f.desc}
                   </p>
                 </div>
 
                 {f.wide && (
-                  <div className="mt-6 pt-5 border-t border-slate-100 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-600 font-medium">
+                  <div className="mt-6 pt-5 border-t border-[#1f1b16]/8 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-stone-600 font-medium">
                     <span className="flex items-center gap-1.5">
                       <CheckCircle className="w-4 h-4 text-emerald-600" />
-                      Surat Pengantar RT/RW & Kelurahan
+                      Surat pengantar RT/RW & kelurahan
                     </span>
                     <span className="flex items-center gap-1.5">
                       <CheckCircle className="w-4 h-4 text-emerald-600" />
-                      Pemeriksaan Kesehatan & Suntik TT
+                      Pemeriksaan kesehatan & suntik TT
                     </span>
                     <span className="flex items-center gap-1.5">
                       <CheckCircle className="w-4 h-4 text-emerald-600" />
-                      Berkas Wali Nikah & Saksi
+                      Berkas wali nikah & saksi
                     </span>
                   </div>
                 )}

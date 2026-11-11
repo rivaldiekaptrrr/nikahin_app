@@ -9,28 +9,22 @@ interface HeroSectionProps {
 
 export default function HeroSection({ release }: HeroSectionProps) {
   return (
-    <section id="hero" className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden">
-      {/* Background Soft Glow Decoration */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-[#ffd9e2]/40 via-[#fdf0de]/50 to-transparent blur-3xl pointer-events-none -z-10" />
-
+    <section id="hero" className="relative pt-28 pb-16 md:pt-36 md:pb-24">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-        {/* Editorial Eyebrow */}
-        <p className="flex items-center justify-center gap-2 text-xs font-bold tracking-wider text-[#ad1457] uppercase mb-4">
+        {/* Editorial Eyebrow (Quiet, Sentence Case) */}
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stone-200/50 text-xs font-medium text-stone-700 mb-6">
           <Heart className="w-3.5 h-3.5 fill-[#d81b60] text-[#d81b60]" />
-          <span>Perencana Pernikahan Bersama Pasangan</span>
-        </p>
+          <span>Perencana pernikahan bersama pasangan</span>
+        </div>
 
-        {/* Main Headline */}
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 tracking-tight leading-[1.12] mb-6">
-          Catat Anggaran Bersama,{' '}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#d81b60] to-[#ad1457]">
-            Wujudkan Pernikahan Impian dengan Tenang
-          </span>
+        {/* Main Headline (Solid Ink, Weight 600, Confident & Restrained) */}
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-stone-900 tracking-tight leading-[1.15] mb-6">
+          Catat anggaran bersama, wujudkan pernikahan impian dengan tenang
         </h1>
 
-        {/* Subtitle */}
-        <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto font-normal leading-relaxed mb-9">
-          Kelola rincian biaya, vendor, susunan acara, buku tamu, hingga berkas KUA dalam satu aplikasi terpadu yang langsung terhubung dengan pasanganmu.
+        {/* Subtitle (Warm Neutral Secondary Text) */}
+        <p className="text-base sm:text-lg text-stone-600 max-w-2xl mx-auto font-normal leading-relaxed mb-10">
+          Kelola rincian biaya, vendor, susunan acara, buku tamu, hingga berkas KUA dalam satu aplikasi terpadu yang langsung terhubung di ponsel berdua.
         </p>
 
         {/* Interactive Device Adaptive CTA */}
@@ -38,19 +32,19 @@ export default function HeroSection({ release }: HeroSectionProps) {
           <DeviceCta release={release} />
         </div>
 
-        {/* 3 Key Trust Signals */}
-        <div className="pt-6 border-t border-slate-200/60 flex flex-wrap items-center justify-center gap-y-3 gap-x-8 text-xs font-semibold text-slate-600">
+        {/* 3 Key Trust Signals (Hairline Border & Calibrated Spacing) */}
+        <div className="pt-6 border-t border-[#1f1b16]/10 flex flex-wrap items-center justify-center gap-y-3 gap-x-8 text-xs font-medium text-stone-600">
           <div className="flex items-center gap-2">
-            <Users className="w-4 h-4 text-[#d81b60]" />
-            <span>Cukup 1 Akun untuk Kamu & Pasangan</span>
+            <Users className="w-4 h-4 text-stone-500" />
+            <span>Cukup 1 akun untuk berdua</span>
           </div>
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>Otomatis Tersambung di HP Berdua</span>
+            <span>Otomatis tersambung di ponsel pasangan</span>
           </div>
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-amber-500" />
-            <span>Sekali Bayar, Aktif Selamanya</span>
+            <Sparkles className="w-4 h-4 text-amber-600" />
+            <span>Sekali bayar, aktif selamanya</span>
           </div>
         </div>
       </div>

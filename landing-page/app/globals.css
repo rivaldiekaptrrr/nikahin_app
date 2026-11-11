@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fff9fa;
-  --foreground: #0f172a;
+  --background: #faf7f2;
+  --foreground: #1c1917;
   --card-bg: #ffffff;
-  --card-border: #f1f5f9;
+  --card-border: rgba(28, 25, 23, 0.08);
   --primary-rose: #d81b60;
   --primary-rose-hover: #c2185b;
   --secondary-rose: #ad1457;
   --champagne: #fdf0de;
-  --champagne-border: #f7e2c4;
+  --champagne-border: #f2dec4;
 }
 
 @theme inline {
@@ -33,6 +33,6 @@ body {
 }
 
 ::selection {
-  background-color: #ffd9e2;
-  color: #3e001d;
+  background-color: #fce7ef;
+  color: #831843;
 }

@@ -39,44 +39,44 @@ export default function FaqAccordion() {
   ];
 
   return (
-    <section id="faq" className="py-20 md:py-28 bg-[#fff9fa]/50 border-t border-slate-200/60">
+    <section id="faq" className="py-20 md:py-28 relative border-t border-[#1f1b16]/8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <div className="text-center max-w-xl mx-auto mb-14">
-          <p className="flex items-center justify-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#ad1457] mb-3">
-            <HelpCircle className="w-3.5 h-3.5" />
-            <span>Tanya Jawab</span>
+          <p className="flex items-center justify-center gap-1.5 text-xs font-medium text-stone-600 mb-2">
+            <HelpCircle className="w-3.5 h-3.5 text-stone-500" />
+            <span>Tanya jawab</span>
           </p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            Pertanyaan yang Sering Diajukan
+          <h2 className="text-3xl sm:text-4xl font-semibold text-stone-900 tracking-tight">
+            Pertanyaan yang sering diajukan
           </h2>
-          <p className="text-slate-600 text-sm sm:text-base mt-2.5">
-            Jawaban lengkap untuk keraguan calon pengantin seputar aplikasi dan lisensi Nikahin.
+          <p className="text-stone-600 text-sm sm:text-base mt-2.5">
+            Jawaban lengkap seputar penggunaan aplikasi dan akses lisensi Nikahin.
           </p>
         </div>
 
-        {/* Accordion List */}
-        <div className="space-y-3.5">
+        {/* Accordion List (Quiet Hairline Cards) */}
+        <div className="space-y-3">
           {faqs.map((faq, idx) => {
             const isOpen = openIdx === idx;
             return (
               <div
                 key={idx}
-                className="rounded-2xl bg-white border border-slate-200/80 shadow-xs overflow-hidden transition-colors"
+                className="rounded-2xl bg-white border border-[#1f1b16]/8 shadow-[0_2px_8px_-2px_rgba(28,25,23,0.04)] overflow-hidden transition-colors"
               >
                 <button
                   onClick={() => setOpenIdx(isOpen ? null : idx)}
-                  className="w-full flex items-center justify-between p-5 sm:p-6 text-left text-sm sm:text-base font-bold text-slate-900 hover:text-[#d81b60] transition-colors focus:outline-none"
+                  className="w-full flex items-center justify-between p-5 sm:p-6 text-left text-sm sm:text-base font-semibold text-stone-900 hover:text-stone-700 transition-colors focus:outline-none"
                 >
                   <span>{faq.q}</span>
                   <ChevronDown
-                    className={`w-5 h-5 text-slate-400 shrink-0 ml-4 transition-transform duration-200 ${
-                      isOpen ? 'rotate-180 text-[#d81b60]' : ''
+                    className={`w-5 h-5 text-stone-400 shrink-0 ml-4 transition-transform duration-200 ${
+                      isOpen ? 'rotate-180 text-stone-900' : ''
                     }`}
                   />
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 sm:px-6 pb-6 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+                  <div className="px-5 sm:px-6 pb-6 text-xs sm:text-sm text-stone-600 leading-relaxed border-t border-[#1f1b16]/6 pt-4">
                     {faq.a}
                   </div>
                 )}

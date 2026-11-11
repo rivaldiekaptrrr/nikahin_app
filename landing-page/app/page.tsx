@@ -1,5 +1,6 @@
 import React from 'react';
 import Navbar from '@/components/Navbar';
+import TactileBackground from '@/components/TactileBackground';
 import HeroSection from '@/components/HeroSection';
 import AppPreviewMockup from '@/components/AppPreviewMockup';
 import FeatureBentoGrid from '@/components/FeatureBentoGrid';
@@ -16,23 +17,20 @@ export default async function HomePage() {
   const release = await getLatestRelease();
 
   return (
-    <main className="min-h-screen flex flex-col bg-[#fff9fa] selection:bg-[#ffd9e2] selection:text-[#3e001d]">
+    <main className="min-h-screen relative flex flex-col bg-[#faf7f2] text-[#1c1917] selection:bg-[#fce7ef] selection:text-[#831843]">
+      <TactileBackground />
       <TrackViewContent />
       <Navbar />
 
-      <HeroSection release={release} />
-
-      <AppPreviewMockup />
-
-      <FeatureBentoGrid />
-
-      <CoupleSyncBanner />
-
-      <FaqAccordion />
-
-      <FinalCtaSection release={release} />
-
-      <Footer />
+      <div className="relative z-10 flex flex-col">
+        <HeroSection release={release} />
+        <AppPreviewMockup />
+        <FeatureBentoGrid />
+        <CoupleSyncBanner />
+        <FaqAccordion />
+        <FinalCtaSection release={release} />
+        <Footer />
+      </div>
     </main>
   );
 }

@@ -21,7 +21,7 @@ export default function Navbar() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white/90 backdrop-blur-md shadow-sm border-b border-slate-100 py-3.5'
+          ? 'bg-[#faf7f2]/90 backdrop-blur-md border-b border-[#1f1b16]/8 py-3.5'
           : 'bg-transparent py-5'
       }`}
     >
@@ -38,23 +38,23 @@ export default function Navbar() {
               priority
             />
           </div>
-          <span className="font-extrabold text-xl tracking-tight text-slate-900 group-hover:text-[#d81b60] transition-colors">
+          <span className="font-semibold text-lg tracking-tight text-stone-900 transition-colors">
             Nikahin
           </span>
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
-          <a href="#fitur" className="hover:text-[#d81b60] transition-colors">
+        {/* Desktop Navigation (Quiet Chrome) */}
+        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-stone-600">
+          <a href="#fitur" className="hover:text-stone-900 transition-colors">
             Fitur Utama
           </a>
-          <a href="#preview" className="hover:text-[#d81b60] transition-colors">
+          <a href="#preview" className="hover:text-stone-900 transition-colors">
             Tampilan Aplikasi
           </a>
-          <a href="#pasangan" className="hover:text-[#d81b60] transition-colors">
+          <a href="#pasangan" className="hover:text-stone-900 transition-colors">
             Akun Pasangan
           </a>
-          <a href="#faq" className="hover:text-[#d81b60] transition-colors">
+          <a href="#faq" className="hover:text-stone-900 transition-colors">
             Tanya Jawab
           </a>
         </nav>
@@ -63,7 +63,7 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-3">
           <a
             href="#hero"
-            className="inline-flex items-center gap-2 text-xs font-bold text-white bg-[#d81b60] hover:bg-[#c2185b] px-4 py-2.5 rounded-xl shadow-sm shadow-[#d81b60]/20 hover:shadow-md hover:shadow-[#d81b60]/30 transition-all"
+            className="inline-flex items-center gap-2 text-xs font-semibold text-white bg-[#d81b60] hover:bg-[#c2185b] px-4 py-2.5 rounded-xl shadow-xs transition-colors"
           >
             <Smartphone className="w-3.5 h-3.5" />
             <span>Pasang Sekarang</span>
@@ -73,7 +73,7 @@ export default function Navbar() {
         {/* Mobile Hamburger Button */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 text-slate-700 hover:text-[#d81b60] focus:outline-none"
+          className="md:hidden p-2 text-stone-700 hover:text-stone-900 focus:outline-none"
           aria-label="Toggle menu"
         >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -82,12 +82,12 @@ export default function Navbar() {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white/95 backdrop-blur-lg border-b border-slate-100 px-6 py-5 shadow-lg space-y-4">
-          <nav className="flex flex-col gap-3 text-sm font-medium text-slate-700">
+        <div className="md:hidden bg-[#faf7f2]/95 backdrop-blur-lg border-b border-[#1f1b16]/8 px-6 py-5 shadow-lg space-y-4">
+          <nav className="flex flex-col gap-3 text-sm font-medium text-stone-700">
             <a
               href="#fitur"
               onClick={() => setMobileMenuOpen(false)}
-              className="py-1.5 hover:text-[#d81b60]"
+              className="py-1.5 hover:text-stone-900"
             >
               Fitur Utama
             </a>
