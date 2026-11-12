@@ -14,27 +14,27 @@ export default function AppPreviewMockup() {
   const [activeTab, setActiveTab] = useState<'beranda' | 'anggaran' | 'tugas' | 'couple'>('beranda');
 
   return (
-    <section id="preview" className="py-20 md:py-28 relative">
+    <section id="preview" className="pt-2 pb-16 sm:pt-6 sm:pb-20 md:pt-12 md:pb-28 relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-14">
-          <p className="text-xs font-medium text-stone-600 mb-2">
-            Tangkapan layar antarmuka asli
+        {/* Section Header - Ramping di Mobile */}
+        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-10">
+          <p className="text-xs font-semibold uppercase tracking-wider text-[#d81b60] mb-1.5">
+            Tangkapan Layar Nyata
           </p>
-          <h2 className="text-3xl sm:text-4xl font-semibold text-stone-900 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-stone-900 tracking-tight">
             Dirancang rapi untuk setiap tahap persiapan
           </h2>
-          <p className="text-stone-600 text-sm sm:text-base mt-3">
+          <p className="text-stone-600 text-xs sm:text-sm md:text-base mt-2 sm:mt-3">
             Tampilan asli aplikasi Nikahin yang mendampingi kamu dan pasangan mengelola hari bahagia berdua.
           </p>
         </div>
 
-        {/* Feature Tabs Bar */}
-        <div className="w-full flex justify-center mb-12 px-2 sm:px-0">
+        {/* Feature Tabs Bar - Ramping & Nyaman Digeser */}
+        <div className="w-full flex justify-center mb-6 sm:mb-8 px-2 sm:px-0">
           <div className="flex items-center justify-start sm:justify-center gap-1.5 max-w-full sm:max-w-xl p-1.5 rounded-2xl bg-stone-200/60 border border-[#1f1b16]/6 overflow-x-auto scroll-smooth touch-pan-x [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <button
               onClick={() => setActiveTab('beranda')}
-              className={`flex items-center gap-2 px-3.5 py-2 sm:px-4 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
+              className={`flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
                 activeTab === 'beranda'
                   ? 'bg-white text-stone-900 shadow-sm'
                   : 'text-stone-600 hover:text-stone-900'
@@ -46,7 +46,7 @@ export default function AppPreviewMockup() {
 
             <button
               onClick={() => setActiveTab('anggaran')}
-              className={`flex items-center gap-2 px-3.5 py-2 sm:px-4 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
+              className={`flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
                 activeTab === 'anggaran'
                   ? 'bg-white text-stone-900 shadow-sm'
                   : 'text-stone-600 hover:text-stone-900'
@@ -58,7 +58,7 @@ export default function AppPreviewMockup() {
 
             <button
               onClick={() => setActiveTab('tugas')}
-              className={`flex items-center gap-2 px-3.5 py-2 sm:px-4 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
+              className={`flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
                 activeTab === 'tugas'
                   ? 'bg-white text-stone-900 shadow-sm'
                   : 'text-stone-600 hover:text-stone-900'
@@ -70,7 +70,7 @@ export default function AppPreviewMockup() {
 
             <button
               onClick={() => setActiveTab('couple')}
-              className={`flex items-center gap-2 px-3.5 py-2 sm:px-4 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
+              className={`flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
                 activeTab === 'couple'
                   ? 'bg-white text-stone-900 shadow-sm'
                   : 'text-stone-600 hover:text-stone-900'
@@ -83,7 +83,42 @@ export default function AppPreviewMockup() {
         </div>
 
         {/* Realistic Smartphone Frame (Center Showcase with Natural Ambient Shadow) */}
-        <div className="relative max-w-[320px] sm:max-w-[350px] mx-auto">
+        <div className="relative max-w-[310px] sm:max-w-[350px] mx-auto">
+          {/* Warm Ambient Halo behind the Mockup */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] sm:w-[460px] h-[340px] sm:h-[460px] bg-gradient-to-tr from-[#fce7ef]/40 via-[#fdf0de]/60 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
+
+          {/* Editorial Atmosphere Card: Wedding Banquet (Left side on Desktop) */}
+          <div className="hidden lg:block absolute -left-48 top-16 w-44 rounded-2xl p-2 bg-white/95 shadow-xl shadow-stone-900/5 border border-stone-200/80 -rotate-6 pointer-events-none select-none z-10">
+            <div className="relative aspect-[4/5] rounded-xl overflow-hidden mb-2">
+              <Image
+                src="/assets/editorial/wedding-banquet.jpg"
+                alt="Dekorasi Meja Jamuan"
+                fill
+                sizes="176px"
+                className="object-cover"
+              />
+            </div>
+            <p className="text-[11px] font-medium text-stone-700 text-center tracking-tight">
+              Dekorasi &amp; Jamuan Idaman
+            </p>
+          </div>
+
+          {/* Editorial Atmosphere Card: Wedding Couple (Right side on Desktop) */}
+          <div className="hidden lg:block absolute -right-48 bottom-24 w-44 rounded-2xl p-2 bg-white/95 shadow-xl shadow-stone-900/5 border border-stone-200/80 rotate-6 pointer-events-none select-none z-10">
+            <div className="relative aspect-[4/5] rounded-xl overflow-hidden mb-2">
+              <Image
+                src="/assets/editorial/wedding-couple-indo.jpg"
+                alt="Momen Bahagia Berdua"
+                fill
+                sizes="176px"
+                className="object-cover object-top"
+              />
+            </div>
+            <p className="text-[11px] font-medium text-stone-700 text-center tracking-tight">
+              Momen Bahagia Berdua
+            </p>
+          </div>
+
           {/* Decorative Floating Accents Around Frame */}
           <div className="absolute -top-3 -right-3 sm:-top-5 sm:-right-6 pointer-events-none select-none z-30 animate-float-slow">
             <Image
