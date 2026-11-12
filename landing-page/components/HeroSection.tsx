@@ -10,7 +10,7 @@ interface HeroSectionProps {
 
 export default function HeroSection({ release }: HeroSectionProps) {
   return (
-    <section id="hero" className="relative pt-20 pb-8 sm:pt-24 sm:pb-12 md:pt-36 md:pb-20 overflow-hidden">
+    <section id="hero" className="relative pt-20 pb-16 sm:pt-24 sm:pb-20 md:pt-36 md:pb-28 overflow-hidden">
       {/* Floating Organic Elements - Disembunyikan di mobile agar tidak menumpuk logo atau menu */}
       <div className="hidden md:block absolute top-16 left-8 md:left-12 pointer-events-none select-none z-0 animate-float-slow">
         <Image
@@ -95,21 +95,21 @@ export default function HeroSection({ release }: HeroSectionProps) {
           <DeviceCta release={release} />
         </div>
 
-        {/* 3 Key Trust Signals - Ramping, Selaras, dan Tanpa Garis Pembatas Kaku */}
+        {/* 3 Key Trust Signals - Ramping, Hangat, dan Alami */}
         <div className="flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-8 gap-y-2 text-xs font-medium text-stone-600">
           <div className="inline-flex items-center gap-1.5">
             <Users className="w-3.5 h-3.5 text-stone-500 shrink-0" />
-            <span>1 akun untuk berdua</span>
+            <span>Satu akun untuk berdua</span>
           </div>
           <span className="hidden sm:inline text-stone-300">•</span>
           <div className="inline-flex items-center gap-1.5">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-            <span>Otomatis tersinkronisasi</span>
+            <span>Langsung terhubung di dua ponsel</span>
           </div>
           <span className="hidden sm:inline text-stone-300">•</span>
           <div className="inline-flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-            <span>Sekali bayar selamanya</span>
+            <span>Sekali bayar untuk selamanya</span>
           </div>
         </div>
       </div>

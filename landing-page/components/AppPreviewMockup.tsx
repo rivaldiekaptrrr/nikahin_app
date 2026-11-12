@@ -14,70 +14,73 @@ export default function AppPreviewMockup() {
   const [activeTab, setActiveTab] = useState<'beranda' | 'anggaran' | 'tugas' | 'couple'>('beranda');
 
   return (
-    <section id="preview" className="pt-2 pb-16 sm:pt-6 sm:pb-20 md:pt-12 md:pb-28 relative overflow-hidden">
+    <section id="preview" className="pt-12 pb-16 sm:pt-16 sm:pb-20 md:pt-24 md:pb-28 relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        {/* Section Header - Ramping di Mobile */}
-        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-10">
-          <p className="text-xs font-semibold uppercase tracking-wider text-[#d81b60] mb-1.5">
-            Tangkapan Layar Nyata
+        {/* Pembatas Lembut & Ruang Bernapas Antar-Seksi */}
+        <div className="w-24 h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent mx-auto mb-10 sm:mb-14" />
+
+        {/* Section Header - Mengalir Alami & Manusiawi */}
+        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
+          <p className="text-xs font-semibold uppercase tracking-wider text-[#d81b60] mb-2">
+            Intip Tampilan Aplikasi
           </p>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-stone-900 tracking-tight">
             Dirancang rapi untuk setiap tahap persiapan
           </h2>
-          <p className="text-stone-600 text-xs sm:text-sm md:text-base mt-2 sm:mt-3">
-            Tampilan asli aplikasi Nikahin yang mendampingi kamu dan pasangan mengelola hari bahagia berdua.
+          <p className="text-stone-600 text-xs sm:text-sm md:text-base mt-2.5 sm:mt-3 leading-relaxed">
+            Semua kebutuhan persiapan tertata rapi dalam satu genggaman, mendampingi langkah bahagia kamu dan pasangan.
           </p>
         </div>
 
         {/* Feature Tabs Bar - Ramping & Nyaman Digeser */}
-        <div className="w-full flex justify-center mb-6 sm:mb-8 px-2 sm:px-0">
+        <div className="w-full flex justify-center mb-8 sm:mb-10 px-2 sm:px-0">
           <div className="flex items-center justify-start sm:justify-center gap-1.5 max-w-full sm:max-w-xl p-1.5 rounded-2xl bg-stone-200/60 border border-[#1f1b16]/6 overflow-x-auto scroll-smooth touch-pan-x [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <button
               onClick={() => setActiveTab('beranda')}
-              className={`flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
+              className={`flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
                 activeTab === 'beranda'
                   ? 'bg-white text-stone-900 shadow-sm'
                   : 'text-stone-600 hover:text-stone-900'
               }`}
             >
               <LayoutDashboard className="w-4 h-4" />
-              <span>Beranda &amp; D-Day</span>
+              <span>Beranda</span>
             </button>
 
             <button
               onClick={() => setActiveTab('anggaran')}
-              className={`flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
+              className={`flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
                 activeTab === 'anggaran'
                   ? 'bg-white text-stone-900 shadow-sm'
                   : 'text-stone-600 hover:text-stone-900'
               }`}
             >
               <Wallet className="w-4 h-4" />
-              <span>Anggaran &amp; Biaya</span>
+              <span>Rincian Anggaran</span>
             </button>
 
             <button
               onClick={() => setActiveTab('tugas')}
-              className={`flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
+              className={`flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
                 activeTab === 'tugas'
                   ? 'bg-white text-stone-900 shadow-sm'
                   : 'text-stone-600 hover:text-stone-900'
               }`}
             >
               <CheckSquare className="w-4 h-4" />
-              <span>Tugas &amp; Ceklist</span>
+              <span>Daftar Tugas</span>
             </button>
 
             <button
               onClick={() => setActiveTab('couple')}
-              className={`flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
+              className={`flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
                 activeTab === 'couple'
                   ? 'bg-white text-stone-900 shadow-sm'
                   : 'text-stone-600 hover:text-stone-900'
               }`}
             >
               <HeartHandshake className="w-4 h-4" />
-              <span>Koneksi Pasangan</span>
+              <span>Akun Pasangan</span>
             </button>
           </div>
         </div>
@@ -119,8 +122,8 @@ export default function AppPreviewMockup() {
             </p>
           </div>
 
-          {/* Decorative Floating Accents Around Frame */}
-          <div className="absolute -top-3 -right-3 sm:-top-5 sm:-right-6 pointer-events-none select-none z-30 animate-float-slow">
+          {/* Decorative Floating Accents Around Frame (Disembunyikan di Mobile agar Tab Bersih) */}
+          <div className="hidden sm:block absolute -top-3 -right-3 sm:-top-5 sm:-right-6 pointer-events-none select-none z-30 animate-float-slow">
             <Image
               src="/assets/editorial/leaf-green.svg"
               alt=""
@@ -129,7 +132,7 @@ export default function AppPreviewMockup() {
               className="w-8 h-8 sm:w-11 sm:h-11 -rotate-45 opacity-85"
             />
           </div>
-          <div className="absolute -bottom-3 -left-3 sm:-bottom-5 sm:-left-6 pointer-events-none select-none z-30 animate-float-reverse">
+          <div className="hidden sm:block absolute -bottom-3 -left-3 sm:-bottom-5 sm:-left-6 pointer-events-none select-none z-30 animate-float-reverse">
             <Image
               src="/assets/editorial/petal-jasmine.svg"
               alt=""
