@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import ScrollReveal from './ScrollReveal';
 import { ChevronDown, HelpCircle } from 'lucide-react';
 
 interface FaqItem {
@@ -41,21 +42,24 @@ export default function FaqAccordion() {
   return (
     <section id="faq" className="py-20 md:py-28 relative border-t border-[#1f1b16]/8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
-        <div className="text-center max-w-xl mx-auto mb-14">
-          <p className="flex items-center justify-center gap-1.5 text-xs font-medium text-stone-600 mb-2">
-            <HelpCircle className="w-3.5 h-3.5 text-stone-500" />
-            <span>Tanya jawab</span>
-          </p>
-          <h2 className="text-3xl sm:text-4xl font-semibold text-stone-900 tracking-tight">
-            Pertanyaan yang sering diajukan
-          </h2>
-          <p className="text-stone-600 text-sm sm:text-base mt-2.5">
-            Jawaban lengkap seputar penggunaan aplikasi dan akses lisensi Nikahin.
-          </p>
-        </div>
+        <ScrollReveal>
+          <div className="text-center max-w-xl mx-auto mb-14">
+            <p className="flex items-center justify-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#d81b60] mb-2">
+              <HelpCircle className="w-3.5 h-3.5" />
+              <span>Tanya Jawab</span>
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-semibold text-stone-900 tracking-tight">
+              Pertanyaan yang sering diajukan
+            </h2>
+            <p className="text-stone-600 text-sm sm:text-base mt-2.5">
+              Jawaban lengkap seputar penggunaan aplikasi dan akses lisensi Nikahin.
+            </p>
+          </div>
+        </ScrollReveal>
 
         {/* Accordion List (Quiet Hairline Cards) */}
-        <div className="space-y-3">
+        <ScrollReveal delayMs={100}>
+          <div className="space-y-3">
           {faqs.map((faq, idx) => {
             const isOpen = openIdx === idx;
             return (
@@ -84,8 +88,9 @@ export default function FaqAccordion() {
             );
           })}
         </div>
-      </div>
-    </section>
+      </ScrollReveal>
+    </div>
+  </section>
   );
 }
 

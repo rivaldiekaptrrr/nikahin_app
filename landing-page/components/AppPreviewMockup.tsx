@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import ScrollReveal from './ScrollReveal';
 import {
   LayoutDashboard,
   Wallet,
@@ -20,73 +21,78 @@ export default function AppPreviewMockup() {
         <div className="w-24 h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent mx-auto mb-10 sm:mb-14" />
 
         {/* Section Header - Mengalir Alami & Manusiawi */}
-        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
-          <p className="text-xs font-semibold uppercase tracking-wider text-[#d81b60] mb-2">
-            Intip Tampilan Aplikasi
-          </p>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-stone-900 tracking-tight">
-            Dirancang rapi untuk setiap tahap persiapan
-          </h2>
-          <p className="text-stone-600 text-xs sm:text-sm md:text-base mt-2.5 sm:mt-3 leading-relaxed">
-            Semua kebutuhan persiapan tertata rapi dalam satu genggaman, mendampingi langkah bahagia kamu dan pasangan.
-          </p>
-        </div>
+        <ScrollReveal>
+          <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#d81b60] mb-2">
+              Intip Tampilan Aplikasi
+            </p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-stone-900 tracking-tight">
+              Dirancang rapi untuk setiap tahap persiapan
+            </h2>
+            <p className="text-stone-600 text-xs sm:text-sm md:text-base mt-2.5 sm:mt-3 leading-relaxed">
+              Semua kebutuhan persiapan tertata rapi dalam satu genggaman, mendampingi langkah bahagia kamu dan pasangan.
+            </p>
+          </div>
+        </ScrollReveal>
 
         {/* Feature Tabs Bar - Ramping & Nyaman Digeser */}
-        <div className="w-full flex justify-center mb-8 sm:mb-10 px-2 sm:px-0">
-          <div className="flex items-center justify-start sm:justify-center gap-1.5 max-w-full sm:max-w-xl p-1.5 rounded-2xl bg-stone-200/60 border border-[#1f1b16]/6 overflow-x-auto scroll-smooth touch-pan-x [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <button
-              onClick={() => setActiveTab('beranda')}
-              className={`flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
-                activeTab === 'beranda'
-                  ? 'bg-white text-stone-900 shadow-sm'
-                  : 'text-stone-600 hover:text-stone-900'
-              }`}
-            >
-              <LayoutDashboard className="w-4 h-4" />
-              <span>Beranda</span>
-            </button>
+        <ScrollReveal delayMs={100}>
+          <div className="w-full flex justify-center mb-8 sm:mb-10 px-2 sm:px-0">
+            <div className="flex items-center justify-start sm:justify-center gap-1.5 max-w-full sm:max-w-xl p-1.5 rounded-2xl bg-stone-200/60 border border-[#1f1b16]/6 overflow-x-auto scroll-smooth touch-pan-x [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <button
+                onClick={() => setActiveTab('beranda')}
+                className={`flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
+                  activeTab === 'beranda'
+                    ? 'bg-white text-stone-900 shadow-sm'
+                    : 'text-stone-600 hover:text-stone-900'
+                }`}
+              >
+                <LayoutDashboard className="w-4 h-4" />
+                <span>Beranda</span>
+              </button>
 
-            <button
-              onClick={() => setActiveTab('anggaran')}
-              className={`flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
-                activeTab === 'anggaran'
-                  ? 'bg-white text-stone-900 shadow-sm'
-                  : 'text-stone-600 hover:text-stone-900'
-              }`}
-            >
-              <Wallet className="w-4 h-4" />
-              <span>Rincian Anggaran</span>
-            </button>
+              <button
+                onClick={() => setActiveTab('anggaran')}
+                className={`flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
+                  activeTab === 'anggaran'
+                    ? 'bg-white text-stone-900 shadow-sm'
+                    : 'text-stone-600 hover:text-stone-900'
+                }`}
+              >
+                <Wallet className="w-4 h-4" />
+                <span>Rincian Anggaran</span>
+              </button>
 
-            <button
-              onClick={() => setActiveTab('tugas')}
-              className={`flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
-                activeTab === 'tugas'
-                  ? 'bg-white text-stone-900 shadow-sm'
-                  : 'text-stone-600 hover:text-stone-900'
-              }`}
-            >
-              <CheckSquare className="w-4 h-4" />
-              <span>Daftar Tugas</span>
-            </button>
+              <button
+                onClick={() => setActiveTab('tugas')}
+                className={`flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
+                  activeTab === 'tugas'
+                    ? 'bg-white text-stone-900 shadow-sm'
+                    : 'text-stone-600 hover:text-stone-900'
+                }`}
+              >
+                <CheckSquare className="w-4 h-4" />
+                <span>Daftar Tugas</span>
+              </button>
 
-            <button
-              onClick={() => setActiveTab('couple')}
-              className={`flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
-                activeTab === 'couple'
-                  ? 'bg-white text-stone-900 shadow-sm'
-                  : 'text-stone-600 hover:text-stone-900'
-              }`}
-            >
-              <HeartHandshake className="w-4 h-4" />
-              <span>Akun Pasangan</span>
-            </button>
+              <button
+                onClick={() => setActiveTab('couple')}
+                className={`flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
+                  activeTab === 'couple'
+                    ? 'bg-white text-stone-900 shadow-sm'
+                    : 'text-stone-600 hover:text-stone-900'
+                }`}
+              >
+                <HeartHandshake className="w-4 h-4" />
+                <span>Akun Pasangan</span>
+              </button>
+            </div>
           </div>
-        </div>
+        </ScrollReveal>
 
         {/* Realistic Smartphone Frame (Center Showcase with Natural Ambient Shadow) */}
-        <div className="relative max-w-[310px] sm:max-w-[350px] mx-auto">
+        <ScrollReveal delayMs={150}>
+          <div className="relative max-w-[310px] sm:max-w-[350px] mx-auto">
           {/* Warm Ambient Halo behind the Mockup */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] sm:w-[460px] h-[340px] sm:h-[460px] bg-gradient-to-tr from-[#fce7ef]/40 via-[#fdf0de]/60 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
 
@@ -266,7 +272,8 @@ export default function AppPreviewMockup() {
             </div>
           </div>
         </div>
-      </div>
-    </section>
-  );
+      </ScrollReveal>
+    </div>
+  </section>
+);
 }

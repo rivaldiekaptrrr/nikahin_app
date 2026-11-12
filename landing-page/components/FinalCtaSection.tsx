@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import ScrollReveal from './ScrollReveal';
 import { Sparkles, Smartphone, HeartHandshake } from 'lucide-react';
 import DeviceCta from './DeviceCta';
 import { ReleaseMetadata } from '@/lib/github-release';
@@ -12,7 +13,8 @@ export default function FinalCtaSection({ release }: FinalCtaSectionProps) {
   return (
     <section className="py-20 md:py-28 relative overflow-hidden">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
-        <div className="relative rounded-3xl bg-white border border-[#1f1b16]/10 p-8 sm:p-12 md:p-16 text-center shadow-[0_8px_30px_-8px_rgba(28,25,23,0.06)] overflow-hidden">
+        <ScrollReveal>
+          <div className="relative rounded-3xl bg-white border border-[#1f1b16]/10 p-8 sm:p-12 md:p-16 text-center shadow-[0_8px_30px_-8px_rgba(28,25,23,0.06)] overflow-hidden">
           {/* Subtle Floating Organic Accents */}
           <div className="absolute top-6 left-6 pointer-events-none select-none z-0 animate-float-slow">
             <Image
@@ -81,7 +83,8 @@ export default function FinalCtaSection({ release }: FinalCtaSectionProps) {
             </div>
           </div>
         </div>
-      </div>
-    </section>
-  );
+      </ScrollReveal>
+    </div>
+  </section>
+);
 }

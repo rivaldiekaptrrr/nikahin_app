@@ -1,12 +1,14 @@
 import React from 'react';
 import Image from 'next/image';
+import ScrollReveal from './ScrollReveal';
 import { HeartHandshake, KeyRound, RefreshCw, Smartphone } from 'lucide-react';
 
 export default function CoupleSyncBanner() {
   return (
     <section id="pasangan" className="py-16 md:py-24 relative">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="relative rounded-3xl bg-white border border-[#1f1b16]/10 p-8 sm:p-12 md:p-14 overflow-hidden shadow-[0_8px_30px_-8px_rgba(28,25,23,0.06)]">
+        <ScrollReveal>
+          <div className="relative rounded-3xl bg-white border border-[#1f1b16]/10 p-8 sm:p-12 md:p-14 overflow-hidden shadow-[0_8px_30px_-8px_rgba(28,25,23,0.06)]">
           {/* Subtle Organic Accent */}
           <div className="absolute top-4 right-4 pointer-events-none select-none z-0 animate-float-slow">
             <Image
@@ -100,8 +102,9 @@ export default function CoupleSyncBanner() {
             </div>
           </div>
         </div>
-      </div>
-    </section>
-  );
+      </ScrollReveal>
+    </div>
+  </section>
+);
 }
 
