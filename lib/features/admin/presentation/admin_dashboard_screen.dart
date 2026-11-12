@@ -304,11 +304,19 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
       final matchesQuery = query.isEmpty ||
           u.email.toLowerCase().contains(query) ||
           (u.displayName?.toLowerCase().contains(query) ?? false) ||
-          u.uid.toLowerCase().contains(query);
+          u.uid.toLowerCase().contains(query) ||
+          (u.deviceModel?.toLowerCase().contains(query) ?? false) ||
+          (u.platform?.toLowerCase().contains(query) ?? false);
 
       if (!matchesQuery) return false;
 
       switch (_selectedFilter) {
+        case 'ACTIVE_TODAY':
+          return u.isActiveToday;
+        case 'ANDROID':
+          return u.isAndroid;
+        case 'IOS':
+          return u.isIos;
         case 'NONE':
           return u.accessLevel == AccessLevel.none && !u.isPartnerLinked;
         case 'PREMIUM':
@@ -323,11 +331,17 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
     }).toList();
 
     final totalCount = _users.length;
+    final dauCount = _users.where((u) => u.isActiveToday).length;
+    final androidCount = _users.where((u) => u.isAndroid).length;
+    final iosCount = _users.where((u) => u.isIos).length;
     final payingUsersCount = _users.where((u) => u.accessLevel == AccessLevel.premium && u.isPrimaryPayer).length;
     final linkedPartnerCount = _users.where((u) => u.isPartnerLinked || (u.accessLevel == AccessLevel.premium && !u.isPrimaryPayer)).length;
     final pendingCount = _users.where((u) => u.accessLevel == AccessLevel.none && !u.isPartnerLinked).length;
     final adminCount = _users.where((u) => u.accessLevel == AccessLevel.admin).length;
     final totalOmset = payingUsersCount * BusinessConfig.lifetimePrice;
+    final dauPercentage = totalCount > 0 ? ((dauCount / totalCount) * 100).toStringAsFixed(0) : '0';
+    final androidPct = totalCount > 0 ? ((androidCount / totalCount) * 100).toStringAsFixed(0) : '0';
+    final iosPct = totalCount > 0 ? ((iosCount / totalCount) * 100).toStringAsFixed(0) : '0';
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
@@ -591,14 +605,14 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                           Expanded(
                             child: _buildBentoKpiCard(
                               theme,
-                              title: 'Total User',
-                              value: '$totalCount',
-                              subtitle: 'Akun Terdaftar',
-                              icon: PhosphorIconsRegular.users,
-                              accentColor: theme.colorScheme.primary,
+                              title: 'Aktif Hari Ini',
+                              value: '$dauCount',
+                              subtitle: '$dauPercentage% dari total pengguna',
+                              icon: PhosphorIconsFill.activity,
+                              accentColor: const Color(0xFF059669),
                               gradientColors: [
-                                theme.colorScheme.primary.withValues(alpha: 0.08),
-                                theme.colorScheme.primary.withValues(alpha: 0.02),
+                                const Color(0xFF059669).withValues(alpha: 0.12),
+                                const Color(0xFF059669).withValues(alpha: 0.02),
                               ],
                             ),
                           ),
@@ -606,15 +620,14 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                           Expanded(
                             child: _buildBentoKpiCard(
                               theme,
-                              title: 'Menunggu',
-                              value: '$pendingCount',
-                              subtitle: 'Perlu Aktivasi',
-                              icon: PhosphorIconsRegular.hourglass,
-                              accentColor: const Color(0xFFEA580C),
-                              isWarning: pendingCount > 0,
+                              title: 'Perangkat OS',
+                              value: '$androidCount / $iosCount',
+                              subtitle: '🤖 $androidPct% • 🍎 $iosPct%',
+                              icon: PhosphorIconsRegular.deviceMobile,
+                              accentColor: const Color(0xFF0284C7),
                               gradientColors: [
-                                const Color(0xFFEA580C).withValues(alpha: 0.12),
-                                const Color(0xFFEA580C).withValues(alpha: 0.02),
+                                const Color(0xFF0284C7).withValues(alpha: 0.12),
+                                const Color(0xFF0284C7).withValues(alpha: 0.02),
                               ],
                             ),
                           ),
@@ -626,14 +639,15 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                           Expanded(
                             child: _buildBentoKpiCard(
                               theme,
-                              title: 'Lisensi Berbayar',
-                              value: '$payingUsersCount',
-                              subtitle: linkedPartnerCount > 0 ? '+ $linkedPartnerCount Pasangan' : 'Lifetime Member',
-                              icon: PhosphorIconsRegular.crown,
-                              accentColor: const Color(0xFF059669),
+                              title: 'Total Pengguna',
+                              value: '$totalCount',
+                              subtitle: pendingCount > 0 ? '$pendingCount perlu aktivasi' : 'Semua terverifikasi',
+                              icon: PhosphorIconsRegular.users,
+                              accentColor: theme.colorScheme.primary,
+                              isWarning: pendingCount > 0,
                               gradientColors: [
-                                const Color(0xFF059669).withValues(alpha: 0.1),
-                                const Color(0xFF059669).withValues(alpha: 0.02),
+                                theme.colorScheme.primary.withValues(alpha: 0.08),
+                                theme.colorScheme.primary.withValues(alpha: 0.02),
                               ],
                             ),
                           ),
@@ -643,7 +657,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                               theme,
                               title: 'Est. Omset',
                               value: CurrencyUtils.formatRupiahCompact(totalOmset),
-                              subtitle: 'Total Penjualan',
+                              subtitle: '$payingUsersCount Lisensi Terjual',
                               icon: PhosphorIconsRegular.money,
                               accentColor: const Color(0xFFD97706),
                               gradientColors: [
@@ -702,6 +716,12 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                               child: Row(
                                 children: [
                                   _buildFilterPill('ALL', 'Semua', totalCount, PhosphorIconsRegular.squaresFour),
+                                  const SizedBox(width: 6),
+                                  _buildFilterPill('ACTIVE_TODAY', 'Aktif Hari Ini', dauCount, PhosphorIconsFill.activity, color: const Color(0xFF059669)),
+                                  const SizedBox(width: 6),
+                                  _buildFilterPill('ANDROID', 'Android', androidCount, PhosphorIconsRegular.androidLogo, color: const Color(0xFF16A34A)),
+                                  const SizedBox(width: 6),
+                                  _buildFilterPill('IOS', 'iPhone', iosCount, PhosphorIconsRegular.appleLogo, color: const Color(0xFF0284C7)),
                                   const SizedBox(width: 6),
                                   _buildFilterPill('NONE', 'Menunggu', pendingCount, PhosphorIconsRegular.hourglass, color: const Color(0xFFEA580C)),
                                   const SizedBox(width: 6),
@@ -1204,6 +1224,120 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                                   ],
                                 ),
                               ),
+                            ],
+                          ),
+
+                          // Telemetri Perangkat, Aktivitas, & Pernikahan
+                          const SizedBox(height: 8),
+                          Wrap(
+                            spacing: 6,
+                            runSpacing: 4,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              // Platform & Model Badge
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
+                                  borderRadius: BorderRadius.circular(6),
+                                  border: Border.all(
+                                    color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      user.isAndroid
+                                          ? PhosphorIconsRegular.androidLogo
+                                          : (user.isIos ? PhosphorIconsRegular.appleLogo : PhosphorIconsRegular.globe),
+                                      size: 11,
+                                      color: user.isAndroid
+                                          ? const Color(0xFF16A34A)
+                                          : (user.isIos ? const Color(0xFF0284C7) : theme.colorScheme.onSurfaceVariant),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      user.deviceModel != null && user.deviceModel!.isNotEmpty
+                                          ? '${user.platformBadgeText} • ${user.deviceModel}'
+                                          : user.platformBadgeText,
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w600,
+                                        color: theme.colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
+                                    if (user.appVersion != null && user.appVersion!.isNotEmpty) ...[
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        'v${user.appVersion}',
+                                        style: TextStyle(
+                                          fontSize: 9.5,
+                                          color: theme.colorScheme.outline,
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+
+                              // Status Keaktifan (Active Today vs Last Active)
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
+                                decoration: BoxDecoration(
+                                  color: user.isActiveToday
+                                      ? const Color(0xFF059669).withValues(alpha: 0.1)
+                                      : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      width: 6,
+                                      height: 6,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: user.isActiveToday ? const Color(0xFF059669) : theme.colorScheme.outline,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      user.lastActiveFormatted,
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: user.isActiveToday ? FontWeight.w700 : FontWeight.w500,
+                                        color: user.isActiveToday ? const Color(0xFF059669) : theme.colorScheme.outline,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              // Info H-Pernikahan (jika ada)
+                              if (user.dDayFormatted != null)
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF59E0B).withValues(alpha: 0.12),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(PhosphorIconsFill.heart, size: 10, color: Color(0xFFD97706)),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        user.dDayFormatted!,
+                                        style: const TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w700,
+                                          color: Color(0xFFD97706),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                             ],
                           ),
 
