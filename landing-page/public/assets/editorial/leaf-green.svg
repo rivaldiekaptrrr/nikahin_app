@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" fill="none">
+  <defs>
+    <!-- Organic Leaf Gradient -->
+    <linearGradient id="leafGrad" x1="15%" y1="10%" x2="85%" y2="90%">
+      <stop offset="0%" stop-color="#4F7942" />
+      <stop offset="40%" stop-color="#3B632F" />
+      <stop offset="80%" stop-color="#2D4D22" />
+      <stop offset="100%" stop-color="#1E3816" />
+    </linearGradient>
+    <linearGradient id="leafHighlight" x1="20%" y1="20%" x2="70%" y2="70%">
+      <stop offset="0%" stop-color="#7CA96E" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#4F7942" stop-opacity="0" />
+    </linearGradient>
+    <linearGradient id="leafVein" x1="20%" y1="15%" x2="85%" y2="85%">
+      <stop offset="0%" stop-color="#8BB87D" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#3B632F" stop-opacity="0.2" />
+    </linearGradient>
+    <!-- Soft Ambient Drop Shadow -->
+    <filter id="leafShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="3" dy="8" stdDeviation="6" flood-color="#1C2E15" flood-opacity="0.22" />
+    </filter>
+  </defs>
+
+  <!-- Leaf Body with Ambient Shadow -->
+  <g filter="url(#leafShadow)">
+    <!-- Main Leaf Curvature -->
+    <path
+      d="M22 96 C 26 68, 48 34, 98 18 C 104 38, 98 78, 62 94 C 44 102, 30 100, 22 96 Z"
+      fill="url(#leafGrad)"
+    />
+    <!-- Specular Highlight Layer -->
+    <path
+      d="M26 90 C 32 66, 52 38, 92 24 C 84 46, 76 68, 54 84 C 40 92, 32 92, 26 90 Z"
+      fill="url(#leafHighlight)"
+    />
+    <!-- Primary Central Vein -->
+    <path
+      d="M24 94 C 42 78, 62 54, 96 20"
+      stroke="url(#leafVein)"
+      stroke-width="1.8"
+      stroke-linecap="round"
+    />
+    <!-- Secondary Vein Branches -->
+    <path
+      d="M45 74 C 54 68, 62 66, 70 67"
+      stroke="url(#leafVein)"
+      stroke-width="1"
+      stroke-linecap="round"
+      opacity="0.7"
+    />
+    <path
+      d="M58 60 C 66 53, 76 50, 84 51"
+      stroke="url(#leafVein)"
+      stroke-width="1"
+      stroke-linecap="round"
+      opacity="0.7"
+    />
+    <path
+      d="M38 80 C 44 83, 50 85, 56 84"
+      stroke="url(#leafVein)"
+      stroke-width="0.9"
+      stroke-linecap="round"
+      opacity="0.6"
+    />
+  </g>
+</svg>
+

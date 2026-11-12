@@ -13,6 +13,25 @@ export default function FinalCtaSection({ release }: FinalCtaSectionProps) {
     <section className="py-20 md:py-28 relative overflow-hidden">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <div className="relative rounded-3xl bg-white border border-[#1f1b16]/10 p-8 sm:p-12 md:p-16 text-center shadow-[0_8px_30px_-8px_rgba(28,25,23,0.06)] overflow-hidden">
+          {/* Subtle Floating Organic Accents */}
+          <div className="absolute top-6 left-6 pointer-events-none select-none z-0 animate-float-slow">
+            <Image
+              src="/assets/editorial/petal-jasmine.svg"
+              alt=""
+              width={40}
+              height={40}
+              className="w-6 h-6 sm:w-9 sm:h-9 opacity-70 rotate-12"
+            />
+          </div>
+          <div className="absolute bottom-6 right-6 pointer-events-none select-none z-0 animate-float-reverse">
+            <Image
+              src="/assets/editorial/leaf-green.svg"
+              alt=""
+              width={44}
+              height={44}
+              className="w-7 h-7 sm:w-10 sm:h-10 opacity-75 -rotate-45"
+            />
+          </div>
           <div className="relative z-10 max-w-2xl mx-auto">
             {/* Logo Icon */}
             <div className="relative w-14 h-14 mx-auto mb-6">

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" fill="none">
+  <defs>
+    <!-- Soft Velvet Rose / Blush Petal Gradient -->
+    <linearGradient id="blushPetalGrad" x1="10%" y1="15%" x2="85%" y2="85%">
+      <stop offset="0%" stop-color="#FBA4A8" />
+      <stop offset="35%" stop-color="#F86D64" />
+      <stop offset="70%" stop-color="#D81B60" />
+      <stop offset="100%" stop-color="#8B204A" />
+    </linearGradient>
+    <radialGradient id="blushHighlight" cx="35%" cy="30%" r="55%">
+      <stop offset="0%" stop-color="#FFD6DA" stop-opacity="0.8" />
+      <stop offset="60%" stop-color="#F86D64" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#D81B60" stop-opacity="0" />
+    </radialGradient>
+    <!-- Realistic Shadow -->
+    <filter id="petalShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="2" dy="7" stdDeviation="5" flood-color="#4A1328" flood-opacity="0.2" />
+    </filter>
+  </defs>
+
+  <g filter="url(#petalShadow)">
+    <!-- Organic Curled Petal Contour -->
+    <path
+      d="M26 84 C 18 64, 22 36, 44 20 C 66 6, 86 18, 88 42 C 90 66, 74 86, 50 88 C 38 89, 30 87, 26 84 Z"
+      fill="url(#blushPetalGrad)"
+    />
+    <!-- Delicate Light Sheen across Curved Flange -->
+    <path
+      d="M32 78 C 26 60, 28 38, 48 24 C 66 12, 80 22, 82 42 C 84 62, 70 78, 52 82 C 42 84, 35 81, 32 78 Z"
+      fill="url(#blushHighlight)"
+    />
+    <!-- Subtle Fold Crease -->
+    <path
+      d="M34 82 C 44 68, 54 48, 68 28"
+      stroke="#FFD6DA"
+      stroke-width="1.2"
+      stroke-linecap="round"
+      opacity="0.35"
+    />
+  </g>
+</svg>
+

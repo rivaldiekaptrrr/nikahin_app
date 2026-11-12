@@ -84,6 +84,26 @@ export default function AppPreviewMockup() {
 
         {/* Realistic Smartphone Frame (Center Showcase with Natural Ambient Shadow) */}
         <div className="relative max-w-[320px] sm:max-w-[350px] mx-auto">
+          {/* Decorative Floating Accents Around Frame */}
+          <div className="absolute -top-3 -right-3 sm:-top-5 sm:-right-6 pointer-events-none select-none z-30 animate-float-slow">
+            <Image
+              src="/assets/editorial/leaf-green.svg"
+              alt=""
+              width={48}
+              height={48}
+              className="w-8 h-8 sm:w-11 sm:h-11 -rotate-45 opacity-85"
+            />
+          </div>
+          <div className="absolute -bottom-3 -left-3 sm:-bottom-5 sm:-left-6 pointer-events-none select-none z-30 animate-float-reverse">
+            <Image
+              src="/assets/editorial/petal-jasmine.svg"
+              alt=""
+              width={44}
+              height={44}
+              className="w-7 h-7 sm:w-10 sm:h-10 rotate-12 opacity-80"
+            />
+          </div>
+
           {/* Outer Phone Shell */}
           <div className="relative rounded-[50px] p-3 bg-stone-950 shadow-[0_32px_64px_-16px_rgba(28,25,23,0.24)] ring-1 ring-stone-900 border-[3.5px] border-stone-800">
             {/* Dynamic Island / Speaker Notch */}
