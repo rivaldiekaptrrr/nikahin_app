@@ -55,6 +55,40 @@ class DeviceInfoService {
         '• Sistem Operasi: $osVersion\n'
         '• Versi Aplikasi: $appVersion';
   }
+
+  /// Ringkasan telemetri perangkat terpadu untuk pemantauan Admin & DAU
+  Future<Map<String, String>> getDeviceTelemetryMeta() async {
+    String platform = 'web';
+    String deviceModel = 'Browser Web';
+    String appVersion = '2.0.5+42';
+
+    try {
+      final pkg = await PackageInfo.fromPlatform();
+      appVersion = '${pkg.version}+${pkg.buildNumber}';
+    } catch (_) {}
+
+    try {
+      if (kIsWeb) {
+        platform = 'web';
+        final web = await _deviceInfoPlugin.webBrowserInfo;
+        deviceModel = 'Browser (${web.browserName.name.toUpperCase()})';
+      } else if (Platform.isAndroid) {
+        platform = 'android';
+        final android = await _deviceInfoPlugin.androidInfo;
+        deviceModel = '${android.brand.toUpperCase()} ${android.model}';
+      } else if (Platform.isIOS) {
+        platform = 'ios';
+        final ios = await _deviceInfoPlugin.iosInfo;
+        deviceModel = ios.utsname.machine;
+      }
+    } catch (_) {}
+
+    return {
+      'platform': platform,
+      'deviceModel': deviceModel,
+      'appVersion': appVersion,
+    };
+  }
 }
 
 /// Provider for DeviceInfoService

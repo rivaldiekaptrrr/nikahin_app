@@ -427,6 +427,37 @@ class FirestoreRestService {
     );
   }
 
+  /// Update active heartbeat & device telemetry (Ultra-hemat 1x per hari)
+  Future<bool> updateDailyActiveTelemetry({
+    required String userId,
+    required int lastActiveAt,
+    required String platform,
+    required String deviceModel,
+    required String appVersion,
+    int? weddingDateEpoch,
+    String? idToken,
+  }) async {
+    final data = <String, dynamic>{
+      'lastActiveAt': lastActiveAt,
+      'platform': platform,
+      'deviceModel': deviceModel,
+      'appVersion': appVersion,
+      'updatedAt': lastActiveAt,
+    };
+    final mask = ['lastActiveAt', 'platform', 'deviceModel', 'appVersion', 'updatedAt'];
+    if (weddingDateEpoch != null) {
+      data['weddingDateEpoch'] = weddingDateEpoch;
+      mask.add('weddingDateEpoch');
+    }
+
+    return putDocument(
+      path: 'users/$userId',
+      data: data,
+      idToken: idToken,
+      updateMask: mask,
+    );
+  }
+
   /// Get all documents in a collection via REST API (with pagination & 401 auto-retry)
   Future<List<Map<String, dynamic>>> getCollection({
     required String collectionPath,

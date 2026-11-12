@@ -147,5 +147,76 @@ void main() {
       expect(uri.queryParameters['text'], contains('user@example.com'));
       expect(uri.queryParameters['text'], contains('Rp 49.000'));
     });
+
+    test('AppUserInfo telemetry serialization and getters', () {
+      final now = DateTime.now();
+      final todayEpoch = now.millisecondsSinceEpoch;
+      final weddingDate = now.add(const Duration(days: 30)).millisecondsSinceEpoch;
+
+      final user = AppUserInfo(
+        uid: 'telemetry_user',
+        email: 'telemetry@nikahin.app',
+        accessLevel: AccessLevel.premium,
+        createdAt: 1000,
+        updatedAt: 1000,
+        lastActiveAt: todayEpoch,
+        platform: 'android',
+        deviceModel: 'Samsung Galaxy A54',
+        appVersion: '2.0.5+42',
+        weddingDateEpoch: weddingDate,
+      );
+
+      // Verify getters
+      expect(user.isActiveToday, isTrue);
+      expect(user.isAndroid, isTrue);
+      expect(user.isIos, isFalse);
+      expect(user.isWeb, isFalse);
+      expect(user.platformBadgeText, equals('Android (APK)'));
+      expect(user.dDayFormatted, equals('H-30 Hari'));
+      expect(user.lastActiveFormatted, equals('Aktif hari ini'));
+
+      // Verify serialization
+      final map = user.toFirestoreMap();
+      expect(map['lastActiveAt'], equals(todayEpoch));
+      expect(map['platform'], equals('android'));
+      expect(map['deviceModel'], equals('Samsung Galaxy A54'));
+      expect(map['appVersion'], equals('2.0.5+42'));
+      expect(map['weddingDateEpoch'], equals(weddingDate));
+
+      // Verify deserialization
+      final restored = AppUserInfo.fromFirestoreMap(map, 'telemetry_user');
+      expect(restored.lastActiveAt, equals(todayEpoch));
+      expect(restored.platform, equals('android'));
+      expect(restored.deviceModel, equals('Samsung Galaxy A54'));
+      expect(restored.appVersion, equals('2.0.5+42'));
+      expect(restored.weddingDateEpoch, equals(weddingDate));
+      expect(restored.isActiveToday, isTrue);
+      expect(restored.isAndroid, isTrue);
+    });
+
+    test('AppUserInfo iOS and Web platform badges', () {
+      final iosUser = AppUserInfo(
+        uid: 'u_ios',
+        email: 'ios@apple.com',
+        accessLevel: AccessLevel.none,
+        createdAt: 1000,
+        updatedAt: 1000,
+        platform: 'ios',
+      );
+      expect(iosUser.isIos, isTrue);
+      expect(iosUser.isAndroid, isFalse);
+      expect(iosUser.platformBadgeText, equals('iPhone (PWA)'));
+
+      final webUser = AppUserInfo(
+        uid: 'u_web',
+        email: 'web@chrome.com',
+        accessLevel: AccessLevel.none,
+        createdAt: 1000,
+        updatedAt: 1000,
+        platform: 'web',
+      );
+      expect(webUser.isWeb, isTrue);
+      expect(webUser.platformBadgeText, equals('Web Peramban'));
+    });
   });
 }

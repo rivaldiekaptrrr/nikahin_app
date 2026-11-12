@@ -8,6 +8,7 @@ import '../../../data/local/preferences_manager.dart';
 import '../../../data/remote/firestore_rest_service.dart';
 import '../../../data/remote/midtrans_payment_service.dart';
 import '../../../data/repositories/wedding_repository.dart';
+import '../../../data/services/device_info_service.dart';
 import '../../../domain/models/access_level.dart';
 import '../../../domain/models/midtrans_core_models.dart';
 import 'auth_state.dart';
@@ -186,6 +187,9 @@ class AuthNotifier extends Notifier<AuthState> {
       if (effectivePremium) {
         ref.read(syncManagerProvider).pullAll();
       }
+
+      // Sinkronisasi telemetri keaktifan harian & info perangkat (1x per hari)
+      syncDailyActiveTelemetry(uid);
     } else if (isDemo) {
       ref.read(syncManagerProvider).configure(
             newUserId: null,
@@ -356,10 +360,57 @@ class AuthNotifier extends Notifier<AuthState> {
       if (effectivePremium) {
         ref.read(syncManagerProvider).pullAll();
       }
+
+      // Sinkronisasi telemetri keaktifan harian & info perangkat (1x per hari)
+      syncDailyActiveTelemetry(uid);
       return true;
     } catch (e) {
       state = state.copyWith(isLoading: false, errorMessage: e.toString());
       return false;
+    }
+  }
+
+  /// Sinkronisasi telemetri keaktifan harian (DAU) & info perangkat ultra-hemat (1x per hari)
+  Future<void> syncDailyActiveTelemetry(String uid) async {
+    try {
+      final now = DateTime.now();
+      final todayStr = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+      final lastSyncedDate = await AppPreferences.getLastSyncedActiveDate();
+
+      // Ultra-hemat kuota: jika hari ini sudah pernah sinkron, lewati!
+      if (lastSyncedDate == todayStr) {
+        return;
+      }
+
+      final deviceInfo = ref.read(deviceInfoServiceProvider);
+      final meta = await deviceInfo.getDeviceTelemetryMeta();
+      final cachedToken = await AppPreferences.getIdToken();
+
+      // Coba ambil tanggal hari H dari profil pernikahan aktif lokal
+      int? weddingDateEpoch;
+      try {
+        final activeProfile = await ref.read(weddingRepositoryProvider).getSingleProfile();
+        if (activeProfile != null) {
+          weddingDateEpoch = activeProfile.weddingDate;
+        }
+      } catch (_) {}
+
+      final firestoreService = ref.read(firestoreServiceProvider);
+      final success = await firestoreService.updateDailyActiveTelemetry(
+        userId: uid,
+        lastActiveAt: now.millisecondsSinceEpoch,
+        platform: meta['platform'] ?? 'web',
+        deviceModel: meta['deviceModel'] ?? 'Perangkat Tidak Diketahui',
+        appVersion: meta['appVersion'] ?? '2.0.5+42',
+        weddingDateEpoch: weddingDateEpoch,
+        idToken: cachedToken,
+      );
+
+      if (success) {
+        await AppPreferences.setLastSyncedActiveDate(todayStr);
+      }
+    } catch (e) {
+      debugPrint('[Telemetry] Sinkronisasi keaktifan harian dilewati: $e');
     }
   }
 
@@ -624,6 +675,9 @@ class AuthNotifier extends Notifier<AuthState> {
       if (effectivePremium) {
         ref.read(syncManagerProvider).pullAll();
       }
+
+      // Sinkronisasi telemetri keaktifan harian & info perangkat (1x per hari)
+      syncDailyActiveTelemetry(uid);
       return true;
     } catch (e) {
       state = state.copyWith(isLoading: false, errorMessage: e.toString());

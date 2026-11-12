@@ -17,6 +17,7 @@ const String kPrefCoupleRole = 'user_couple_role';
 const String kPrefIsPrimaryPayer = 'user_is_primary_payer';
 const String kPrefDailyReminderHour = 'wedding_daily_reminder_hour';
 const String kPrefDailyReminderMinute = 'wedding_daily_reminder_minute';
+const String kPrefLastSyncedActiveDate = 'last_synced_active_date';
 
 class AppPreferences {
   static Future<String> getAccessLevel() async {
@@ -240,6 +241,16 @@ class AppPreferences {
   static Future<void> setBiometricEnabled(bool val) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('wedding_biometric_lock', val);
+  }
+
+  static Future<String?> getLastSyncedActiveDate() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(kPrefLastSyncedActiveDate);
+  }
+
+  static Future<void> setLastSyncedActiveDate(String dateStr) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(kPrefLastSyncedActiveDate, dateStr);
   }
 }
 
