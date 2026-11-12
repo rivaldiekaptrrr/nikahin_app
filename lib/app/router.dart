@@ -1,3 +1,7 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:go_router/go_router.dart';
 import 'shell/wedding_shell_scaffold.dart';
 import '../features/admin/presentation/admin_dashboard_screen.dart';
@@ -18,8 +22,61 @@ import '../features/vendors/wedding_vendor_screen.dart';
 import '../features/splash/presentation/splash_screen.dart';
 import '../features/auth/presentation/payment_celebration_screen.dart';
 
+/// Navigator observer yang aman untuk Firebase Analytics.
+/// Mencegah crash jika Firebase belum terinisialisasi (misal di widget test atau web tanpa config).
+class SafeFirebaseAnalyticsObserver extends NavigatorObserver {
+  FirebaseAnalyticsObserver? _inner;
+
+  FirebaseAnalyticsObserver? get _observer {
+    if (_inner != null) return _inner;
+    try {
+      if (!kIsWeb && Firebase.apps.isNotEmpty) {
+        _inner = FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance);
+      }
+    } catch (_) {
+      // Firebase belum diinisialisasi atau dilewati
+    }
+    return _inner;
+  }
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    super.didPush(route, previousRoute);
+    try {
+      _observer?.didPush(route, previousRoute);
+    } catch (_) {}
+  }
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    super.didPop(route, previousRoute);
+    try {
+      _observer?.didPop(route, previousRoute);
+    } catch (_) {}
+  }
+
+  @override
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
+    super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
+    try {
+      _observer?.didReplace(newRoute: newRoute, oldRoute: oldRoute);
+    } catch (_) {}
+  }
+
+  @override
+  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    super.didRemove(route, previousRoute);
+    try {
+      _observer?.didRemove(route, previousRoute);
+    } catch (_) {}
+  }
+}
+
 final appRouter = GoRouter(
   initialLocation: '/',
+  observers: [
+    SafeFirebaseAnalyticsObserver(),
+  ],
   redirect: (context, state) {
     final uri = state.uri;
     // Tangkap jika aplikasi dibuka via deep link kembalian pembayaran
