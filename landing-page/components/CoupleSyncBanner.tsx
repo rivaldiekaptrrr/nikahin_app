@@ -30,8 +30,8 @@ export default function CoupleSyncBanner() {
               </h2>
 
               <p className="text-sm sm:text-base text-stone-600 leading-relaxed">
-                Kamu tidak perlu membayar dua kali atau berbagi akun email yang sama. 
-                Cukup bagikan <strong>6 karakter kode undangan</strong> kepada pasanganmu untuk langsung 
+                Kamu tidak perlu membayar dua kali atau berbagi akun email yang sama.
+                Cukup bagikan <strong>6 karakter kode undangan</strong> kepada pasanganmu untuk langsung
                 terhubung secara otomatis.
               </p>
 
