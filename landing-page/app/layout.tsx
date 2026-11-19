@@ -99,7 +99,7 @@ const jsonLdData = {
       'applicationCategory': 'LifestyleApplication',
       'offers': {
         '@type': 'Offer',
-        'price': '49000',
+        'price': '39000',
         'priceCurrency': 'IDR',
         'availability': 'https://schema.org/InStock',
       },
