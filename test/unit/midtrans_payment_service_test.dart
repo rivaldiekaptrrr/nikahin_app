@@ -71,7 +71,7 @@ void main() {
             'status_message': 'Success, Bank Transfer transaction is created',
             'transaction_id': 'trx-bca-001',
             'order_id': 'NIKAHIN-CORE-BCA-123',
-            'gross_amount': '49000.00',
+            'gross_amount': '39000.00',
             'payment_type': 'bank_transfer',
             'transaction_status': 'pending',
             'va_numbers': [
@@ -96,7 +96,7 @@ void main() {
       final success = result as MidtransCoreChargeSuccess;
       expect(success.data.channel, equals(PaymentChannel.bcaVa));
       expect(success.data.vaNumber, equals('7001081234567890'));
-      expect(success.data.grossAmount, equals(49000.0));
+      expect(success.data.grossAmount, equals(39000.0));
       expect(success.data.status, equals(MidtransTransactionStatus.pending));
     });
 
@@ -108,7 +108,7 @@ void main() {
             'status_message': 'Success, QRIS transaction is created',
             'transaction_id': 'trx-qris-002',
             'order_id': 'NIKAHIN-CORE-QRIS-456',
-            'gross_amount': '49000.00',
+            'gross_amount': '39000.00',
             'payment_type': 'qris',
             'transaction_status': 'pending',
             'actions': [
@@ -148,7 +148,7 @@ void main() {
             'status_code': '200',
             'transaction_status': 'settlement',
             'order_id': 'ORDER-123',
-            'gross_amount': '49000.00',
+            'gross_amount': '39000.00',
           }),
           200,
           headers: {'content-type': 'application/json'},

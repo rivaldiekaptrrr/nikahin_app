@@ -75,7 +75,7 @@ class BusinessConfig {
 
   /// Kode Lisensi & Harga
   static const String midtransPackageCode = 'WEDDING';
-  static const double lifetimePrice = 49000.0;
+  static const double lifetimePrice = 39000.0;
 }
 ```
 
@@ -108,7 +108,7 @@ Demi keamanan dari *GitHub Secret Scanning / Push Protection*, server key tidak 
 
 1. **Paywall & VIP Hero** ([`pending_verification_screen.dart`](file:///c:/Project/nikahin_app/lib/features/auth/presentation/pending_verification_screen.dart)):
    - Hero banner bertema pernikahan mewah (*Emerald Dark & Champagne Gold*).
-   - VIP Membership Card dengan diskon lifetime (Rp 49.000 dari Rp 99.000).
+   - VIP Membership Card dengan diskon lifetime (Rp 39.000 dari Rp 99.000).
    - 2x2 Bento grid fitur unggulan (Unlimited Budget, Vendor Directory, Rundown, Guest RSVP).
    - 1 tombol aksi utama: *"Aktifkan Akses Sekarang"*.
 

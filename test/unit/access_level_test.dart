@@ -125,11 +125,11 @@ void main() {
       final users = [primaryUser, partnerUser, normalPendingUser];
       final payingUsersCount = users.where((u) => u.accessLevel == AccessLevel.premium && u.isPrimaryPayer).length;
       final linkedPartnerCount = users.where((u) => u.isPartnerLinked || (u.accessLevel == AccessLevel.premium && !u.isPrimaryPayer)).length;
-      final totalOmset = payingUsersCount * 49000.0;
+      final totalOmset = payingUsersCount * 39000.0;
 
       expect(payingUsersCount, equals(1));
       expect(linkedPartnerCount, equals(1));
-      expect(totalOmset, equals(49000.0)); // Zero revenue inflation!
+      expect(totalOmset, equals(39000.0)); // Zero revenue inflation!
     });
 
     test('BusinessConfig WhatsApp URL generation', () {
@@ -145,7 +145,7 @@ void main() {
       expect(uri.host, equals('wa.me'));
       expect(uri.path, contains(expectedNumber));
       expect(uri.queryParameters['text'], contains('user@example.com'));
-      expect(uri.queryParameters['text'], contains('Rp 49.000'));
+      expect(uri.queryParameters['text'], contains('Rp 39.000'));
     });
 
     test('AppUserInfo telemetry serialization and getters', () {

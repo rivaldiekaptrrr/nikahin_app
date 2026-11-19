@@ -115,7 +115,7 @@ class BusinessConfig {
   static const String midtransBackendUrl = 'https://track-it-backend-sand.vercel.app/api/create-snap-token';
 
   /// Harga Paket Lisensi
-  static const double lifetimePrice = 49000.0;
+  static const double lifetimePrice = 39000.0;
   static const double originalPrice = 99000.0;
 ## 4. Konfigurasi Google Sign-In & Keystore Fingerprint (Debug vs Release)
 
@@ -179,7 +179,7 @@ class BusinessConfig {
 flowchart TD
     subgraph UserFlow ["Alur Pengguna"]
         A["Buka Aplikasi & Masuk / Daftar"] --> B{"Cek Status Lisensi"}
-        B -->|Belum Bayar| C["Layar Aktivasi Lisensi (Rp 49.000)"]
+        B -->|Belum Bayar| C["Layar Aktivasi Lisensi (Rp 39.000)"]
         B -->|Premium / Admin| D["Akses Penuh Aplikasi Planner"]
         C -->|Mode Manual| E["Scan QRIS & Download Gambar"]
         E --> F["Kirim Bukti Pembayaran ke WhatsApp"]

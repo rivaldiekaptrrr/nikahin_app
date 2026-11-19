@@ -9,7 +9,7 @@ Dokumen ini merupakan panduan komprehensif bagi developer mengenai arsitektur si
 Aplikasi Nikahin menggunakan model lisensi **Akses Seumur Hidup (Lifetime Pass)** dengan harga tunggal:
 - **Paket**: Paket Wedding Planner Seumur Hidup (Lifetime)
 - **Harga Normal**: Rp 99.000
-- **Harga Promo / Lifetime**: **Rp 49.000** (Hemat 50%)
+- **Harga Promo / Lifetime**: **Rp 39.000** (Hemat 60%)
 
 Saat pengguna baru mendaftar (hanya dengan Email dan Kata Sandi), hak akses akun berstatus `AccessLevel.none`. Pengguna langsung diarahkan ke layar aktivasi lisensi (`/pending-verification`) untuk memilih salah satu alur pembayaran yang sedang aktif.
 
@@ -47,7 +47,7 @@ flowchart TD
     subgraph ClientLayer ["Aplikasi Flutter Pengguna"]
         Register[Daftar Akun Baru]
         Paywall[Layar Verifikasi Pembayaran]
-        ScanQR[Scan QRIS Statis Rp 49.000]
+        ScanQR[Scan QRIS Statis Rp 39.000]
         SendProof[Kirim Bukti ke WhatsApp +6187834284141]
         AutoPoll[Deteksi Auto-Polling 10 Detik]
         AppUnlocked([Akses Terbuka & Masuk Dashboard])
