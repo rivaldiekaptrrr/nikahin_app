@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Responsive container that centers content and enforces comfortable reading width on larger screens (Tablet, Web, Desktop)
 class ResponsiveContainer extends StatelessWidget {

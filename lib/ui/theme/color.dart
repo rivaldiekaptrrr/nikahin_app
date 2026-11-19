@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Light Theme Colors (Reference: Color.kt in Track-app)
 const Color kPrimaryLight = Color(0xFF2563EB); // Electric Sapphire Blue (#2563EB)

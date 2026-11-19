@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Vector WhatsApp Logo Widget
 /// Can be rendered as a single-color icon (e.g. white inside colored button)

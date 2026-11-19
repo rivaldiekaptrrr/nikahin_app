@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Modern 4-Color Vector Google 'G' Logo
 class GoogleLogo extends StatelessWidget {

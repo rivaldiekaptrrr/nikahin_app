@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Animated skeleton placeholder with elegant shimmer/pulse effect for smooth loading transitions
 class SkeletonPlaceholder extends StatefulWidget {

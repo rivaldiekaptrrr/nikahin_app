@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Helper to generate the concave card path with rounded corners
 /// and an organic, smooth downward dip at the top edge.
