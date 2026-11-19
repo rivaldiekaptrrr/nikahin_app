@@ -11,7 +11,7 @@
 ---
 
 ## 2. Tech Stack & Dependencies
-- **Framework**: Flutter (SDK `^3.13.5` / `3.47.6+`) & Dart 3
+- **Framework**: Flutter (SDK `^3.14.0` / `3.50.0+`) & Dart 3
 - **State Management**: Flutter Riverpod
 - **Local Persistence**: Drift (SQLite) + `sqlite3_flutter_libs`
 - **Routing**: GoRouter

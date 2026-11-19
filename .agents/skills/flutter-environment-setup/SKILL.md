@@ -15,7 +15,7 @@ Pastikan komponen-komponen berikut terpasang dengan versi yang sesuai:
 
 | Komponen | Versi Rekomendasi | Keterangan & Lokasi Standar |
 | :--- | :--- | :--- |
-| **Flutter SDK** | **`3.47.6+`** (Dart **`^3.13.5`**) | Disarankan di `C:\src\flutter` (Channel `stable`). |
+| **Flutter SDK** | **`3.50.0+`** (Dart **`^3.14.0`**) | Disarankan di `C:\src\flutter` (Channel `stable`). |
 | **Java JDK** | **JDK 17** (Temurin / Adoptium / OpenJDK) | `C:\Program Files\Eclipse Adoptium\jdk-17.x` |
 | **Android SDK Platform** | **Android 36 & 35** (`platforms;android-36`, `platforms;android-35`) | `C:\Android\sdk` atau `%LOCALAPPDATA%\Android\Sdk` |
 | **Android Build-Tools** | **`36.0.0`** & `35.0.0` | Diperlukan oleh Gradle & plugin Android modern. |
