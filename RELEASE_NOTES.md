@@ -1,3 +1,4 @@
-• Keandalan Transaksi Multi-Kanal: Optimalisasi integrasi saluran pembayaran dan kelancaran proses verifikasi otomatis.
-• Penyempurnaan Tampilan & Antarmuka: Penyesuaian detail dialog pembayaran dan panduan transaksi agar lebih presisi serta responsif.
-• Peningkatan Stabilitas Aplikasi: Pembaruan performa menyeluruh untuk mendukung pengalaman perencanaan pernikahan yang lebih mulus.
+• Personalisasi Foto Latar Beranda: Pengguna kini dapat memasang foto prewedding atau momen berdua langsung dari galeri ke kartu utama beranda, lengkap dengan penyesuaian kontras otomatis dan watermark elegan.
+• Harmonisasi Tampilan Kartu Utama: Penyelarasan palet warna hangat dan lengkungan sudut pada kartu hitung mundur agar semakin serasi dengan kartu kesehatan bujet dan bento grid.
+• Optimalisasi Transaksi QRIS & Dompet Digital: Peningkatan keandalan pembuatan barcode QRIS dinamis serta kelancaran proses verifikasi pembayaran otomatis.
+• Pembaruan Mesin & Performa (Flutter 3.50): Peningkatan kelancaran rendering animasi antarmuka, responsivitas sentuhan yang lebih presisi, serta stabilitas sistem menyeluruh.
