@@ -1,5 +1,5 @@
 import 'package:phosphor_icons/phosphor_icons.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 import '../../../../domain/models/wedding_models.dart';
 import '../../../../shared/widgets/bento_card.dart';
