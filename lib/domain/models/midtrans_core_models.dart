@@ -237,7 +237,7 @@ class MidtransChargeData {
         if (a is Map<String, dynamic>) {
           final name = a['name'] as String?;
           final url = a['url'] as String?;
-          if (name == 'generate-qr-code' && url != null) {
+          if ((name == 'generate-qr-code' || name == 'generate-qr-code-v2') && url != null) {
             qrUrl = url;
           } else if ((name == 'deeplink-redirect' || name == 'deeplink') && url != null) {
             deepUrl = url;
