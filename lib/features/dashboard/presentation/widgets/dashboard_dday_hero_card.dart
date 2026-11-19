@@ -1,17 +1,22 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:phosphor_icons/phosphor_icons.dart';
 import '../../../../data/repositories/wedding_repository.dart';
 import '../../../../domain/models/wedding_models.dart';
 import '../../../../shared/utils/date_utils.dart';
+import '../../../../shared/widgets/app_svg_logo.dart';
+import '../hero_cover_controller.dart';
 
 /// Kartu Hero Hitung Mundur D-Day berstandar Appllama High-Fidelity (Opsi B).
 /// Menampilkan nama pasangan di tengah, tanggal beraksen hangat, strip kalender lingkaran interaktif,
-/// dan panel fokus agenda/hitung mundur yang dinamis sesuai tanggal terpilih.
+/// panel fokus agenda/hitung mundur yang dinamis, serta personalisasi foto latar belakang.
 class DashboardDDayHeroCard extends ConsumerStatefulWidget {
   final String profileId;
   final WeddingProfile profile;
@@ -65,11 +70,146 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
 
+  void _showPhotoOptions(BuildContext context, bool hasCustomPhoto) {
+    HapticFeedback.lightImpact();
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (bottomSheetContext) {
+        final sheetTheme = Theme.of(bottomSheetContext);
+
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 36,
+                    height: 4,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      color: sheetTheme.colorScheme.outlineVariant,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                Text(
+                  'Foto Latar Kartu Utama',
+                  style: sheetTheme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Personalisasi kartu hitung mundur dengan foto momen berdua favoritmu.',
+                  style: sheetTheme.textTheme.bodySmall?.copyWith(
+                    color: sheetTheme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ListTile(
+                  leading: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: sheetTheme.colorScheme.primaryContainer.withValues(alpha: 0.6),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(PhosphorIconsRegular.image, color: sheetTheme.colorScheme.primary),
+                  ),
+                  title: const Text('Pilih Foto dari Galeri', style: TextStyle(fontWeight: FontWeight.w600)),
+                  subtitle: const Text('Gunakan foto prewedding atau foto berdua'),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  onTap: () async {
+                    Navigator.pop(bottomSheetContext);
+                    final success = await ref
+                        .read(heroCoverNotifierProvider(widget.profileId).notifier)
+                        .pickAndSavePhoto(ImageSource.gallery);
+                    if (success && mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Foto latar berhasil diperbarui')),
+                      );
+                    }
+                  },
+                ),
+                ListTile(
+                  leading: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: sheetTheme.colorScheme.primaryContainer.withValues(alpha: 0.6),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(PhosphorIconsRegular.camera, color: sheetTheme.colorScheme.primary),
+                  ),
+                  title: const Text('Ambil Foto dengan Kamera', style: TextStyle(fontWeight: FontWeight.w600)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  onTap: () async {
+                    Navigator.pop(bottomSheetContext);
+                    final success = await ref
+                        .read(heroCoverNotifierProvider(widget.profileId).notifier)
+                        .pickAndSavePhoto(ImageSource.camera);
+                    if (success && mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Foto latar berhasil diperbarui')),
+                      );
+                    }
+                  },
+                ),
+                if (hasCustomPhoto) ...[
+                  const SizedBox(height: 4),
+                  ListTile(
+                    leading: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: sheetTheme.colorScheme.errorContainer.withValues(alpha: 0.6),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(PhosphorIconsRegular.trash, color: sheetTheme.colorScheme.error),
+                    ),
+                    title: Text(
+                      'Hapus Foto (Gunakan Tema Bawaan)',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: sheetTheme.colorScheme.error,
+                      ),
+                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    onTap: () async {
+                      Navigator.pop(bottomSheetContext);
+                      await ref
+                          .read(heroCoverNotifierProvider(widget.profileId).notifier)
+                          .removePhoto();
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Kembali ke tampilan tema bawaan')),
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final repo = ref.watch(weddingRepositoryProvider);
+
+    final coverAsync = ref.watch(heroCoverNotifierProvider(widget.profileId));
+    final coverPhotoPath = coverAsync.value;
+    final hasCustomPhoto = coverPhotoPath != null && coverPhotoPath.isNotEmpty;
 
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -118,180 +258,316 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
           return _isSameDay(eDt, _anchorDate);
         }).toList();
 
-        return Card(
-          elevation: 0,
-          margin: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(26),
-            side: BorderSide(
-              color: theme.colorScheme.primary.withValues(alpha: 0.15),
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(
+              color: hasCustomPhoto
+                  ? Colors.white.withValues(alpha: 0.22)
+                  : theme.colorScheme.primary.withValues(alpha: isDark ? 0.25 : 0.14),
               width: 1.2,
             ),
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: isDark
-                    ? [
-                        theme.colorScheme.surfaceContainer,
-                        theme.colorScheme.surfaceContainerHigh,
-                      ]
-                    : [
-                        Colors.white.withValues(alpha: 0.94),
-                        theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
-                      ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.04),
+                blurRadius: 14,
+                offset: const Offset(0, 4),
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.03),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Column(
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(22),
+            child: Stack(
               children: [
-                // ==================== 1. HEADER: NAMA PASANGAN & TANGGAL PERNIKAHAN ====================
-                InkWell(
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    context.go('/wedding/${widget.profileId}/settings');
-                  },
-                  borderRadius: BorderRadius.circular(12),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 4),
-                    child: Column(
-                      children: [
-                        Text(
-                          names,
-                          style: GoogleFonts.playfairDisplay(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.3,
-                            color: theme.colorScheme.onSurface,
+                // ==================== LAYER 0: BACKGROUND (FOTO ATAU GRADASI HANGAT + WATERMARK) ====================
+                if (hasCustomPhoto) ...[
+                  Positioned.fill(
+                    child: kIsWeb
+                        ? Image.network(
+                            coverPhotoPath,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => _buildDefaultGradient(theme, isDark),
+                          )
+                        : Image.file(
+                            File(coverPhotoPath),
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => _buildDefaultGradient(theme, isDark),
                           ),
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                  ),
+                  // Dark Vignette & Scrim Gradient Overlay untuk menjaga keterbacaan teks
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.black.withValues(alpha: 0.52),
+                            Colors.black.withValues(alpha: 0.35),
+                            Colors.black.withValues(alpha: 0.68),
+                          ],
+                          stops: const [0.0, 0.45, 1.0],
                         ),
-                        const SizedBox(height: 5),
-                        Text(
-                          formattedWeddingDate,
-                          style: GoogleFonts.playfairDisplay(
-                            fontSize: 14.5,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFFD97757),
-                            letterSpacing: 0.3,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 20),
-
-                // ==================== 2. STRIP LINGKARAN TANGGAL DENGAN INDIKATOR ACARA ====================
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // Tombol Panah Kiri (<)
-                    IconButton(
-                      icon: const Icon(PhosphorIconsRegular.caretLeft),
-                      iconSize: 20,
-                      visualDensity: VisualDensity.compact,
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-                      color: theme.colorScheme.onSurfaceVariant,
-                      onPressed: () {
-                        HapticFeedback.selectionClick();
-                        setState(() {
-                          _anchorDate =
-                              _anchorDate.subtract(const Duration(days: 1));
-                        });
-                      },
+                ] else ...[
+                  Positioned.fill(
+                    child: _buildDefaultGradient(theme, isDark),
+                  ),
+                  // Watermark Vektor Simbol Master Nikahin (Subtle Brand Identity)
+                  Positioned(
+                    top: -24,
+                    right: -24,
+                    child: IgnorePointer(
+                      child: Opacity(
+                        opacity: isDark ? 0.08 : 0.065,
+                        child: Transform.rotate(
+                          angle: -0.18,
+                          child: const NikahinSvgLogo.master(
+                            width: 155,
+                            height: 155,
+                          ),
+                        ),
+                      ),
                     ),
+                  ),
+                ],
 
-                    // Deretan 5 Lingkaran Tanggal
-                    ...dateItems.map((date) {
-                      final isCenter = _isSameDay(date, _anchorDate);
-                      final isToday = _isSameDay(date, today);
-                      final isWeddingDay = _isSameDay(date, weddingDateTime);
+                // ==================== LAYER 1: KONTEN KARTU ====================
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                  child: Column(
+                    children: [
+                      // ==================== 1. HEADER: NAMA PASANGAN & TANGGAL PERNIKAHAN ====================
+                      InkWell(
+                        onTap: () {
+                          HapticFeedback.lightImpact();
+                          context.go('/wedding/${widget.profileId}/settings');
+                        },
+                        borderRadius: BorderRadius.circular(12),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 4),
+                          child: Column(
+                            children: [
+                              Text(
+                                names,
+                                style: GoogleFonts.playfairDisplay(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 0.3,
+                                  color: hasCustomPhoto
+                                      ? Colors.white
+                                      : theme.colorScheme.onSurface,
+                                  shadows: hasCustomPhoto
+                                      ? [
+                                          Shadow(
+                                            color: Colors.black.withValues(alpha: 0.6),
+                                            blurRadius: 6,
+                                            offset: const Offset(0, 1.5),
+                                          ),
+                                        ]
+                                      : null,
+                                ),
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                formattedWeddingDate,
+                                style: GoogleFonts.playfairDisplay(
+                                  fontSize: 14.5,
+                                  fontWeight: FontWeight.w600,
+                                  color: hasCustomPhoto
+                                      ? const Color(0xFFFDF0DE)
+                                      : const Color(0xFFD97757),
+                                  letterSpacing: 0.3,
+                                  shadows: hasCustomPhoto
+                                      ? [
+                                          Shadow(
+                                            color: Colors.black.withValues(alpha: 0.5),
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 1),
+                                          ),
+                                        ]
+                                      : null,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
 
-                      // Cek apakah tanggal ini memiliki event pernikahan
-                      final hasEvent = events.any((e) {
-                        final eDt =
-                            DateTime.fromMillisecondsSinceEpoch(e.eventDate);
-                        return _isSameDay(eDt, date);
-                      });
+                      // ==================== 2. STRIP LINGKARAN TANGGAL DENGAN INDIKATOR ACARA ====================
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // Tombol Panah Kiri (<)
+                          IconButton(
+                            icon: const Icon(PhosphorIconsRegular.caretLeft),
+                            iconSize: 20,
+                            visualDensity: VisualDensity.compact,
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                            color: hasCustomPhoto
+                                ? Colors.white.withValues(alpha: 0.9)
+                                : theme.colorScheme.onSurfaceVariant,
+                            onPressed: () {
+                              HapticFeedback.selectionClick();
+                              setState(() {
+                                _anchorDate =
+                                    _anchorDate.subtract(const Duration(days: 1));
+                              });
+                            },
+                          ),
 
-                      return _buildDateCircle(
+                          // Deretan 5 Lingkaran Tanggal
+                          ...dateItems.map((date) {
+                            final isCenter = _isSameDay(date, _anchorDate);
+                            final isToday = _isSameDay(date, today);
+                            final isWeddingDay = _isSameDay(date, weddingDateTime);
+
+                            // Cek apakah tanggal ini memiliki event pernikahan
+                            final hasEvent = events.any((e) {
+                              final eDt =
+                                  DateTime.fromMillisecondsSinceEpoch(e.eventDate);
+                              return _isSameDay(eDt, date);
+                            });
+
+                            return _buildDateCircle(
+                              context: context,
+                              theme: theme,
+                              isDark: isDark,
+                              date: date,
+                              isCenter: isCenter,
+                              isToday: isToday,
+                              isWeddingDay: isWeddingDay,
+                              hasEvent: hasEvent,
+                              hasCustomPhoto: hasCustomPhoto,
+                              onTap: () {
+                                HapticFeedback.selectionClick();
+                                setState(() {
+                                    _anchorDate = date;
+                                });
+                              },
+                            );
+                          }),
+
+                          // Tombol Panah Kanan (>)
+                          IconButton(
+                            icon: const Icon(PhosphorIconsRegular.caretRight),
+                            iconSize: 20,
+                            visualDensity: VisualDensity.compact,
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                            color: hasCustomPhoto
+                                ? Colors.white.withValues(alpha: 0.9)
+                                : theme.colorScheme.onSurfaceVariant,
+                            onPressed: () {
+                              HapticFeedback.selectionClick();
+                              setState(() {
+                                _anchorDate = _anchorDate.add(const Duration(days: 1));
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+
+                      // ==================== 3. COUNTDOWN SIMPLE (KONSEP C: DUAL PERSPECTIVE) ====================
+                      _buildSimpleCountdown(
                         context: context,
                         theme: theme,
                         isDark: isDark,
-                        date: date,
-                        isCenter: isCenter,
-                        isToday: isToday,
-                        isWeddingDay: isWeddingDay,
-                        hasEvent: hasEvent,
-                        onTap: () {
-                          HapticFeedback.selectionClick();
-                          setState(() {
-                            _anchorDate = date;
-                          });
-                        },
-                      );
-                    }),
+                        isAtToday: isAtToday,
+                        countdownTag: countdownTag,
+                        today: today,
+                        weddingDateTime: weddingDateTime,
+                        eventsOnSelectedDate: eventsOnSelectedDate,
+                        hasCustomPhoto: hasCustomPhoto,
+                      ),
+                      const SizedBox(height: 14),
 
-                    // Tombol Panah Kanan (>)
-                    IconButton(
-                      icon: const Icon(PhosphorIconsRegular.caretRight),
-                      iconSize: 20,
-                      visualDensity: VisualDensity.compact,
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-                      color: theme.colorScheme.onSurfaceVariant,
-                      onPressed: () {
-                        HapticFeedback.selectionClick();
-                        setState(() {
-                          _anchorDate = _anchorDate.add(const Duration(days: 1));
-                        });
-                      },
+                      // ==================== 4. SPACE DEDIKASI UNTUK QUOTES ====================
+                      _buildQuoteSection(
+                        context: context,
+                        theme: theme,
+                        isDark: isDark,
+                        hasCustomPhoto: hasCustomPhoto,
+                      ),
+                    ],
+                  ),
+                ),
+
+                // ==================== LAYER 2: TOMBOL ATUR FOTO LATAR (POJOK KANAN ATAS) ====================
+                Positioned(
+                  top: 14,
+                  right: 14,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () => _showPhotoOptions(context, hasCustomPhoto),
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        padding: const EdgeInsets.all(7),
+                        decoration: BoxDecoration(
+                          color: hasCustomPhoto
+                              ? Colors.black.withValues(alpha: 0.45)
+                              : (isDark
+                                  ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5)
+                                  : Colors.white.withValues(alpha: 0.8)),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: hasCustomPhoto
+                                ? Colors.white.withValues(alpha: 0.25)
+                                : theme.colorScheme.primary.withValues(alpha: 0.2),
+                            width: 1,
+                          ),
+                        ),
+                        child: Icon(
+                          hasCustomPhoto
+                              ? PhosphorIconsRegular.camera
+                              : PhosphorIconsRegular.image,
+                          size: 16,
+                          color: hasCustomPhoto
+                              ? Colors.white
+                              : theme.colorScheme.primary,
+                        ),
+                      ),
                     ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-
-                // ==================== 3. COUNTDOWN SIMPLE (KONSEP C: DUAL PERSPECTIVE) ====================
-                _buildSimpleCountdown(
-                  context: context,
-                  theme: theme,
-                  isDark: isDark,
-                  isAtToday: isAtToday,
-                  countdownTag: countdownTag,
-                  today: today,
-                  weddingDateTime: weddingDateTime,
-                  eventsOnSelectedDate: eventsOnSelectedDate,
-                ),
-                const SizedBox(height: 14),
-
-                // ==================== 4. SPACE DEDIKASI UNTUK QUOTES ====================
-                _buildQuoteSection(
-                  context: context,
-                  theme: theme,
-                  isDark: isDark,
+                  ),
                 ),
               ],
             ),
           ),
         );
       },
+    );
+  }
+
+  /// Gradasi Latar Bawaan Harmonis (Warm Champagne Silk & Peach khas Nikahin)
+  Widget _buildDefaultGradient(ThemeData theme, bool isDark) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: isDark
+              ? [
+                  theme.colorScheme.surfaceContainer,
+                  theme.colorScheme.surfaceContainerHigh,
+                ]
+              : [
+                  theme.colorScheme.primaryContainer.withValues(alpha: 0.55),
+                  theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.45),
+                ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
     );
   }
 
@@ -338,7 +614,21 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
     required DateTime today,
     required DateTime weddingDateTime,
     required List<WeddingEvent> eventsOnSelectedDate,
+    required bool hasCustomPhoto,
   }) {
+    final boxBgColor = hasCustomPhoto
+        ? Colors.black.withValues(alpha: 0.42)
+        : (isDark
+            ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.35)
+            : Colors.white.withValues(alpha: 0.85));
+
+    final boxBorder = Border.all(
+      color: hasCustomPhoto
+          ? Colors.white.withValues(alpha: 0.2)
+          : theme.colorScheme.primary.withValues(alpha: 0.14),
+      width: 1,
+    );
+
     if (isAtToday) {
       final humanDuration = _formatHumanDuration(today, weddingDateTime);
 
@@ -346,14 +636,9 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: isDark
-              ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.35)
-              : Colors.white.withValues(alpha: 0.85),
+          color: boxBgColor,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: theme.colorScheme.primary.withValues(alpha: 0.12),
-            width: 1,
-          ),
+          border: boxBorder,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -362,8 +647,19 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
               countdownTag,
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w800,
-                color: theme.colorScheme.primary,
+                color: hasCustomPhoto
+                    ? const Color(0xFFFBA4A8)
+                    : theme.colorScheme.primary,
                 letterSpacing: 0.6,
+                shadows: hasCustomPhoto
+                    ? [
+                        Shadow(
+                          color: Colors.black.withValues(alpha: 0.5),
+                          blurRadius: 4,
+                          offset: const Offset(0, 1),
+                        ),
+                      ]
+                    : null,
               ),
             ),
             const SizedBox(height: 3),
@@ -371,8 +667,19 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
               humanDuration,
               style: theme.textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w600,
-                color: theme.colorScheme.onSurfaceVariant,
+                color: hasCustomPhoto
+                    ? Colors.white.withValues(alpha: 0.95)
+                    : theme.colorScheme.onSurfaceVariant,
                 letterSpacing: 0.2,
+                shadows: hasCustomPhoto
+                    ? [
+                        Shadow(
+                          color: Colors.black.withValues(alpha: 0.4),
+                          blurRadius: 4,
+                          offset: const Offset(0, 1),
+                        ),
+                      ]
+                    : null,
               ),
               textAlign: TextAlign.center,
             ),
@@ -386,12 +693,10 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: isDark
-              ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.35)
-              : Colors.white.withValues(alpha: 0.85),
+          color: boxBgColor,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: const Color(0xFFE07A5F).withValues(alpha: 0.25),
+            color: const Color(0xFFE07A5F).withValues(alpha: 0.35),
             width: 1,
           ),
         ),
@@ -399,18 +704,22 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(
-              PhosphorIconsRegular.calendarCheck,
-              size: 16,
+              PhosphorIconsFill.calendarDots,
               color: Color(0xFFE07A5F),
+              size: 16,
             ),
-            const SizedBox(width: 6),
-            Flexible(
+            const SizedBox(width: 8),
+            Expanded(
               child: Text(
-                eventsOnSelectedDate.first.eventName,
+                'Ada ${eventsOnSelectedDate.length} agenda acara pada tanggal ini',
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: theme.colorScheme.onSurface,
+                  fontWeight: FontWeight.w600,
+                  color: hasCustomPhoto
+                      ? Colors.white
+                      : const Color(0xFFE07A5F),
                 ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -426,7 +735,9 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
                 child: Text(
                   '• Kembali ke Hari Ini',
                   style: theme.textTheme.labelMedium?.copyWith(
-                    color: theme.colorScheme.primary,
+                    color: hasCustomPhoto
+                        ? const Color(0xFFFDF0DE)
+                        : theme.colorScheme.primary,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -441,14 +752,9 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: isDark
-            ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.35)
-            : Colors.white.withValues(alpha: 0.85),
+        color: boxBgColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.35),
-          width: 1,
-        ),
+        border: boxBorder,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -457,7 +763,9 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
             DateFormat('d MMMM yyyy', 'id_ID').format(_anchorDate),
             style: theme.textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.w600,
-              color: theme.colorScheme.onSurfaceVariant,
+              color: hasCustomPhoto
+                  ? Colors.white.withValues(alpha: 0.95)
+                  : theme.colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(width: 8),
@@ -472,7 +780,9 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
               child: Text(
                 '• Kembali ke Hari Ini',
                 style: theme.textTheme.labelMedium?.copyWith(
-                  color: theme.colorScheme.primary,
+                  color: hasCustomPhoto
+                      ? const Color(0xFFFDF0DE)
+                      : theme.colorScheme.primary,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -488,6 +798,7 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
     required BuildContext context,
     required ThemeData theme,
     required bool isDark,
+    required bool hasCustomPhoto,
   }) {
     if (!widget.profile.quoteEnabled) {
       return const SizedBox.shrink();
@@ -511,18 +822,24 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
       displaySource = parts.length > 1 ? parts[1].trim() : null;
     }
 
-    final accentColor = theme.colorScheme.primary;
+    final accentColor = hasCustomPhoto
+        ? const Color(0xFFFBA4A8)
+        : theme.colorScheme.primary;
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark
-            ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.35)
-            : Colors.white.withValues(alpha: 0.88),
+        color: hasCustomPhoto
+            ? Colors.black.withValues(alpha: 0.42)
+            : (isDark
+                ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.35)
+                : Colors.white.withValues(alpha: 0.88)),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: theme.colorScheme.primary.withValues(alpha: 0.12),
+          color: hasCustomPhoto
+              ? Colors.white.withValues(alpha: 0.2)
+              : theme.colorScheme.primary.withValues(alpha: 0.14),
           width: 1,
         ),
       ),
@@ -544,6 +861,15 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
                   fontWeight: FontWeight.w800,
                   color: accentColor,
                   letterSpacing: 0.8,
+                  shadows: hasCustomPhoto
+                      ? [
+                          Shadow(
+                            color: Colors.black.withValues(alpha: 0.5),
+                            blurRadius: 4,
+                            offset: const Offset(0, 1),
+                          ),
+                        ]
+                      : null,
                 ),
               ),
             ],
@@ -564,7 +890,20 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
                 children: [
                   Text(
                     '"$displayQuoteText"',
-                    style: _resolveQuoteStyle(widget.profile, theme),
+                    style: _resolveQuoteStyle(widget.profile, theme).copyWith(
+                      color: hasCustomPhoto
+                          ? Colors.white.withValues(alpha: 0.95)
+                          : theme.colorScheme.onSurface.withValues(alpha: 0.85),
+                      shadows: hasCustomPhoto
+                          ? [
+                              Shadow(
+                                color: Colors.black.withValues(alpha: 0.5),
+                                blurRadius: 4,
+                                offset: const Offset(0, 1),
+                              ),
+                            ]
+                          : null,
+                    ),
                   ),
                   if (displaySource != null && displaySource.isNotEmpty) ...[
                     const SizedBox(height: 8),
@@ -575,6 +914,15 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
                         style: theme.textTheme.labelMedium?.copyWith(
                           fontWeight: FontWeight.w700,
                           color: accentColor,
+                          shadows: hasCustomPhoto
+                              ? [
+                                  Shadow(
+                                    color: Colors.black.withValues(alpha: 0.5),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 1),
+                                  ),
+                                ]
+                              : null,
                         ),
                       ),
                     ),
@@ -597,6 +945,7 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
     required bool isToday,
     required bool isWeddingDay,
     required bool hasEvent,
+    required bool hasCustomPhoto,
     required VoidCallback onTap,
   }) {
     final dayNum = DateFormat('d', 'id_ID').format(date);
@@ -607,20 +956,37 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
 
     Color bgColor;
     if (isCenter) {
-      bgColor = isDark ? theme.colorScheme.surface : Colors.white;
+      if (hasCustomPhoto) {
+        bgColor = isWeddingDay ? const Color(0xFFE07A5F) : primaryColor;
+      } else {
+        bgColor = isDark ? theme.colorScheme.surface : Colors.white;
+      }
     } else {
-      bgColor = isDark
-          ? theme.colorScheme.surface.withValues(alpha: 0.6)
-          : Colors.white.withValues(alpha: 0.75);
+      if (hasCustomPhoto) {
+        bgColor = Colors.black.withValues(alpha: 0.38);
+      } else {
+        bgColor = isDark
+            ? theme.colorScheme.surface.withValues(alpha: 0.6)
+            : Colors.white.withValues(alpha: 0.75);
+      }
     }
 
     Border? border;
     if (isCenter) {
       border = Border.all(
-        color: isWeddingDay
-            ? const Color(0xFFE07A5F)
-            : (isToday ? primaryColor : theme.colorScheme.outline),
+        color: hasCustomPhoto
+            ? Colors.white.withValues(alpha: 0.8)
+            : (isWeddingDay
+                ? const Color(0xFFE07A5F)
+                : (isToday ? primaryColor : theme.colorScheme.outline)),
         width: 1.8,
+      );
+    } else if (hasCustomPhoto) {
+      border = Border.all(
+        color: isWeddingDay
+            ? const Color(0xFFE07A5F).withValues(alpha: 0.8)
+            : (isToday ? const Color(0xFFFBA4A8).withValues(alpha: 0.7) : Colors.white.withValues(alpha: 0.22)),
+        width: isWeddingDay || isToday ? 1.4 : 1.0,
       );
     } else if (isWeddingDay) {
       border = Border.all(
@@ -655,8 +1021,8 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
               ? [
                   BoxShadow(
                     color: isWeddingDay
-                        ? const Color(0xFFE07A5F).withValues(alpha: 0.2)
-                        : primaryColor.withValues(alpha: 0.12),
+                        ? const Color(0xFFE07A5F).withValues(alpha: 0.3)
+                        : (hasCustomPhoto ? Colors.black.withValues(alpha: 0.4) : primaryColor.withValues(alpha: 0.12)),
                     blurRadius: 10,
                     offset: const Offset(0, 3),
                   ),
@@ -680,13 +1046,15 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
                   style: TextStyle(
                     fontSize: isCenter ? 17 : 12.5,
                     fontWeight: isCenter ? FontWeight.w900 : FontWeight.w600,
-                    color: isCenter
-                        ? (isWeddingDay
-                            ? const Color(0xFFE07A5F)
-                            : (isToday ? primaryColor : theme.colorScheme.onSurface))
-                        : (isToday
-                            ? primaryColor
-                            : theme.colorScheme.onSurface.withValues(alpha: 0.85)),
+                    color: hasCustomPhoto
+                        ? Colors.white
+                        : (isCenter
+                            ? (isWeddingDay
+                                ? const Color(0xFFE07A5F)
+                                : (isToday ? primaryColor : theme.colorScheme.onSurface))
+                            : (isToday
+                                ? primaryColor
+                                : theme.colorScheme.onSurface.withValues(alpha: 0.85))),
                     height: 1.1,
                   ),
                 ),
@@ -696,11 +1064,13 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
                   style: TextStyle(
                     fontSize: isCenter ? (isToday ? 9.0 : 11.0) : 9.5,
                     fontWeight: isCenter ? FontWeight.w700 : FontWeight.w500,
-                    color: isCenter
-                        ? (isWeddingDay
-                            ? const Color(0xFFE07A5F)
-                            : primaryColor)
-                        : (isToday ? primaryColor : theme.colorScheme.onSurfaceVariant),
+                    color: hasCustomPhoto
+                        ? (isCenter ? Colors.white : Colors.white.withValues(alpha: 0.85))
+                        : (isCenter
+                            ? (isWeddingDay
+                                ? const Color(0xFFE07A5F)
+                                : primaryColor)
+                            : (isToday ? primaryColor : theme.colorScheme.onSurfaceVariant)),
                     height: 1.1,
                   ),
                 ),
@@ -763,4 +1133,3 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
     );
   }
 }
-

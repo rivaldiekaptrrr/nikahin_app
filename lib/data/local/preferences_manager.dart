@@ -252,6 +252,20 @@ class AppPreferences {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(kPrefLastSyncedActiveDate, dateStr);
   }
+
+  static Future<String?> getHeroCoverPhoto(String profileId) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('hero_cover_photo_$profileId');
+  }
+
+  static Future<void> setHeroCoverPhoto(String profileId, String? path) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (path != null && path.isNotEmpty) {
+      await prefs.setString('hero_cover_photo_$profileId', path);
+    } else {
+      await prefs.remove('hero_cover_photo_$profileId');
+    }
+  }
 }
 
 class UserEmailNotifier extends Notifier<String?> {
