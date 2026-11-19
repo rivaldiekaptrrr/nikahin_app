@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -608,7 +608,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                               title: 'Aktif Hari Ini',
                               value: '$dauCount',
                               subtitle: '$dauPercentage% dari total pengguna',
-                              icon: PhosphorIconsFill.activity,
+                              icon: PhosphorIconsRegular.userCheck,
                               accentColor: const Color(0xFF059669),
                               gradientColors: [
                                 const Color(0xFF059669).withValues(alpha: 0.12),
@@ -717,7 +717,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                                 children: [
                                   _buildFilterPill('ALL', 'Semua', totalCount, PhosphorIconsRegular.squaresFour),
                                   const SizedBox(width: 6),
-                                  _buildFilterPill('ACTIVE_TODAY', 'Aktif Hari Ini', dauCount, PhosphorIconsFill.activity, color: const Color(0xFF059669)),
+                                  _buildFilterPill('ACTIVE_TODAY', 'Aktif Hari Ini', dauCount, PhosphorIconsRegular.userCheck, color: const Color(0xFF059669)),
                                   const SizedBox(width: 6),
                                   _buildFilterPill('ANDROID', 'Android', androidCount, PhosphorIconsRegular.androidLogo, color: const Color(0xFF16A34A)),
                                   const SizedBox(width: 6),

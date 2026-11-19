@@ -6,10 +6,14 @@ import 'package:path_provider/path_provider.dart';
 import '../../../data/local/preferences_manager.dart';
 
 /// Notifier untuk mengelola personalisasi foto latar belakang kartu utama (Hero D-Day)
-class HeroCoverNotifier extends FamilyAsyncNotifier<String?, String> {
+class HeroCoverNotifier extends AsyncNotifier<String?> {
+  final String profileId;
+
+  HeroCoverNotifier(this.profileId);
+
   @override
-  Future<String?> build(String arg) async {
-    return AppPreferences.getHeroCoverPhoto(arg);
+  Future<String?> build() async {
+    return AppPreferences.getHeroCoverPhoto(profileId);
   }
 
   /// Memilih foto dari galeri atau kamera dan menyimpannya secara permanen
@@ -30,7 +34,7 @@ class HeroCoverNotifier extends FamilyAsyncNotifier<String?, String> {
       } else {
         final appDir = await getApplicationDocumentsDirectory();
         final ext = picked.path.contains('.') ? picked.path.split('.').last : 'jpg';
-        final fileName = 'hero_cover_${arg}_${DateTime.now().millisecondsSinceEpoch}.$ext';
+        final fileName = 'hero_cover_${profileId}_${DateTime.now().millisecondsSinceEpoch}.$ext';
         final savedFile = File('${appDir.path}/$fileName');
 
         // Bersihkan foto lama jika ada
@@ -48,7 +52,7 @@ class HeroCoverNotifier extends FamilyAsyncNotifier<String?, String> {
         finalPath = savedFile.path;
       }
 
-      await AppPreferences.setHeroCoverPhoto(arg, finalPath);
+      await AppPreferences.setHeroCoverPhoto(profileId, finalPath);
       state = AsyncData(finalPath);
       return true;
     } catch (e, st) {
@@ -68,7 +72,7 @@ class HeroCoverNotifier extends FamilyAsyncNotifier<String?, String> {
         }
       } catch (_) {}
     }
-    await AppPreferences.setHeroCoverPhoto(arg, null);
+    await AppPreferences.setHeroCoverPhoto(profileId, null);
     state = const AsyncData(null);
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -132,7 +132,7 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
                         .read(heroCoverNotifierProvider(widget.profileId).notifier)
                         .pickAndSavePhoto(ImageSource.gallery);
                     if (success && mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      ScaffoldMessenger.of(this.context).showSnackBar(
                         const SnackBar(content: Text('Foto latar berhasil diperbarui')),
                       );
                     }
@@ -155,7 +155,7 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
                         .read(heroCoverNotifierProvider(widget.profileId).notifier)
                         .pickAndSavePhoto(ImageSource.camera);
                     if (success && mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      ScaffoldMessenger.of(this.context).showSnackBar(
                         const SnackBar(content: Text('Foto latar berhasil diperbarui')),
                       );
                     }
@@ -186,7 +186,7 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
                           .read(heroCoverNotifierProvider(widget.profileId).notifier)
                           .removePhoto();
                       if (mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        ScaffoldMessenger.of(this.context).showSnackBar(
                           const SnackBar(content: Text('Kembali ke tampilan tema bawaan')),
                         );
                       }
@@ -286,12 +286,12 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
                         ? Image.network(
                             coverPhotoPath,
                             fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => _buildDefaultGradient(theme, isDark),
+                            errorBuilder: (_, _, _) => _buildDefaultGradient(theme, isDark),
                           )
                         : Image.file(
                             File(coverPhotoPath),
                             fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => _buildDefaultGradient(theme, isDark),
+                            errorBuilder: (_, _, _) => _buildDefaultGradient(theme, isDark),
                           ),
                   ),
                   // Dark Vignette & Scrim Gradient Overlay untuk menjaga keterbacaan teks
