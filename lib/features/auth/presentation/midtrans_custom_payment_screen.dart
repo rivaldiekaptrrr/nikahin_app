@@ -607,6 +607,23 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
               ],
             ),
           ),
+          if (_data.deeplinkUrl != null && _data.deeplinkUrl!.isNotEmpty) ...[
+            const SizedBox(height: 14),
+            FilledButton.icon(
+              onPressed: () => _openDeeplink(_data.deeplinkUrl!),
+              style: FilledButton.styleFrom(
+                minimumSize: const Size.fromHeight(48),
+                backgroundColor: theme.colorScheme.primary,
+                foregroundColor: theme.colorScheme.onPrimary,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              ),
+              icon: const Icon(PhosphorIconsRegular.arrowSquareOut, size: 18),
+              label: const Text(
+                'Buka di Aplikasi E-Wallet',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -635,6 +652,7 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
 
   Widget _buildEWalletCard(ThemeData theme) {
     final deep = _data.deeplinkUrl;
+    final hasQr = _data.qrCodeUrl != null && _data.qrCodeUrl!.isNotEmpty;
     final isDark = theme.brightness == Brightness.dark;
 
     return BentoCard(
@@ -656,7 +674,9 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
                       style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
                     ),
                     Text(
-                      'Buka di aplikasi',
+                      hasQr && deep != null && deep.isNotEmpty
+                          ? 'Buka aplikasi atau pindai QRIS'
+                          : 'Buka di aplikasi',
                       style: TextStyle(
                         fontSize: 11.5,
                         color: theme.colorScheme.onSurfaceVariant,
@@ -683,10 +703,89 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
               ),
             ),
-        ],
-      ),
-    );
-  }
+          if (hasQr) ...[
+            if (deep != null && deep.isNotEmpty) ...[
+              const SizedBox(height: 14),
+              Row(
+                children: [
+                  Expanded(child: Divider(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5))),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(
+                      'ATAU PINDAI KODE QRIS',
+                      style: TextStyle(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        color: theme.colorScheme.onSurfaceVariant,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ),
+                  Expanded(child: Divider(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5))),
+                ],
+              ),
+              const SizedBox(height: 14),
+            ],
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.grey.shade300, width: 1.2),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.06),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                    margin: const EdgeInsets.only(bottom: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: const Text(
+                      'MERCHANT: NIKAHIN WEDDING PLANNER',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ),
+                  Image.network(
+                    _data.qrCodeUrl!,
+                    width: 210,
+                    height: 210,
+                    fit: BoxFit.contain,
+                    errorBuilder: (_, _, _) => _buildFallbackQrVisual(),
+                  ),
+                  const SizedBox(height: 8),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(PhosphorIconsFill.sealCheck, size: 14, color: Color(0xFFC8102E)),
+                      SizedBox(width: 4),
+                      Text(
+                        'QRIS STANDAR ASPI & BANK INDONESIA',
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
 
   Widget _buildTransactionDetailCard(ThemeData theme) {
     final authState = ref.watch(authNotifierProvider);
@@ -822,22 +921,26 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
           ),
           const SizedBox(height: 12),
 
-          // Segmented Tab Pilihan Kanal (m-Banking, ATM, Internet Banking)
-          Container(
-            padding: const EdgeInsets.all(3),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-              borderRadius: BorderRadius.circular(10),
+          // Segmented Tab Pilihan Kanal (hanya untuk Virtual Account)
+          if (_data.channel != PaymentChannel.qris &&
+              _data.channel != PaymentChannel.gopay &&
+              _data.channel != PaymentChannel.shopeepay) ...[
+            Container(
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: [
+                  _buildGuideTabButton('m-Banking', 0, theme),
+                  _buildGuideTabButton('ATM', 1, theme),
+                  _buildGuideTabButton('i-Banking', 2, theme),
+                ],
+              ),
             ),
-            child: Row(
-              children: [
-                _buildGuideTabButton('m-Banking', 0, theme),
-                _buildGuideTabButton('ATM', 1, theme),
-                _buildGuideTabButton('i-Banking', 2, theme),
-              ],
-            ),
-          ),
-          const SizedBox(height: 14),
+            const SizedBox(height: 14),
+          ],
 
           // Daftar Langkah Terstruktur
           ...instructions.asMap().entries.map((entry) {

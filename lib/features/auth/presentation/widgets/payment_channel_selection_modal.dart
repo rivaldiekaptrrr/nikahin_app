@@ -50,8 +50,8 @@ class _PaymentChannelSelectionModalState extends State<PaymentChannelSelectionMo
   @override
   void initState() {
     super.initState();
-    // Default pilihan ke GoPay atau initialChannel
-    _selectedChannel = widget.initialChannel ?? PaymentChannel.gopay;
+    // Default pilihan ke QRIS atau initialChannel
+    _selectedChannel = widget.initialChannel ?? PaymentChannel.qris;
   }
 
   @override
@@ -144,8 +144,15 @@ class _PaymentChannelSelectionModalState extends State<PaymentChannelSelectionMo
                 if (_isRecommendedExpanded) ...[
                   const SizedBox(height: 8),
                   _buildChannelIslandCard(
+                    channel: PaymentChannel.qris,
+                    theme: theme,
+                    recommendedBadge: 'POPULER',
+                  ),
+                  const SizedBox(height: 8),
+                  _buildChannelIslandCard(
                     channel: PaymentChannel.gopay,
                     theme: theme,
+                    recommendedBadge: 'INSTAN 1-KETUK',
                   ),
                   const SizedBox(height: 14),
                 ],
@@ -181,6 +188,8 @@ class _PaymentChannelSelectionModalState extends State<PaymentChannelSelectionMo
                 if (_isEwalletExpanded) ...[
                   const SizedBox(height: 8),
                   _buildChannelIslandCard(channel: PaymentChannel.qris, theme: theme),
+                  const SizedBox(height: 8),
+                  _buildChannelIslandCard(channel: PaymentChannel.gopay, theme: theme),
                   const SizedBox(height: 8),
                   _buildChannelIslandCard(channel: PaymentChannel.shopeepay, theme: theme),
                   const SizedBox(height: 14),

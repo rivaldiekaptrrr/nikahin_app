@@ -161,5 +161,12 @@ void main() {
       expect(status, equals(MidtransTransactionStatus.settlement));
       expect(status.isSuccess, isTrue);
     });
+
+    test('PaymentChannel QRIS and GoPay are available for production', () {
+      expect(PaymentChannel.qris.isAvailable, isTrue);
+      expect(PaymentChannel.gopay.isAvailable, isTrue);
+      expect(PaymentChannel.qris.name, equals('QRIS'));
+      expect(PaymentChannel.gopay.name, equals('GoPay / Gojek'));
+    });
   });
 }

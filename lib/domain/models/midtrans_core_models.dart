@@ -6,11 +6,11 @@ enum PaymentChannel {
   qris(
     id: 'qris',
     name: 'QRIS',
-    subtitle: 'Semua Bank & E-Wallet',
+    subtitle: 'BCA, Mandiri, BRI, GoPay, OVO, Dana',
     icon: PhosphorIconsRegular.qrCode,
-    badge: 'SEGERA HADIR',
-    badgeColor: Color(0xFFE65100),
-    isAvailable: false,
+    badge: 'OTOMATIS 24 JAM',
+    badgeColor: Color(0xFF00695C),
+    isAvailable: true,
   ),
   mandiriBill(
     id: 'mandiri_bill',
@@ -69,9 +69,9 @@ enum PaymentChannel {
   gopay(
     id: 'gopay',
     name: 'GoPay / Gojek',
-    subtitle: 'Instan 1-Ketuk',
+    subtitle: 'Instan 1-Ketuk & QRIS',
     icon: PhosphorIconsRegular.wallet,
-    badge: 'DEEPLINK',
+    badge: 'DEEPLINK & QRIS',
     badgeColor: Color(0xFF00838F),
     isAvailable: true,
   ),
