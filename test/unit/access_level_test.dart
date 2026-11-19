@@ -173,7 +173,7 @@ void main() {
       expect(user.isWeb, isFalse);
       expect(user.platformBadgeText, equals('Android (APK)'));
       expect(user.dDayFormatted, equals('H-30 Hari'));
-      expect(user.lastActiveFormatted, equals('Aktif hari ini'));
+      expect(user.lastActiveFormatted, equals('Aktif baru saja'));
 
       // Verify serialization
       final map = user.toFirestoreMap();
