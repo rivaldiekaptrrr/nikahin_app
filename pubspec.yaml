@@ -70,12 +70,16 @@ dependencies:
   firebase_crashlytics: ^6.0.1
   firebase_analytics: ^13.0.1
 
+  cupertino_ui: any
+  material_ui: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
   drift_dev: ^2.35.1
   build_runner: ^2.4.15
+  path_provider_platform_interface: any
+  plugin_platform_interface: any
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
