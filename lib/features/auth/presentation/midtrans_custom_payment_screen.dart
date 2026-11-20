@@ -630,6 +630,21 @@ class _MidtransCustomPaymentScreenState extends ConsumerState<MidtransCustomPaym
   }
 
   Widget _buildFallbackQrVisual() {
+    // Jika qrString tersedia, gunakan dynamic QR generator sebagai fallback sebelum placeholder abu-abu
+    if (_data.qrString != null && _data.qrString!.isNotEmpty) {
+      final qrStringFallbackUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${Uri.encodeComponent(_data.qrString!)}';
+      return Image.network(
+        qrStringFallbackUrl,
+        width: 210,
+        height: 210,
+        fit: BoxFit.contain,
+        errorBuilder: (_, _, _) => _buildPlaceholderQrVisual(),
+      );
+    }
+    return _buildPlaceholderQrVisual();
+  }
+
+  Widget _buildPlaceholderQrVisual() {
     return Container(
       width: 190,
       height: 190,
