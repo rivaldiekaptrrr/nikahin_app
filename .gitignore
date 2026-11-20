@@ -60,6 +60,7 @@ keystore_base64.txt
 # Temporary reference repos & test scripts
 midtrans-python-client/
 test_midtrans_core_api.py
+.cache_fonts/
 
 # Cloudflare Wrangler CLI state
 .wrangler/

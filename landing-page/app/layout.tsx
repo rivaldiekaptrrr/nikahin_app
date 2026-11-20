@@ -56,9 +56,9 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'id_ID',
     url: 'https://getnikahin.my.id',
-    title: 'Nikahin — Aplikasi Perencanaan Pernikahan & Budget Pasangan',
+    title: 'Nikahin — Wedding Planner Rp 39.000 Sekali Bayar, Konek 2 Akun & Kustomisasi Tema',
     description:
-      'Satu aplikasi untuk kelola anggaran, vendor, rundown, buku tamu, dan seserahan bersama pasangan secara real-time.',
+      'Hanya Rp 39.000 sekali bayar seumur hidup (Lifetime). Tautkan 2 akun berdua (CPP & CPW), bebas pilih tema visual pernikahan, kelola anggaran, vendor, rundown, dan tamu real-time tanpa biaya bulanan.',
     siteName: 'Nikahin',
     images: [
       {
@@ -72,9 +72,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Nikahin — Aplikasi Perencanaan Pernikahan & Budget Pasangan',
+    title: 'Nikahin — Wedding Planner Rp 39.000 Sekali Bayar, Konek 2 Akun & Kustomisasi Tema',
     description:
-      'Satu aplikasi untuk kelola anggaran, vendor, rundown, buku tamu, dan seserahan bersama pasangan secara real-time.',
+      'Hanya Rp 39.000 sekali bayar seumur hidup (Lifetime). Tautkan 2 akun berdua (CPP & CPW), bebas pilih tema visual pernikahan, kelola anggaran, vendor, rundown, dan tamu real-time tanpa biaya bulanan.',
     images: ['/assets/og-image.png'],
   },
   icons: {
