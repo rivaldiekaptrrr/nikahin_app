@@ -61,14 +61,14 @@
             background:
                 linear-gradient(90deg,
                     #090807 0%,
-                    #090807 46%,
-                    rgba(9, 8, 7, 0.96) 53%,
-                    rgba(9, 8, 7, 0.62) 69%,
-                    rgba(9, 8, 7, 0.22) 86%,
-                    rgba(9, 8, 7, 0.14) 100%),
+                    #090807 45%,
+                    rgba(9, 8, 7, 0.88) 52%,
+                    rgba(9, 8, 7, 0.40) 62%,
+                    rgba(9, 8, 7, 0.12) 75%,
+                    rgba(9, 8, 7, 0.02) 100%),
                 radial-gradient(ellipse at 82% 50%,
-                    rgba(212, 175, 55, 0.08) 0%,
-                    rgba(9, 8, 7, 0.36) 86%);
+                    rgba(212, 175, 55, 0.06) 0%,
+                    rgba(9, 8, 7, 0.20) 86%);
         }
 
         /* Delicate Inner Champagne-Gold Hairline Frame (No Doodles) */
@@ -153,9 +153,9 @@
         }
     
         .og-left {
-            width: 640px;
+            width: 675px;
             height: 100%;
-            padding: 50px 48px 48px 56px;
+            padding: 48px 36px 46px 56px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -220,13 +220,16 @@
         .og-cta-row {
             display: flex;
             align-items: center;
-            gap: 28px;
+            justify-content: flex-start;
+            gap: 32px;
+            max-width: 600px;
         }
 
         .og-price-callout {
             display: flex;
             flex-direction: column;
             gap: 6px;
+            flex-shrink: 0;
         }
 
         .og-price-top {
@@ -262,16 +265,18 @@
         .og-price-bottom {
             display: flex;
             align-items: baseline;
-            gap: 8px;
+            gap: 10px;
+            white-space: nowrap;
         }
 
         .og-price-now {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 46px;
+            font-size: 44px;
             font-weight: 800;
             color: #FFFFFF;
             letter-spacing: -0.03em;
             line-height: 1;
+            white-space: nowrap;
         }
 
         .og-price-unit {
