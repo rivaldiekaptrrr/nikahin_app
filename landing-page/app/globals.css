@@ -78,6 +78,9 @@ body {
   animation: marquee 40s linear infinite;
 }
 
-.animate-marquee:hover {
-  animation-play-state: paused;
+/* Hanya jeda saat diarahkan mouse di komputer/laptop, tidak berhenti saat diketuk di layar sentuh ponsel */
+@media (hover: hover) and (pointer: fine) {
+  .animate-marquee:hover {
+    animation-play-state: paused;
+  }
 }

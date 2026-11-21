@@ -82,13 +82,13 @@ export default function TestimonialMarquee() {
         </ScrollReveal>
       </div>
 
-      {/* Infinite Marquee Track with Fade Gradient Edges - Pause on Hover & Focus (WCAG 2.2.2) */}
+      {/* Infinite Marquee Track with Fade Gradient Edges (Desktop Hover Pause via CSS) */}
       <div 
         role="region" 
         aria-label="Pita ulasan pengalaman nyata pasangan pengantin"
-        className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)] group"
+        className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
       >
-        <div className="animate-marquee group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused] flex gap-4 sm:gap-5 py-2 sm:py-3">
+        <div className="animate-marquee flex gap-4 sm:gap-5 py-2 sm:py-3">
           {marqueeItems.map((item, idx) => (
             <div
               key={`${item.couple}-${idx}`}
