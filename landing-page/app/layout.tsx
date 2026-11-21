@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Plus_Jakarta_Sans } from 'next/font/google';
+import { Plus_Jakarta_Sans, Playfair_Display } from 'next/font/google';
 import MetaPixel from '@/components/MetaPixel';
 import FirebaseAnalytics from '@/components/FirebaseAnalytics';
 import './globals.css';
@@ -8,6 +8,13 @@ const jakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700', '800'],
   variable: '--font-jakarta',
+  display: 'swap',
+});
+
+const playfairDisplay = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['500', '600', '700'],
+  variable: '--font-playfair',
   display: 'swap',
 });
 
@@ -182,7 +189,7 @@ export default function RootLayout({
     <html
       lang="id"
       suppressHydrationWarning
-      className={`${jakartaSans.variable} font-sans scroll-smooth`}
+      className={`${jakartaSans.variable} ${playfairDisplay.variable} font-sans scroll-smooth`}
     >
       <body className="min-h-screen bg-[#faf7f2] text-[#1c1917] antialiased selection:bg-[#fce7ef] selection:text-[#831843]">
         {/* Schema.org Structured Data (Disimpan di body sesuai panduan resmi Next.js App Router) */}

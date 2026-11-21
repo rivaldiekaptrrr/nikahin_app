@@ -3,8 +3,10 @@ import Navbar from '@/components/Navbar';
 import TactileBackground from '@/components/TactileBackground';
 import HeroSection from '@/components/HeroSection';
 import AppPreviewMockup from '@/components/AppPreviewMockup';
+import TestimonialMarquee from '@/components/TestimonialMarquee';
 import FeatureBentoGrid from '@/components/FeatureBentoGrid';
 import CoupleSyncBanner from '@/components/CoupleSyncBanner';
+import PricingSection from '@/components/PricingSection';
 import FaqAccordion from '@/components/FaqAccordion';
 import FinalCtaSection from '@/components/FinalCtaSection';
 import Footer from '@/components/Footer';
@@ -24,9 +26,11 @@ export default async function HomePage() {
 
       <div className="relative z-10 flex flex-col">
         <HeroSection release={release} />
+        <TestimonialMarquee />
         <AppPreviewMockup />
         <FeatureBentoGrid />
         <CoupleSyncBanner />
+        <PricingSection release={release} />
         <FaqAccordion />
         <FinalCtaSection release={release} />
         <Footer />
