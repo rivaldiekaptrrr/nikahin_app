@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     siteName: 'Nikahin',
     images: [
       {
-        url: '/assets/og-image.png',
+        url: '/assets/og-image.png?v=2',
         width: 1200,
         height: 630,
         alt: 'Nikahin — Aplikasi Perencanaan Pernikahan & Budget Pasangan',
@@ -75,7 +75,7 @@ export const metadata: Metadata = {
     title: 'Nikahin — Wedding Planner & Budgeting Pasangan',
     description:
       'Rencanakan pernikahan berdua lebih tenang. Kelola bujet, vendor, rundown, dan tamu tersinkronisasi real-time.',
-    images: ['/assets/og-image.png'],
+    images: ['/assets/og-image.png?v=2'],
   },
   icons: {
     icon: [
