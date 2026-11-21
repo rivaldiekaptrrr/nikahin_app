@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { Heart, ShieldCheck, Users, Sparkles, Star, DownloadCloud } from 'lucide-react';
+import { ShieldCheck, Users, Sparkles, Star, DownloadCloud } from 'lucide-react';
 import DeviceCta from './DeviceCta';
 import { ReleaseMetadata } from '@/lib/github-release';
 
@@ -43,43 +43,6 @@ export default function HeroSection({ release }: HeroSectionProps) {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10">
-        {/* Social Proof & Trust Pill - Foto Lebih Terbaca & Ramping */}
-        <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/90 border border-stone-200/80 shadow-xs text-xs font-medium text-stone-700 mb-4 sm:mb-6 backdrop-blur-xs">
-          <div className="flex -space-x-2 overflow-hidden">
-            <div className="relative w-6 h-6 rounded-full ring-2 ring-white overflow-hidden shrink-0 shadow-xs">
-              <Image
-                src="/assets/editorial/wedding-couple-indo.jpg"
-                alt="Pengantin Nikahin"
-                fill
-                sizes="24px"
-                className="object-cover object-top"
-              />
-            </div>
-            <div className="relative w-6 h-6 rounded-full ring-2 ring-white overflow-hidden shrink-0 shadow-xs">
-              <Image
-                src="/assets/editorial/wedding-couple.jpg"
-                alt="Pasangan Bahagia"
-                fill
-                sizes="24px"
-                className="object-cover object-top"
-              />
-            </div>
-            <div className="relative w-6 h-6 rounded-full ring-2 ring-white overflow-hidden shrink-0 shadow-xs">
-              <Image
-                src="/assets/editorial/wedding-bouquet.jpg"
-                alt="Bunga Pernikahan"
-                fill
-                sizes="24px"
-                className="object-cover"
-              />
-            </div>
-          </div>
-          <span className="flex items-center gap-1.5 text-stone-700">
-            <Heart className="w-3.5 h-3.5 fill-[#d81b60] text-[#d81b60] shrink-0" />
-            <span>Dipercaya ribuan calon pengantin di Indonesia</span>
-          </span>
-        </div>
-
         {/* Main Headline (Wedding Luxury Editorial with Playfair Display) */}
         <h1 className="text-[26px] sm:text-4xl md:text-6xl font-semibold text-stone-900 tracking-tight leading-[1.2] sm:leading-[1.15] mb-3 sm:mb-6">
           Catat anggaran bersama,{' '}
