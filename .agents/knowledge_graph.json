@@ -119,7 +119,8 @@
         "Mode Otomatis Midtrans (useManualPaymentMode = false): Mengaktifkan Midtrans Core API direct payment dengan modal seleksi channel (PaymentChannelSelectionModal: GoPay, ShopeePay, QRIS Dinamis, Virtual Accounts), diproses melalui endpoint Vercel serverless (midtransCoreChargeBackendUrl) dan layar instruksi dinamis MidtransCustomPaymentScreen.",
         "Implementasi UI berada pada lib/features/auth/presentation/pending_verification_screen.dart yang secara reaktif memilih antara _buildManualPaymentContent() dan _buildDirectPaymentContent() berdasarkan nilai toggle.",
         "Layanan remote pembayaran dikelola oleh lib/data/remote/midtrans_payment_service.dart dan diintegrasikan ke auth state notifier di lib/features/auth/presentation/auth_notifier.dart.",
-        "Detail Lisensi: Paket Wedding Planner Seumur Hidup (Lifetime Pass) seharga Rp 49.000 (diskon 50% dari harga normal Rp 99.000)."
+        "Detail Lisensi: Paket Wedding Planner Seumur Hidup (Lifetime Pass) seharga Rp 39.000 (diskon 60% dari harga normal Rp 99.000).",
+        "Web PWA QRIS Support: Dilengkapi dengan endpoint proxy CORS Vercel serverless (api/qr-proxy.ts) dan prioritas parsing QR actions (generate-qr-code) pada backend TrackIt-backend/api/charge-core-api.ts untuk memastikan gambar/string QRIS dapat dirender langsung pada peramban web tanpa terhambat kebijakan browser CORS."
       ]
     },
     {
@@ -165,6 +166,17 @@
         "iOS Safari PWA Optimization: Meta tag viewport-fit=cover untuk notch & Dynamic Island iPhone, apple-touch-icon.png (180x180 px warna Warm Champagne #FDF0DE), dan kartu panduan 'Tambah ke Layar Utama' (SettingsPwaInstallCard) di menu Pengaturan.",
         "In-App Updater Web Isolation: Pengecekan APK dinonaktifkan pada Web melalui AppPlatformConfig.isApkUpdaterAvailable; menu Pengaturan menampilkan lencana info 'Web PWA Aktif'.",
         "Deployment Pipeline: Perintah deployment langsung via terminal: npx wrangler pages deploy build/web --project-name=nikahin-app."
+      ]
+    },
+    {
+      "name": "Nikahin_Open_Graph_Showcase",
+      "entityType": "MarketingBrandArchitecture",
+      "observations": [
+        "Open Graph Card (1200 x 630 px, og-image.png) dirancang khusus untuk pratinjau tautan WhatsApp, Telegram, iMessage, dan media sosial pada https://getnikahin.my.id dan https://nikahin-app.pages.dev.",
+        "Mesin Generator: Python Pillow dengan teknik 2x supersampling (2400 x 1260 px dirender dengan algoritma Lanczos) via scripts/generate_og_card.py terintegrasi dengan gambar latar og-bg.jpg pilihan pengguna.",
+        "Kepatuhan Total antislop-ui: Menghilangkan seluruh refleks wadah kapsul (pill badge reflex), menyatukan fitur dalam Satu Panel Etalase Terpadu (Unified Showcase Panel), dan menggunakan ikon vektor programatik murni (checkmark hijau, gembok keamanan, panah dua arah sinkronisasi) tanpa ketergantungan emoji font untuk mencegah galat tofu glyph.",
+        "Hierarki Konten Berskala Besar (Scale-Up): Menyoroti harga utama Rp 39.000 Seumur Hidup (62 pt Bold), fitur Konek 2 Akun Berdua (CPP & CPW Real-Time), 5 Pilihan Tema Warna Eksklusif (Champagne, Rose, Emerald, Burgundy, Slate), serta grid 2x2 kelengkapan acara hari H.",
+        "Sinkronisasi Multi-Aset: File gambar terdistribusi otomatis di landing-page/public/assets/og-image.png, web/assets/og-image.png, web/og-image.png, dengan metadata terintegrasi di landing-page/app/layout.tsx dan web/index.html."
       ]
     }
   ],
@@ -228,7 +240,11 @@
       "from": "Nikahin_App_Core",
       "to": "Nikahin_Web_PWA_Architecture",
       "relationType": "deploysWebPwaWith"
+    },
+    {
+      "from": "Nikahin_App_Core",
+      "to": "Nikahin_Open_Graph_Showcase",
+      "relationType": "showcasesBrandWith"
     }
   ]
 }
-

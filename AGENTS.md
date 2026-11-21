@@ -57,6 +57,12 @@
 Knowledge graph data and MCP configurations are versioned inside `.agents/`:
 - `.agents/mcp_config.json`: Automatic MCP Memory & Maestro server registration.
 - `.agents/knowledge_graph.json`: Machine-readable snapshot of entities and relations.
+- **Otomatis Perbarui Knowledge Graph (`.agents/knowledge_graph.json`) & MCP Memory (Mandatory Gate)**:
+  Setiap kali ada penambahan fitur baru, perubahan arsitektur/backend, penyesuaian skema/kebijakan harga, atau perombakan aset merek/landing page, agen **WAJIB** secara otomatis:
+  1. Memperbarui entitas, observasi, atau relasi terkait pada berkas [`.agents/knowledge_graph.json`](file:///c:/Rivaldi/nikahin_app/.agents/knowledge_graph.json) terlebih dahulu (*Local-First*).
+  2. Menyinkronkan perubahan tersebut ke server **MCP Memory** (`create_entities`, `add_observations`, `create_relations`).
+  3. Memasukkan pembaruan berkas `.agents/knowledge_graph.json` ke dalam commit Git terkait.
+  **DILARANG KERAS** membiarkan pengetahuan proyek usang atau menunggu pengguna mengingatkan untuk memperbarui knowledge graph.
 - `.agents/skills/flutter-environment-setup/SKILL.md`: Complete environment setup, toolchain requirements, and new machine onboarding guide.
 - `.agents/skills/flutter-cicd-release-workflow/SKILL.md`: Detailed CI/CD and release workflow guide.
 - `.agents/skills/maestro-testing/SKILL.md`: Complete Maestro E2E automated UI testing & MCP integration guide.
