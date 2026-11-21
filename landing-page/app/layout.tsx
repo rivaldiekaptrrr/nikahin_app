@@ -21,11 +21,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL('https://getnikahin.my.id'),
   title: {
-    default: 'Nikahin — Aplikasi Perencanaan Pernikahan & Budget Pasangan',
+    default: 'Nikahin — Aplikasi Perencana Pernikahan & Budget',
     template: '%s | Nikahin App',
   },
   description:
-    'Rencanakan hari bahagia berdua lebih tenang dan rapi. Satu aplikasi untuk anggaran, termin vendor, rundown, buku tamu, dan seserahan yang tersinkronisasi real-time.',
+    'Rencanakan hari bahagia berdua lebih rapi dan tenang. Kelola anggaran, vendor, rundown acara, dan tamu tersinkronisasi real-time.',
   keywords: [
     'wedding planner indonesia',
     'aplikasi pernikahan',
@@ -56,9 +56,9 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'id_ID',
     url: 'https://getnikahin.my.id',
-    title: 'Nikahin — Wedding Planner Rp 39.000 Sekali Bayar, Konek 2 Akun & Kustomisasi Tema',
+    title: 'Nikahin — Wedding Planner & Budgeting Pasangan',
     description:
-      'Hanya Rp 39.000 sekali bayar seumur hidup (Lifetime). Tautkan 2 akun berdua (CPP & CPW), bebas pilih tema visual pernikahan, kelola anggaran, vendor, rundown, dan tamu real-time tanpa biaya bulanan.',
+      'Rencanakan pernikahan berdua lebih tenang. Kelola bujet, vendor, rundown, dan tamu tersinkronisasi real-time.',
     siteName: 'Nikahin',
     images: [
       {
@@ -72,9 +72,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Nikahin — Wedding Planner Rp 39.000 Sekali Bayar, Konek 2 Akun & Kustomisasi Tema',
+    title: 'Nikahin — Wedding Planner & Budgeting Pasangan',
     description:
-      'Hanya Rp 39.000 sekali bayar seumur hidup (Lifetime). Tautkan 2 akun berdua (CPP & CPW), bebas pilih tema visual pernikahan, kelola anggaran, vendor, rundown, dan tamu real-time tanpa biaya bulanan.',
+      'Rencanakan pernikahan berdua lebih tenang. Kelola bujet, vendor, rundown, dan tamu tersinkronisasi real-time.',
     images: ['/assets/og-image.png'],
   },
   icons: {

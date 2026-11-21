@@ -173,9 +173,11 @@
       "entityType": "MarketingBrandArchitecture",
       "observations": [
         "Open Graph Card (1200 x 630 px, og-image.png) dirancang khusus untuk pratinjau tautan WhatsApp, Telegram, iMessage, dan media sosial pada https://getnikahin.my.id dan https://nikahin-app.pages.dev.",
-        "Mesin Generator: Python Pillow dengan teknik 2x supersampling (2400 x 1260 px dirender dengan algoritma Lanczos) via scripts/generate_og_card.py terintegrasi dengan gambar latar og-bg.jpg pilihan pengguna.",
-        "Kepatuhan Total antislop-ui: Menghilangkan seluruh refleks wadah kapsul (pill badge reflex), menyatukan fitur dalam Satu Panel Etalase Terpadu (Unified Showcase Panel), dan menggunakan ikon vektor programatik murni (checkmark hijau, gembok keamanan, panah dua arah sinkronisasi) tanpa ketergantungan emoji font untuk mencegah galat tofu glyph.",
-        "Hierarki Konten Berskala Besar (Scale-Up): Menyoroti harga utama Rp 39.000 Seumur Hidup (62 pt Bold), fitur Konek 2 Akun Berdua (CPP & CPW Real-Time), 5 Pilihan Tema Warna Eksklusif (Champagne, Rose, Emerald, Burgundy, Slate), serta grid 2x2 kelengkapan acara hari H.",
+        "Desain Split 50:50 High-Converting: Mengadopsi template etalase produk modern dengan latar kanvas emas hangat (#F7BA1E), membingkai kartu putih terangkat (elevated card dengan offset drop shadow).",
+        "Kolom Kiri (Penaawaran & CTA): Lencana 'LIFETIME DEAL', wordmark 'Nikahin' berikon master, tagline ringkas, rating '★ 4.9 (1.200+ Calon Pengantin)', harga coret Rp 99.000 -> Rp 39.000 seumur hidup, dan tombol CTA tegas 'Coba Sekarang →' untuk memicu konversi klik.",
+        "Kolom Kanan (Spill Beranda HP): Bingkai ponsel modern berbezel titanium gelap dengan Dynamic Island yang menampilkan tangkapan layar asli beranda aplikasi (Beranda.jpeg) lengkap dengan hitung mundur hari H dan kartu bujet.",
+        "Optimasi Panjang Metadata OpenGraph: Judul ringkas 47-50 karakter dan deskripsi 94-111 karakter yang lulus 100% audit OpenGraph agar tidak terpotong pada tampilan mobile.",
+        "Mesin Generator: scripts/generate_og_split_card.py dengan teknik 2x supersampling Lanczos (2400 x 1260 px) menggunakan font resmi Playfair Display & Plus Jakarta Sans.",
         "Sinkronisasi Multi-Aset: File gambar terdistribusi otomatis di landing-page/public/assets/og-image.png, web/assets/og-image.png, web/og-image.png, dengan metadata terintegrasi di landing-page/app/layout.tsx dan web/index.html."
       ]
     },
