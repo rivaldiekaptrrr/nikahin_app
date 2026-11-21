@@ -21,7 +21,7 @@
       "name": "Nikahin_Tech_Stack",
       "entityType": "TechStack",
       "observations": [
-        "Framework: Flutter (SDK ^3.8.0) & Dart 3.",
+        "Framework: Flutter (SDK 3.50.1) & Dart 3.14.0.",
         "State Management: Flutter Riverpod.",
         "Database: Drift (SQLite) + sqlite3_flutter_libs for smart local caching and offline persistence when network drops.",
         "Routing & Navigation: GoRouter.",
@@ -76,7 +76,7 @@
       "name": "Nikahin_Environment_Setup",
       "entityType": "DevOpsWorkflow",
       "observations": [
-        "Standard environment: Flutter SDK 3.47.6+ (Dart ^3.13.5) on stable channel at C:/src/flutter.",
+        "Standard environment: Flutter SDK 3.50.1 (Dart 3.14.0) on stable channel at C:/src/flutter.",
         "Java JDK: Eclipse Adoptium / Temurin JDK 17 (JAVA_HOME).",
         "Android SDK: C:/Android/sdk with Android SDK Platforms 36/35, Build-Tools 36.0.0/35.0.0, Android NDK r28c (28.2.x), CMake 3.22.1.",
         "Environment variables: JAVA_HOME, ANDROID_HOME, ANDROID_SDK_ROOT, and PATH containing flutter/bin, platform-tools, cmdline-tools/latest/bin.",
@@ -178,6 +178,17 @@
         "Hierarki Konten Berskala Besar (Scale-Up): Menyoroti harga utama Rp 39.000 Seumur Hidup (62 pt Bold), fitur Konek 2 Akun Berdua (CPP & CPW Real-Time), 5 Pilihan Tema Warna Eksklusif (Champagne, Rose, Emerald, Burgundy, Slate), serta grid 2x2 kelengkapan acara hari H.",
         "Sinkronisasi Multi-Aset: File gambar terdistribusi otomatis di landing-page/public/assets/og-image.png, web/assets/og-image.png, web/og-image.png, dengan metadata terintegrasi di landing-page/app/layout.tsx dan web/index.html."
       ]
+    },
+    {
+      "name": "Nikahin_Landing_Page_Architecture",
+      "entityType": "WebPlatformArchitecture",
+      "observations": [
+        "Production URL: https://getnikahin.my.id, hosted on Vercel with Node.js 24.x and Next.js 16 App Router.",
+        "Analytics & Measurement: Terintegrasi ganda dengan Google Analytics GA4 (Measurement ID G-2WTR52H3DG) via FirebaseAnalytics.tsx/gtag.ts dan Meta Pixel via fpixel.ts.",
+        "Event Tracking Standard: Melacak interaksi pengguna meliputi first_visit, page_view, select_content, app_download_click, dan generate_lead.",
+        "Adaptive Device Architecture: Deteksi User-Agent cerdas (Android, iOS Safari, Desktop) dengan custom modals (AndroidInstallModal, IosInstallModal, DesktopQrModal).",
+        "Modal UX & Typography Polish: Judul langkah tersinkronisasi rapi sejajar rata kiri dengan ikon kontekstual (Download, Compass, Share, PlusSquare, AlertTriangle) dan teks deskripsi mengalir alami tanpa pemaksaan perataan text-justify."
+      ]
     }
   ],
   "relations": [
@@ -245,6 +256,11 @@
       "from": "Nikahin_App_Core",
       "to": "Nikahin_Open_Graph_Showcase",
       "relationType": "showcasesBrandWith"
+    },
+    {
+      "from": "Nikahin_App_Core",
+      "to": "Nikahin_Landing_Page_Architecture",
+      "relationType": "promotesAppWith"
     }
   ]
 }
