@@ -15,20 +15,18 @@ export default function FeatureBentoGrid() {
   return (
     <section id="fitur" className="py-12 sm:py-16 md:py-24 relative border-y border-[#1f1b16]/8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        {/* Section Header */}
-        <ScrollReveal>
-          <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-14">
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#d81b60] mb-2">
-              Fitur Lengkap Nikahin
-            </p>
-            <h2 className="text-2xl sm:text-4xl font-semibold text-stone-900 tracking-tight">
-              Semua yang kamu butuhkan, dalam satu aplikasi
-            </h2>
-            <p className="text-stone-600 text-xs sm:text-base mt-2.5 sm:mt-3 leading-relaxed">
-              Bebas dari spreadsheet rumit atau catatan terpisah di WhatsApp. Rencanakan hari bahagia berdua dengan tenang.
-            </p>
-          </div>
-        </ScrollReveal>
+        {/* Section Header - Tampil Langsung Tanpa Tertahan Animasi */}
+        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-14">
+          <p className="text-xs font-semibold uppercase tracking-wider text-[#d81b60] mb-2">
+            Fitur Lengkap Nikahin
+          </p>
+          <h2 className="text-2xl sm:text-4xl font-semibold text-stone-900 tracking-tight">
+            Semua yang kamu butuhkan, dalam satu aplikasi
+          </h2>
+          <p className="text-stone-600 text-xs sm:text-base mt-2.5 sm:mt-3 leading-relaxed">
+            Bebas dari spreadsheet rumit atau catatan terpisah di WhatsApp. Rencanakan hari bahagia berdua dengan tenang.
+          </p>
+        </div>
 
         {/* Bento Grid Container */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">

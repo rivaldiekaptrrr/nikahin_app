@@ -24,21 +24,19 @@ export default function PricingSection({ release }: PricingSectionProps) {
   return (
     <section id="harga" className="py-12 sm:py-16 md:py-24 relative overflow-hidden">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
-        {/* Section Header */}
-        <ScrollReveal>
-          <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#d81b60] mb-2 flex items-center justify-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              <span>Sekali Bayar, Bebas Pakai Selamanya</span>
-            </p>
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-semibold text-stone-900 tracking-tight leading-[1.18]">
-              Satu harga pasti untuk hari bahagiamu berdua
-            </h2>
-            <p className="text-stone-600 text-xs sm:text-base mt-2.5 sm:mt-3 leading-relaxed">
-              Nggak ada tagihan tersembunyi atau biaya perpanjangan. Cukup sekali aktivasi untuk dipakai berdua sampai seluruh rangkaian pernikahan selesai.
-            </p>
-          </div>
-        </ScrollReveal>
+        {/* Section Header - Tampil Langsung Tanpa Tertahan Animasi */}
+        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
+          <p className="text-xs font-semibold uppercase tracking-wider text-[#d81b60] mb-2 flex items-center justify-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+            <span>Sekali Bayar, Bebas Pakai Selamanya</span>
+          </p>
+          <h2 className="text-2xl sm:text-4xl md:text-5xl font-semibold text-stone-900 tracking-tight leading-[1.18]">
+            Satu harga pasti untuk hari bahagiamu berdua
+          </h2>
+          <p className="text-stone-600 text-xs sm:text-base mt-2.5 sm:mt-3 leading-relaxed">
+            Nggak ada tagihan tersembunyi atau biaya perpanjangan. Cukup sekali aktivasi untuk dipakai berdua sampai seluruh rangkaian pernikahan selesai.
+          </p>
+        </div>
 
         {/* Lifetime Pricing Card (Featured Luxury Frame) */}
         <ScrollReveal delayMs={100}>

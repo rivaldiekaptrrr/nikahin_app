@@ -35,20 +35,18 @@ export default function AppPreviewMockup() {
         {/* Pembatas Lembut di Desktop */}
         <div className="hidden sm:block w-24 h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent mx-auto mb-10 sm:mb-14" />
 
-        {/* Section Header - Mengalir Alami & Manusiawi */}
-        <ScrollReveal>
-          <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-10">
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#d81b60] mb-2">
-              Antarmuka Aplikasi
-            </p>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-stone-900 tracking-tight">
-              Bantu urus semua hal penting, dari awal sampai hari H
-            </h2>
-            <p className="text-stone-600 text-xs sm:text-sm md:text-base mt-2.5 sm:mt-3 leading-relaxed">
-              Nggak perlu lagi pusing membuka banyak catatan terpisah di WhatsApp atau buku coretan. Cukup satu aplikasi yang langsung terhubung di ponsel kalian berdua.
-            </p>
-          </div>
-        </ScrollReveal>
+        {/* Section Header - Tampil Langsung Tanpa Tertahan Animasi */}
+        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-10">
+          <p className="text-xs font-semibold uppercase tracking-wider text-[#d81b60] mb-2">
+            Antarmuka Aplikasi
+          </p>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-stone-900 tracking-tight">
+            Bantu urus semua hal penting, dari awal sampai hari H
+          </h2>
+          <p className="text-stone-600 text-xs sm:text-sm md:text-base mt-2.5 sm:mt-3 leading-relaxed">
+            Nggak perlu lagi pusing membuka banyak catatan terpisah di WhatsApp atau buku coretan. Cukup satu aplikasi yang langsung terhubung di ponsel kalian berdua.
+          </p>
+        </div>
 
         {/* Feature Tabs Bar - Ramping & Nyaman Digeser (Auto-cycling indicator & Touch Accessible) */}
         <ScrollReveal delayMs={100}>

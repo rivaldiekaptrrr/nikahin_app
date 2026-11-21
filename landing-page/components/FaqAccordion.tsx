@@ -42,20 +42,19 @@ export default function FaqAccordion() {
   return (
     <section id="faq" className="py-12 sm:py-16 md:py-24 relative border-t border-[#1f1b16]/8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
-        <ScrollReveal>
-          <div className="text-center max-w-xl mx-auto mb-8 sm:mb-12">
-            <p className="flex items-center justify-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#d81b60] mb-2">
-              <HelpCircle className="w-3.5 h-3.5" />
-              <span>Tanya Jawab</span>
-            </p>
-            <h2 className="text-2xl sm:text-4xl font-semibold text-stone-900 tracking-tight">
-              Pertanyaan yang sering diajukan
-            </h2>
-            <p className="text-stone-600 text-xs sm:text-base mt-2 sm:mt-2.5">
-              Jawaban lengkap seputar penggunaan aplikasi dan akses lisensi Nikahin.
-            </p>
-          </div>
-        </ScrollReveal>
+        {/* Section Header - Tampil Langsung Tanpa Tertahan Animasi */}
+        <div className="text-center max-w-xl mx-auto mb-8 sm:mb-12">
+          <p className="flex items-center justify-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#d81b60] mb-2">
+            <HelpCircle className="w-3.5 h-3.5" />
+            <span>Tanya Jawab</span>
+          </p>
+          <h2 className="text-2xl sm:text-4xl font-semibold text-stone-900 tracking-tight">
+            Pertanyaan yang sering diajukan
+          </h2>
+          <p className="text-stone-600 text-xs sm:text-base mt-2 sm:mt-2.5">
+            Jawaban lengkap seputar penggunaan aplikasi dan akses lisensi Nikahin.
+          </p>
+        </div>
 
         {/* Accordion List (Quiet Hairline Cards - WAI-ARIA Standard Compliant) */}
         <ScrollReveal delayMs={100}>

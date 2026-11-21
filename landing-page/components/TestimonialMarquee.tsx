@@ -1,6 +1,5 @@
 import React from 'react';
 import Image from 'next/image';
-import ScrollReveal from './ScrollReveal';
 import { Star, MapPin } from 'lucide-react';
 
 interface Testimonial {
@@ -72,13 +71,11 @@ export default function TestimonialMarquee() {
   return (
     <section className="pt-2 pb-10 sm:pt-6 sm:pb-16 md:pt-8 md:pb-20 relative overflow-hidden bg-gradient-to-b from-transparent via-stone-100/50 to-transparent">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 mb-3 sm:mb-6">
-        <ScrollReveal>
-          <div className="text-center max-w-xl mx-auto">
-            <h2 className="text-xs sm:text-sm md:text-base font-semibold text-stone-700 tracking-tight">
-              Ulasan dari Pengguna Nikahin
-            </h2>
-          </div>
-        </ScrollReveal>
+        <div className="text-center max-w-xl mx-auto">
+          <h2 className="text-xs sm:text-sm md:text-base font-semibold text-stone-700 tracking-tight">
+            Ulasan dari Pengguna Nikahin
+          </h2>
+        </div>
       </div>
 
       {/* Infinite Marquee Track with Fade Gradient Edges (Desktop Hover Pause via CSS) */}
