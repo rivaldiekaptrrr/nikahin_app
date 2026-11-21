@@ -168,3 +168,4 @@ def update_og_card_with_brand_and_screen():
 
 if __name__ == '__main__':
     update_og_card_with_brand_and_screen()
+
