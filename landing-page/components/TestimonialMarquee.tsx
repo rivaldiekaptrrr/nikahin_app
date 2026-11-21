@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import ScrollReveal from './ScrollReveal';
-import { Star, Heart, MapPin } from 'lucide-react';
+import { Star, MapPin } from 'lucide-react';
 
 interface Testimonial {
   couple: string;
@@ -74,9 +74,8 @@ export default function TestimonialMarquee() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 mb-3 sm:mb-6">
         <ScrollReveal>
           <div className="text-center max-w-xl mx-auto">
-            <h2 className="text-xs sm:text-sm md:text-base font-medium text-stone-600 tracking-tight flex items-center justify-center gap-1.5">
-              <Heart className="w-3.5 h-3.5 fill-[#d81b60] text-[#d81b60] shrink-0" />
-              <span>Cerita nyata dari pasangan yang sudah menikah</span>
+            <h2 className="text-xs sm:text-sm md:text-base font-semibold text-stone-700 tracking-tight">
+              Ulasan dari Pengguna Nikahin
             </h2>
           </div>
         </ScrollReveal>

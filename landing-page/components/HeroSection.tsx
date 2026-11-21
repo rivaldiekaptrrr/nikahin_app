@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { ShieldCheck, Users, Sparkles, Star, DownloadCloud } from 'lucide-react';
+import { Users, Star, DownloadCloud } from 'lucide-react';
 import DeviceCta from './DeviceCta';
 import { ReleaseMetadata } from '@/lib/github-release';
 
@@ -96,26 +96,8 @@ export default function HeroSection({ release }: HeroSectionProps) {
         </div>
 
         {/* Interactive Device Adaptive CTA */}
-        <div className="mb-4 sm:mb-6">
+        <div>
           <DeviceCta release={release} />
-        </div>
-
-        {/* 3 Key Trust Signals - Ramping, Hangat, dan Alami */}
-        <div className="flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-8 gap-y-2 text-xs font-medium text-stone-600">
-          <div className="inline-flex items-center gap-1.5">
-            <Users className="w-3.5 h-3.5 text-stone-500 shrink-0" />
-            <span>Satu akun untuk berdua</span>
-          </div>
-          <span className="hidden sm:inline text-stone-300">•</span>
-          <div className="inline-flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-            <span>Sinkron langsung di dua ponsel</span>
-          </div>
-          <span className="hidden sm:inline text-stone-300">•</span>
-          <div className="inline-flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-            <span>Sekali bayar tanpa langganan</span>
-          </div>
         </div>
       </div>
     </section>
