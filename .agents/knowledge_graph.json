@@ -178,7 +178,8 @@
         "Kolom Kanan (Spill Beranda HP): Bingkai ponsel modern berbezel titanium gelap dengan Dynamic Island yang menampilkan tangkapan layar asli beranda aplikasi (Beranda.jpeg) lengkap dengan hitung mundur hari H dan kartu bujet.",
         "Optimasi Panjang Metadata OpenGraph: Judul ringkas 47-50 karakter dan deskripsi 94-111 karakter yang lulus 100% audit OpenGraph agar tidak terpotong pada tampilan mobile.",
         "Mesin Generator: scripts/generate_og_split_card.py dengan teknik 2x supersampling Lanczos (2400 x 1260 px) menggunakan font resmi Playfair Display & Plus Jakarta Sans.",
-        "Sinkronisasi Multi-Aset: File gambar terdistribusi otomatis di landing-page/public/assets/og-image.png, web/assets/og-image.png, web/og-image.png, dengan metadata terintegrasi di landing-page/app/layout.tsx dan web/index.html."
+        "Sinkronisasi Multi-Aset: File gambar terdistribusi otomatis di landing-page/public/assets/og-image.png, web/assets/og-image.png, web/og-image.png, dengan metadata terintegrasi di landing-page/app/layout.tsx dan web/index.html.",
+        "Tata Letak Bersih Mengikuti Template Pengguna (Anti-Clutter Clean Template): Desain kartu Open Graph diselaraskan persis dengan template referensi pengguna, menghilangkan elemen ramai (grid 2x2 dan stiker widget berlebih) untuk memaksimalkan ruang bernapas (whitespace). Kolom kiri memuat lencana tunggal LIFETIME DEAL, logo master resmi Nikahin, judul sans-serif tebal, deskripsi penawaran lengkap, garis pemisah horizontal halus, rating 4.97 (155+ ulasan pasangan), serta harga Rp 39.000 / seumur hidup bersanding dengan tombol hitam kontras Coba Sekarang. Kolom kanan didedikasikan sepenuhnya untuk bingkai smartphone iPhone portrait yang menampilkan tangkapan layar beranda asli (berandanew.jpeg) secara utuh."
       ]
     },
     {
