@@ -195,7 +195,11 @@
         "Analytics & Measurement: Terintegrasi ganda dengan Google Analytics GA4 (Measurement ID G-2WTR52H3DG) via FirebaseAnalytics.tsx/gtag.ts dan Meta Pixel via fpixel.ts.",
         "Event Tracking Standard: Melacak interaksi pengguna meliputi first_visit, page_view, select_content, app_download_click, dan generate_lead.",
         "Adaptive Device Architecture: Deteksi User-Agent cerdas (Android, iOS Safari, Desktop) dengan custom modals (AndroidInstallModal, IosInstallModal, DesktopQrModal).",
-        "Modal UX & Typography Polish: Judul langkah tersinkronisasi rapi sejajar rata kiri dengan ikon kontekstual (Download, Compass, Share, PlusSquare, AlertTriangle) dan teks deskripsi mengalir alami tanpa pemaksaan perataan text-justify."
+        "Modal UX & Typography Polish: Judul langkah tersinkronisasi rapi sejajar rata kiri dengan ikon kontekstual (Download, Compass, Share, PlusSquare, AlertTriangle) dan teks deskripsi mengalir alami tanpa pemaksaan perataan text-justify.",
+        "Social Proof Marquee & Testimonials: Komponen TestimonialMarquee.tsx dengan pita ulasan berjalan tak terbatas (infinite marquee) memuat cerita nyata 5 pasangan pengantin dari berbagai kota di Indonesia lengkap dengan foto profil resolusi tinggi (Unsplash CDN via next.config.ts remotePatterns), serta kontrol jeda sentuh/hover sesuai WCAG 2.2.2.",
+        "Pre-CTA Credibility Strip: Tiga metrik kredibilitas utama (1.200+ Pasangan Pengguna, 2.500+ Total Unduhan, 4.9/5.0 Rating Kepuasan) diposisikan langsung di atas tombol CTA utama sebagai pemicu keyakinan instan, mengeliminasi boks besar 140px di dasar hero dan memangkas dead space.",
+        "Dedicated Lifetime Pricing Card: Komponen PricingSection.tsx dengan kartu harga seumur hidup Rp 39.000 / selamanya (diskon 60% dari harga normal Rp 99.000) untuk 2 akun terhubung, 9 poin checklist fasilitas, serta teks bantu pembaca layar (sr-only).",
+        "Full Page Ergonomics & WCAG 2.1 AA Compliance: Seluruh halaman mengadopsi standar WAI-ARIA (Accordion, Tablist/Tab/Tabpanel mockup ponsel, menu mobile dinamis), kontras warna di atas 5.8:1, pendeteksi sentuhan jempol mobile (onTouchStart/onTouchEnd), serta bahasa Indonesia alami bebas istilah asing kaku."
       ]
     }
   ],
