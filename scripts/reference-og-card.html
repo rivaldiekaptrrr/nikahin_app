@@ -106,6 +106,62 @@
         /* ============================================================
        LEFT EDITORIAL CONTENT COLUMN (~660px)
        ============================================================ */
+        
+        /* Brand Identity Lockup (Logo + Wordmark) */
+        .og-brand-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .og-brand-lockup {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .og-logo-box {
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
+            background: #1C1612;
+            border: 1.5px solid rgba(212, 175, 55, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            flex-shrink: 0;
+        }
+
+        .og-logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .og-brand-title {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            color: #FFFFFF;
+            letter-spacing: -0.025em;
+            line-height: 1;
+        }
+
+        .og-eyebrow-pill {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: #D4AF37;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            padding: 5px 11px;
+            border-radius: 6px;
+            line-height: 1;
+        }
+    
         .og-left {
             width: 660px;
             height: 100%;
@@ -537,10 +593,16 @@
                  ====================================================== -->
             <div class="og-left">
 
-              <!-- 1. Top Gold Accent Line & Eyebrow (No Price) -->
-              <div class="og-top-accent">
-                <div class="og-gold-rule"></div>
-                <div class="og-eyebrow">LIFETIME ACCESS &nbsp;•&nbsp; ANDROID &amp; IPHONE</div>
+              <!-- 1. Brand Identity Header (Official Master Logo + Brand Name "Nikahin") -->
+              <div class="og-brand-header">
+                <div class="og-brand-lockup">
+                  <div class="og-logo-box">
+                    <img src="../landing-page/public/assets/nikahin-symbol-master-512.png" alt="Logo Nikahin" class="og-logo-img" />
+                  </div>
+                  <span class="og-brand-title">Nikahin</span>
+                </div>
+                <div class="og-gold-rule" style="width: 20px; height: 1.5px; background-color: rgba(212, 175, 55, 0.4);"></div>
+                <div class="og-eyebrow-pill">LIFETIME ACCESS &nbsp;•&nbsp; ANDROID &amp; IPHONE</div>
               </div>
 
               <!-- 2. Main Editorial Headline & Description (No Price) -->
@@ -597,151 +659,11 @@
                     <div class="og-island-lens"></div>
                   </div>
 
-                  <!-- Custom Uploaded Screenshot Image -->
-                  <img id="custom-screen-img" alt="Nikahin App Beranda Screenshot" />
+                  <!-- Custom Uploaded Screenshot Image (Real Beranda Nikahin) -->
+                  <img id="custom-screen-img" src="../assets/images/landpages/Beranda.jpeg" alt="Nikahin App Beranda Screenshot" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; z-index: 20; display: block;" />
 
-                  <!-- Built-in Warm Luxury Cream/Champagne/Rose "Nikahin" Beranda UI -->
-                  <div id="builtin-mockup-ui" class="w-full h-full flex flex-col" style="background-color: #FAF7F2; color: #1C1612;">
-
-                    <!-- iOS Status Bar -->
-                    <div class="px-4 pt-2.5 pb-1 flex items-center justify-between text-[9px] font-semibold" style="color: #2C241E;">
-                      <span>09:41</span>
-                      <div class="flex items-center gap-1">
-                        <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 16 16">
-                          <rect x="1" y="10" width="2.2" height="5" rx="0.6"/>
-                          <rect x="4.6" y="7.5" width="2.2" height="7.5" rx="0.6"/>
-                          <rect x="8.2" y="5" width="2.2" height="10" rx="0.6"/>
-                          <rect x="11.8" y="2" width="2.2" height="13" rx="0.6"/>
-                        </svg>
-                        <div class="w-4 h-2 border border-[#2C241E] rounded-[2px] p-[1px] flex items-center">
-                          <div class="w-full h-full bg-[#2C241E] rounded-[1px]"></div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Couple Header -->
-                    <div class="px-3.5 pt-1.5 pb-2 flex items-center justify-between">
-                      <div>
-                        <div class="text-[7.5px] font-semibold uppercase tracking-widest" style="color: #A68646;">Wedding Planner</div>
-                        <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 13.5px; font-weight: 600; color: #1C1612; line-height: 1.2;">
-                          Halo, Raka &amp; Dina 💍
-                        </div>
-                      </div>
-                      <div class="flex items-center -space-x-1.5">
-                        <div class="w-5 h-5 rounded-full border border-[#FAF7F2] text-[8px] font-bold flex items-center justify-center" style="background-color: #2B241E; color: #DFBE6F;">R</div>
-                        <div class="w-5 h-5 rounded-full border border-[#FAF7F2] text-[8px] font-bold flex items-center justify-center" style="background-color: #C48B8B; color: #FFFFFF;">D</div>
-                      </div>
-                    </div>
-
-                    <!-- Luxury Countdown Banner -->
-                    <div class="px-3.5 pb-2.5">
-                      <div class="rounded-2xl p-3 text-white relative overflow-hidden" style="background: linear-gradient(135deg, #1B1612 0%, #33271D 100%); border: 1px solid rgba(212, 175, 55, 0.35);">
-                        <div class="flex items-center justify-between">
-                          <span class="text-[7.5px] font-semibold uppercase tracking-widest" style="color: #DFBE6F;">Countdown Pernikahan</span>
-                          <span class="text-[7px] font-semibold px-1.5 py-0.5 rounded-full" style="background-color: rgba(212, 175, 55, 0.16); color: #F2D78B;">Synced • 2 Akun</span>
-                        </div>
-                        <div class="mt-2 flex items-baseline gap-1.5">
-                          <span style="font-family: 'Playfair Display', Georgia, serif; font-size: 26px; font-weight: 600; color: #FFFFFF; line-height: 1;">112</span>
-                          <span class="text-[9.5px] font-medium" style="color: rgba(246, 240, 228, 0.86);">Hari Menuju Akad</span>
-                        </div>
-                        <div class="mt-2 pt-2 border-t border-white/10 flex items-center justify-between text-[7.5px]" style="color: rgba(246, 240, 228, 0.65);">
-                          <span>Sabtu, 13 Maret 2027</span>
-                          <span style="color: #DFBE6F;">Jakarta</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Budget Progress Card -->
-                    <div class="px-3.5 pb-2.5">
-                      <div class="rounded-xl p-2.5" style="background-color: #FFFFFF; border: 1px solid #EAE0D2;">
-                        <div class="flex items-center justify-between">
-                          <span class="text-[8px] font-semibold uppercase tracking-wider" style="color: #8C7A6B;">Anggaran Pernikahan</span>
-                          <span class="text-[7.5px] font-bold px-1.5 py-0.5 rounded" style="background-color: #F6EFE2; color: #9A752E;">53% Terpakai</span>
-                        </div>
-                        <div class="mt-1 flex items-baseline justify-between">
-                          <span class="text-[12.5px] font-bold" style="color: #1C1612;">Rp 42,5 jt</span>
-                          <span class="text-[8.5px] font-medium" style="color: #9A8B7E;">/ Rp 80 jt</span>
-                        </div>
-                        <div class="w-full h-1.5 rounded-full mt-1.5 overflow-hidden" style="background-color: #F1E9DC;">
-                          <div class="h-full rounded-full" style="width: 53%; background: linear-gradient(90deg, #C8A24D 0%, #DFBE6F 100%);"></div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- 4 Quick Action Icons -->
-                    <div class="px-3.5 pb-2.5">
-                      <div class="grid grid-cols-4 gap-1.5 text-center">
-                        <div class="flex flex-col items-center gap-1">
-                          <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background-color: #F5ECD9; color: #9A752E;">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 10h5"/></svg>
-                          </div>
-                          <span class="text-[7.5px] font-semibold" style="color: #4A3E35;">Bujet</span>
-                        </div>
-                        <div class="flex flex-col items-center gap-1">
-                          <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background-color: #F6E6E6; color: #A65D5D;">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg>
-                          </div>
-                          <span class="text-[7.5px] font-semibold" style="color: #4A3E35;">Vendor</span>
-                        </div>
-                        <div class="flex flex-col items-center gap-1">
-                          <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background-color: #EDE8E1; color: #5C4F43;">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-                          </div>
-                          <span class="text-[7.5px] font-semibold" style="color: #4A3E35;">Rundown</span>
-                        </div>
-                        <div class="flex flex-col items-center gap-1">
-                          <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background-color: #E7EFEA; color: #3D6B54;">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                          </div>
-                          <span class="text-[7.5px] font-semibold" style="color: #4A3E35;">Tamu</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Checklist Berdua Section -->
-                    <div class="px-3.5 flex-1 flex flex-col">
-                      <div class="flex items-center justify-between mb-1.5">
-                        <span class="text-[8.5px] font-bold" style="color: #1C1612;">Checklist Berdua</span>
-                        <span class="text-[7.5px] font-semibold" style="color: #A68646;">43 / 50 Selesai</span>
-                      </div>
-                      <div class="space-y-1.5">
-                        <div class="flex items-center gap-2 rounded-lg px-2 py-1.5" style="background-color: #FFFFFF; border: 1px solid #EAE0D2;">
-                          <div class="w-3 h-3 rounded-full border-[1.5px] flex-shrink-0" style="border-color: #C8A24D;"></div>
-                          <div class="min-w-0 flex-1">
-                            <div class="text-[8px] font-semibold truncate" style="color: #1C1612;">Fitting Kebaya &amp; Beskap</div>
-                            <div class="text-[6.5px]" style="color: #9A8B7E;">Besok • 14:00 WIB</div>
-                          </div>
-                          <span class="text-[6.5px] font-semibold px-1.5 py-0.5 rounded" style="background-color: #F6E6E6; color: #9E5252;">Dina</span>
-                        </div>
-
-                        <div class="flex items-center gap-2 rounded-lg px-2 py-1.5" style="background-color: #FFFFFF; border: 1px solid #EAE0D2;">
-                          <div class="w-3 h-3 rounded-full border-[1.5px] flex-shrink-0" style="border-color: #C8A24D;"></div>
-                          <div class="min-w-0 flex-1">
-                            <div class="text-[8px] font-semibold truncate" style="color: #1C1612;">Pelunasan DP Katering</div>
-                          </div>
-                          <span class="text-[6.5px] font-semibold px-1.5 py-0.5 rounded" style="background-color: #F5ECD9; color: #8C6A24;">Raka</span>
-                        </div>
-
-                        <div class="flex items-center gap-2 rounded-lg px-2 py-1.5" style="background-color: #FFFFFF; border: 1px solid #EAE0D2;">
-                          <div class="w-3 h-3 rounded-full flex items-center justify-center flex-shrink-0" style="background-color: #3D6B54; color: #FFFFFF;">
-                            <svg class="w-2 h-2" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                          </div>
-                          <div class="min-w-0 flex-1">
-                            <div class="text-[8px] font-medium line-through truncate" style="color: #A89A8E;">Booking Gedung &amp; Dekor</div>
-                          </div>
-                          <span class="text-[6.5px] font-semibold px-1.5 py-0.5 rounded" style="background-color: #EFEAE2; color: #6E6258;">Berdua</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Bottom Tab Bar -->
-                    <div class="mt-auto px-4 pt-2 pb-3.5 flex items-center justify-between text-[7.5px] font-semibold" style="background-color: #FFFFFF; border-top: 1px solid #EAE0D2;">
-                      <span style="color: #9A752E;">● Beranda</span>
-                      <span style="color: #A89A8E;">Checklist</span>
-                      <span style="color: #A89A8E;">Vendor</span>
-                      <span style="color: #A89A8E;">Akun</span>
-                    </div>
-
+                  <!-- Built-in Warm Luxury Cream/Champagne/Rose "Nikahin" Beranda UI (Hidden) -->
+                  <div id="builtin-mockup-ui" class="w-full h-full flex flex-col" style="display: none; background-color: #FAF7F2; color: #1C1612;">
                   </div>
 
                   <!-- Bottom Home Indicator Bar -->
