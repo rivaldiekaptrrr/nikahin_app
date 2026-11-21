@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Heart } from 'lucide-react';
 
 export default function Footer() {
-  const currentYear = 2026;
+  const currentYear = new Date().getFullYear();
 
   return (
     <footer className="relative border-t border-[#1f1b16]/8 py-12 md:py-16 text-stone-600 text-xs sm:text-sm">

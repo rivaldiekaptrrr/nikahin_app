@@ -11,10 +11,10 @@ interface FinalCtaSectionProps {
 
 export default function FinalCtaSection({ release }: FinalCtaSectionProps) {
   return (
-    <section className="py-20 md:py-28 relative overflow-hidden">
+    <section className="py-12 sm:py-16 md:py-24 relative overflow-hidden">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <ScrollReveal>
-          <div className="relative rounded-3xl bg-white border border-[#1f1b16]/10 p-8 sm:p-12 md:p-16 text-center shadow-[0_8px_30px_-8px_rgba(28,25,23,0.06)] overflow-hidden">
+          <div className="relative rounded-3xl bg-white border border-[#1f1b16]/10 p-6 sm:p-10 md:p-16 text-center shadow-[0_8px_30px_-8px_rgba(28,25,23,0.06)] overflow-hidden">
           {/* Subtle Floating Organic Accents */}
           <div className="absolute top-6 left-6 pointer-events-none select-none z-0 animate-float-slow">
             <Image

@@ -13,18 +13,18 @@ import {
 
 export default function FeatureBentoGrid() {
   return (
-    <section id="fitur" className="py-20 md:py-28 relative border-y border-[#1f1b16]/8">
+    <section id="fitur" className="py-12 sm:py-16 md:py-24 relative border-y border-[#1f1b16]/8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <ScrollReveal>
-          <div className="text-center max-w-2xl mx-auto mb-16">
+          <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-14">
             <p className="text-xs font-semibold uppercase tracking-wider text-[#d81b60] mb-2">
               Fitur Lengkap Nikahin
             </p>
-            <h2 className="text-3xl sm:text-4xl font-semibold text-stone-900 tracking-tight">
+            <h2 className="text-2xl sm:text-4xl font-semibold text-stone-900 tracking-tight">
               Semua yang kamu butuhkan, dalam satu aplikasi
             </h2>
-            <p className="text-stone-600 text-sm sm:text-base mt-3 leading-relaxed">
+            <p className="text-stone-600 text-xs sm:text-base mt-2.5 sm:mt-3 leading-relaxed">
               Bebas dari spreadsheet rumit atau catatan terpisah di WhatsApp. Rencanakan hari bahagia berdua dengan tenang.
             </p>
           </div>
@@ -34,7 +34,7 @@ export default function FeatureBentoGrid() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {/* CARD 1: ANGGARAN & TERMIN VENDOR (Wide 2-col on Desktop, Stacked on Mobile) */}
           <ScrollReveal delayMs={0} className="md:col-span-2 flex flex-col justify-between">
-            <div className="h-full p-6 sm:p-7 rounded-2xl bg-white border border-[#1f1b16]/8 shadow-[0_4px_16px_-4px_rgba(28,25,23,0.05)] hover:border-[#1f1b16]/18 transition-all flex flex-col justify-between">
+            <div className="h-full p-6 sm:p-7 rounded-2xl bg-white border border-[#1f1b16]/8 shadow-[0_4px_20px_-4px_rgba(28,25,23,0.06),0_1px_3px_rgba(28,25,23,0.03)] hover:shadow-[0_14px_36px_-8px_rgba(28,25,23,0.1)] hover:border-amber-400/40 transition-all flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-10 h-10 rounded-xl bg-stone-100 border border-[#1f1b16]/6 text-stone-800 flex items-center justify-center">
@@ -51,7 +51,7 @@ export default function FeatureBentoGrid() {
                       Manajemen Anggaran &amp; Termin Vendor
                     </h3>
                     <p className="text-xs sm:text-sm text-stone-600 leading-relaxed mb-4">
-                      Pantau setiap rupiah pengeluaran pernikahan berdua secara transparan. Catat uang muka (DP), jadwal pelunasan bertahap, hingga sisa tagihan vendor agar tidak terjadi *overbudget*.
+                      Pantau setiap rupiah pengeluaran pernikahan berdua secara transparan. Catat uang muka (DP), jadwal pelunasan bertahap, hingga sisa tagihan vendor agar pengeluaran tidak membengkak melebihi rencana.
                     </p>
                     <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-stone-600">
                       <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200/60">

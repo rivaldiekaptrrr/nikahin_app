@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import ScrollReveal from './ScrollReveal';
 import {
@@ -9,81 +9,122 @@ import {
   CheckSquare,
   HeartHandshake,
   UserCheck,
+  Check,
 } from 'lucide-react';
+
+const TABS = ['beranda', 'anggaran', 'tugas', 'couple'] as const;
 
 export default function AppPreviewMockup() {
   const [activeTab, setActiveTab] = useState<'beranda' | 'anggaran' | 'tugas' | 'couple'>('beranda');
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    if (isPaused) return;
+    const interval = setInterval(() => {
+      setActiveTab((curr) => {
+        const idx = TABS.indexOf(curr);
+        return TABS[(idx + 1) % TABS.length];
+      });
+    }, 4500);
+    return () => clearInterval(interval);
+  }, [isPaused]);
 
   return (
-    <section id="preview" className="pt-12 pb-16 sm:pt-16 sm:pb-20 md:pt-24 md:pb-28 relative overflow-hidden">
+    <section id="preview" className="pt-6 pb-12 sm:pt-14 sm:pb-16 md:pt-20 md:pb-24 relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        {/* Pembatas Lembut & Ruang Bernapas Antar-Seksi */}
-        <div className="w-24 h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent mx-auto mb-10 sm:mb-14" />
+        {/* Pembatas Lembut di Desktop */}
+        <div className="hidden sm:block w-24 h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent mx-auto mb-10 sm:mb-14" />
 
         {/* Section Header - Mengalir Alami & Manusiawi */}
         <ScrollReveal>
-          <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
+          <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-10">
             <p className="text-xs font-semibold uppercase tracking-wider text-[#d81b60] mb-2">
-              Intip Tampilan Aplikasi
+              Antarmuka Aplikasi
             </p>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-stone-900 tracking-tight">
-              Dirancang rapi untuk setiap tahap persiapan
+              Bantu urus semua hal penting, dari awal sampai hari H
             </h2>
             <p className="text-stone-600 text-xs sm:text-sm md:text-base mt-2.5 sm:mt-3 leading-relaxed">
-              Semua kebutuhan persiapan tertata rapi dalam satu genggaman, mendampingi langkah bahagia kamu dan pasangan.
+              Nggak perlu lagi pusing membuka banyak catatan terpisah di WhatsApp atau buku coretan. Cukup satu aplikasi yang langsung terhubung di ponsel kalian berdua.
             </p>
           </div>
         </ScrollReveal>
 
-        {/* Feature Tabs Bar - Ramping & Nyaman Digeser */}
+        {/* Feature Tabs Bar - Ramping & Nyaman Digeser (Auto-cycling indicator & Touch Accessible) */}
         <ScrollReveal delayMs={100}>
-          <div className="w-full flex justify-center mb-8 sm:mb-10 px-2 sm:px-0">
-            <div className="flex items-center justify-start sm:justify-center gap-1.5 max-w-full sm:max-w-xl p-1.5 rounded-2xl bg-stone-200/60 border border-[#1f1b16]/6 overflow-x-auto scroll-smooth touch-pan-x [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div 
+            className="w-full flex justify-center mb-6 sm:mb-10 px-2 sm:px-0"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+            onTouchStart={() => setIsPaused(true)}
+            onTouchEnd={() => setIsPaused(false)}
+          >
+            <div 
+              role="tablist" 
+              aria-label="Pilihan fitur pratinjau aplikasi"
+              className="flex items-center justify-start sm:justify-center gap-1.5 max-w-full sm:max-w-xl p-1.5 rounded-2xl bg-stone-200/60 border border-[#1f1b16]/6 overflow-x-auto scroll-smooth touch-pan-x [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            >
               <button
+                role="tab"
+                id="tab-beranda"
+                aria-selected={activeTab === 'beranda'}
+                aria-controls="preview-screen-panel"
                 onClick={() => setActiveTab('beranda')}
-                className={`flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
+                className={`flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-all shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d81b60] ${
                   activeTab === 'beranda'
-                    ? 'bg-white text-stone-900 shadow-sm'
+                    ? 'bg-white text-stone-900 shadow-sm ring-1 ring-stone-900/5'
                     : 'text-stone-600 hover:text-stone-900'
                 }`}
               >
-                <LayoutDashboard className="w-4 h-4" />
+                <LayoutDashboard className="w-4 h-4" aria-hidden="true" />
                 <span>Beranda</span>
               </button>
 
               <button
+                role="tab"
+                id="tab-anggaran"
+                aria-selected={activeTab === 'anggaran'}
+                aria-controls="preview-screen-panel"
                 onClick={() => setActiveTab('anggaran')}
-                className={`flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
+                className={`flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-all shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d81b60] ${
                   activeTab === 'anggaran'
-                    ? 'bg-white text-stone-900 shadow-sm'
+                    ? 'bg-white text-stone-900 shadow-sm ring-1 ring-stone-900/5'
                     : 'text-stone-600 hover:text-stone-900'
                 }`}
               >
-                <Wallet className="w-4 h-4" />
+                <Wallet className="w-4 h-4" aria-hidden="true" />
                 <span>Rincian Anggaran</span>
               </button>
 
               <button
+                role="tab"
+                id="tab-tugas"
+                aria-selected={activeTab === 'tugas'}
+                aria-controls="preview-screen-panel"
                 onClick={() => setActiveTab('tugas')}
-                className={`flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
+                className={`flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-all shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d81b60] ${
                   activeTab === 'tugas'
-                    ? 'bg-white text-stone-900 shadow-sm'
+                    ? 'bg-white text-stone-900 shadow-sm ring-1 ring-stone-900/5'
                     : 'text-stone-600 hover:text-stone-900'
                 }`}
               >
-                <CheckSquare className="w-4 h-4" />
+                <CheckSquare className="w-4 h-4" aria-hidden="true" />
                 <span>Daftar Tugas</span>
               </button>
 
               <button
+                role="tab"
+                id="tab-couple"
+                aria-selected={activeTab === 'couple'}
+                aria-controls="preview-screen-panel"
                 onClick={() => setActiveTab('couple')}
-                className={`flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors shrink-0 ${
+                className={`flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-all shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d81b60] ${
                   activeTab === 'couple'
-                    ? 'bg-white text-stone-900 shadow-sm'
+                    ? 'bg-white text-stone-900 shadow-sm ring-1 ring-stone-900/5'
                     : 'text-stone-600 hover:text-stone-900'
                 }`}
               >
-                <HeartHandshake className="w-4 h-4" />
+                <HeartHandshake className="w-4 h-4" aria-hidden="true" />
                 <span>Akun Pasangan</span>
               </button>
             </div>
@@ -92,9 +133,36 @@ export default function AppPreviewMockup() {
 
         {/* Realistic Smartphone Frame (Center Showcase with Natural Ambient Shadow) */}
         <ScrollReveal delayMs={150}>
-          <div className="relative max-w-[310px] sm:max-w-[350px] mx-auto">
+          <div 
+            className="relative max-w-[285px] sm:max-w-[340px] mx-auto"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+            onTouchStart={() => setIsPaused(true)}
+            onTouchEnd={() => setIsPaused(false)}
+          >
           {/* Warm Ambient Halo behind the Mockup */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] sm:w-[460px] h-[340px] sm:h-[460px] bg-gradient-to-tr from-[#fce7ef]/40 via-[#fdf0de]/60 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
+
+          {/* Floating Live-Sync Simulation Cards (Flanking Desktop) */}
+          <div className="hidden lg:flex absolute -left-52 top-1/4 z-30 bg-white/95 backdrop-blur-md rounded-2xl p-3 shadow-xl shadow-stone-900/8 border border-stone-200/80 items-center gap-3 animate-float-slow select-none">
+            <div className="w-9 h-9 rounded-xl bg-rose-100 flex items-center justify-center text-rose-700 font-bold text-xs shrink-0">
+              CPW
+            </div>
+            <div className="text-left">
+              <p className="text-xs font-semibold text-stone-900 leading-tight">Sinta mencatat DP</p>
+              <p className="text-[11px] font-medium text-emerald-600">Gedung • Rp 15.000.000</p>
+            </div>
+          </div>
+
+          <div className="hidden lg:flex absolute -right-52 bottom-1/4 z-30 bg-white/95 backdrop-blur-md rounded-2xl p-3 shadow-xl shadow-stone-900/8 border border-stone-200/80 items-center gap-3 animate-float-reverse select-none">
+            <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center text-amber-700 font-bold text-xs shrink-0">
+              CPP
+            </div>
+            <div className="text-left">
+              <p className="text-xs font-semibold text-stone-900 leading-tight">Rama melengkapi</p>
+              <p className="text-[11px] font-medium text-stone-600">Berkas pendaftaran KUA ✓</p>
+            </div>
+          </div>
 
           {/* Editorial Atmosphere Card: Wedding Banquet (Left side on Desktop) */}
           <div className="hidden lg:block absolute -left-48 top-16 w-44 rounded-2xl p-2 bg-white/95 shadow-xl shadow-stone-900/5 border border-stone-200/80 -rotate-6 pointer-events-none select-none z-10">
@@ -157,7 +225,12 @@ export default function AppPreviewMockup() {
             </div>
 
             {/* Inner Screen Canvas (Standard 9:20 Phone Ratio) */}
-            <div className="relative rounded-[38px] bg-stone-900 overflow-hidden aspect-[9/20] w-full">
+            <div 
+              id="preview-screen-panel"
+              role="tabpanel"
+              aria-label={`Tampilan fitur ${activeTab}`}
+              className="relative rounded-[38px] bg-stone-900 overflow-hidden aspect-[9/20] w-full"
+            >
               {/* TAB 1: BERANDA (Real Screenshot) */}
               {activeTab === 'beranda' && (
                 <div className="relative w-full h-full animate-in fade-in duration-300">

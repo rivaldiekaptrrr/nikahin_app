@@ -40,26 +40,26 @@ export default function FaqAccordion() {
   ];
 
   return (
-    <section id="faq" className="py-20 md:py-28 relative border-t border-[#1f1b16]/8">
+    <section id="faq" className="py-12 sm:py-16 md:py-24 relative border-t border-[#1f1b16]/8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <ScrollReveal>
-          <div className="text-center max-w-xl mx-auto mb-14">
+          <div className="text-center max-w-xl mx-auto mb-8 sm:mb-12">
             <p className="flex items-center justify-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#d81b60] mb-2">
               <HelpCircle className="w-3.5 h-3.5" />
               <span>Tanya Jawab</span>
             </p>
-            <h2 className="text-3xl sm:text-4xl font-semibold text-stone-900 tracking-tight">
+            <h2 className="text-2xl sm:text-4xl font-semibold text-stone-900 tracking-tight">
               Pertanyaan yang sering diajukan
             </h2>
-            <p className="text-stone-600 text-sm sm:text-base mt-2.5">
+            <p className="text-stone-600 text-xs sm:text-base mt-2 sm:mt-2.5">
               Jawaban lengkap seputar penggunaan aplikasi dan akses lisensi Nikahin.
             </p>
           </div>
         </ScrollReveal>
 
-        {/* Accordion List (Quiet Hairline Cards) */}
+        {/* Accordion List (Quiet Hairline Cards - WAI-ARIA Standard Compliant) */}
         <ScrollReveal delayMs={100}>
-          <div className="space-y-3">
+          <div className="space-y-3" role="region" aria-label="Daftar Pertanyaan dan Jawaban">
           {faqs.map((faq, idx) => {
             const isOpen = openIdx === idx;
             return (
@@ -68,19 +68,28 @@ export default function FaqAccordion() {
                 className="rounded-2xl bg-white border border-[#1f1b16]/8 shadow-[0_2px_8px_-2px_rgba(28,25,23,0.04)] overflow-hidden transition-colors"
               >
                 <button
+                  id={`faq-btn-${idx}`}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-panel-${idx}`}
                   onClick={() => setOpenIdx(isOpen ? null : idx)}
-                  className="w-full flex items-center justify-between p-5 sm:p-6 text-left text-sm sm:text-base font-semibold text-stone-900 hover:text-stone-700 transition-colors focus:outline-none"
+                  className="w-full flex items-center justify-between p-5 sm:p-6 text-left text-sm sm:text-base font-semibold text-stone-900 hover:text-stone-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#d81b60] focus-visible:ring-inset"
                 >
                   <span>{faq.q}</span>
                   <ChevronDown
                     className={`w-5 h-5 text-stone-400 shrink-0 ml-4 transition-transform duration-200 ${
                       isOpen ? 'rotate-180 text-stone-900' : ''
                     }`}
+                    aria-hidden="true"
                   />
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 sm:px-6 pb-6 text-xs sm:text-sm text-stone-600 leading-relaxed border-t border-[#1f1b16]/6 pt-4">
+                  <div 
+                    id={`faq-panel-${idx}`}
+                    role="region"
+                    aria-labelledby={`faq-btn-${idx}`}
+                    className="px-5 sm:px-6 pb-6 text-xs sm:text-sm text-stone-600 leading-relaxed border-t border-[#1f1b16]/6 pt-4"
+                  >
                     {faq.a}
                   </div>
                 )}

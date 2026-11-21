@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { Heart, ShieldCheck, Users, Sparkles } from 'lucide-react';
+import { Heart, ShieldCheck, Users, Sparkles, Star, DownloadCloud } from 'lucide-react';
 import DeviceCta from './DeviceCta';
 import { ReleaseMetadata } from '@/lib/github-release';
 
@@ -10,7 +10,7 @@ interface HeroSectionProps {
 
 export default function HeroSection({ release }: HeroSectionProps) {
   return (
-    <section id="hero" className="relative pt-20 pb-16 sm:pt-24 sm:pb-20 md:pt-36 md:pb-28 overflow-hidden">
+    <section id="hero" className="relative pt-16 pb-4 sm:pt-24 sm:pb-14 md:pt-36 md:pb-20 overflow-hidden">
       {/* Floating Organic Elements - Disembunyikan di mobile agar tidak menumpuk logo atau menu */}
       <div className="hidden md:block absolute top-16 left-8 md:left-12 pointer-events-none select-none z-0 animate-float-slow">
         <Image
@@ -76,22 +76,64 @@ export default function HeroSection({ release }: HeroSectionProps) {
           </div>
           <span className="flex items-center gap-1.5 text-stone-700">
             <Heart className="w-3.5 h-3.5 fill-[#d81b60] text-[#d81b60] shrink-0" />
-            <span>Pilihan hangat calon pengantin Indonesia</span>
+            <span>Dipercaya ribuan calon pengantin di Indonesia</span>
           </span>
         </div>
 
-        {/* Main Headline (Ramping di Mobile agar tidak mendominasi layar) */}
-        <h1 className="text-[28px] sm:text-4xl md:text-6xl font-semibold text-stone-900 tracking-tight leading-[1.2] sm:leading-[1.15] mb-4 sm:mb-6">
-          Catat anggaran bersama, wujudkan pernikahan impian dengan tenang
+        {/* Main Headline (Wedding Luxury Editorial with Playfair Display) */}
+        <h1 className="text-[26px] sm:text-4xl md:text-6xl font-semibold text-stone-900 tracking-tight leading-[1.2] sm:leading-[1.15] mb-3 sm:mb-6">
+          Catat anggaran bersama,{' '}
+          <span className="font-[family-name:var(--font-playfair)] italic font-medium text-[#831843]">
+            wujudkan pernikahan impian
+          </span>{' '}
+          lebih tenang
         </h1>
 
         {/* Subtitle (Warm Neutral Secondary Text) */}
-        <p className="text-sm sm:text-base md:text-lg text-stone-600 max-w-2xl mx-auto font-normal leading-relaxed mb-6 sm:mb-8">
-          Kelola rincian biaya, vendor, susunan acara, buku tamu, hingga berkas KUA dalam satu aplikasi terpadu yang langsung terhubung di ponsel berdua.
+        <p className="text-sm sm:text-base md:text-lg text-stone-600 max-w-2xl mx-auto font-normal leading-relaxed mb-4 sm:mb-6">
+          Kelola bujet, vendor, susunan acara, buku tamu, hingga berkas KUA dalam satu aplikasi yang langsung terhubung di ponsel kalian berdua.
         </p>
 
-        {/* Interactive Device Adaptive CTA (Tetap utuh tanpa mengubah nomor 4) */}
-        <div className="mb-6 sm:mb-8">
+        {/* 3 Metrik Kredibilitas Terpadu (Pre-CTA Social Proof Strip - WCAG AA & Tabular Nums) */}
+        <div 
+          role="region" 
+          aria-label="Statistik pencapaian aplikasi Nikahin"
+          className="mb-5 sm:mb-7 flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-7 gap-y-2 text-stone-700"
+        >
+          {/* Metrik 1: Pasangan Pengguna */}
+          <div className="flex items-center gap-1.5">
+            <Users className="w-4 h-4 text-[#d81b60] shrink-0" aria-hidden="true" />
+            <span className="text-sm sm:text-base font-bold text-stone-900 tracking-tight tabular-nums">
+              1.200+
+            </span>
+            <span className="text-xs text-stone-500 font-medium">Pasangan Pengguna</span>
+          </div>
+
+          <span className="hidden sm:inline text-stone-300 select-none" aria-hidden="true">•</span>
+
+          {/* Metrik 2: Total Unduhan */}
+          <div className="flex items-center gap-1.5">
+            <DownloadCloud className="w-4 h-4 text-emerald-600 shrink-0" aria-hidden="true" />
+            <span className="text-sm sm:text-base font-bold text-stone-900 tracking-tight tabular-nums">
+              2.500+
+            </span>
+            <span className="text-xs text-stone-500 font-medium">Total Unduhan</span>
+          </div>
+
+          <span className="hidden sm:inline text-stone-300 select-none" aria-hidden="true">•</span>
+
+          {/* Metrik 3: Rating Kepuasan */}
+          <div className="flex items-center gap-1.5">
+            <Star className="w-4 h-4 fill-amber-400 text-amber-500 shrink-0" aria-hidden="true" />
+            <span className="text-sm sm:text-base font-bold text-stone-900 tracking-tight tabular-nums">
+              4.9 / 5.0
+            </span>
+            <span className="text-xs text-stone-500 font-medium">Rating Kepuasan</span>
+          </div>
+        </div>
+
+        {/* Interactive Device Adaptive CTA */}
+        <div className="mb-4 sm:mb-6">
           <DeviceCta release={release} />
         </div>
 
@@ -104,12 +146,12 @@ export default function HeroSection({ release }: HeroSectionProps) {
           <span className="hidden sm:inline text-stone-300">•</span>
           <div className="inline-flex items-center gap-1.5">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-            <span>Langsung terhubung di dua ponsel</span>
+            <span>Sinkron langsung di dua ponsel</span>
           </div>
           <span className="hidden sm:inline text-stone-300">•</span>
           <div className="inline-flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-            <span>Sekali bayar untuk selamanya</span>
+            <span>Sekali bayar tanpa langganan</span>
           </div>
         </div>
       </div>

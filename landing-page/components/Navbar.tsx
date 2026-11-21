@@ -44,17 +44,20 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Navigation (Quiet Chrome) */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-stone-600">
-          <a href="#fitur" className="hover:text-stone-900 transition-colors">
+        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-stone-600" aria-label="Navigasi Utama">
+          <a href="#fitur" className="hover:text-stone-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d81b60] rounded-md px-1 transition-colors">
             Fitur Utama
           </a>
-          <a href="#preview" className="hover:text-stone-900 transition-colors">
+          <a href="#preview" className="hover:text-stone-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d81b60] rounded-md px-1 transition-colors">
             Tampilan Aplikasi
           </a>
-          <a href="#pasangan" className="hover:text-stone-900 transition-colors">
+          <a href="#pasangan" className="hover:text-stone-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d81b60] rounded-md px-1 transition-colors">
             Akun Pasangan
           </a>
-          <a href="#faq" className="hover:text-stone-900 transition-colors">
+          <a href="#harga" className="hover:text-stone-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d81b60] rounded-md px-1 transition-colors">
+            Harga
+          </a>
+          <a href="#faq" className="hover:text-stone-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d81b60] rounded-md px-1 transition-colors">
             Tanya Jawab
           </a>
         </nav>
@@ -63,18 +66,19 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-3">
           <a
             href="#hero"
-            className="inline-flex items-center gap-2 text-xs font-semibold text-white bg-[#d81b60] hover:bg-[#c2185b] px-4 py-2.5 rounded-xl shadow-xs transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-semibold text-white bg-[#d81b60] hover:bg-[#c2185b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d81b60] focus-visible:ring-offset-2 px-4 py-2.5 rounded-xl shadow-xs transition-colors"
           >
             <Smartphone className="w-3.5 h-3.5" />
-            <span>Pasang Sekarang</span>
+            <span>Pasang Aplikasi</span>
           </a>
         </div>
 
         {/* Mobile Hamburger Button */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 text-stone-700 hover:text-stone-900 focus:outline-none"
-          aria-label="Toggle menu"
+          className="md:hidden p-2 text-stone-700 hover:text-stone-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#d81b60] rounded-lg"
+          aria-expanded={mobileMenuOpen}
+          aria-label={mobileMenuOpen ? 'Tutup menu navigasi' : 'Buka menu navigasi'}
         >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
@@ -83,11 +87,11 @@ export default function Navbar() {
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-[#faf7f2]/95 backdrop-blur-lg border-b border-[#1f1b16]/8 px-6 py-5 shadow-lg space-y-4">
-          <nav className="flex flex-col gap-3 text-sm font-medium text-stone-700">
+          <nav className="flex flex-col gap-3 text-sm font-medium text-stone-700" aria-label="Navigasi Menu Ponsel">
             <a
               href="#fitur"
               onClick={() => setMobileMenuOpen(false)}
-              className="py-1.5 hover:text-stone-900"
+              className="py-1.5 hover:text-[#d81b60]"
             >
               Fitur Utama
             </a>
@@ -106,6 +110,13 @@ export default function Navbar() {
               Akun Pasangan
             </a>
             <a
+              href="#harga"
+              onClick={() => setMobileMenuOpen(false)}
+              className="py-1.5 hover:text-[#d81b60]"
+            >
+              Harga
+            </a>
+            <a
               href="#faq"
               onClick={() => setMobileMenuOpen(false)}
               className="py-1.5 hover:text-[#d81b60]"
@@ -117,9 +128,9 @@ export default function Navbar() {
             <a
               href="#hero"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full inline-flex items-center justify-center gap-2 text-sm font-bold text-white bg-[#d81b60] py-2.5 rounded-xl shadow-md transition-all"
+              className="w-full inline-flex items-center justify-center gap-2 text-sm font-bold text-white bg-[#d81b60] py-2.5 rounded-xl shadow-md transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d81b60]"
             >
-              <span>Download Aplikasi</span>
+              <span>Pasang Aplikasi</span>
               <ArrowRight className="w-4 h-4" />
             </a>
           </div>
