@@ -149,7 +149,7 @@ export default function AppPreviewMockup() {
               CPW
             </div>
             <div className="text-left">
-              <p className="text-xs font-semibold text-stone-900 leading-tight">Sinta mencatat DP</p>
+              <p className="text-xs font-semibold text-stone-900 leading-tight">Putri mencatat DP</p>
               <p className="text-[11px] font-medium text-emerald-600">Gedung • Rp 15.000.000</p>
             </div>
           </div>
@@ -159,7 +159,7 @@ export default function AppPreviewMockup() {
               CPP
             </div>
             <div className="text-left">
-              <p className="text-xs font-semibold text-stone-900 leading-tight">Rama melengkapi</p>
+              <p className="text-xs font-semibold text-stone-900 leading-tight">Bagas melengkapi</p>
               <p className="text-[11px] font-medium text-stone-600">Berkas pendaftaran KUA ✓</p>
             </div>
           </div>

@@ -14,11 +14,11 @@ interface Testimonial {
 
 const TESTIMONIALS: Testimonial[] = [
   {
-    couple: 'Rama & Sinta',
+    couple: 'Bagas & Putri',
     city: 'Jakarta Selatan',
     role: 'Menikah Januari 2027',
     quote:
-      'Nggak ada lagi drama lupa bayar DP gedung atau katering. Begitu salah satu bayar, catatan pengeluaran langsung terupdate di HP pasangan.',
+      'Nggak ada lagi drama lupa catat DP gedung atau katering. Begitu salah satu bayar, pengeluaran langsung terupdate di HP pasangan.',
     highlight: 'Bujet Selalu Sinkron',
     avatar:
       'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=160&h=160&q=80',
@@ -44,11 +44,11 @@ const TESTIMONIALS: Testimonial[] = [
       'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=160&h=160&q=80',
   },
   {
-    couple: 'Rezky & Maya',
+    couple: 'Bima & Laras',
     city: 'Yogyakarta',
     role: 'Menikah Desember 2026',
     quote:
-      'Tampilannya cantik dan bebas pilih tema. Yang paling kami suka, bayarnya cuma sekali di awal tanpa kepikiran langganan bulanan.',
+      'Tampilannya rapi dan bebas pilih tema sesuka hati. Yang paling melegakan, bayarnya cuma sekali di awal tanpa kepikiran biaya langganan bulanan.',
     highlight: 'Tema Sesuai Selera',
     avatar:
       'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=160&h=160&q=80',
