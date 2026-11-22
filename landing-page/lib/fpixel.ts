@@ -1,5 +1,5 @@
 export const FB_PIXEL_ID =
-  process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID || '1703837728440239';
+  process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID || '972654332267701';
 
 // Deklarasi tipe global untuk window.fbq dan window.gtag
 declare global {
