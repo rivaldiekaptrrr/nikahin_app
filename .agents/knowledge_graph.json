@@ -192,7 +192,7 @@
       "entityType": "WebPlatformArchitecture",
       "observations": [
         "Production URL: https://getnikahin.my.id, hosted on Vercel with Node.js 24.x and Next.js 16 App Router.",
-        "Analytics & Measurement: Terintegrasi ganda dengan Google Analytics GA4 (Measurement ID G-2WTR52H3DG) via FirebaseAnalytics.tsx/gtag.ts dan Meta Pixel via fpixel.ts.",
+        "Analytics & Measurement: Terintegrasi ganda dengan Google Analytics GA4 (Measurement ID G-2WTR52H3DG) via FirebaseAnalytics.tsx/gtag.ts dan Meta Pixel resmi akun bisnis Nikahin (ID 972654332267701) via fpixel.ts.",
         "Event Tracking Standard: Melacak interaksi pengguna meliputi first_visit, page_view, select_content, app_download_click, dan generate_lead.",
         "Adaptive Device Architecture: Deteksi User-Agent cerdas (Android, iOS Safari, Desktop) dengan custom modals (AndroidInstallModal, IosInstallModal, DesktopQrModal).",
         "Modal UX & Typography Polish: Judul langkah tersinkronisasi rapi sejajar rata kiri dengan ikon kontekstual (Download, Compass, Share, PlusSquare, AlertTriangle) dan teks deskripsi mengalir alami tanpa pemaksaan perataan text-justify.",
