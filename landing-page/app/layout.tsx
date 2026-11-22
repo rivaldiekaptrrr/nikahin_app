@@ -59,6 +59,11 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  verification: {
+    other: {
+      'facebook-domain-verification': 'lsag6577gmmvcawugvh0zhdd90r4k5',
+    },
+  },
   openGraph: {
     type: 'website',
     locale: 'id_ID',
@@ -191,6 +196,12 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${jakartaSans.variable} ${playfairDisplay.variable} font-sans scroll-smooth`}
     >
+      <head>
+        <meta
+          name="facebook-domain-verification"
+          content="lsag6577gmmvcawugvh0zhdd90r4k5"
+        />
+      </head>
       <body className="min-h-screen bg-[#faf7f2] text-[#1c1917] antialiased selection:bg-[#fce7ef] selection:text-[#831843]">
         {/* Schema.org Structured Data (Disimpan di body sesuai panduan resmi Next.js App Router) */}
         <script
