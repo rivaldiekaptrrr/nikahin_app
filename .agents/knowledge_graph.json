@@ -165,6 +165,7 @@
         "Caching & HTTP Headers: Dikonfigurasi melalui web/_headers dengan cache immutable 1 tahun untuk aset .wasm dan .js, mempercepat muat ulang halaman kedua ke sub-detik.",
         "iOS Safari PWA Optimization: Meta tag viewport-fit=cover untuk notch & Dynamic Island iPhone, apple-touch-icon.png (180x180 px warna Warm Champagne #FDF0DE), dan kartu panduan 'Tambah ke Layar Utama' (SettingsPwaInstallCard) di menu Pengaturan.",
         "In-App Updater Web Isolation: Pengecekan APK dinonaktifkan pada Web melalui AppPlatformConfig.isApkUpdaterAvailable; menu Pengaturan menampilkan lencana info 'Web PWA Aktif'.",
+        "Hero Cover Photo Persistence: Personalisasi foto latar belakang kartu hero beranda di Web PWA disimpan permanen sebagai Base64 Data URI di SharedPreferences (localStorage), menghindari hilangnya gambar akibat pencabutan Blob URL sementara browser saat aplikasi ditutup/dimuat ulang, serta dilengkapi auto-cleanup blob URL kedaluwarsa.",
         "Deployment Pipeline: Perintah deployment langsung via terminal: npx wrangler pages deploy build/web --project-name=nikahin-app."
       ]
     },

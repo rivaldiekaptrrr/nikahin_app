@@ -46,5 +46,21 @@ void main() {
       final prefsValue = await AppPreferences.getHeroCoverPhoto('profile_abc');
       expect(prefsValue, isNull);
     });
+
+    test('heroCoverNotifierProvider supports Base64 Data URL for web persistence', () async {
+      const base64DataUri = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD...';
+      await AppPreferences.setHeroCoverPhoto('profile_web', base64DataUri);
+
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      final initialVal = await container.read(heroCoverNotifierProvider('profile_web').future);
+      expect(initialVal, equals(base64DataUri));
+
+      // Remove photo
+      await container.read(heroCoverNotifierProvider('profile_web').notifier).removePhoto();
+      expect(container.read(heroCoverNotifierProvider('profile_web')).value, isNull);
+      expect(await AppPreferences.getHeroCoverPhoto('profile_web'), isNull);
+    });
   });
 }

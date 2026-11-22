@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,7 +14,13 @@ class HeroCoverNotifier extends AsyncNotifier<String?> {
 
   @override
   Future<String?> build() async {
-    return AppPreferences.getHeroCoverPhoto(profileId);
+    final photoPath = await AppPreferences.getHeroCoverPhoto(profileId);
+    if (kIsWeb && photoPath != null && photoPath.startsWith('blob:')) {
+      // Bersihkan blob URL kadaluarsa dari sesi sebelumnya agar tidak merusak tampilan kartu
+      await AppPreferences.setHeroCoverPhoto(profileId, null);
+      return null;
+    }
+    return photoPath;
   }
 
   /// Memilih foto dari galeri atau kamera dan menyimpannya secara permanen
@@ -30,7 +37,11 @@ class HeroCoverNotifier extends AsyncNotifier<String?> {
 
       String finalPath;
       if (kIsWeb) {
-        finalPath = picked.path;
+        final bytes = await picked.readAsBytes();
+        final base64String = base64Encode(bytes);
+        final ext = picked.path.contains('.') ? picked.path.split('.').last.toLowerCase() : 'jpg';
+        final mime = (ext == 'png') ? 'image/png' : 'image/jpeg';
+        finalPath = 'data:$mime;base64,$base64String';
       } else {
         final appDir = await getApplicationDocumentsDirectory();
         final ext = picked.path.contains('.') ? picked.path.split('.').last : 'jpg';
@@ -64,7 +75,7 @@ class HeroCoverNotifier extends AsyncNotifier<String?> {
   /// Menghapus foto latar belakang kustom dan kembali ke gradasi tema bawaan
   Future<void> removePhoto() async {
     final oldPath = state.value;
-    if (oldPath != null && oldPath.isNotEmpty && !kIsWeb) {
+    if (oldPath != null && oldPath.isNotEmpty && !kIsWeb && !oldPath.startsWith('data:')) {
       try {
         final oldFile = File(oldPath);
         if (await oldFile.exists()) {

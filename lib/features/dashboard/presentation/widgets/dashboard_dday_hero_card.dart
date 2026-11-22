@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
@@ -209,7 +210,9 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
 
     final coverAsync = ref.watch(heroCoverNotifierProvider(widget.profileId));
     final coverPhotoPath = coverAsync.value;
-    final hasCustomPhoto = coverPhotoPath != null && coverPhotoPath.isNotEmpty;
+    final hasCustomPhoto = coverPhotoPath != null &&
+        coverPhotoPath.isNotEmpty &&
+        (!kIsWeb || !coverPhotoPath.startsWith('blob:'));
 
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -282,17 +285,7 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
                 // ==================== LAYER 0: BACKGROUND (FOTO ATAU GRADASI HANGAT + WATERMARK) ====================
                 if (hasCustomPhoto) ...[
                   Positioned.fill(
-                    child: kIsWeb
-                        ? Image.network(
-                            coverPhotoPath,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, _, _) => _buildDefaultGradient(theme, isDark),
-                          )
-                        : Image.file(
-                            File(coverPhotoPath),
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, _, _) => _buildDefaultGradient(theme, isDark),
-                          ),
+                    child: _buildCoverImage(coverPhotoPath, theme, isDark),
                   ),
                   // Dark Vignette & Scrim Gradient Overlay untuk menjaga keterbacaan teks
                   Positioned.fill(
@@ -548,6 +541,37 @@ class _DashboardDDayHeroCardState extends ConsumerState<DashboardDDayHeroCard> {
         );
       },
     );
+  }
+
+  /// Merender gambar latar belakang kartu hero yang kompatibel lintas platform (Web Base64 & Native File)
+  Widget _buildCoverImage(String path, ThemeData theme, bool isDark) {
+    if (kIsWeb) {
+      if (path.startsWith('data:image')) {
+        try {
+          final commaIndex = path.indexOf(',');
+          final base64Data = commaIndex != -1 ? path.substring(commaIndex + 1) : path;
+          final bytes = base64Decode(base64Data);
+          return Image.memory(
+            bytes,
+            fit: BoxFit.cover,
+            errorBuilder: (_, _, _) => _buildDefaultGradient(theme, isDark),
+          );
+        } catch (_) {
+          return _buildDefaultGradient(theme, isDark);
+        }
+      }
+      return Image.network(
+        path,
+        fit: BoxFit.cover,
+        errorBuilder: (_, _, _) => _buildDefaultGradient(theme, isDark),
+      );
+    } else {
+      return Image.file(
+        File(path),
+        fit: BoxFit.cover,
+        errorBuilder: (_, _, _) => _buildDefaultGradient(theme, isDark),
+      );
+    }
   }
 
   /// Gradasi Latar Bawaan Harmonis (Warm Champagne Silk & Peach khas Nikahin)
