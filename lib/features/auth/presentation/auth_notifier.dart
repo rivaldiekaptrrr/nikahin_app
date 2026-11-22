@@ -191,6 +191,11 @@ class AuthNotifier extends Notifier<AuthState> {
       // Sinkronisasi telemetri keaktifan harian & info perangkat (1x per hari)
       syncDailyActiveTelemetry(uid);
     } else if (isDemo) {
+      final db = ref.read(databaseProvider);
+      final profile = await db.getProfileById(MockSeeder.primaryMockProfileId);
+      if (MockSeeder.isOutdated(profile)) {
+        await MockSeeder.seedAllMockData(db);
+      }
       ref.read(syncManagerProvider).configure(
             newUserId: null,
             enabled: false,
@@ -224,14 +229,8 @@ class AuthNotifier extends Notifier<AuthState> {
 
       final db = ref.read(databaseProvider);
       final existingMockProfile = await db.getProfileById(MockSeeder.primaryMockProfileId);
-      final oldExp10 = await db.getExpenseById('exp_10');
-      if (existingMockProfile == null || oldExp10 != null) {
+      if (MockSeeder.isOutdated(existingMockProfile)) {
         await MockSeeder.seedAllMockData(db);
-      } else if (existingMockProfile.groomName == 'Rivaldi' || existingMockProfile.brideName == 'Alya') {
-        await db.updateProfile(existingMockProfile.copyWith(
-          groomName: 'Rama',
-          brideName: 'Sinta',
-        ));
       }
 
       ref.read(syncManagerProvider).configure(

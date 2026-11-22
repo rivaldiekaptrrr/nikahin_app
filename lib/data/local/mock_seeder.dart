@@ -3,19 +3,27 @@ import 'database.dart';
 
 class MockSeeder {
   static const String primaryMockProfileId = 'profile_rivaldi_alya';
+  static final int targetWeddingDate = DateTime(2027, 11, 10, 8, 0).millisecondsSinceEpoch;
+  static const double targetBudgetCap = 50000000.0;
+
+  /// Cek apakah profil demo di SQLite belum ada atau masih memakai data lama
+  static bool isOutdated(WeddingProfile? profile) {
+    if (profile == null) return true;
+    return profile.totalBudgetCap != targetBudgetCap || profile.weddingDate != targetWeddingDate;
+  }
 
   /// Seed complete mock data across all 10 wedding modules into SQLite database
   static Future<void> seedAllMockData(AppDatabase db) async {
     // 1. Single Wedding Profile (Rama & Sinta)
     final now = DateTime.now();
-    final weddingDate = DateTime(2027, 11, 10, 8, 0).millisecondsSinceEpoch;
+    final weddingDate = targetWeddingDate;
 
     final primaryProfile = WeddingProfile(
       id: primaryMockProfileId,
       groomName: 'Rama',
       brideName: 'Sinta',
       weddingDate: weddingDate,
-      totalBudgetCap: 50000000.0,
+      totalBudgetCap: targetBudgetCap,
       religionType: 'ISLAM',
       culturalPresetGroom: 'SUNDA',
       culturalPresetBride: 'JAWA',
@@ -26,10 +34,17 @@ class MockSeeder {
       createdAt: now.subtract(const Duration(days: 60)).millisecondsSinceEpoch,
     );
 
-    // Clean up existing expenses, payment terms, and vendors to ensure a fresh, consistent seed
+    // Clean up all existing mock entities to ensure a completely fresh, consistent seed
     await (db.delete(db.weddingExpenses)..where((t) => t.weddingProfileId.equals(primaryMockProfileId))).go();
     await (db.delete(db.weddingPaymentTerms)).go();
     await (db.delete(db.weddingVendors)..where((t) => t.weddingProfileId.equals(primaryMockProfileId))).go();
+    await (db.delete(db.weddingDocuments)..where((t) => t.weddingProfileId.equals(primaryMockProfileId))).go();
+    await (db.delete(db.weddingEvents)..where((t) => t.weddingProfileId.equals(primaryMockProfileId))).go();
+    await (db.delete(db.weddingRundownItems)).go();
+    await (db.delete(db.weddingTasks)..where((t) => t.weddingProfileId.equals(primaryMockProfileId))).go();
+    await (db.delete(db.weddingGuests)..where((t) => t.weddingProfileId.equals(primaryMockProfileId))).go();
+    await (db.delete(db.weddingCommitteeMembers)..where((t) => t.weddingProfileId.equals(primaryMockProfileId))).go();
+    await (db.delete(db.weddingSeserahans)..where((t) => t.weddingProfileId.equals(primaryMockProfileId))).go();
 
     await db.insertProfile(primaryProfile);
 

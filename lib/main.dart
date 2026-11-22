@@ -53,19 +53,14 @@ void main() async {
     }
   } catch (_) {}
 
-  // Seed rich mock data if toggle is active
-  if (kUseMockData) {
+  // Seed rich mock data if toggle is active, or auto-migrate if mock profile is outdated
+  try {
     final existingMockProfile = await db.getProfileById(MockSeeder.primaryMockProfileId);
-    final existingTerms = await db.getPaymentTermsForExpense('exp_1');
-    final oldExp10 = await db.getExpenseById('exp_10');
-    if (existingMockProfile == null || existingTerms.isEmpty || oldExp10 != null) {
+    if (kUseMockData || (existingMockProfile != null && MockSeeder.isOutdated(existingMockProfile))) {
       await MockSeeder.seedAllMockData(db);
-    } else if (existingMockProfile.groomName == 'Rivaldi' || existingMockProfile.brideName == 'Alya') {
-      await db.updateProfile(existingMockProfile.copyWith(
-        groomName: 'Rama',
-        brideName: 'Sinta',
-      ));
     }
+  } catch (e) {
+    debugPrint('[MockSeeder] Migrasi data mock dilewati: $e');
   }
 
   runApp(
