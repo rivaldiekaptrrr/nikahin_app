@@ -29,6 +29,13 @@ void main() async {
     try {
       await Firebase.initializeApp();
       
+      // Mode debug: nonaktifkan Crashlytics agar assertion lokal tidak mengotori dashboard analitik
+      if (kDebugMode) {
+        await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+      } else {
+        await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+      }
+
       // 1. Teruskan seluruh galat fatal framework Flutter ke Crashlytics
       FlutterError.onError = (errorDetails) {
         FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);

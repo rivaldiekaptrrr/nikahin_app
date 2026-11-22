@@ -25,15 +25,23 @@ class BentoCard extends StatelessWidget {
     final theme = Theme.of(context);
     final cardBg = backgroundColor ?? theme.colorScheme.surface;
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
+    return Container(
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
-        child: Container(
-          padding: padding,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: gradient == null ? cardBg : Colors.transparent,
+        borderRadius: BorderRadius.circular(borderRadius),
+        clipBehavior: Clip.antiAlias,
+        child: Ink(
           decoration: BoxDecoration(
-            color: gradient == null ? cardBg : null,
             gradient: gradient,
             borderRadius: BorderRadius.circular(borderRadius),
             border: border ??
@@ -41,15 +49,15 @@ class BentoCard extends StatelessWidget {
                   color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
                   width: 1,
                 ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.03),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
           ),
-          child: child,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(borderRadius),
+            child: Padding(
+              padding: padding,
+              child: child,
+            ),
+          ),
         ),
       ),
     );

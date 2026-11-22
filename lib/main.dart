@@ -19,6 +19,14 @@ void main() async {
   if (!kIsWeb) {
     try {
       await Firebase.initializeApp();
+
+      // Di mode debug lokal, nonaktifkan koleksi Crashlytics agar assertion pengujian tidak mengotori analitik
+      if (kDebugMode) {
+        await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+      } else {
+        await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+      }
+
       // Teruskan seluruh error fatal tak tertangani dari framework Flutter ke Crashlytics
       FlutterError.onError = (errorDetails) {
         FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
