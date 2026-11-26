@@ -90,5 +90,62 @@ service cloud.firestore {
         (resource != null && resource.data.creatorUid == request.auth.uid) || isAdmin()
       );
     }
+
+    // ===============================================================
+    // Voucher, Pricing & Channel Attribution Collections
+    // ===============================================================
+
+    function isValidPricingConfig(data) {
+      return data.keys().hasAll(['defaultPrice', 'minAllowedPrice']) &&
+             data.keys().hasOnly(['defaultPrice', 'minAllowedPrice', 'updatedAt']) &&
+             data.defaultPrice is number && data.defaultPrice >= 0 &&
+             data.minAllowedPrice is number && data.minAllowedPrice >= 0 &&
+             (!('updatedAt' in data) || data.updatedAt is int || data.updatedAt is number);
+    }
+
+    function isValidVoucher(data) {
+      return data.keys().hasAll(['code', 'channel', 'discountType', 'discountValue', 'isActive', 'usedCount']) &&
+             data.keys().hasOnly(['code', 'channel', 'description', 'discountType', 'discountValue', 'isActive', 'maxQuota', 'usedCount', 'validFrom', 'validUntil', 'createdAt', 'updatedAt']) &&
+             data.code is string && data.code.size() >= 2 && data.code.size() <= 32 &&
+             data.channel is string && data.channel.size() >= 1 && data.channel.size() <= 40 &&
+             (!('description' in data) || data.description == null || (data.description is string && data.description.size() <= 200)) &&
+             data.discountType in ['FIXED', 'PERCENT'] &&
+             data.discountValue is number && data.discountValue >= 0 &&
+             (data.discountType != 'PERCENT' || data.discountValue <= 100) &&
+             data.isActive is bool &&
+             (!('maxQuota' in data) || data.maxQuota == null || (data.maxQuota is int && data.maxQuota > 0)) &&
+             data.usedCount is int && data.usedCount >= 0 &&
+             (!('validFrom' in data) || data.validFrom == null || data.validFrom is int || data.validFrom is number) &&
+             (!('validUntil' in data) || data.validUntil == null || data.validUntil is int || data.validUntil is number) &&
+             (!('createdAt' in data) || data.createdAt is int || data.createdAt is number) &&
+             (!('updatedAt' in data) || data.updatedAt is int || data.updatedAt is number);
+    }
+
+    // Konfigurasi Harga Global (Dibaca publik untuk pricing display, write eksklusif Admin)
+    match /app_config/pricing {
+      allow get: if true;
+      allow list: if false;
+      allow create, update: if isAdmin() && isValidPricingConfig(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // Master Vouchers (Anti-Enumeration bagi user biasa, Full CRUD bagi Admin)
+    match /vouchers/{code} {
+      allow get: if request.auth != null;
+      allow list: if isAdmin();
+      allow create, update: if isAdmin() && isValidVoucher(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // Log Penukaran Voucher (Hanya Admin SDK Webhook yang boleh menulis)
+    match /voucher_redemptions/{orderId} {
+      allow read: if isAdmin() || (request.auth != null && resource != null && resource.data.userId == request.auth.uid);
+      allow write: if false;
+    }
+
+    // Pending Orders sementara untuk bridge Midtrans metadata (Server-Only)
+    match /pending_orders/{orderId} {
+      allow read, write: if false;
+    }
   }
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../app/config/firebase_config.dart';
 import '../../domain/models/access_level.dart';
+import '../../domain/models/voucher_models.dart';
 import '../local/preferences_manager.dart';
 
 class AuthResponse {
@@ -455,6 +456,137 @@ class FirestoreRestService {
       data: data,
       idToken: idToken,
       updateMask: mask,
+    );
+  }
+
+  // ===============================================================
+  // Pricing Config, Vouchers & Channel Attribution REST Operations
+  // ===============================================================
+
+  /// Mengambil konfigurasi harga dasar global dari `app_config/pricing`
+  Future<PricingConfig> fetchPricingConfig({String? idToken}) async {
+    final raw = await getDocument(path: 'app_config/pricing', idToken: idToken);
+    if (raw != null) {
+      return PricingConfig.fromFirestoreMap(raw);
+    }
+    return const PricingConfig();
+  }
+
+  /// Memperbarui konfigurasi harga dasar global (Khusus Admin)
+  Future<bool> updatePricingConfig(PricingConfig config, {String? idToken}) async {
+    return putDocument(
+      path: 'app_config/pricing',
+      data: config.toFirestoreMap(),
+      idToken: idToken,
+      updateMask: ['defaultPrice', 'minAllowedPrice', 'updatedAt'],
+    );
+  }
+
+  /// Mengambil seluruh daftar voucher (Khusus Admin Dashboard)
+  Future<List<VoucherModel>> fetchAllVouchers({String? idToken}) async {
+    final rawList = await getCollection(collectionPath: 'vouchers', idToken: idToken);
+    final list = rawList
+        .map((raw) => VoucherModel.fromFirestoreMap(raw, docId: raw['id'] as String?))
+        .toList();
+    list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return list;
+  }
+
+  /// Mengambil detail satu voucher berdasarkan kode (Bisa dipanggil user auth)
+  Future<VoucherModel?> getVoucherByCode(String code, {String? idToken}) async {
+    final cleanCode = code.trim().toUpperCase();
+    if (cleanCode.isEmpty) return null;
+    final raw = await getDocument(path: 'vouchers/$cleanCode', idToken: idToken);
+    if (raw != null) {
+      return VoucherModel.fromFirestoreMap(raw, docId: cleanCode);
+    }
+    return null;
+  }
+
+  /// Membuat atau mengedit voucher (Khusus Admin; saat edit menjaga `usedCount` tetap aman)
+  Future<bool> upsertVoucher(VoucherModel voucher, {bool isEdit = false, String? idToken}) async {
+    final cleanCode = voucher.code.trim().toUpperCase();
+    final data = voucher.toFirestoreMap();
+    final mask = isEdit
+        ? [
+            'code',
+            'channel',
+            'description',
+            'discountType',
+            'discountValue',
+            'isActive',
+            'maxQuota',
+            'validFrom',
+            'validUntil',
+            'updatedAt',
+          ]
+        : [
+            'code',
+            'channel',
+            'description',
+            'discountType',
+            'discountValue',
+            'isActive',
+            'maxQuota',
+            'usedCount',
+            'validFrom',
+            'validUntil',
+            'createdAt',
+            'updatedAt',
+          ];
+
+    return putDocument(
+      path: 'vouchers/$cleanCode',
+      data: data,
+      idToken: idToken,
+      updateMask: mask,
+    );
+  }
+
+  /// Mengubah status aktif/nonaktif voucher secara cepat
+  Future<bool> toggleVoucherActive(String code, bool isActive, {String? idToken}) async {
+    final cleanCode = code.trim().toUpperCase();
+    return putDocument(
+      path: 'vouchers/$cleanCode',
+      data: {
+        'isActive': isActive,
+        'updatedAt': DateTime.now().millisecondsSinceEpoch,
+      },
+      idToken: idToken,
+      updateMask: ['isActive', 'updatedAt'],
+    );
+  }
+
+  /// Menghapus voucher permanen (Khusus Admin)
+  Future<bool> deleteVoucher(String code, {String? idToken}) async {
+    final cleanCode = code.trim().toUpperCase();
+    return deleteDocument(path: 'vouchers/$cleanCode', idToken: idToken);
+  }
+
+  /// Mengambil riwayat penukaran voucher lunas (Khusus Admin Dashboard)
+  Future<List<VoucherRedemptionLog>> fetchVoucherRedemptions({String? idToken}) async {
+    final rawList = await getCollection(collectionPath: 'voucher_redemptions', idToken: idToken);
+    final logs = rawList
+        .map((raw) => VoucherRedemptionLog.fromFirestoreMap(raw, docId: raw['id'] as String?))
+        .toList();
+    logs.sort((a, b) => b.redeemedAt.compareTo(a.redeemedAt));
+    return logs;
+  }
+
+  /// Mencatat sumber akuisisi / kode promo awal pengguna di `users/{userId}`
+  Future<bool> saveUserAcquisitionSource({
+    required String userId,
+    required Map<String, dynamic> acquisitionSource,
+    String? idToken,
+  }) async {
+    return putDocument(
+      path: 'users/$userId',
+      data: {
+        'acquisitionSource': acquisitionSource,
+        'updatedAt': DateTime.now().millisecondsSinceEpoch,
+      },
+      idToken: idToken,
+      updateMask: ['acquisitionSource', 'updatedAt'],
     );
   }
 
