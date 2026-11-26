@@ -70,7 +70,7 @@ export const metadata: Metadata = {
     url: 'https://getnikahin.my.id',
     title: 'Nikahin — Wedding Planner & Budgeting Pasangan',
     description:
-      'Rencanakan pernikahan berdua lebih tenang. Kelola bujet, vendor, rundown, dan tamu tersinkronisasi real-time.',
+      'Rencanakan pernikahan berdua lebih tenang. Tersedia promo diskon khusus kode voucher untuk akses seumur hidup.',
     siteName: 'Nikahin',
     images: [
       {
@@ -86,7 +86,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Nikahin — Wedding Planner & Budgeting Pasangan',
     description:
-      'Rencanakan pernikahan berdua lebih tenang. Kelola bujet, vendor, rundown, dan tamu tersinkronisasi real-time.',
+      'Rencanakan pernikahan berdua lebih tenang. Tersedia promo diskon khusus kode voucher untuk akses seumur hidup.',
     images: ['/assets/og-image.png'],
   },
   icons: {
@@ -111,7 +111,7 @@ const jsonLdData = {
       'applicationCategory': 'LifestyleApplication',
       'offers': {
         '@type': 'Offer',
-        'price': '39000',
+        'price': '99000',
         'priceCurrency': 'IDR',
         'availability': 'https://schema.org/InStock',
       },

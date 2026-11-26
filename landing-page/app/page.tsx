@@ -11,6 +11,7 @@ import FaqAccordion from '@/components/FaqAccordion';
 import FinalCtaSection from '@/components/FinalCtaSection';
 import Footer from '@/components/Footer';
 import TrackViewContent from '@/components/TrackViewContent';
+import AttributionTracker from '@/components/AttributionTracker';
 import { getLatestRelease } from '@/lib/github-release';
 
 export const revalidate = 300;
@@ -21,6 +22,7 @@ export default async function HomePage() {
   return (
     <main className="min-h-screen relative flex flex-col bg-[#faf7f2] text-[#1c1917] selection:bg-[#fce7ef] selection:text-[#831843]">
       <TactileBackground />
+      <AttributionTracker />
       <TrackViewContent />
       <Navbar />
 

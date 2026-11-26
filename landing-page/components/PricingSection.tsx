@@ -2,6 +2,7 @@ import React from 'react';
 import ScrollReveal from './ScrollReveal';
 import { Check, Sparkles, ShieldCheck, HeartHandshake, Users } from 'lucide-react';
 import DeviceCta from './DeviceCta';
+import DynamicPriceDisplay from './DynamicPriceDisplay';
 import { ReleaseMetadata } from '@/lib/github-release';
 
 interface PricingSectionProps {
@@ -50,7 +51,7 @@ export default function PricingSection({ release }: PricingSectionProps) {
                 <div>
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100/70 border border-amber-300/60 text-xs font-bold text-amber-900 uppercase tracking-wider mb-2">
                     <Sparkles className="w-3.5 h-3.5 text-amber-700" />
-                    <span>Penawaran Terbatas Hemat 60%</span>
+                    <span>Akses Sekali Bayar Seumur Hidup</span>
                   </div>
                   <h3 className="text-2xl sm:text-3xl font-bold text-stone-900 tracking-tight">
                     Paket Lengkap Nikahin
@@ -63,20 +64,8 @@ export default function PricingSection({ release }: PricingSectionProps) {
                 </div>
               </div>
 
-              {/* Price Highlight Row (WCAG AA Accessible Markup) */}
-              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 pb-6 mb-8 border-b border-stone-200/80">
-                <span className="sr-only">Harga normal:</span>
-                <span className="text-lg sm:text-xl font-semibold text-stone-400 line-through decoration-rose-500 decoration-2">
-                  Rp 99.000
-                </span>
-                <span className="sr-only">Harga promo aktivasi sekali bayar:</span>
-                <span className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-stone-900 tracking-tight tabular-nums">
-                  Rp 39.000
-                </span>
-                <span className="text-base sm:text-lg font-semibold text-amber-700">
-                  / selamanya
-                </span>
-              </div>
+              {/* Price Highlight Row (Dynamic Pricing & Promo Aware) */}
+              <DynamicPriceDisplay />
 
               {/* Included Features Checklist (2-Column Grid on Tablet/Desktop) */}
               <div className="mb-10">

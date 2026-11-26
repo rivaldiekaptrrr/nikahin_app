@@ -1,3 +1,5 @@
+import { getStoredAttribution } from './attribution';
+
 export const FB_PIXEL_ID =
   process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID || '972654332267701';
 
@@ -56,10 +58,13 @@ export const trackDownloadClick = (
   platform: 'android' | 'ios' | 'pwa',
   metadata: Record<string, unknown> = {}
 ) => {
+  const attr = getStoredAttribution();
   const payload = {
     platform,
     content_name: 'Nikahin Wedding Planner App',
     content_category: 'App Download',
+    promo_code: attr?.promoCode || null,
+    channel: attr?.ref || attr?.utmSource || 'organic',
     timestamp: new Date().toISOString(),
     ...metadata,
   };

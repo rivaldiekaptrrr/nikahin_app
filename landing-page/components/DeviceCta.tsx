@@ -8,6 +8,7 @@ import DesktopQrModal from './DesktopQrModal';
 import { detectDevice, DeviceType } from '@/lib/device-detector';
 import { ReleaseMetadata } from '@/lib/github-release';
 import { trackDownloadClick } from '@/lib/fpixel';
+import { appendPromoToUrl } from '@/lib/attribution';
 
 interface DeviceCtaProps {
   release?: ReleaseMetadata;
@@ -156,12 +157,12 @@ export default function DeviceCta({
       <IosInstallModal
         isOpen={iosModalOpen}
         onClose={() => setIosModalOpen(false)}
-        appUrl={appUrl}
+        appUrl={appendPromoToUrl(appUrl)}
       />
       <DesktopQrModal
         isOpen={qrModalOpen}
         onClose={() => setQrModalOpen(false)}
-        targetUrl="https://getnikahin.my.id"
+        targetUrl={appendPromoToUrl('https://getnikahin.my.id')}
       />
     </>
   );
