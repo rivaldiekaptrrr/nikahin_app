@@ -32,26 +32,38 @@ class BusinessConfig {
     defaultValue: 'https://track-it-backend-sand.vercel.app/api/charge-core-api',
   );
 
+  /// Backend URL Validasi Kode Voucher (Vercel Serverless Function)
+  static const String validateVoucherBackendUrl = String.fromEnvironment(
+    'VALIDATE_VOUCHER_BACKEND_URL',
+    defaultValue: 'https://track-it-backend-sand.vercel.app/api/validate-voucher',
+  );
+
   /// Status Lingkungan Midtrans (false = Sandbox, true = Production)
   static const bool isProduction = bool.fromEnvironment('MIDTRANS_IS_PRODUCTION', defaultValue: true);
 
   /// Kode Paket Lisensi Midtrans
   static const String midtransPackageCode = 'WEDDING';
 
-  /// Informasi Harga Paket Lisensi
-  static const double lifetimePrice = 39000.0;
+  /// Informasi Harga Paket Lisensi (Default Fallback jika belum memuat dari Firestore)
+  static const double lifetimePrice = 99000.0;
   static const double originalPrice = 99000.0;
   static const String packageName = 'Paket Wedding Planner Seumur Hidup (Lifetime)';
 
   /// Generator URL WhatsApp untuk Konfirmasi Pembeli
   static Uri getWhatsAppConfirmationUri({
     required String userEmail,
+    String? voucherCode,
+    double? finalAmount,
   }) {
     final targetNumber = useManualPaymentMode ? manualPaymentWhatsAppNumber : adminWhatsAppNumber;
+    final amountValue = (finalAmount ?? lifetimePrice).toInt();
+    final promoLine = (voucherCode != null && voucherCode.trim().isNotEmpty)
+        ? '\nKode Promo: ${voucherCode.trim().toUpperCase()}'
+        : '';
     final message = '''
-Halo Tim Nikahin, saya sudah melakukan pembayaran lisensi via QRIS (Rp 39.000):
+Halo Tim Nikahin, saya sudah melakukan pembayaran lisensi via QRIS (Rp $amountValue):
 
-Email Terdaftar: $userEmail
+Email Terdaftar: $userEmail$promoLine
 
 Berikut saya lampirkan bukti pembayaran QRIS. Mohon untuk diverifikasi dan diaktifkan akses akun saya. Terima kasih!
 '''

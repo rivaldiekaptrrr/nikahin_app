@@ -168,5 +168,65 @@ void main() {
       expect(PaymentChannel.qris.name, equals('QRIS'));
       expect(PaymentChannel.gopay.name, equals('GoPay / Gojek'));
     });
+
+    test('validateVoucher parses valid response accurately', () async {
+      final mockClient = MockClient((request) async {
+        final body = jsonDecode(request.body) as Map<String, dynamic>;
+        expect(body['code'], equals('THREADS39'));
+        return http.Response(
+          jsonEncode({
+            'valid': true,
+            'code': 'THREADS39',
+            'channel': 'threads',
+            'basePrice': 49000,
+            'discountAmount': 10000,
+            'finalPrice': 39000,
+            'message': 'Kode THREADS39 terpasang! Hemat Rp 10.000',
+          }),
+          200,
+          headers: {'content-type': 'application/json'},
+        );
+      });
+
+      final service = MidtransPaymentService(client: mockClient);
+      final result = await service.validateVoucher(code: ' threads39 ');
+
+      expect(result.valid, isTrue);
+      expect(result.code, equals('THREADS39'));
+      expect(result.channel, equals('threads'));
+      expect(result.discountAmount, equals(10000));
+      expect(result.finalPrice, equals(39000));
+    });
+
+    test('chargeCoreApi sends voucherCode in backend payload when supplied', () async {
+      final mockClient = MockClient((request) async {
+        final body = jsonDecode(request.body) as Map<String, dynamic>;
+        expect(body['voucherCode'], equals('IGPASANGAN'));
+        return http.Response(
+          jsonEncode({
+            'status_code': '201',
+            'order_id': 'ORDER-PROMO-1',
+            'transaction_status': 'pending',
+            'gross_amount': '39000.00',
+            'payment_type': 'qris',
+            'qr_string': '000201010212...',
+          }),
+          201,
+          headers: {'content-type': 'application/json'},
+        );
+      });
+
+      final service = MidtransPaymentService(client: mockClient);
+      final result = await service.chargeCoreApi(
+        channel: PaymentChannel.qris,
+        userId: 'user_promo',
+        email: 'promo@nikahin.app',
+        customerName: 'Rivaldi',
+        amount: 39000,
+        voucherCode: ' igpasangan ',
+      );
+
+      expect(result, isA<MidtransCoreChargeSuccess>());
+    });
   });
 }

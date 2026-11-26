@@ -16,6 +16,7 @@ import '../../../data/local/preferences_manager.dart';
 import '../../../data/remote/midtrans_payment_service.dart';
 import '../../../data/repositories/wedding_repository.dart';
 import '../../../data/services/couple_pairing_service.dart';
+import '../../../domain/models/voucher_models.dart';
 import '../../../shared/utils/currency_utils.dart';
 import '../../../shared/widgets/bento_card.dart';
 import '../../../shared/widgets/whatsapp_logo.dart';
@@ -41,14 +42,109 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
   Timer? _statusPollTimer;
   OverlayEntry? _qrisToastOverlay;
 
+  // Dynamic Pricing & Voucher State
+  PricingConfig _pricingConfig = const PricingConfig();
+  VoucherValidationResult? _appliedVoucher;
+  bool _isVoucherExpanded = false;
+  bool _isValidatingVoucher = false;
+  String? _voucherError;
+  final TextEditingController _voucherController = TextEditingController();
+
+  bool get _hasDiscountedVoucher =>
+      _appliedVoucher?.valid == true && _appliedVoucher!.finalPrice < _pricingConfig.defaultPrice;
+
+  double get _activePrice =>
+      (_appliedVoucher?.valid == true) ? _appliedVoucher!.finalPrice : _pricingConfig.defaultPrice;
+
+  double get _strikePrice => _pricingConfig.defaultPrice;
+
+  String? get _activeVoucherCode =>
+      (_appliedVoucher?.valid == true) ? _appliedVoucher!.code : null;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _loadDynamicPricingAndPromo();
     // Auto-polling status verifikasi berkala (setiap 10 detik) jika akun belum premium
     _statusPollTimer = Timer.periodic(const Duration(seconds: 10), (_) {
       _silentCheckStatus();
     });
+  }
+
+  Future<void> _loadDynamicPricingAndPromo() async {
+    try {
+      final firestoreService = ref.read(firestoreServiceProvider);
+      final idToken = await AppPreferences.getIdToken();
+      final fetchedPricing = await firestoreService.fetchPricingConfig(idToken: idToken);
+      if (mounted) {
+        setState(() => _pricingConfig = fetchedPricing);
+      }
+    } catch (_) {}
+
+    try {
+      final pendingPromo = await AppPreferences.getPendingPromoCode();
+      if (pendingPromo != null && pendingPromo.trim().isNotEmpty && mounted) {
+        _voucherController.text = pendingPromo.trim().toUpperCase();
+        setState(() => _isVoucherExpanded = true);
+        await _applyVoucher(silent: true);
+      }
+    } catch (_) {}
+  }
+
+  Future<void> _applyVoucher({bool silent = false}) async {
+    final code = _voucherController.text.trim().toUpperCase();
+    if (code.isEmpty) {
+      setState(() => _voucherError = 'Masukkan kode promo terlebih dahulu.');
+      return;
+    }
+
+    setState(() {
+      _isValidatingVoucher = true;
+      _voucherError = null;
+    });
+
+    final paymentService = ref.read(midtransPaymentServiceProvider);
+    final result = await paymentService.validateVoucher(code: code);
+
+    if (!mounted) return;
+
+    setState(() {
+      _isValidatingVoucher = false;
+      if (result.valid) {
+        _appliedVoucher = result;
+        _voucherError = null;
+      } else {
+        _appliedVoucher = null;
+        if (!silent) {
+          _voucherError = result.message;
+        }
+      }
+    });
+
+    if (result.valid) {
+      await AppPreferences.setPendingPromoCode(result.code);
+      if (!silent && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result.message),
+            backgroundColor: Colors.green.shade700,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _removeVoucher() async {
+    _voucherController.clear();
+    await AppPreferences.setPendingPromoCode(null);
+    if (mounted) {
+      setState(() {
+        _appliedVoucher = null;
+        _voucherError = null;
+      });
+    }
   }
 
   @override
@@ -62,6 +158,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _statusPollTimer?.cancel();
+    _voucherController.dispose();
     _qrisToastOverlay?.remove();
     _qrisToastOverlay = null;
     super.dispose();
@@ -115,6 +212,8 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
   Future<void> _launchWhatsApp(String userEmail) async {
     final uri = BusinessConfig.getWhatsAppConfirmationUri(
       userEmail: userEmail,
+      voucherCode: _activeVoucherCode,
+      finalAmount: _activePrice,
     );
     try {
       final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
@@ -341,6 +440,8 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
       // Eksekusi pembayaran langsung Midtrans Core API (100% In-App Native)
       final result = await ref.read(authNotifierProvider.notifier).chargeMidtransCoreApi(
         channel: selectedChannel,
+        amount: _activePrice,
+        voucherCode: _activeVoucherCode,
       );
       if (!mounted) return;
 
@@ -490,7 +591,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
         ),
         const SizedBox(height: 6),
         Text(
-          'Akun ($userEmail) siap digunakan. Selesaikan pembayaran sebesar ${CurrencyUtils.formatRupiah(BusinessConfig.lifetimePrice)} untuk membuka semua fitur selamanya.',
+          'Akun ($userEmail) siap digunakan. Selesaikan pembayaran sebesar ${CurrencyUtils.formatRupiah(_activePrice)} untuk membuka semua fitur selamanya.',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 12.5,
@@ -544,21 +645,22 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                       ],
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                    decoration: BoxDecoration(
-                      color: Colors.red.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: const Text(
-                      'HEMAT 50%',
-                      style: TextStyle(
-                        fontSize: 10.5,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red,
+                  if (_hasDiscountedVoucher)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        'HEMAT ${((1 - (_activePrice / _strikePrice)) * 100).round()}%',
+                        style: const TextStyle(
+                          fontSize: 10.5,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                        ),
                       ),
                     ),
-                  ),
                 ],
               ),
               const SizedBox(height: 12),
@@ -574,7 +676,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                       fit: BoxFit.scaleDown,
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        CurrencyUtils.formatRupiah(BusinessConfig.lifetimePrice),
+                        CurrencyUtils.formatRupiah(_activePrice),
                         style: TextStyle(
                           fontSize: 26,
                           fontWeight: FontWeight.w900,
@@ -584,25 +686,27 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 3),
-                    child: Text(
-                      CurrencyUtils.formatRupiah(BusinessConfig.originalPrice),
-                      style: TextStyle(
-                        fontSize: 13,
-                        decoration: TextDecoration.lineThrough,
-                        color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                  if (_hasDiscountedVoucher) ...[
+                    const SizedBox(width: 8),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 3),
+                      child: Text(
+                        CurrencyUtils.formatRupiah(_strikePrice),
+                        style: TextStyle(
+                          fontSize: 13,
+                          decoration: TextDecoration.lineThrough,
+                          color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                   const Spacer(),
                   IconButton.filledTonal(
                     onPressed: () {
-                      Clipboard.setData(ClipboardData(text: BusinessConfig.lifetimePrice.toInt().toString()));
+                      Clipboard.setData(ClipboardData(text: _activePrice.toInt().toString()));
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Nominal ${CurrencyUtils.formatRupiah(BusinessConfig.lifetimePrice)} berhasil disalin ke papan klip'),
+                          content: Text('Nominal ${CurrencyUtils.formatRupiah(_activePrice)} berhasil disalin ke papan klip'),
                           duration: const Duration(seconds: 2),
                           behavior: SnackBarBehavior.floating,
                         ),
@@ -613,6 +717,8 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                   ),
                 ],
               ),
+              const SizedBox(height: 12),
+              _buildPromoVoucherCard(theme),
             ],
           ),
         ),
@@ -761,7 +867,7 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
               const SizedBox(height: 8),
               _buildStepItem(
                 number: '3',
-                text: 'Selesaikan pembayaran sejumlah ${CurrencyUtils.formatRupiah(BusinessConfig.lifetimePrice)} & simpan bukti transfer.',
+                text: 'Selesaikan pembayaran sejumlah ${CurrencyUtils.formatRupiah(_activePrice)} & simpan bukti transfer.',
               ),
               const SizedBox(height: 8),
               _buildStepItem(
@@ -956,13 +1062,13 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
               ),
               const SizedBox(height: 16),
 
-              // Harga
+              // Harga Dinamis & Coretan Harga Normal
               Row(
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 textBaseline: TextBaseline.alphabetic,
                 children: [
                   Text(
-                    CurrencyUtils.formatRupiah(BusinessConfig.lifetimePrice),
+                    CurrencyUtils.formatRupiah(_activePrice),
                     style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.w900,
@@ -970,7 +1076,18 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
                       letterSpacing: -0.8,
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  if (_hasDiscountedVoucher) ...[
+                    const SizedBox(width: 8),
+                    Text(
+                      CurrencyUtils.formatRupiah(_strikePrice),
+                      style: TextStyle(
+                        fontSize: 14,
+                        decoration: TextDecoration.lineThrough,
+                        color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.65),
+                      ),
+                    ),
+                  ],
+                  const SizedBox(width: 6),
                   Text(
                     '/ selamanya',
                     style: TextStyle(
@@ -1009,7 +1126,11 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
             ],
           ),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 14),
+
+        // 3.5. Input Kode Voucher / Promo (Antislop Expandable Card)
+        _buildPromoVoucherCard(theme),
+        const SizedBox(height: 18),
 
         // 4. Tombol Utama (Pilih Metode Pembayaran)
         FilledButton.icon(
@@ -1109,6 +1230,142 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
         ),
         const SizedBox(height: 16),
       ],
+    );
+  }
+
+  Widget _buildPromoVoucherCard(ThemeData theme) {
+    final hasApplied = _appliedVoucher?.valid == true;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: hasApplied
+            ? Colors.green.withValues(alpha: 0.08)
+            : theme.colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: hasApplied
+              ? Colors.green.withValues(alpha: 0.35)
+              : theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (hasApplied)
+            Row(
+              children: [
+                Icon(PhosphorIconsFill.checkCircle, size: 18, color: Colors.green.shade700),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Kode ${_appliedVoucher!.code} aktif',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                          color: Colors.green.shade800,
+                        ),
+                      ),
+                      Text(
+                        'Hemat ${CurrencyUtils.formatRupiah(_appliedVoucher!.discountAmount)}',
+                        style: TextStyle(fontSize: 11.5, color: Colors.green.shade700),
+                      ),
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: _removeVoucher,
+                  style: TextButton.styleFrom(
+                    visualDensity: VisualDensity.compact,
+                    foregroundColor: theme.colorScheme.error,
+                  ),
+                  child: const Text('Hapus', style: TextStyle(fontSize: 12)),
+                ),
+              ],
+            )
+          else if (!_isVoucherExpanded)
+            InkWell(
+              onTap: () => setState(() => _isVoucherExpanded = true),
+              borderRadius: BorderRadius.circular(10),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Row(
+                  children: [
+                    Icon(PhosphorIconsRegular.ticket, size: 18, color: theme.colorScheme.primary),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Punya kode promo?',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: theme.colorScheme.onSurface,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      'Masukkan',
+                      style: TextStyle(
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 2),
+                    Icon(PhosphorIconsRegular.caretRight, size: 14, color: theme.colorScheme.primary),
+                  ],
+                ),
+              ),
+            )
+          else
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _voucherController,
+                        textCapitalization: TextCapitalization.characters,
+                        decoration: InputDecoration(
+                          hintText: 'Masukkan kode promo',
+                          isDense: true,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    FilledButton.tonal(
+                      onPressed: _isValidatingVoucher ? null : () => _applyVoucher(),
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                      child: _isValidatingVoucher
+                          ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Text('Terapkan', style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+                if (_voucherError != null) ...[
+                  const SizedBox(height: 6),
+                  Text(
+                    _voucherError!,
+                    style: TextStyle(fontSize: 11.5, color: theme.colorScheme.error),
+                  ),
+                ],
+              ],
+            ),
+        ],
+      ),
     );
   }
 

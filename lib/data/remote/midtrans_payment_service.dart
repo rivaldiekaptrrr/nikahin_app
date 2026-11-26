@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import '../../app/config/business_config.dart';
 import '../../domain/models/midtrans_core_models.dart';
+import '../../domain/models/voucher_models.dart';
 
 /// Hasil transaksi pembuatan token Midtrans Snap
 sealed class MidtransPaymentResult {
@@ -68,6 +69,39 @@ class MidtransPaymentService {
 
   MidtransPaymentService({http.Client? client}) : _client = client ?? http.Client();
 
+  /// Validasi Kode Voucher via Vercel Serverless Backend (Zero-Trust)
+  Future<VoucherValidationResult> validateVoucher({required String code}) async {
+    final cleanCode = code.trim().toUpperCase();
+    if (cleanCode.isEmpty) {
+      return const VoucherValidationResult(
+        valid: false,
+        message: 'Masukkan kode promo terlebih dahulu.',
+      );
+    }
+
+    try {
+      final uri = Uri.parse(BusinessConfig.validateVoucherBackendUrl);
+      final res = await _client
+          .post(
+            uri,
+            headers: {'Content-Type': 'application/json; charset=utf-8'},
+            body: jsonEncode({
+              'code': cleanCode,
+              'appName': 'nikahin',
+            }),
+          )
+          .timeout(const Duration(seconds: 10));
+
+      final decoded = jsonDecode(res.body) as Map<String, dynamic>;
+      return VoucherValidationResult.fromJson(decoded);
+    } catch (_) {
+      return const VoucherValidationResult(
+        valid: false,
+        message: 'Tidak dapat memverifikasi kode promo saat ini. Periksa koneksi internet Anda.',
+      );
+    }
+  }
+
   /// Eksekusi Charge Midtrans Core API via Backend Vercel Serverless Function
   /// 100% Zero-Trust: Server Key Midtrans dikelola sepenuhnya di serverless backend Vercel
   Future<MidtransCoreChargeResult> chargeCoreApi({
@@ -76,11 +110,13 @@ class MidtransPaymentService {
     required String email,
     required String customerName,
     double amount = BusinessConfig.lifetimePrice,
+    String? voucherCode,
   }) async {
     final orderId = 'NIKAHIN-CORE-${userId.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '').substring(0, userId.length > 5 ? 5 : userId.length).toUpperCase()}-${DateTime.now().millisecondsSinceEpoch}';
 
     try {
       final backendUri = Uri.parse(BusinessConfig.midtransCoreChargeBackendUrl);
+      final cleanVoucher = voucherCode?.trim().toUpperCase();
       final backendPayload = jsonEncode({
         'channel': channel.id,
         'orderId': orderId,
@@ -89,6 +125,7 @@ class MidtransPaymentService {
         'customerName': customerName,
         'amount': amount.toInt(),
         'appName': 'nikahin',
+        if (cleanVoucher != null && cleanVoucher.isNotEmpty) 'voucherCode': cleanVoucher,
       });
 
       final res = await _client
@@ -150,14 +187,17 @@ class MidtransPaymentService {
     required String userId,
     required String email,
     String accessLevel = BusinessConfig.midtransPackageCode,
+    String? voucherCode,
   }) async {
     try {
       final uri = Uri.parse(BusinessConfig.midtransBackendUrl);
+      final cleanVoucher = voucherCode?.trim().toUpperCase();
       final payload = jsonEncode({
         'userId': userId,
         'email': email,
         'accessLevel': accessLevel,
         'appName': 'nikahin',
+        if (cleanVoucher != null && cleanVoucher.isNotEmpty) 'voucherCode': cleanVoucher,
       });
 
       final response = await _client

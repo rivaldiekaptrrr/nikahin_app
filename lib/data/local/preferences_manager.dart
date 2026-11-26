@@ -18,6 +18,8 @@ const String kPrefIsPrimaryPayer = 'user_is_primary_payer';
 const String kPrefDailyReminderHour = 'wedding_daily_reminder_hour';
 const String kPrefDailyReminderMinute = 'wedding_daily_reminder_minute';
 const String kPrefLastSyncedActiveDate = 'last_synced_active_date';
+const String kPrefPendingPromoCode = 'pending_promo_code';
+const String kPrefAttributionRef = 'attribution_ref';
 
 class AppPreferences {
   static Future<String> getAccessLevel() async {
@@ -264,6 +266,34 @@ class AppPreferences {
       await prefs.setString('hero_cover_photo_$profileId', path);
     } else {
       await prefs.remove('hero_cover_photo_$profileId');
+    }
+  }
+
+  static Future<String?> getPendingPromoCode() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(kPrefPendingPromoCode);
+  }
+
+  static Future<void> setPendingPromoCode(String? code) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (code != null && code.trim().isNotEmpty) {
+      await prefs.setString(kPrefPendingPromoCode, code.trim().toUpperCase());
+    } else {
+      await prefs.remove(kPrefPendingPromoCode);
+    }
+  }
+
+  static Future<String?> getAttributionRef() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(kPrefAttributionRef);
+  }
+
+  static Future<void> setAttributionRef(String? ref) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (ref != null && ref.trim().isNotEmpty) {
+      await prefs.setString(kPrefAttributionRef, ref.trim().toLowerCase());
+    } else {
+      await prefs.remove(kPrefAttributionRef);
     }
   }
 }

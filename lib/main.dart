@@ -47,6 +47,21 @@ void main() async {
   // Initialize Drift Database
   final db = AppDatabase();
 
+  // Capture query parameter promo/ref dari URL Web PWA (misal: ?promo=THREADS39)
+  if (kIsWeb) {
+    try {
+      final params = Uri.base.queryParameters;
+      final promo = params['promo'] ?? params['voucher'];
+      final ref = params['ref'] ?? params['utm_source'];
+      if (promo != null && promo.trim().isNotEmpty) {
+        await AppPreferences.setPendingPromoCode(promo);
+      }
+      if (ref != null && ref.trim().isNotEmpty) {
+        await AppPreferences.setAttributionRef(ref);
+      }
+    } catch (_) {}
+  }
+
   // Initialize Notification Service
   final notificationService = NotificationService();
   await notificationService.init();

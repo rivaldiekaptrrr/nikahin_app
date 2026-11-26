@@ -880,6 +880,7 @@ class AuthNotifier extends Notifier<AuthState> {
   Future<MidtransCoreChargeResult> chargeMidtransCoreApi({
     required PaymentChannel channel,
     double amount = BusinessConfig.lifetimePrice,
+    String? voucherCode,
   }) async {
     final uid = state.userId;
     final email = state.email;
@@ -890,6 +891,25 @@ class AuthNotifier extends Notifier<AuthState> {
       );
     }
 
+    // Catat atribusi promo/ref jika pengguna datang dari tautan kampanye sebelum bayar
+    try {
+      final pendingPromo = voucherCode ?? await AppPreferences.getPendingPromoCode();
+      final attrRef = await AppPreferences.getAttributionRef();
+      if ((pendingPromo != null && pendingPromo.isNotEmpty) || (attrRef != null && attrRef.isNotEmpty)) {
+        final firestoreService = ref.read(firestoreServiceProvider);
+        final idToken = await AppPreferences.getIdToken();
+        await firestoreService.saveUserAcquisitionSource(
+          userId: uid,
+          idToken: idToken,
+          acquisitionSource: {
+            if (pendingPromo != null && pendingPromo.isNotEmpty) 'voucherCode': pendingPromo,
+            if (attrRef != null && attrRef.isNotEmpty) 'channel': attrRef,
+            'capturedAt': DateTime.now().millisecondsSinceEpoch,
+          },
+        );
+      }
+    } catch (_) {}
+
     final paymentService = ref.read(midtransPaymentServiceProvider);
     return await paymentService.chargeCoreApi(
       channel: channel,
@@ -897,6 +917,7 @@ class AuthNotifier extends Notifier<AuthState> {
       email: email,
       customerName: name,
       amount: amount,
+      voucherCode: voucherCode,
     );
   }
 
