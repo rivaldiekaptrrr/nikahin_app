@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:phosphor_icons/phosphor_icons.dart';
 import '../../../../data/local/preferences_manager.dart';
+import '../../../../data/repositories/wedding_repository.dart';
 import '../../../../domain/models/voucher_models.dart';
 import '../../../../shared/utils/currency_utils.dart';
 import '../../../../shared/utils/date_utils.dart';
@@ -34,7 +35,7 @@ class _AdminVoucherTabState extends ConsumerState<AdminVoucherTab> {
     try {
       final firestoreService = ref.read(firestoreServiceProvider);
       final idToken = await AppPreferences.getIdToken();
-      final results = await Future.wait([
+      final results = await Future.wait<dynamic>([
         firestoreService.fetchPricingConfig(idToken: idToken),
         firestoreService.fetchAllVouchers(idToken: idToken),
         firestoreService.fetchVoucherRedemptions(idToken: idToken),
