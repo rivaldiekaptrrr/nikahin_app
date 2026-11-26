@@ -8,6 +8,8 @@ import '../../../domain/models/access_level.dart';
 import '../../../shared/utils/currency_utils.dart';
 import '../../../shared/utils/date_utils.dart';
 import '../../auth/presentation/auth_notifier.dart';
+import 'widgets/admin_redemptions_tab.dart';
+import 'widgets/admin_voucher_tab.dart';
 
 class AdminDashboardScreen extends ConsumerStatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -343,7 +345,9 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
     final androidPct = totalCount > 0 ? ((androidCount / totalCount) * 100).toStringAsFixed(0) : '0';
     final iosPct = totalCount > 0 ? ((iosCount / totalCount) * 100).toStringAsFixed(0) : '0';
 
-    return Scaffold(
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
       backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
         titleSpacing: _isSelectionMode ? 0 : 16,
@@ -387,6 +391,19 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
+                ],
+              ),
+        bottom: _isSelectionMode
+            ? null
+            : TabBar(
+                labelColor: theme.colorScheme.primary,
+                unselectedLabelColor: theme.colorScheme.onSurfaceVariant,
+                indicatorColor: theme.colorScheme.primary,
+                labelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                tabs: const [
+                  Tab(text: 'Pengguna'),
+                  Tab(text: 'Voucher & Harga'),
+                  Tab(text: 'Log Penukaran'),
                 ],
               ),
         actions: _isSelectionMode
@@ -516,8 +533,11 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
               ),
             )
           : null,
-      body: SafeArea(
-        child: RefreshIndicator(
+      body: TabBarView(
+        physics: _isSelectionMode ? const NeverScrollableScrollPhysics() : null,
+        children: [
+          SafeArea(
+            child: RefreshIndicator(
           onRefresh: _loadUsers,
           child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
@@ -890,6 +910,11 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
             ],
           ),
         ),
+      ),
+          const AdminVoucherTab(),
+          const AdminRedemptionsTab(),
+        ],
+      ),
       ),
     );
   }
