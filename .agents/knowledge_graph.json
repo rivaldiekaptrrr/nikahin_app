@@ -203,6 +203,19 @@
         "Dedicated Lifetime Pricing Card: Komponen PricingSection.tsx dengan kartu harga seumur hidup Rp 39.000 / selamanya (diskon 60% dari harga normal Rp 99.000) untuk 2 akun terhubung, 9 poin checklist fasilitas, serta teks bantu pembaca layar (sr-only).",
         "Full Page Ergonomics & WCAG 2.1 AA Compliance: Seluruh halaman mengadopsi standar WAI-ARIA (Accordion, Tablist/Tab/Tabpanel mockup ponsel, menu mobile dinamis), kontras warna di atas 5.8:1, pendeteksi sentuhan jempol mobile (onTouchStart/onTouchEnd), serta bahasa Indonesia alami bebas istilah asing kaku."
       ]
+    },
+    {
+      "name": "Nikahin_Voucher_Attribution_System",
+      "entityType": "MonetizationAttributionArchitecture",
+      "observations": [
+        "Arsitektur Zero-Hardcode & Zero-Trust Pricing: Seluruh konfigurasi harga default tunggal (app_config/pricing.defaultPrice = 99000, tanpa dual-harga) dan daftar kode voucher (vouchers/{code}) disimpan dinamis di Cloud Firestore serta dikelola penuh melalui Admin Panel Flutter. Tanpa voucher tampil utuh Rp 99.000 tanpa coretan; saat voucher valid dimasukkan, harga default tercoret menjadi nominal diskon.",
+        "Firestore Collections & Rules: Menambahkan app_config/pricing (public read get, admin write), vouchers/{code} (authenticated get, admin list/CRUD anti-enumeration), voucher_redemptions/{orderId} (audit log lunas, server-only write), dan pending_orders/{orderId} (bridge metadata Midtrans server-only).",
+        "Admin Console Integration: AdminDashboardScreen (lib/features/admin/presentation/) diubah menjadi konsol 3 tab (Pengguna, Voucher & Harga, Log Penukaran) dengan widgets/admin_voucher_tab.dart, admin_voucher_form_dialog.dart (potongan Rupiah/Persen dari harga default, Live Price Preview, kuota, tanggal kedaluwarsa, salin link promo ?promo=), dan admin_redemptions_tab.dart.",
+        "Open Graph & Landing Page Positioning: Kartu OG (og-image.png) dan metadata tidak mencantumkan nominal harga agar aman saat harga default Rp 99.000, melainkan menekankan promo diskon kode voucher. DynamicPriceDisplay.tsx di Landing Page menampilkan Rp 99.000 + ajakan mengikuti Threads/Instagram resmi Nikahin bila belum membawa ?promo=.",
+        "Vercel Serverless Backend (TrackIt-backend): Menambahkan api/_lib/firebase-admin.ts, api/_lib/pricing-helper.ts, api/validate-voucher.ts, dan api/public-pricing.ts. Memperbarui api/charge-core-api.ts, api/create-snap-token.ts, serta api/midtrans-webhook.ts (atomic increment usedCount + log voucher_redemptions secara idempotent).",
+        "Landing Page & Client Propagation: landing-page/lib/attribution.ts & AttributionTracker.tsx menangkap ?promo=, ?ref=, dan UTM ke localStorage lalu meneruskannya ke URL Web PWA/QR Modal serta Meta Pixel/GA4, dengan DynamicPriceDisplay.tsx di PricingSection.",
+        "Flutter & Web PWA Paywall: main.dart menangkap ?promo=/ref dari URL Web ke AppPreferences; PendingVerificationScreen menampilkan rincian harga dinamis dari app_config/pricing serta kartu input kode promo expandable dan menyematkan voucherCode ke chargeMidtransCoreApi maupun konfirmasi WhatsApp manual."
+      ]
     }
   ],
   "relations": [
@@ -275,6 +288,11 @@
       "from": "Nikahin_App_Core",
       "to": "Nikahin_Landing_Page_Architecture",
       "relationType": "promotesAppWith"
+    },
+    {
+      "from": "Nikahin_App_Core",
+      "to": "Nikahin_Voucher_Attribution_System",
+      "relationType": "tracksAttributionWith"
     }
   ]
 }
