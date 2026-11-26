@@ -49,6 +49,7 @@
   2. `flutter test`
   3. `flutter build apk --release`
 - **Push to `main`/`master`**: Standard commits for development; does NOT trigger GitHub Actions build to conserve runner minutes.
+- **Production-Safe Staging Rule**: Setiap pengembangan fitur baru berskala besar, perubahan alur pembayaran/backend, atau modifikasi landing page/Web PWA **WAJIB** mengikuti standar isolasi pengujian di `.agents/skills/production-safe-staging-workflow/SKILL.md` (*feature branch*, Vercel Preview, Cloudflare `--branch` preview, dan *debug build*) sebelum di-*merge* ke `master`.
 - **Pushing tag `v*` (e.g. `v1.0.0`)**: The dedicated trigger that executes GitHub Actions, builds release APK, creates a GitHub Release, and uses `RELEASE_NOTES.md` as the changelog.
 
 ---
@@ -65,6 +66,7 @@ Knowledge graph data and MCP configurations are versioned inside `.agents/`:
   **DILARANG KERAS** membiarkan pengetahuan proyek usang atau menunggu pengguna mengingatkan untuk memperbarui knowledge graph.
 - `.agents/skills/flutter-environment-setup/SKILL.md`: Complete environment setup, toolchain requirements, and new machine onboarding guide.
 - `.agents/skills/flutter-cicd-release-workflow/SKILL.md`: Detailed CI/CD and release workflow guide.
+- `.agents/skills/production-safe-staging-workflow/SKILL.md`: Standar isolasi pengujian (feature branch, Vercel Preview, Cloudflare Branch Preview, & Midtrans Sandbox) agar perubahan besar tidak mengganggu produksi.
 - `.agents/skills/maestro-testing/SKILL.md`: Complete Maestro E2E automated UI testing & MCP integration guide.
 - `.agents/skills/clean-response-formatting/SKILL.md`: Standar penulisan format respon bersih, bebas dari raw LaTeX syntax ($...$, \rightarrow).
 - `.agents/skills/interactive-agent-workflow/SKILL.md`: Standar alur kerja interaktif, konfirmasi sebelum eksekusi, dan larangan menjalankan tes/analisis otomatis tanpa persetujuan pengguna.

@@ -69,7 +69,8 @@
         "Push to master/main is action-free for development to conserve runner minutes. Builds are triggered exclusively on release tags (v*) or via manual workflow_dispatch.",
         "Pushing version tag (v*, e.g., v1.0.0) automatically generates a GitHub Release with APK asset and uses RELEASE_NOTES.md as changelog.",
         "Platform toggles are managed centrally via lib/app/config/platform_config.dart and the platform-flags job in multiplatform-build.yml.",
-        "Skill file stored locally in .agents/skills/flutter-cicd-release-workflow/SKILL.md."
+        "Skill file stored locally in .agents/skills/flutter-cicd-release-workflow/SKILL.md.",
+        "Production-Safe Staging Rule: Setiap fitur baru atau perubahan besar wajib dikerjakan di feature branch terpisah dan diuji lewat Vercel Preview (dengan Midtrans Sandbox Preview-only), Cloudflare Pages Branch Preview (--branch=staging-*), serta debug build lokal sesuai .agents/skills/production-safe-staging-workflow/SKILL.md sebelum di-merge ke master."
       ]
     },
     {
