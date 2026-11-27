@@ -7,7 +7,6 @@ import '../../../../data/repositories/wedding_repository.dart';
 import '../../../../domain/models/voucher_models.dart';
 import '../../../../shared/utils/currency_utils.dart';
 import '../../../../shared/utils/date_utils.dart';
-import '../../../auth/presentation/auth_notifier.dart';
 import 'admin_voucher_form_dialog.dart';
 
 /// Tab manajemen Harga Dasar Global, Voucher Dinamis, dan Ringkasan Kanal di Admin Panel
@@ -328,7 +327,7 @@ class _AdminVoucherTabState extends ConsumerState<AdminVoucherTab> {
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: channelStats.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 10),
+                separatorBuilder: (_, _) => const SizedBox(width: 10),
                 itemBuilder: (ctx, i) {
                   final entry = channelStats.entries.elementAt(i);
                   return Container(
@@ -548,12 +547,10 @@ class _AdminVoucherTabState extends ConsumerState<AdminVoucherTab> {
 class _PricingMetricTile extends StatelessWidget {
   final String label;
   final String value;
-  final bool muted;
 
   const _PricingMetricTile({
     required this.label,
     required this.value,
-    this.muted = false,
   });
 
   @override
@@ -576,8 +573,7 @@ class _PricingMetricTile extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14.5,
-              decoration: muted ? TextDecoration.lineThrough : null,
-              color: muted ? theme.colorScheme.onSurfaceVariant : theme.colorScheme.onSurface,
+              color: theme.colorScheme.onSurface,
             ),
           ),
         ],

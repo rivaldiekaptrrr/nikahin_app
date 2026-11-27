@@ -6,7 +6,6 @@ import '../../../../data/repositories/wedding_repository.dart';
 import '../../../../domain/models/voucher_models.dart';
 import '../../../../shared/utils/currency_utils.dart';
 import '../../../../shared/utils/date_utils.dart';
-import '../../../auth/presentation/auth_notifier.dart';
 
 /// Tab riwayat penukaran voucher yang berhasil lunas (`voucher_redemptions`)
 class AdminRedemptionsTab extends ConsumerStatefulWidget {
@@ -98,7 +97,7 @@ class _AdminRedemptionsTabState extends ConsumerState<AdminRedemptionsTab> {
                 : ListView.separated(
                     padding: const EdgeInsets.fromLTRB(16, 6, 16, 24),
                     itemCount: filtered.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 8),
+                    separatorBuilder: (_, _) => const SizedBox(height: 8),
                     itemBuilder: (ctx, i) {
                       final log = filtered[i];
                       return Container(
