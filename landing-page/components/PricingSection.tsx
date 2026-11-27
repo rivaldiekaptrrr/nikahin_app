@@ -32,7 +32,7 @@ export default function PricingSection({ release }: PricingSectionProps) {
             <span>Sekali Bayar, Bebas Pakai Selamanya</span>
           </p>
           <h2 className="text-2xl sm:text-4xl md:text-5xl font-semibold text-stone-900 tracking-tight leading-[1.18]">
-            Satu harga pasti untuk hari bahagiamu berdua
+            Satu paket lengkap untuk hari bahagiamu berdua
           </h2>
           <p className="text-stone-600 text-xs sm:text-base mt-2.5 sm:mt-3 leading-relaxed">
             Nggak ada tagihan tersembunyi atau biaya perpanjangan. Cukup sekali aktivasi untuk dipakai berdua sampai seluruh rangkaian pernikahan selesai.

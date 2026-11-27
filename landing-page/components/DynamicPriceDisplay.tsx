@@ -54,37 +54,38 @@ export default function DynamicPriceDisplay() {
   }, []);
 
   const hasValidPromo = pricing.promo?.valid === true && pricing.promo.finalPrice < pricing.defaultPrice;
-  const activePrice = hasValidPromo ? pricing.promo!.finalPrice : pricing.defaultPrice;
 
   return (
     <div className="pb-6 mb-8 border-b border-stone-200/80">
-      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        {hasValidPromo && (
-          <>
-            <span className="sr-only">Harga normal:</span>
-            <span className="text-lg sm:text-xl font-semibold text-stone-400 line-through decoration-rose-500 decoration-2">
-              {formatRp(pricing.defaultPrice)}
-            </span>
-          </>
-        )}
-        <span className="sr-only">Harga aktivasi sekali bayar:</span>
-        <span className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-stone-900 tracking-tight tabular-nums">
-          {formatRp(activePrice)}
-        </span>
-        <span className="text-base sm:text-lg font-semibold text-amber-700">
-          / selamanya
-        </span>
-      </div>
-
       {hasValidPromo && pricing.promo?.code ? (
-        <p className="mt-2.5 text-sm font-medium text-emerald-700">
-          Kode promo <span className="font-bold">{pricing.promo.code}</span> aktif — hemat{' '}
-          {formatRp(pricing.promo.discountAmount)} dari harga normal.
-        </p>
+        <>
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <span className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-stone-900 tracking-tight tabular-nums">
+              {formatRp(pricing.promo.finalPrice)}
+            </span>
+            <span className="text-base sm:text-lg font-semibold text-amber-700">
+              / selamanya
+            </span>
+          </div>
+          <p className="mt-2.5 text-sm font-medium text-emerald-700">
+            Kode promo <span className="font-bold">{pricing.promo.code}</span> aktif — langsung hemat{' '}
+            {formatRp(pricing.promo.discountAmount)} saat aktivasi di aplikasi.
+          </p>
+        </>
       ) : (
-        <p className="mt-2.5 text-xs sm:text-sm text-stone-600">
-          Ikuti akun <span className="font-semibold text-stone-800">Threads &amp; Instagram</span> resmi Nikahin untuk mendapatkan kode promo diskon khusus.
-        </p>
+        <>
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <span className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-stone-900 tracking-tight">
+              Sekali Aktivasi Berdua
+            </span>
+            <span className="text-base sm:text-lg font-semibold text-amber-700">
+              / selamanya
+            </span>
+          </div>
+          <p className="mt-2.5 text-xs sm:text-sm text-stone-600">
+            Cek akun <span className="font-semibold text-stone-800">Threads &amp; Instagram</span> resmi Nikahin untuk mendapatkan kode promo diskon spesial sebelum aktivasi.
+          </p>
+        </>
       )}
     </div>
   );
