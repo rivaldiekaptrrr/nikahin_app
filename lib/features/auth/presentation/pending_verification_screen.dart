@@ -422,7 +422,11 @@ class _PendingVerificationScreenState extends ConsumerState<PendingVerificationS
   }
 
   Future<void> _handleMidtransCorePurchase() async {
-    final selectedChannel = await PaymentChannelSelectionModal.show(context);
+    final selectedChannel = await PaymentChannelSelectionModal.show(
+      context,
+      amount: _activePrice,
+      originalAmount: _hasDiscountedVoucher ? _pricingConfig.defaultPrice : null,
+    );
     if (selectedChannel == null || !mounted) return;
 
     if (!selectedChannel.isAvailable) {

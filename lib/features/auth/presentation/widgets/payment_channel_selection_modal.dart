@@ -11,16 +11,22 @@ import 'payment_brand_badge.dart';
 class PaymentChannelSelectionModal extends StatefulWidget {
   final ValueChanged<PaymentChannel> onChannelSelected;
   final PaymentChannel? initialChannel;
+  final double? amount;
+  final double? originalAmount;
 
   const PaymentChannelSelectionModal({
     super.key,
     required this.onChannelSelected,
     this.initialChannel,
+    this.amount,
+    this.originalAmount,
   });
 
   static Future<PaymentChannel?> show(
     BuildContext context, {
     PaymentChannel? initialChannel,
+    double? amount,
+    double? originalAmount,
   }) {
     HapticFeedback.mediumImpact();
     return showModalBottomSheet<PaymentChannel>(
@@ -29,6 +35,8 @@ class PaymentChannelSelectionModal extends StatefulWidget {
       backgroundColor: Colors.transparent,
       builder: (ctx) => PaymentChannelSelectionModal(
         initialChannel: initialChannel,
+        amount: amount,
+        originalAmount: originalAmount,
         onChannelSelected: (channel) => Navigator.of(ctx).pop(channel),
       ),
     );
@@ -472,14 +480,33 @@ class _PaymentChannelSelectionModalState extends State<PaymentChannelSelectionMo
                 ],
               ),
               const SizedBox(height: 2),
-              Text(
-                CurrencyUtils.formatRupiah(BusinessConfig.lifetimePrice),
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w900,
-                  color: theme.colorScheme.onSurface,
-                  letterSpacing: -0.5,
-                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Text(
+                    CurrencyUtils.formatRupiah(widget.amount ?? BusinessConfig.lifetimePrice),
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: theme.colorScheme.onSurface,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  if (widget.originalAmount != null &&
+                      widget.originalAmount! > (widget.amount ?? BusinessConfig.lifetimePrice)) ...[
+                    const SizedBox(width: 6),
+                    Text(
+                      CurrencyUtils.formatRupiah(widget.originalAmount!),
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: theme.colorScheme.onSurfaceVariant,
+                        decoration: TextDecoration.lineThrough,
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ],
           ),
